@@ -1,0 +1,38 @@
+.vaultPerformanceGraph {
+  display: flex;
+  justify-content: space-between;
+  max-width: 800px;
+  min-width: 600px;
+  width: 100%;
+  min-height: 400px;
+  flex: 1;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.tooltipContainer {
+  background: rgba(0, 0, 0, 0.87);
+  border-radius: 10px;
+  padding: 12px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.tooltipInfo {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+}
+
+.tooltipIcon {
+  margin-right: 12px;
+}
+
+.vaultDataToggle {
+  display: flex;
+  width: 100%;
+  max-width: 300px;
+  align-items: center;
+  justify-content: space-between;
+}

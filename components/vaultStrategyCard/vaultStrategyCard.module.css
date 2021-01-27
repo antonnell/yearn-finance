@@ -1,0 +1,41 @@
+.strategyContainer {
+  width: 420px;
+  border-radius: 10px;
+  display: flex;
+  padding: 24px;
+  margin-right: 48px;
+  margin-bottom: 24px;
+  height: 80px;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.strategyName {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.strategyNameText {
+  min-width: 100px;
+}
+
+.strategyStats {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.strategyStat {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 28px;
+  padding-left: 24px;
+}
+
+.strategyPercent {
+  flex: 1;
+}

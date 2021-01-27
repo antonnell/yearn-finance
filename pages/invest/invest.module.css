@@ -1,0 +1,77 @@
+.investContainer {
+  height: 100%;
+  padding: 48px;
+  display: flex;
+  flex-direction: column;
+}
+
+.portfolioStatsContainer {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.portfolioBalanceContainer {
+  display: flex;
+  align-items: center;
+  margin-right: 48px;
+}
+
+.portfolioBalanceCombined {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  padding: 48px 0px;
+}
+
+.portfolioOutline {
+  border: 1px solid #212529;
+  border-radius: 30px;
+  height: 60px;
+  width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 24px;
+}
+
+.portfolioIcon {
+  font-size: 2.4rem !important;
+}
+
+.portfolioGrowthContainer {
+  display: flex;
+  align-items: center;
+}
+
+.growthOutline {
+  border: 1px solid #212529;
+  border-radius: 20px;
+  height: 40px;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 24px;
+}
+
+.growthIcon {
+  font-size: 1.6rem !important;
+}
+
+.vaultsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding-top: 48px;
+  margin: 0px -24px;
+}
+
+.searchContainer {
+  margin: 24px !important;
+}
+
+.vaultSectionTitle {
+  width: 100%;
+  padding: 12px 24px;
+}

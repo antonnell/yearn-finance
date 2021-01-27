@@ -1,0 +1,113 @@
+.navigationContainer {
+  position: fixed;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 200px;
+  padding: 24px 12px;
+  border-radius: 0px !important;
+}
+
+.navigationHeading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.navigationContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+}
+
+.navigationOptionActive {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 12px;
+  margin: 12px 0px;
+  width: 100%;
+  border-radius: 10px;
+  cursor: pointer;
+    background: rgba(25, 101, 233, 0.3);
+}
+
+.navigationOption {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 12px;
+  margin: 12px 0px;
+  width: 100%;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.navigationOption:hover {
+  background: rgba(25, 101, 233, 0.3);
+}
+
+.navigationOptionIcon {
+  margin-right: 12px;
+  height: 30px;
+  width: 30px;
+  font-size: 30px !important;
+}
+
+.navigationOptionIcon_invest {
+  margin-right: 12px;
+  height: 30px;
+  width: 30px;
+  background-image: url('/navigation/yearn-icon.png');
+  background-size: 100%;
+}
+
+.navigationOptionIcon_lending {
+  margin-right: 12px;
+  height: 30px;
+  width: 30px;
+  background-image: url('/navigation/cream-icon.svg');
+  background-size: 100%;
+}
+
+.navigationOptionIcon_insure {
+  margin-right: 12px;
+  height: 30px;
+  width: 30px;
+  background-image: url('/navigation/cover-icon.png');
+  background-size: 100%;
+}
+
+
+.socials {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 100%;
+  padding: 24px 0px;
+}
+
+.socialButton {
+  padding: 12px;
+  width: 24px;
+  height: 24px;
+  background-size: 60%;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+  box-sizing: unset;
+}
+
+.telegram {
+  background-image: url('/socials/telegram.svg');
+}
+.medium {
+  background-image: url('/socials/medium.svg');
+}
+.twitter {
+  background-image: url('/socials/twitter.svg');
+}

@@ -1,0 +1,29 @@
+.vaultGrowthContainer {
+  display: flex;
+  justify-content: space-between;
+  max-width: 800px;
+  min-width: 600px;
+  flex: 1;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.portfolioGrowthContainer {
+  display: flex;
+  align-items: center;
+}
+
+.growthOutline {
+  border: 1px solid #212529;
+  border-radius: 20px;
+  height: 40px;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 24px;
+}
+
+.growthIcon {
+  font-size: 1.6rem !important;
+}

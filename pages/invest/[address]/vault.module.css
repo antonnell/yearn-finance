@@ -1,0 +1,67 @@
+.vaultContainer {
+  height: 100%;
+  padding: 48px;
+  display: flex;
+  flex-direction: column;
+}
+
+.vaultStatsContainer {
+  display: flex;
+  align-items: center;
+  margin-bottom: 48px;
+}
+
+.vaultBalanceContainer {
+  display: flex;
+  align-items: center;
+  margin-right: 48px;
+}
+
+.vaultOutline {
+  border-radius: 30px;
+  height: 60px;
+  width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 24px;
+}
+
+.vaultLogo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vaultInfo {
+  display: flex;
+  max-width: 1400px;
+  flex-wrap: wrap;
+}
+
+.vaultTitle {
+  min-width: 100px;
+}
+
+.vaultGrowthContainer {
+  display: flex;
+  align-items: center;
+}
+
+.growthOutline {
+  border: 1px solid #212529;
+  border-radius: 20px;
+  height: 40px;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 24px;
+}
+
+.growthIcon {
+  font-size: 1.6rem !important;
+}
+
+.cardSeparation {
+}

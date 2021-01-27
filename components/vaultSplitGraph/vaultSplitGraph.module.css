@@ -1,0 +1,17 @@
+.vaultPerformanceGraph {
+  display: flex;
+  justify-content: space-between;
+  max-width: 800px;
+  min-width: 600px;
+  flex: 1;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+  cursor: pointer;
+}
+
+.tooltipContainer {
+  background: rgba(0, 0, 0, 0.87);
+  border-radius: 10px;
+  padding: 12px;
+  color: #fff;
+}

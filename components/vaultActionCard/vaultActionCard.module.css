@@ -1,0 +1,44 @@
+.vaultActionContainer {
+  width: 420px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  margin-right: 48px;
+  margin-bottom: 24px;
+}
+
+.depositContainer {
+  padding-top: 24px;
+}
+
+.actionButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.scaleContainer {
+  margin: 24px 0px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.scale {
+  width: 60px;
+  height: 60px;
+  border-radius: 30px !important;
+}
+
+.balances {
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 12px;
+}
+
+.value {
+  cursor: pointer;
+}
