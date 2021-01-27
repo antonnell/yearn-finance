@@ -1,6 +1,9 @@
 import { Typography, Paper } from '@material-ui/core'
 import Skeleton from '@material-ui/lab/Skeleton';
+
+import AccountBalanceWalletOutlinedIcon from '@material-ui/icons/AccountBalanceWalletOutlined';
 import TrendingUpIcon from '@material-ui/icons/TrendingUp';
+
 import BigNumber from 'bignumber.js'
 
 import { formatCurrency } from '../../utils'
@@ -13,7 +16,7 @@ export default function VaultGrowthNumbers({ vault }) {
     <div className={ classes.vaultGrowthContainer }>
       <div className={ classes.portfolioGrowthContainer }>
         <div className={ classes.growthOutline } >
-          <TrendingUpIcon className={ classes.growthIcon } />
+          <AccountBalanceWalletOutlinedIcon className={ classes.growthIcon } />
         </div>
         <div>
           <Typography variant='subtitle1' color='textSecondary'>Holdings</Typography>

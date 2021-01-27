@@ -43,9 +43,7 @@ function Vault(props) {
 
   useEffect(() => {
     function vaultsUpdated() {
-      console.log(VAULTS_UPDATED)
       const v = stores.investStore.getVault(router.query.address)
-      console.log(v)
       setVault(v)
       forceUpdate()
     }
@@ -89,7 +87,7 @@ function Vault(props) {
         <div className={ classes.vaultInfo }>
           <div className={ classes.cardSeparation }>
             {
-              vault.strategies && vault.strategies.map((strategy) => {
+              vault && vault.strategies && vault.strategies.map((strategy) => {
                 return <VaultStrategyCard strategy={ strategy } />
               })
             }

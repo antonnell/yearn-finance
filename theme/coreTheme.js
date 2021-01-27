@@ -29,12 +29,18 @@ const coreTheme = {
       fontSize: '2rem',
       fontWeight: 700,
       lineHeight: 1.167,
-      letterSpacing: '2px'
+      letterSpacing: '2px',
+      ['@media (max-width:576px)']: { // eslint-disable-line no-useless-computed-key
+        fontSize: '1.6rem'
+      }
     },
     h2: {   // Navigation tabs / section headers
       fontSize: '1.2rem',
       fontWeight: 500,
       lineHeight: 1.5,
+      ['@media (max-width:576px)']: { // eslint-disable-line no-useless-computed-key
+        fontSize: '1rem'
+      }
     },
     h3: {    // yearn title text YEARN
       fontFamily: [
@@ -51,33 +57,51 @@ const coreTheme = {
       fontSize: '1.5rem',
       fontWeight: 700,
       lineHeight: 1.167,
+      ['@media (max-width:576px)']: { // eslint-disable-line no-useless-computed-key
+        fontSize: '1.2rem'
+      }
     },
     h4: {   // yearn title text finance
       fontSize: '1.5rem',
       letterSpacing: '0.3rem',
       fontWeight: 300,
       lineHeight: 1.167,
+      ['@media (max-width:576px)']: { // eslint-disable-line no-useless-computed-key
+        fontSize: '1.2rem'
+      }
     },
     h5: {   // card headers
       fontSize: '0.9rem',
       fontWeight: 700,
       lineHeight: 1.167,
+      ['@media (max-width:576px)']: { // eslint-disable-line no-useless-computed-key
+        fontSize: '0.7rem'
+      }
     },
     h6: {   // card headers
       fontSize: '1.5rem',
       fontWeight: 700,
       lineHeight: 1.167,
-      letterSpacing: '2px'
+      letterSpacing: '2px',
+      ['@media (max-width:576px)']: { // eslint-disable-line no-useless-computed-key
+        fontSize: '1.2rem'
+      }
     },
     subtitle1: {
       fontSize: '0.9rem',
       fontWeight: 300,
       lineHeight: 1.167,
+      ['@media (max-width:576px)']: { // eslint-disable-line no-useless-computed-key
+        fontSize: '0.7rem'
+      }
     },
     body1: {
       fontSize: '1rem',
       fontWeight: 300,
       lineHeight: 1.167,
+      ['@media (max-width:576px)']: { // eslint-disable-line no-useless-computed-key
+        fontSize: '0.8rem'
+      }
     }
   },
   palette: {
@@ -95,7 +119,10 @@ const coreTheme = {
         minWidth: '150px'
       },
       textSizeLarge: {
-        fontSize: '3rem'
+        fontSize: '3rem',
+        ['@media (max-width:576px)']: { // eslint-disable-line no-useless-computed-key
+          fontSize: '2.4rem'
+        }
       }
     },
     MuiDialog: {

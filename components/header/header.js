@@ -6,6 +6,7 @@ import { withTheme } from '@material-ui/core/styles';
 
 import WbSunnyOutlinedIcon from '@material-ui/icons/WbSunnyOutlined';
 import Brightness2Icon from '@material-ui/icons/Brightness2';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import Unlock from '../unlock'
 
@@ -96,11 +97,11 @@ function Header(props) {
       { props.backClicked && (
         <div className={ classes.backButton }>
           <Button
-            color='secondary'
-            variant='contained'
-            onClick={ props.backClicked }
+          color={ props.theme.palette.type === 'light' ? 'primary' : 'secondary' }
+          onClick={ props.backClicked }
+            disableElevation
             >
-            <Typography variant='h5'>Back</Typography>
+            <ArrowBackIcon fontSize={ 'large' } />
           </Button>
         </div>
       )}

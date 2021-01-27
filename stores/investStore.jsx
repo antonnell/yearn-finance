@@ -13,6 +13,8 @@ import {
   VAULT_PERFORMANCE_RETURNED,
   DEPOSIT_VAULT,
   DEPOSIT_VAULT_RETURNED,
+  WITHDRAW_VAULT,
+  WITHDRAW_VAULT_RETURNED
 } from './constants';
 
 import stores from './'
@@ -52,6 +54,9 @@ class Store {
             break;
           case DEPOSIT_VAULT:
             this.depositVault(payload);
+            break;
+          case WITHDRAW_VAULT:
+            this.withdrawVault(payload);
             break;
           default: {
           }
@@ -188,7 +193,6 @@ class Store {
         }
       } catch(ex) {
         console.log(ex)
-        console.log(vault)
       }
     }, (err, vaultsBalanced) => {
       if(err) {
@@ -346,17 +350,66 @@ class Store {
     this._callContract(web3, vaultContract, 'deposit', [amountToSend], account, gasPrice, null, callback)
   }
 
+
+  withdrawVault = async (payload) => {
+    const account = stores.accountStore.getStore('account')
+    if(!account) {
+      return false
+      //maybe throw an error
+    }
+
+    const web3 = await stores.accountStore.getWeb3Provider()
+    if(!web3) {
+      return false
+      //maybe throw an error
+    }
+
+    const { vault, amount } = payload.content
+
+    this._callWithdrawVault(web3, vault, account, amount, (err, withdrawResult) => {
+      if(err) {
+        return this.emitter.emit(ERROR, err);
+      }
+
+      return this.emitter.emit(WITHDRAW_VAULT_RETURNED, withdrawResult)
+    })
+  }
+
+  _callWithdrawVault = async (web3, vault, account, amount, callback) => {
+    let abi = null
+
+    switch (vault.type) {
+      case 'v1':
+        abi = VAULTV1ABI
+        break;
+      case 'v2':
+        abi = VAULTV2ABI
+        break;
+      default:
+        abi = 'UNKNOWN'
+    }
+
+    const vaultContract = new web3.eth.Contract(abi, vault.address)
+
+    const amountToSend = BigNumber(amount).times(10**vault.decimals).toFixed(0)
+
+    const gasPrice = await stores.accountStore.getGasPrice()
+
+    this._callContract(web3, vaultContract, 'withdraw', [amountToSend], account, gasPrice, null, callback)
+  }
+
   _callContract = (web3, contract, method, params, account, gasPrice, emit, callback) => {
     //todo: rewrite the callback unfctionality.
 
+    const context = this
     contract.methods[method](...params).send({ from: account.address, gasPrice: web3.utils.toWei(gasPrice, 'gwei') })
       .on('transactionHash', function(hash){
-        this.emitter.emit(TX_SUBMITTED, hash)
+        context.emitter.emit(TX_SUBMITTED, hash)
         callback(null, hash)
       })
       .on('confirmation', function(confirmationNumber, receipt){
         if(emit && confirmationNumber === 1) {
-          this.emitter.emit(emit)
+          context.emitter.emit(emit)
         }
       })
       .on('error', function(error) {

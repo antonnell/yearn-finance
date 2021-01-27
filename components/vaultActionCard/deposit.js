@@ -61,8 +61,6 @@ export default function Deposit({ vault }) {
     }
   })
 
-  console.log(vault)
-
   return (
     <div className={ classes.depositContainer }>
 

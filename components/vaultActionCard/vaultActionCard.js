@@ -20,6 +20,7 @@ export default function VaultActionCard({ vault }) {
   return (
     <Paper elevation={ 0 } className={ classes.vaultActionContainer }>
       <Tabs
+        variant='fullWidth'
         value={ tabValue }
         onChange={ handleTabChange }
       >

@@ -206,8 +206,6 @@ class Store {
       localStorage.getItem('yearn.finance-gas-speed', 'fast')
     }
 
-    console.log(gasPrices)
-
     this.setStore({ gasPrices: gasPrices, gasSpeed: gasSpeed })
     this.emitter.emit(GAS_PRICES_RETURNED)
   }

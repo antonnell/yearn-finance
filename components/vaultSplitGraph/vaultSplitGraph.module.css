@@ -15,3 +15,12 @@
   padding: 12px;
   color: #fff;
 }
+
+
+@media screen and (max-width: 576px) {
+  .vaultPerformanceGraph {
+    width: calc(100vw - 24px);
+    max-width: max-content;
+    min-width: auto;
+  }
+}

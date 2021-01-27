@@ -44,7 +44,6 @@ export default function VaultSplitGraph({ vaults }) {
   }
 
   const sectorClicked = (payload) => {
-    console.log('sector clicked')
     router.push('/invest/'+payload.address)
   }
 

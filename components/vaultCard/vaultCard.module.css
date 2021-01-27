@@ -55,3 +55,15 @@
 .fontWeightBold {
   font-weight: bold !important;
 }
+
+
+
+
+@media screen and (max-width: 576px) {
+  .vaultContainer {
+    margin: 12px;
+  }
+  .vaultContainerActive {
+    margin: 12px;
+  }
+}

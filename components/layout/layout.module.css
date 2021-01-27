@@ -12,3 +12,14 @@
   height: 100%;
   margin-left: 200px;
 }
+
+@media screen and (max-width: 576px) {
+  .container {
+    flex-direction: column;
+  }
+  .content {
+    min-height: 100vh;
+    margin-left: 0px;
+    max-width: 100vw;
+  }
+}

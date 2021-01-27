@@ -48,8 +48,6 @@ export default function GasSpeed({ vault, setParentSpeed }) {
     dispatcher.dispatch(GET_GAS_PRICES)
   }, [])
 
-  console.log(storeGasPrices)
-
   return (
     <div className={ classes.gasSpeedContainer }>
       <Typography variant='h5' className={ classes.title }>Transaction Speed</Typography>

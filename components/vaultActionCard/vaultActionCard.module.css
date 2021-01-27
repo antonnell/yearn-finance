@@ -42,3 +42,25 @@
 .value {
   cursor: pointer;
 }
+
+
+@media screen and (max-width: 576px) {
+  .vaultActionContainer {
+    width: calc(100vw - 24px);
+    padding: 12px;
+    margin-right: 0px;
+    margin-bottom: 24px;
+  }
+
+  .depositContainer {
+    padding-top: 12px;
+  }
+
+  .actionButton {
+    margin-top: 24px;
+  }
+
+  .scaleContainer {
+    margin: 24px 0px;
+  }
+}

@@ -6,13 +6,13 @@ import {
 
 import Head from 'next/head'
 import Layout from '../../components/layout/layout.js'
-import classes from './insure.module.css'
+import classes from './lend.module.css'
 
-function Insure({ changeTheme }) {
+function Lend({ changeTheme }) {
   return (
     <Layout changeTheme={ changeTheme }>
       <Head>
-        <title>Insure</title>
+        <title>Lend</title>
       </Head>
       <div className={ classes.comingSoon }>
         <Typography variant='h6'>Coming soon ...</Typography>
@@ -21,4 +21,4 @@ function Insure({ changeTheme }) {
   )
 }
 
-export default Insure
+export default Lend

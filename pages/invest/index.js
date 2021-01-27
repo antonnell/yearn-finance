@@ -110,7 +110,7 @@ function Invest({ changeTheme }) {
                 </div>
               </div>
             </div>
-            <div>
+            <div className={ classes.spllitContainer }>
               <VaultSplitGraph vaults={ vaults } />
             </div>
           </div>

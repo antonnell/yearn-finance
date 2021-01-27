@@ -36,3 +36,12 @@
   align-items: center;
   justify-content: space-between;
 }
+
+@media screen and (max-width: 576px) {
+  .vaultPerformanceGraph {
+    max-width: auto;
+    min-width: auto;
+    width: calc(100vw - 24px);
+    margin-bottom: 12px;
+  }
+}

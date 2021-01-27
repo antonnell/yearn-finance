@@ -24,6 +24,10 @@
   width: 100%;
 }
 
+.navigationContentMobile {
+  display: none;
+}
+
 .navigationOptionActive {
   display: flex;
   align-items: center;
@@ -110,4 +114,123 @@
 }
 .twitter {
   background-image: url('/socials/twitter.svg');
+}
+.discord {
+  background-image: url('/socials/discord.svg');
+}
+
+.navigationContentNavs {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+
+
+.headerThings {
+  display: none;
+}
+
+.switchIcon {
+  font-size: 1.5rem !important;
+  margin-top: 0.2rem;
+}
+
+.backButton {
+  flex: 1;
+}
+
+.accountButton {
+  display: flex;
+  align-items: center;
+  margin-left: 24px !important;
+}
+
+.accountIcon {
+  width: 30px;
+  height: 30px;
+  background-size: 100%;
+  margin-right: 12px;
+}
+
+.metamask {
+  background-image: url('/connectors/icn-metamask.svg');
+}
+.ledger {
+  background-image: url('/connectors/icn-ledger.svg');
+}
+.coinbase {
+  background-image: url('/connectors/coinbaseWalletIcon.svg');
+}
+.torus {
+  background-image: url('/connectors/torus.jpg');
+}
+.trust {
+  background-image: url('/connectors/trustWallet.png');
+}
+
+
+.menuIcon {
+  display: none;
+}
+
+.backButtonContainer {
+  display: none;
+}
+
+
+@media screen and (max-width: 576px) {
+  .navigationContainer {
+    position: relative;
+    min-height: 80px;
+    display: flex;
+    width: 100%;
+    padding: 24px 12px;
+    border-radius: 0px !important;
+  }
+  .socials {
+    display: none;
+  }
+  .navigationContent {
+    display: none;
+  }
+  .navigationContentMobile {
+    position: fixed;
+    top: 0px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    width: 100%;
+    padding: 24px;
+    height: 100vh;
+    z-index: 999;
+  }
+  .menuIcon {
+    position: absolute;
+    top: 24px;
+    right: 12px;
+    display: flex;
+  }
+  .navigationHeading {
+    width: 100%;
+  }
+  .headerThings {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .backButtonContainer {
+    position: absolute;
+    top: 24px;
+    left: 12px;
+    display: flex;
+  }
+}
+
+@media screen and (min-width: 992px) {
+
 }

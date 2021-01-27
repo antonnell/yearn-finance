@@ -75,3 +75,37 @@
   width: 100%;
   padding: 12px 24px;
 }
+
+
+
+@media screen and (max-width: 576px) {
+  .investContainer {
+    padding: 12px;
+  }
+  .portfolioBalanceCombined {
+    padding: 0px;
+  }
+  .portfolioBalanceContainer {
+    margin-right: 0px;
+    margin-bottom: 12px;
+  }
+  .portfolioOutline {
+    border-radius: 25px;
+    height: 40px;
+    width: 40px;
+    margin-right: 12px;
+  }
+  .portfolioIcon {
+    font-size: 2rem !important;
+  }
+  .spllitContainer {
+    display: none;
+  }
+  .vaultsContainer {
+    padding-top: 24px;
+    margin: 0px -12px;
+  }
+  .searchContainer {
+    margin: 12px !important;
+  }
+}

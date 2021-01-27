@@ -195,7 +195,7 @@ function MyComponent(props) {
   const width = window.innerWidth
 
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: (width > 650 ? 'space-between' : 'center'), alignItems: 'center' }}>
+    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: (width > 576 ? 'space-between' : 'center'), alignItems: 'center' }}>
       {Object.keys(connectorsByName).map(name => {
         const currentConnector = connectorsByName[name];
         const activating = currentConnector === activatingConnector;
@@ -245,9 +245,9 @@ function MyComponent(props) {
         }
 
         return (
-          <div key={name} style={{ padding: '0px', display: 'flex', margin: '12px 0px' }}>
+          <div key={name} style={{ padding: '0px', display: 'flex', margin: (width > 576 ? '12px 0px' : '0px') }}>
             <Button style={ {
-                width: '350px',
+                width: ( width > 576 ? '350px' : 'calc(100vw - 100px)'),
                 height: '160px'
               } }
               variant='contained'

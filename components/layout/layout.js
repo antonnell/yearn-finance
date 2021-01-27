@@ -33,7 +33,7 @@ export default function Layout({ children, configure, backClicked, changeTheme }
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
       {!configure && (
-        <Navigation />
+        <Navigation backClicked={backClicked} changeTheme={ changeTheme } />
       )}
       <div className={ classes.content }>
         {!configure && (

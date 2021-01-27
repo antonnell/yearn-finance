@@ -52,7 +52,7 @@ export default function MyApp({ Component, pageProps }) {
   useEffect(function() {
     stores.emitter.on(VAULTS_CONFIGURED, vaultsConfigureReturned)
     stores.emitter.on(ACCOUNT_CONFIGURED, accountConfigureReturned)
-
+ 
     stores.dispatcher.dispatch({ type: CONFIGURE })
   },[]);
 

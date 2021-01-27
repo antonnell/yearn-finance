@@ -65,3 +65,29 @@
 
 .cardSeparation {
 }
+
+
+@media screen and (max-width: 576px) {
+  .vaultContainer {
+    padding: 12px;
+  }
+  .vaultStatsContainer {
+    margin-bottom: 12px;
+  }
+  .vaultBalanceContainer {
+    margin-right: 12px;
+  }
+  .vaultOutline {
+    border-radius: 25px;
+    height: 50px;
+    width: 50px;
+    margin-right: 12px;
+  }
+  .vaultInfo {
+    max-width: 100vw;
+    flex-direction: column-reverse;
+  }
+  .cardSeparation {
+    
+  }
+}
