@@ -43,6 +43,14 @@
   cursor: pointer;
 }
 
+.marginLeft {
+  margin-left: 6px !important;
+}
+
+.marginRight {
+  margin-right: 6px !important;
+}
+
 
 @media screen and (max-width: 576px) {
   .vaultActionContainer {

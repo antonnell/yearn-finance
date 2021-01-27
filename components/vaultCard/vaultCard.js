@@ -26,7 +26,7 @@ export default function VaultCard({ vault, account }) {
         </div>
         <div>
           <div className={ classes.vaultVersionContainer }>
-            <Typography  className={ classes.vaultVersionText }>{ vault.type }</Typography>
+            <Typography  className={ classes.vaultVersionText }>{ (vault.type === 'v2' && !vault.endorsed) ? 'Exp' : vault.type }</Typography>
           </div>
         </div>
       </div>
@@ -49,7 +49,7 @@ export default function VaultCard({ vault, account }) {
           )
         }
         <div className={ classes.vaultInfoField }>
-          <Typography variant='h2' className={ classes.fontWeightBold }>{ !(vault.apy && vault.apy.oneMonthSample) ? <Skeleton /> : (BigNumber(vault.apy.oneMonthSample).times(100).toFixed(2) + '%') }</Typography>
+          <Typography variant='h2' className={ classes.fontWeightBold }>{ !(vault.apy) ? <Skeleton /> :  ( vault.apy.oneMonthSample ? (BigNumber(vault.apy.oneMonthSample).times(100).toFixed(2) + '%') : 'Unknown') }</Typography>
           <Typography variant='body1'>Yearly Growth</Typography>
         </div>
       </div>

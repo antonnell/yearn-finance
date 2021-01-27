@@ -76,7 +76,7 @@ function Vault(props) {
             </div>
             <div className={ classes.vaultTitle }>
               <Typography variant='subtitle1' color='textSecondary'>
-                { !vault ? <Skeleton /> : vault.type }
+                { !vault ? <Skeleton /> : ((vault.type === 'v2' && !vault.endorsed) ? 'Exp' : vault.type) }
               </Typography>
               <Typography variant='h1'>
                 { !vault ? <Skeleton /> : vault.displayName }

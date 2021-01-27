@@ -46,10 +46,15 @@ export default function Withdraw({ vault }) {
       setLoading(false)
     }
 
+    const errorReturned = () => {
+      setLoading(false)
+    }
 
+    stores.emitter.on(ERROR, errorReturned)
     stores.emitter.on(WITHDRAW_VAULT_RETURNED, withdrawReturned)
 
     return () => {
+      stores.emitter.removeListener(ERROR, errorReturned)
       stores.emitter.removeListener(WITHDRAW_VAULT_RETURNED, withdrawReturned)
     }
   })
@@ -117,7 +122,7 @@ export default function Withdraw({ vault }) {
           onClick={ onWithdraw }
           disabled={ loading }
           >
-          <Typography variant='h5'>{ loading ? <CircularProgress size={30} /> : 'Withdraw' }</Typography>
+          <Typography variant='h5'>{ loading ? <CircularProgress size={25} /> : 'Withdraw' }</Typography>
         </Button>
       </div>
     </div>

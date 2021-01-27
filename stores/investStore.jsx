@@ -1,5 +1,6 @@
 import async from 'async';
 import {
+  MAX_UINT256,
   YEARN_API,
   ERROR,
   TX_SUBMITTED,
@@ -14,7 +15,9 @@ import {
   DEPOSIT_VAULT,
   DEPOSIT_VAULT_RETURNED,
   WITHDRAW_VAULT,
-  WITHDRAW_VAULT_RETURNED
+  WITHDRAW_VAULT_RETURNED,
+  APPROVE_VAULT,
+  APPROVE_VAULT_RETURNED,
 } from './constants';
 
 import stores from './'
@@ -57,6 +60,9 @@ class Store {
             break;
           case WITHDRAW_VAULT:
             this.withdrawVault(payload);
+            break;
+          case APPROVE_VAULT:
+            this.approveVault(payload);
             break;
           default: {
           }
@@ -272,7 +278,7 @@ class Store {
     const contracts = [
       {
         namespace: "vaults",
-        store: 'localStorage',
+        store: localStorage,
         addresses: [
           address
         ],
@@ -347,7 +353,7 @@ class Store {
 
     const gasPrice = await stores.accountStore.getGasPrice()
 
-    this._callContract(web3, vaultContract, 'deposit', [amountToSend], account, gasPrice, null, callback)
+    this._callContract(web3, vaultContract, 'deposit', [amountToSend], account, gasPrice, GET_VAULT_BALANCES, callback)
   }
 
 
@@ -395,21 +401,23 @@ class Store {
 
     const gasPrice = await stores.accountStore.getGasPrice()
 
-    this._callContract(web3, vaultContract, 'withdraw', [amountToSend], account, gasPrice, null, callback)
+    this._callContract(web3, vaultContract, 'withdraw', [amountToSend], account, gasPrice, GET_VAULT_BALANCES, callback)
   }
 
-  _callContract = (web3, contract, method, params, account, gasPrice, emit, callback) => {
+  _callContract = (web3, contract, method, params, account, gasPrice, dispatchEvent, callback) => {
     //todo: rewrite the callback unfctionality.
 
     const context = this
     contract.methods[method](...params).send({ from: account.address, gasPrice: web3.utils.toWei(gasPrice, 'gwei') })
       .on('transactionHash', function(hash){
+        console.log('hash: ', hash)
         context.emitter.emit(TX_SUBMITTED, hash)
         callback(null, hash)
       })
       .on('confirmation', function(confirmationNumber, receipt){
-        if(emit && confirmationNumber === 1) {
-          context.emitter.emit(emit)
+        console.log('confirmed: ', confirmationNumber)
+        if(dispatchEvent && confirmationNumber === 1) {
+          context.dispatcher.dispatch({ type: dispatchEvent })
         }
       })
       .on('error', function(error) {
@@ -428,6 +436,45 @@ class Store {
           callback(error)
         }
       })
+  }
+
+  approveVault = async (payload) => {
+    const account = stores.accountStore.getStore('account')
+    if(!account) {
+      return false
+      //maybe throw an error
+    }
+
+    const web3 = await stores.accountStore.getWeb3Provider()
+    if(!web3) {
+      return false
+      //maybe throw an error
+    }
+
+    const { vault, amount } = payload.content
+
+    this._callApproveVault(web3, vault, account, amount, (err, approveResult) => {
+      if(err) {
+        return this.emitter.emit(ERROR, err);
+      }
+
+      return this.emitter.emit(APPROVE_VAULT_RETURNED, approveResult)
+    })
+  }
+
+  _callApproveVault = async (web3, vault, account, amount, callback) => {
+    const tokenContract = new web3.eth.Contract(ERC20ABI, vault.tokenMetadata.address)
+
+    let amountToSend = '0'
+    if(amount === 'max') {
+      amountToSend = MAX_UINT256
+    } else {
+      amountToSend = BigNumber(amount).times(10**vault.decimals).toFixed(0)
+    }
+
+    const gasPrice = await stores.accountStore.getGasPrice()
+
+    this._callContract(web3, tokenContract, 'approve', [vault.address, amountToSend], account, gasPrice, GET_VAULT_BALANCES, callback)
   }
 }
 

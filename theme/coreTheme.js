@@ -119,9 +119,9 @@ const coreTheme = {
         minWidth: '150px'
       },
       textSizeLarge: {
-        fontSize: '3rem',
+        fontSize: '2.4rem',
         ['@media (max-width:576px)']: { // eslint-disable-line no-useless-computed-key
-          fontSize: '2.4rem'
+          fontSize: '2rem'
         }
       }
     },

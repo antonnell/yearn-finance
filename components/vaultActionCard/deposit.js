@@ -9,6 +9,7 @@ import classes from './vaultActionCard.module.css'
 
 import stores from '../../stores'
 import {
+  ERROR,
   DEPOSIT_VAULT,
   DEPOSIT_VAULT_RETURNED,
   APPROVE_VAULT,
@@ -39,6 +40,11 @@ export default function Deposit({ vault }) {
     stores.dispatcher.dispatch({ type: APPROVE_VAULT, content: { vault: vault, amount: amount, gasSpeed: gasSpeed } })
   }
 
+  const onApproveMax = () => {
+    setLoading(true)
+    stores.dispatcher.dispatch({ type: APPROVE_VAULT, content: { vault: vault, amount: 'max', gasSpeed: gasSpeed } })
+  }
+
   const setSpeed = (speed) => {
     setGasSpeed(speed)
   }
@@ -49,17 +55,25 @@ export default function Deposit({ vault }) {
     }
 
     const approveReturned = () => {
-      onDeposit()
+      setLoading(false)
     }
 
+    const errorReturned = () => {
+      setLoading(false)
+    }
+
+    stores.emitter.on(ERROR, errorReturned)
     stores.emitter.on(DEPOSIT_VAULT_RETURNED, depositReturned)
     stores.emitter.on(APPROVE_VAULT_RETURNED, approveReturned)
 
     return () => {
+      stores.emitter.removeListener(ERROR, errorReturned)
       stores.emitter.removeListener(DEPOSIT_VAULT_RETURNED, depositReturned)
       stores.emitter.removeListener(APPROVE_VAULT_RETURNED, approveReturned)
     }
   })
+
+  console.log(vault.tokenMetadata)
 
   return (
     <div className={ classes.depositContainer }>
@@ -115,7 +129,7 @@ export default function Deposit({ vault }) {
         <GasSpeed setParentSpeed={ setSpeed } />
       </div>
       <div className={ classes.actionButton } >
-        { (BigNumber(vault.tokenMetadata.allowance).gt(0) || amount==='' || BigNumber(vault.tokenMetadata.allowance).gt(amount)) && (
+        { (amount==='' || BigNumber(vault.tokenMetadata.allowance).gte(amount)) && (
           <Button
             fullWidth
             disableElevation
@@ -125,21 +139,36 @@ export default function Deposit({ vault }) {
             onClick={ onDeposit }
             disabled={ loading }
             >
-            <Typography variant='h5'>{ loading ? <CircularProgress size={30} /> : 'Deposit' }</Typography>
+            <Typography variant='h5'>{ loading ? <CircularProgress size={25} /> : 'Deposit' }</Typography>
           </Button>
         )}
-        { (BigNumber(vault.tokenMetadata.allowance).eq(0) || BigNumber(vault.tokenMetadata.allowance).lte(amount)) && (
-          <Button
-            fullWidth
-            disableElevation
-            variant='contained'
-            color='primary'
-            size='large'
-            onClick={ onApprove }
-            disabled={ loading }
-            >
-            <Typography variant='h5'>{ loading ? <CircularProgress size={30} /> : 'Approve' }</Typography>
-          </Button>
+        { (amount !=='' && (!vault.tokenMetadata.allowance || BigNumber(vault.tokenMetadata.allowance).eq(0) || BigNumber(vault.tokenMetadata.allowance).lt(amount))) && (
+          <React.Fragment>
+            <Button
+              fullWidth
+              disableElevation
+              variant='contained'
+              color='primary'
+              size='large'
+              onClick={ onApprove }
+              disabled={ loading }
+              className={ classes.marginRight }
+              >
+              <Typography variant='h5'>{ loading ? <CircularProgress size={25} /> : 'Approve Exact' }</Typography>
+            </Button>
+            <Button
+              fullWidth
+              disableElevation
+              variant='contained'
+              color='primary'
+              size='large'
+              onClick={ onApproveMax }
+              disabled={ loading }
+              className={ classes.marginLeft }
+              >
+              <Typography variant='h5'>{ loading ? <CircularProgress size={25} /> : 'Approve Max' }</Typography>
+            </Button>
+          </React.Fragment>
         )}
       </div>
     </div>
