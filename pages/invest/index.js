@@ -10,7 +10,7 @@ import {
   Skeleton
 } from '@material-ui/core'
 import classes from './invest.module.css'
-import VaultCard from '../../components/VaultCard'
+import VaultCard from '../../components/vaultCard'
 import VaultGrowthNumbers from '../../components/vaultGrowthNumbers'
 import VaultSplitGraph from '../../components/vaultSplitGraph'
 import VaultPerformanceGraph from '../../components/vaultPerformanceGraph'

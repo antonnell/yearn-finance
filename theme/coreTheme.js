@@ -122,21 +122,6 @@ const coreTheme = {
         }
       }
     },
-    MuiSnackbarContent: {
-      root: {
-        padding: '0px',
-        minWidth: 'auto',
-        '@media (min-width: 960px)': {
-          minWidth: '500px',
-        }
-      },
-      message: {
-        padding: '0px'
-      },
-      action: {
-        marginRight: '0px'
-      }
-    },
   }
 }
 
