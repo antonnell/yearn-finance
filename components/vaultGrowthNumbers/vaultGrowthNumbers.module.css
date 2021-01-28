@@ -1,8 +1,6 @@
 .vaultGrowthContainer {
   display: flex;
   justify-content: space-between;
-  max-width: 600px;
-  min-width: 600px;
   flex: 1;
   flex-wrap: wrap;
   margin-bottom: 24px;

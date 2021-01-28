@@ -1,8 +1,6 @@
 .vaultPerformanceGraph {
   display: flex;
   justify-content: space-between;
-  max-width: 800px;
-  min-width: 600px;
   width: 100%;
   min-height: 400px;
   flex: 1;

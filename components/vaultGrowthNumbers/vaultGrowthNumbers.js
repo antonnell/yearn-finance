@@ -20,7 +20,7 @@ export default function VaultGrowthNumbers({ vault }) {
         </div>
         <div>
           <Typography variant='subtitle1' color='textSecondary'>Holdings</Typography>
-          <Typography variant='h6'>{ !vault ? <Skeleton /> : ( formatCurrency(vault.balance)+' '+vault.displayName ) }</Typography>
+          <Typography variant='h6'>{ !vault ? <Skeleton /> : ( formatCurrency(vault.balanceInToken)+' '+vault.tokenMetadata.displayName ) }</Typography>
         </div>
       </div>
       <div className={ classes.portfolioGrowthContainer }>

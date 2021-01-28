@@ -84,10 +84,10 @@ function Header(props) {
     const accountConfigure = () => {
       const accountStore = stores.accountStore.getStore('account')
       setAccount(accountStore)
-      setUnlockOpen(false)
+      closeUnlock()
     }
     const connectWallet = () => {
-      setUnlockOpen(true)
+      onAddressClicked()
     }
 
     stores.emitter.on(ACCOUNT_CONFIGURED, accountConfigure)
@@ -107,7 +107,7 @@ function Header(props) {
     setUnlockOpen(true)
   }
 
-  const closoeUnlock = () => {
+  const closeUnlock = () => {
     setUnlockOpen(false)
   }
 
@@ -149,7 +149,7 @@ function Header(props) {
       </Button>
 
       { unlockOpen && (
-        <Unlock modalOpen={ unlockOpen } closeModal={ closoeUnlock } />
+        <Unlock modalOpen={ unlockOpen } closeModal={ closeUnlock } />
       )}
     </div>
   )

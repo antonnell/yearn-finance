@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js'
 // URLS
 export const YEARN_API = 'https://api.yearn.tools/'
 export const GAS_PRICE_API = 'https://gasprice.poa.network/'
-
+export const ETHERSCAN_URL = 'https://etherscan.io/'
 
 
 // GENERAL
@@ -53,6 +53,9 @@ export const APPROVE_VAULT_RETURNED = 'APPROVE_VAULT_RETURNED'
 
 export const WITHDRAW_VAULT = 'WITHDRAW_VAULT'
 export const WITHDRAW_VAULT_RETURNED = 'WITHDRAW_VAULT_RETURNED'
+
+export const GET_VAULT_TRANSACTIONS = 'GET_VAULT_TRANSACTIONS'
+export const VAULT_TRANSACTIONS_RETURNED = 'VAULT_TRANSACTIONS_RETURNED'
 
 // ACCOUNT
 export const GET_ACCOUNT_BALANCES = 'GET_ACCOUNT_BALANCES'

@@ -18,6 +18,8 @@ import {
   WITHDRAW_VAULT_RETURNED,
   APPROVE_VAULT,
   APPROVE_VAULT_RETURNED,
+  GET_VAULT_TRANSACTIONS,
+  VAULT_TRANSACTIONS_RETURNED
 } from './constants';
 
 import stores from './'
@@ -63,6 +65,9 @@ class Store {
             break;
           case APPROVE_VAULT:
             this.approveVault(payload);
+            break;
+          case GET_VAULT_TRANSACTIONS:
+            this.getVaultTransactions(payload);
             break;
           default: {
           }
@@ -168,6 +173,8 @@ class Store {
         }
 
         vault.pricePerFullShare = BigNumber(pricePerFullShare).div(bnDec(18)).toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN)
+
+        vault.balanceInToken = BigNumber(vault.balance).times(vault.pricePerFullShare).toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN)
 
         const erc20Contract = new web3.eth.Contract(ERC20ABI, vault.tokenMetadata.address)
         const tokenBalanceOf = await erc20Contract.methods.balanceOf(account.address).call()
@@ -508,6 +515,55 @@ class Store {
     const gasPrice = await stores.accountStore.getGasPrice()
 
     this._callContract(web3, tokenContract, 'approve', [vault.address, amountToSend], account, gasPrice, GET_VAULT_BALANCES, callback)
+  }
+
+  getVaultTransactions = async (payload) => {
+    const { address } = payload.content
+
+    const account = stores.accountStore.getStore('account')
+    if(!account || !account.address) {
+      //maybe throw an error
+      return false
+    }
+
+    try {
+      const url = `${YEARN_API}user/${account.address}/vaults/transactions`
+
+      const vaultsApiResult = await fetch(url);
+      const transactions = await vaultsApiResult.json()
+
+      const vaults = this.getStore('vaults')
+
+      const vaultsPopulated = vaults.map((vault) => {
+
+        const txs = transactions.filter((tx) => {
+          return tx.vaultAddress === vault.address
+        })
+
+        if(txs && txs.length > 0) {
+          const array = []
+          array.push(...txs[0].deposits.map((tx) => { tx.description = 'Deposit into vault'; return tx; }))
+          array.push(...txs[0].withdrawals.map((tx) => { tx.description = 'Withdraw from vault'; return tx; }))
+          array.push(...txs[0].transfersIn.map((tx) => { tx.description = 'Transfer into vault'; return tx; }))
+          array.push(...txs[0].transfersOut.map((tx) => { tx.description = 'Transfer out of vault'; return tx; }))
+
+          vault.transactions = array.sort((a, b) => {
+            return a.timestamp < b.timestamp ? 1 : -1
+          })
+        } else {
+          vault.transactions = []
+        }
+
+        return vault
+      })
+
+      this.setStore({ vaults: vaultsPopulated })
+
+      this.emitter.emit(VAULTS_UPDATED)
+      this.emitter.emit(VAULT_TRANSACTIONS_RETURNED)
+    } catch (ex) {
+      console.log(ex)
+    }
   }
 }
 

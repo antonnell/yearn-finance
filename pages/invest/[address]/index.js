@@ -19,12 +19,15 @@ import VaultStrategyCard from '../../../components/vaultStrategyCard'
 import VaultActionCard from '../../../components/vaultActionCard'
 import VaultGrowthNumbers from '../../../components/vaultGrowthNumbers'
 import VaultPerformanceGraph from '../../../components/vaultPerformanceGraph'
+import VaultTransactions from '../../../components/vaultTransactions'
 
 import stores from '../../../stores'
 import {
   VAULTS_UPDATED,
   GET_VAULT_PERFORMANCE,
   VAULT_PERFORMANCE_RETURNED,
+  GET_VAULT_TRANSACTIONS,
+  VAULT_TRANSACTIONS_RETURNED,
   ACCOUNT_CHANGED
 } from '../../../stores/constants'
 
@@ -53,10 +56,12 @@ function Vault(props) {
 
     stores.emitter.on(VAULTS_UPDATED, vaultsUpdated)
     stores.emitter.on(VAULT_PERFORMANCE_RETURNED, vaultsUpdated)
+    stores.emitter.on(VAULT_TRANSACTIONS_RETURNED, vaultsUpdated)
 
     return () => {
       stores.emitter.removeListener(VAULTS_UPDATED, vaultsUpdated)
       stores.emitter.removeListener(VAULT_PERFORMANCE_RETURNED, vaultsUpdated)
+      stores.emitter.removeListener(VAULT_TRANSACTIONS_RETURNED, vaultsUpdated)
     }
   }, [])
 
@@ -74,6 +79,7 @@ function Vault(props) {
 
   useEffect(() => {
     stores.dispatcher.dispatch({ type: GET_VAULT_PERFORMANCE, content: { address: router.query.address, duration: 'Month' } })
+    stores.dispatcher.dispatch({ type: GET_VAULT_TRANSACTIONS, content: { address: router.query.address } })
   }, [])
 
   return (
@@ -86,7 +92,7 @@ function Vault(props) {
           <div className={ classes.vaultBalanceContainer }>
             <div className={ classes.vaultOutline } >
               <div className={ classes.vaultLogo }>
-                { !vault ? <Skeleton /> : <img src={ vault.tokenMetadata.icon } className={ classes.vaultIcon } alt='' width={ 50 } height={ 50 } /> }
+                { !vault ? <Skeleton /> : <img src={ vault.tokenMetadata.icon ? vault.tokenMetadata.icon : '/tokens/unknown-logo.png' } className={ classes.vaultIcon } alt='' width={ 50 } height={ 50 } /> }
               </div>
             </div>
             <div className={ classes.vaultTitle }>
@@ -112,6 +118,9 @@ function Vault(props) {
             { account && account.address && <VaultGrowthNumbers vault={ vault } />}
             <VaultPerformanceGraph vault={ vault } />
           </div>
+        </div>
+        <div className={ classes.vaultTransactionsContainer }>
+          { account && account.address && <VaultTransactions vault={ vault } /> }
         </div>
       </div>
     </Layout>

@@ -13,7 +13,8 @@ import {
   DEPOSIT_VAULT,
   DEPOSIT_VAULT_RETURNED,
   APPROVE_VAULT,
-  APPROVE_VAULT_RETURNED
+  APPROVE_VAULT_RETURNED,
+  CONNECT_WALLET
 } from '../../stores/constants'
 
 export default function Deposit({ vault }) {
@@ -49,7 +50,7 @@ export default function Deposit({ vault }) {
   }
 
   const onConnectWallet = () => {
-    stores.dispatcher.dispatch({ type: CONNECT_WALLET, content: {} })
+    stores.emitter.emit(CONNECT_WALLET)
   }
 
   const setSpeed = (speed) => {

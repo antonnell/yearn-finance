@@ -9,18 +9,23 @@ import classes from './vaultActionCard.module.css'
 
 import stores from '../../stores'
 import {
+  ERROR,
   WITHDRAW_VAULT,
   WITHDRAW_VAULT_RETURNED,
+  CONNECT_WALLET,
 } from '../../stores/constants'
 
 export default function Withdraw({ vault }) {
 
+  const storeAccount = stores.accountStore.getStore('account')
+
+  const [ account, setAccount ] = useState(storeAccount)
   const [ loading, setLoading ] = useState(false)
   const [ amount, setAmount ] = useState('')
   const [ gasSpeed, setGasSpeed ] = useState('')
 
   const setAmountPercent = (percent) => {
-    setAmount(BigNumber(vault.balance).times(percent).div(100).toFixed(vault.decimals, BigNumber.ROUND_DOWN))
+    setAmount(BigNumber(vault.balanceInToken).times(percent).div(100).toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN))
   }
 
   const onAmountChanged = (event) => {
@@ -29,12 +34,11 @@ export default function Withdraw({ vault }) {
 
   const onWithdraw = () => {
     setLoading(true)
-    stores.dispatcher.dispatch({ type: WITHDRAW_VAULT, content: { vault: vault, amount: amount, gasSpeed: gasSpeed } })
+    stores.dispatcher.dispatch({ type: WITHDRAW_VAULT, content: { vault: vault, amount: BigNumber(amount).div(vault.pricePerFullShare).toFixed(vault.decimals, BigNumber.ROUND_DOWN), gasSpeed: gasSpeed } })
   }
 
-  const onApprove = () => {
-    setLoading(true)
-    stores.dispatcher.dispatch({ type: APPROVE_VAULT, content: { vault: vault, amount: amount, gasSpeed: gasSpeed } })
+  const onConnectWallet = () => {
+    stores.emitter.emit(CONNECT_WALLET)
   }
 
   const setSpeed = (speed) => {
@@ -64,7 +68,7 @@ export default function Withdraw({ vault }) {
 
       <div className={ classes.textField }>
         <div className={ classes.balances }>
-          <Typography variant='h5' onClick={ () => { setAmountPercent(100) } } className={ classes.value } noWrap>Balance: { !vault.balance ? <Skeleton /> : formatCurrency(vault.balance) }</Typography>
+          <Typography variant='h5' onClick={ () => { setAmountPercent(100) } } className={ classes.value } noWrap>Balance: { !vault.balanceInToken ? <Skeleton /> : formatCurrency(vault.balanceInToken) }</Typography>
         </div>
         <TextField
           variant="outlined"
@@ -112,19 +116,37 @@ export default function Withdraw({ vault }) {
       <div >
         <GasSpeed setParentSpeed={ setSpeed } />
       </div>
-      <div className={ classes.actionButton } >
-        <Button
-          fullWidth
-          disableElevation
-          variant='contained'
-          color='primary'
-          size='large'
-          onClick={ onWithdraw }
-          disabled={ loading }
-          >
-          <Typography variant='h5'>{ loading ? <CircularProgress size={25} /> : 'Withdraw' }</Typography>
-        </Button>
-      </div>
+
+      { (!account || !account.address) &&
+        <div className={ classes.actionButton } >
+          <Button
+            fullWidth
+            disableElevation
+            variant='contained'
+            color='primary'
+            size='large'
+            onClick={ onConnectWallet }
+            disabled={ loading }
+            >
+            <Typography variant='h5'>Connect Wallet</Typography>
+          </Button>
+        </div>
+      }
+      { account && account.address &&
+        <div className={ classes.actionButton } >
+          <Button
+            fullWidth
+            disableElevation
+            variant='contained'
+            color='primary'
+            size='large'
+            onClick={ onWithdraw }
+            disabled={ loading }
+            >
+            <Typography variant='h5'>{ loading ? <CircularProgress size={25} /> : 'Withdraw' }</Typography>
+          </Button>
+        </div>
+      }
     </div>
   )
 }

@@ -19,7 +19,7 @@ export default function VaultCard({ vault, account }) {
     <Paper elevation={ 0 } className={ activeVault ? classes.vaultContainerActive : classes.vaultContainer } onClick={ handleNavigate }>
       <div className={ classes.vaultTitle }>
         <div className={ classes.vaultLogo }>
-          <img src={ vault.tokenMetadata.icon } alt='' width={ 50 } height={ 50 } />
+          <img src={ vault.tokenMetadata.icon ? vault.tokenMetadata.icon : '/tokens/unknown-logo.png' } alt='' width={ 50 } height={ 50 } />
         </div>
         <div className={ classes.vaultName}>
           <Typography variant='h2' className={ classes.fontWeightBold }>{ vault.displayName }</Typography>

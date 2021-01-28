@@ -63,9 +63,16 @@
   font-size: 1.6rem !important;
 }
 
-.cardSeparation {
+.vaultTransactionsContainer {
+  width: 100%;
+  margin-top: 48px;
 }
 
+.cardSeparation {
+  display: flex;
+  flex-direction: column;
+  width: min-content;
+}
 
 @media screen and (max-width: 576px) {
   .vaultContainer {
@@ -87,7 +94,7 @@
     max-width: 100vw;
     flex-direction: column-reverse;
   }
-  .cardSeparation {
-    
+  .vaultTransactionsContainer {
+    margin-top: 12px;
   }
 }

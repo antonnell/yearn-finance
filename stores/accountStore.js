@@ -141,6 +141,7 @@ class Store {
     const res = window.ethereum.on('accountsChanged', function (accounts) {
       that.setStore({ account: { address: accounts[0] } })
       that.emitter.emit(ACCOUNT_CHANGED)
+      that.emitter.emit(ACCOUNT_CONFIGURED)
 
       that.dispatcher.dispatch({ type: CONFIGURE_VAULTS, content: { connected: true } })
       that.dispatcher.dispatch({ type: CONFIGURE_LENDING, content: { connected: true } })
