@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Typography, Button, ButtonGroup } from '@material-ui/core'
 import { ComposedChart, Area, Line, CartesianGrid, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 import * as moment from 'moment';
@@ -11,35 +11,49 @@ import { useRouter } from 'next/router'
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
-import { GET_VAULT_PERFORMANCE } from '../../stores/constants'
+import { GET_VAULT_PERFORMANCE, ACCOUNT_CHANGED } from '../../stores/constants'
 
 import stores from '../../stores/index.js'
 
 import classes from './vaultPerformanceGraph.module.css'
 
 function CustomTooltip({ payload, label, active }) {
-
   if (active && payload && payload.length > 0) {
     return (
       <div className={ classes.tooltipContainer }>
-        <div className={ classes.tooltipInfo}>
-          <div className={ classes.tooltipIcon } >
-            <AttachMoneyicon className={ classes.growthIcon } />
+        { payload.length === 2 && (
+          <React.Fragment>
+            <div className={ classes.tooltipInfo}>
+              <div className={ classes.tooltipIcon } >
+                <AttachMoneyicon className={ classes.growthIcon } />
+              </div>
+              <div>
+                <Typography>Holdings</Typography>
+                <Typography>{ formatCurrency(payload[0].value) }</Typography>
+              </div>
+            </div>
+            <div className={ classes.tooltipInfo}>
+              <div className={ classes.tooltipIcon } >
+                <TrendingUpIcon className={ classes.growthIcon } />
+              </div>
+              <div>
+                <Typography>Share Price:</Typography>
+                <Typography>{ formatCurrency(payload[1].value, 4) }</Typography>
+              </div>
+            </div>
+          </React.Fragment>
+        )}
+        { payload.length === 1 && (
+          <div className={ classes.tooltipInfo}>
+            <div className={ classes.tooltipIcon } >
+              <TrendingUpIcon className={ classes.growthIcon } />
+            </div>
+            <div>
+              <Typography>Share Price:</Typography>
+              <Typography>{ formatCurrency(payload[0].value, 4) }</Typography>
+            </div>
           </div>
-          <div>
-            <Typography>Holdings</Typography>
-            <Typography>{ formatCurrency(payload[0].value) }</Typography>
-          </div>
-        </div>
-        <div className={ classes.tooltipInfo}>
-          <div className={ classes.tooltipIcon } >
-            <TrendingUpIcon className={ classes.growthIcon } />
-          </div>
-          <div>
-            <Typography>Share Price:</Typography>
-            <Typography>{ formatCurrency(payload[1].value, 4) }</Typography>
-          </div>
-        </div>
+        )}
       </div>
     );
   }
@@ -52,6 +66,21 @@ export default function VaultPerformanceGraph({ vault }) {
   const router = useRouter()
   const [ dataDuration, setDataDuration ] = useState('Month')
 
+  const storeAccount = stores.accountStore.getStore('account')
+  const [ account, setAccount ] = useState(storeAccount)
+
+  useEffect(() => {
+    const accountChanged = () => {
+      const storeAccount = stores.accountStore.getStore('account')
+      setAccount(storeAccount)
+    }
+
+    stores.emitter.on(ACCOUNT_CHANGED, accountChanged)
+    return () => {
+      stores.emitter.removeListener(ACCOUNT_CHANGED, accountChanged)
+    }
+  }, [])
+
   let data = []
 
   if(vault && vault.historicData && vault.historicData.getPricePerFullShare && vault.historicData.getPricePerFullShare.length > 0) {
@@ -59,7 +88,7 @@ export default function VaultPerformanceGraph({ vault }) {
       return {
         time: val.blockNumber,
         pricePerShare: BigNumber(val.value).div(bnDec(18)).toNumber(),
-        balanceOf: BigNumber(vault.historicData.balanceOf[0].values[index].value).div(bnDec(18)).toNumber()
+        balanceOf: vault.historicData.balanceOf ? BigNumber(vault.historicData.balanceOf[0].values[index].value).div(bnDec(18)).toNumber() : 0
       }
     })
   }
@@ -69,7 +98,7 @@ export default function VaultPerformanceGraph({ vault }) {
       return {
         time: val.blockNumber,
         pricePerShare: BigNumber(val.value).div(bnDec(18)).toNumber(),
-        balanceOf: BigNumber(vault.historicData.balanceOf[0].values[index].value).div(bnDec(18)).toNumber()
+        balanceOf: vault.historicData.balanceOf ? BigNumber(vault.historicData.balanceOf[0].values[index].value).div(bnDec(18)).toNumber() : 0
       }
     })
   }
@@ -118,7 +147,7 @@ export default function VaultPerformanceGraph({ vault }) {
             <YAxis yAxisId="left" tickLine={false} axisLine={false} padding={{ top: 50, bottom: 50 }} hide domain={[1, 'dataMax']} /> />
             <YAxis yAxisId="right" orientation='right' tickCount={3} tickLine={false} axisLine={false} hide />
 
-            <Area type="monotone" yAxisId="right" dataKey="balanceOf" stroke="#2F80ED" fillOpacity={1} fill="url(#colorUv)"  />
+            { account && account.address && <Area type="monotone" yAxisId="right" dataKey="balanceOf" stroke="#2F80ED" fillOpacity={1} fill="url(#colorUv)"  /> }
             <Line type='natural' yAxisId="left" dataKey="pricePerShare" stroke="#888" dot={<div></div>} />
           </ComposedChart>
         </ResponsiveContainer>

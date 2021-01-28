@@ -8,6 +8,11 @@ import WbSunnyOutlinedIcon from '@material-ui/icons/WbSunnyOutlined';
 import Brightness2Icon from '@material-ui/icons/Brightness2';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
+import {
+  CONNECT_WALLET,
+  ACCOUNT_CONFIGURED
+} from '../../stores/constants'
+
 import Unlock from '../unlock'
 
 import stores from '../../stores'
@@ -69,10 +74,29 @@ const StyledSwitch = withStyles((theme) => ({
 
 function Header(props) {
 
-  const account = stores.accountStore.getStore('account')
+  const accountStore = stores.accountStore.getStore('account')
 
+  const [ account, setAccount ] = useState(accountStore)
   const [ darkMode, setDarkMode ] = useState(props.theme.palette.type === 'dark' ? true : false);
   const [ unlockOpen, setUnlockOpen ] = useState(false);
+
+  useEffect(() => {
+    const accountConfigure = () => {
+      const accountStore = stores.accountStore.getStore('account')
+      setAccount(accountStore)
+      setUnlockOpen(false)
+    }
+    const connectWallet = () => {
+      setUnlockOpen(true)
+    }
+
+    stores.emitter.on(ACCOUNT_CONFIGURED, accountConfigure)
+    stores.emitter.on(CONNECT_WALLET, connectWallet)
+    return () => {
+      stores.emitter.removeListener(ACCOUNT_CONFIGURED, accountConfigure)
+      stores.emitter.removeListener(CONNECT_WALLET, connectWallet)
+    }
+  }, [])
 
   const handleToggleChange = (event, val) => {
     setDarkMode(val)
@@ -120,8 +144,8 @@ function Header(props) {
         color='secondary'
         onClick={ onAddressClicked }
         >
-        <div className={ `${classes.accountIcon} ${classes.metamask}` }></div>
-        <Typography variant='h5'>{ account ? formatAddress(account.address) : 'Connect Wallet' }</Typography>
+        { account && account.address && <div className={ `${classes.accountIcon} ${classes.metamask}` }></div>}
+        <Typography variant='h5'>{ (account && account.address)? formatAddress(account.address) : 'Connect Wallet' }</Typography>
       </Button>
 
       { unlockOpen && (

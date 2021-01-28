@@ -7,8 +7,8 @@ import {
   Paper,
   TextField,
   InputAdornment,
-  Skeleton
 } from '@material-ui/core'
+import Skeleton from '@material-ui/lab/Skeleton';
 import classes from './invest.module.css'
 import VaultCard from '../../components/vaultCard'
 import VaultGrowthNumbers from '../../components/vaultGrowthNumbers'
@@ -18,6 +18,7 @@ import VaultPerformanceGraph from '../../components/vaultPerformanceGraph'
 import BigNumber from 'bignumber.js'
 
 import AccountBalanceWalletOutlinedIcon from '@material-ui/icons/AccountBalanceWalletOutlined';
+import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 import SearchIcon from '@material-ui/icons/Search';
 import PieChartIcon from '@material-ui/icons/PieChart';
@@ -30,16 +31,22 @@ import { VAULTS_UPDATED } from '../../stores/constants'
 function Invest({ changeTheme }) {
 
   const storeVaults = stores.investStore.getStore('vaults')
-  const storePortfolioBbalance = stores.investStore.getStore('portfolioBalanceUSD')
+  const storePortfolioBalance = stores.investStore.getStore('portfolioBalanceUSD')
+  const storePortfolioGrowth = stores.investStore.getStore('portfolioGrowth')
+  const storeHighestHoldings = stores.investStore.getStore('highestHoldings')
   const account = stores.accountStore.getStore('account')
 
   const [ vaults, setVaults ] = useState(storeVaults)
-  const [ porfolioBalance, setPorfolioBalance ] = useState(storePortfolioBbalance)
+  const [ porfolioBalance, setPorfolioBalance ] = useState(storePortfolioBalance)
+  const [ porfolioGrowth, setPorfolioGrowth ] = useState(storePortfolioGrowth)
+  const [ highestHoldings, setHighestHoldings ] = useState(storeHighestHoldings)
   const [ search, setSearch ] = useState('')
 
   const vaultsUpdated = () => {
     setVaults(stores.investStore.getStore('vaults'))
     setPorfolioBalance(stores.investStore.getStore('portfolioBalanceUSD'))
+    setPorfolioGrowth(stores.investStore.getStore('portfolioGrowth'))
+    setHighestHoldings(stores.investStore.getStore('highestHoldings'))
   }
 
   useEffect(function() {
@@ -97,21 +104,41 @@ function Invest({ changeTheme }) {
                 </div>
                 <div>
                   <Typography variant='subtitle1' color='textSecondary'>Portfolio Balance</Typography>
-                  <Typography variant='h1'>$ { formatCurrency(porfolioBalance) }</Typography>
+                  <Typography variant='h1'>{ (!porfolioBalance || porfolioBalance === '') ? <Skeleton /> : '$ '+formatCurrency(porfolioBalance) }</Typography>
                 </div>
               </div>
+              <div className={ classes.portfolioBalanceContainer }>
+                <div className={ classes.growthOutline } >
+                  <AttachMoneyIcon className={ classes.growthIcon } />
+                </div>
+                <div>
+                  <Typography variant='subtitle1' color='textSecondary'>Highest Holdings</Typography>
+                  <Typography variant='h6'>{ highestHoldings.displayName }</Typography>
+                </div>
+              </div>
+            </div>
+            <div className={ classes.spllitContainer }>
+              <VaultSplitGraph vaults={ vaults } />
+            </div>
+            <div className={ classes.portfolioBalanceCombined}>
               <div className={ classes.portfolioBalanceContainer }>
                 <div className={ classes.portfolioOutline } >
                   <TrendingUpIcon className={ classes.portfolioIcon } />
                 </div>
                 <div>
                   <Typography variant='subtitle1' color='textSecondary'>Yearly Growth</Typography>
-                  <Typography variant='h6'>24.62%</Typography>
+                  <Typography variant='h1'>{ (!porfolioBalance || porfolioBalance === '') ? <Skeleton /> : '$ '+formatCurrency(BigNumber(porfolioBalance).times(porfolioGrowth).div(100)) }</Typography>
                 </div>
               </div>
-            </div>
-            <div className={ classes.spllitContainer }>
-              <VaultSplitGraph vaults={ vaults } />
+              <div className={ classes.portfolioBalanceContainer }>
+                <div className={ classes.growthOutline } >
+                  <TrendingUpIcon className={ classes.growthIcon } />
+                </div>
+                <div>
+                  <Typography variant='subtitle1' color='textSecondary'>Yearly Growth</Typography>
+                  <Typography variant='h6'>{ (!porfolioGrowth || porfolioGrowth === '') ? <Skeleton /> : formatCurrency(porfolioGrowth)+'%' }</Typography>
+                </div>
+              </div>
             </div>
           </div>
         )}

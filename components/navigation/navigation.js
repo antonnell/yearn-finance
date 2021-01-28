@@ -18,10 +18,7 @@ import Unlock from '../unlock'
 import stores from '../../stores'
 import { formatAddress } from '../../utils'
 
-
 import classes from './navigation.module.css'
-
-
 
 const StyledSwitch = withStyles((theme) => ({
   root: {
@@ -116,7 +113,7 @@ function Navigation(props) {
 
   const renderNavs = () => {
     return (<React.Fragment>
-      <div className={ activePath.includes('/invest') ? classes.navigationOptionActive : classes.navigationOption } onClick={ () => { handleNavigate('/invest') }}>
+      <div className={ (activePath.includes('/invest') || activePath === '/') ? classes.navigationOptionActive : classes.navigationOption } onClick={ () => { handleNavigate('/invest') }}>
         <div className={ classes.navigationOptionIcon_invest } ></div>
         <Typography variant='h2'>Invest</Typography>
       </div>

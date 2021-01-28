@@ -25,14 +25,17 @@ import {
   VAULTS_UPDATED,
   GET_VAULT_PERFORMANCE,
   VAULT_PERFORMANCE_RETURNED,
+  ACCOUNT_CHANGED
 } from '../../../stores/constants'
 
 function Vault(props) {
   const [, updateState] = React.useState();
   const forceUpdate = React.useCallback(() => updateState({}), []);
 
-
   const router = useRouter()
+
+  const storeAccount = stores.accountStore.getStore('account')
+  const [ account, setAccount ] = useState(storeAccount)
 
   const storeVault = stores.investStore.getVault(router.query.address)
   const [ vault, setVault ] = useState(storeVault)
@@ -55,7 +58,19 @@ function Vault(props) {
       stores.emitter.removeListener(VAULTS_UPDATED, vaultsUpdated)
       stores.emitter.removeListener(VAULT_PERFORMANCE_RETURNED, vaultsUpdated)
     }
-  }, [router.query.address])
+  }, [])
+
+  useEffect(() => {
+    const accountChanged = () => {
+      const storeAccount = stores.accountStore.getStore('account')
+      setAccount(storeAccount)
+    }
+
+    stores.emitter.on(ACCOUNT_CHANGED, accountChanged)
+    return () => {
+      stores.emitter.removeListener(ACCOUNT_CHANGED, accountChanged)
+    }
+  }, [])
 
   useEffect(() => {
     stores.dispatcher.dispatch({ type: GET_VAULT_PERFORMANCE, content: { address: router.query.address, duration: 'Month' } })
@@ -94,7 +109,7 @@ function Vault(props) {
             <VaultActionCard vault={ vault } />
           </div>
           <div className={ classes.cardSeparation }>
-            <VaultGrowthNumbers vault={ vault } />
+            { account && account.address && <VaultGrowthNumbers vault={ vault } />}
             <VaultPerformanceGraph vault={ vault } />
           </div>
         </div>

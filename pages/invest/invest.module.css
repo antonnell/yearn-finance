@@ -13,7 +13,6 @@
 .portfolioBalanceContainer {
   display: flex;
   align-items: center;
-  margin-right: 48px;
 }
 
 .portfolioBalanceCombined {
@@ -45,9 +44,9 @@
 
 .growthOutline {
   border: 1px solid #212529;
-  border-radius: 20px;
-  height: 40px;
-  width: 40px;
+  border-radius: 25px;
+  height: 50px;
+  width: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -55,7 +54,7 @@
 }
 
 .growthIcon {
-  font-size: 1.6rem !important;
+  font-size: 2rem !important;
 }
 
 .vaultsContainer {
@@ -86,17 +85,25 @@
     padding: 0px;
   }
   .portfolioBalanceContainer {
-    margin-right: 0px;
     margin-bottom: 12px;
   }
   .portfolioOutline {
-    border-radius: 25px;
+    border-radius: 20px;
     height: 40px;
     width: 40px;
     margin-right: 12px;
   }
   .portfolioIcon {
-    font-size: 2rem !important;
+    font-size: 1.8rem !important;
+  }
+  .growthOutline {
+    border-radius: 20px;
+    height: 40px;
+    width: 40px;
+    margin-right: 12px;
+  }
+  .growthIcon {
+    font-size: 1.8rem !important;
   }
   .spllitContainer {
     display: none;

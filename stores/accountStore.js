@@ -128,6 +128,7 @@ class Store {
     if(window.ethereum) {
       this.updateAccount()
     } else {
+      window.removeEventListener('ethereum#initialized', this.updateAccount)
       window.addEventListener('ethereum#initialized', this.updateAccount, {
         once: true,
       });
@@ -137,12 +138,13 @@ class Store {
 
   updateAccount = () => {
     const that = this
-    window.ethereum.on('accountsChanged', function (accounts) {
+    const res = window.ethereum.on('accountsChanged', function (accounts) {
       that.setStore({ account: { address: accounts[0] } })
-      const web3context = that.getStore('web3context')
-      if(web3context) {
-        that.emitter.emit(ACCOUNT_CHANGED)
-      }
+      that.emitter.emit(ACCOUNT_CHANGED)
+
+      that.dispatcher.dispatch({ type: CONFIGURE_VAULTS, content: { connected: true } })
+      that.dispatcher.dispatch({ type: CONFIGURE_LENDING, content: { connected: true } })
+      that.dispatcher.dispatch({ type: CONFIGURE_COVER, content: { connected: true } })
     })
   }
 

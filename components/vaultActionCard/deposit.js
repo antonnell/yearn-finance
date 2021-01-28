@@ -18,6 +18,9 @@ import {
 
 export default function Deposit({ vault }) {
 
+  const storeAccount = stores.accountStore.getStore('account')
+
+  const [ account, setAccount ] = useState(storeAccount)
   const [ loading, setLoading ] = useState(false)
   const [ amount, setAmount ] = useState('')
   const [ gasSpeed, setGasSpeed ] = useState('')
@@ -43,6 +46,10 @@ export default function Deposit({ vault }) {
   const onApproveMax = () => {
     setLoading(true)
     stores.dispatcher.dispatch({ type: APPROVE_VAULT, content: { vault: vault, amount: 'max', gasSpeed: gasSpeed } })
+  }
+
+  const onConnectWallet = () => {
+    stores.dispatcher.dispatch({ type: CONNECT_WALLET, content: {} })
   }
 
   const setSpeed = (speed) => {
@@ -72,8 +79,6 @@ export default function Deposit({ vault }) {
       stores.emitter.removeListener(APPROVE_VAULT_RETURNED, approveReturned)
     }
   })
-
-  console.log(vault.tokenMetadata)
 
   return (
     <div className={ classes.depositContainer }>
@@ -128,49 +133,67 @@ export default function Deposit({ vault }) {
       <div >
         <GasSpeed setParentSpeed={ setSpeed } />
       </div>
-      <div className={ classes.actionButton } >
-        { (amount==='' || BigNumber(vault.tokenMetadata.allowance).gte(amount)) && (
-          <Button
-            fullWidth
-            disableElevation
-            variant='contained'
-            color='primary'
-            size='large'
-            onClick={ onDeposit }
-            disabled={ loading }
-            >
-            <Typography variant='h5'>{ loading ? <CircularProgress size={25} /> : 'Deposit' }</Typography>
-          </Button>
-        )}
-        { (amount !=='' && (!vault.tokenMetadata.allowance || BigNumber(vault.tokenMetadata.allowance).eq(0) || BigNumber(vault.tokenMetadata.allowance).lt(amount))) && (
-          <React.Fragment>
+
+      { (!account || !account.address) &&
+        <div className={ classes.actionButton } >
             <Button
               fullWidth
               disableElevation
               variant='contained'
               color='primary'
               size='large'
-              onClick={ onApprove }
+              onClick={ onConnectWallet }
               disabled={ loading }
-              className={ classes.marginRight }
               >
-              <Typography variant='h5'>{ loading ? <CircularProgress size={25} /> : 'Approve Exact' }</Typography>
+              <Typography variant='h5'>Connect Wallet</Typography>
             </Button>
+          </div>
+        }
+      { account && account.address &&
+        <div className={ classes.actionButton } >
+          { (amount==='' || BigNumber(vault.tokenMetadata.allowance).gte(amount)) && (
             <Button
               fullWidth
               disableElevation
               variant='contained'
               color='primary'
               size='large'
-              onClick={ onApproveMax }
+              onClick={ onDeposit }
               disabled={ loading }
-              className={ classes.marginLeft }
               >
-              <Typography variant='h5'>{ loading ? <CircularProgress size={25} /> : 'Approve Max' }</Typography>
+              <Typography variant='h5'>{ loading ? <CircularProgress size={25} /> : 'Deposit' }</Typography>
             </Button>
-          </React.Fragment>
-        )}
-      </div>
+          )}
+          { (amount !=='' && (!vault.tokenMetadata.allowance || BigNumber(vault.tokenMetadata.allowance).eq(0) || BigNumber(vault.tokenMetadata.allowance).lt(amount))) && (
+            <React.Fragment>
+              <Button
+                fullWidth
+                disableElevation
+                variant='contained'
+                color='primary'
+                size='large'
+                onClick={ onApprove }
+                disabled={ loading }
+                className={ classes.marginRight }
+                >
+                <Typography variant='h5'>{ loading ? <CircularProgress size={25} /> : 'Approve Exact' }</Typography>
+              </Button>
+              <Button
+                fullWidth
+                disableElevation
+                variant='contained'
+                color='primary'
+                size='large'
+                onClick={ onApproveMax }
+                disabled={ loading }
+                className={ classes.marginLeft }
+                >
+                <Typography variant='h5'>{ loading ? <CircularProgress size={25} /> : 'Approve Max' }</Typography>
+              </Button>
+            </React.Fragment>
+          )}
+        </div>
+      }
     </div>
   )
 }

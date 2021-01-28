@@ -34,7 +34,7 @@ export default function VaultSplitGraph({ vaults }) {
       icon: vault.tokenMetadata.icon,
       displayName: vault.displayName,
       symbol: vault.symbol,
-      value: parseFloat(vault.balance)
+      value: parseFloat(vault.balanceUSD)
     }
   })
 
@@ -89,7 +89,7 @@ export default function VaultSplitGraph({ vaults }) {
         <path d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`} stroke={fill} fill="none" />
         <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
         <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} textAnchor={textAnchor} fill="#333">
-          {`${formatCurrency(value)} ${payload.displayName}`}
+          {`$ ${formatCurrency(value)}`}
         </text>
         <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} dy={18} textAnchor={textAnchor} fill="#999">
           {`(Share ${(percent * 100).toFixed(2)}%)`}
@@ -106,7 +106,7 @@ export default function VaultSplitGraph({ vaults }) {
             activeIndex={ activeIndex }
             activeShape={ renderActiveShape }
             data={ data }
-            cx={250}
+            cx={300}
             cy={150}
             innerRadius={60}
             outerRadius={80}

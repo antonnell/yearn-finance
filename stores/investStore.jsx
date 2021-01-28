@@ -127,9 +127,10 @@ class Store {
 
   getVaultBalances = async () => {
     const account = stores.accountStore.getStore('account')
-    if(!account) {
+    if(!account || !account.address) {
+      this.emitter.emit(VAULTS_CONFIGURED)
+      this.emitter.emit(VAULTS_UPDATED)
       return false
-      //maybe throw an error
     }
 
     const web3 = await stores.accountStore.getWeb3Provider()
@@ -191,6 +192,7 @@ class Store {
         }
 
         vault.tokenMetadata.priceUSD = price
+        vault.balanceUSD = BigNumber(vault.balance).times(vault.pricePerFullShare).times(price)
 
         if(callback) {
           callback(null, vault)
@@ -205,11 +207,23 @@ class Store {
         return this.emitter.emit(ERROR, err)
       }
 
+      const portfolioBalanceUSD = vaultsBalanced.reduce((accumulator, currentValue) => {
+        return BigNumber(accumulator).plus(BigNumber(currentValue.balance).times(currentValue.pricePerFullShare).times(currentValue.tokenMetadata.priceUSD)).toNumber()
+      }, 0)
+
+      const portfolioGrowth = vaultsBalanced.reduce((accumulator, currentValue) => {
+        if(!currentValue.balance || BigNumber(currentValue.balance).eq(0) || !currentValue.apy.oneMonthSample  || BigNumber(currentValue.apy.oneMonthSample).eq(0)) {
+          return accumulator
+        }
+
+        return BigNumber(accumulator).plus(BigNumber(currentValue.balance).times(currentValue.pricePerFullShare).times(currentValue.tokenMetadata.priceUSD).div(portfolioBalanceUSD).times(currentValue.apy.oneMonthSample*100)).toNumber()
+      }, 0)
+
       this.setStore({
-        vaults: vaultsBalanced ,
-        portfolioBalanceUSD: vaultsBalanced.reduce((accumulator, currentValue) => {
-          return BigNumber(accumulator).plus(BigNumber(currentValue.balance).times(currentValue.pricePerFullShare).times(currentValue.tokenMetadata.priceUSD)).toNumber()
-        }, 0)
+        vaults: vaultsBalanced,
+        portfolioBalanceUSD: portfolioBalanceUSD,
+        portfolioGrowth: portfolioGrowth,
+        highestHoldings: vaultsBalanced.reduce((prev, current) => (BigNumber(prev.balanceUSD).gt(current.balanceUSD)) ? prev : current)
       })
 
       this.emitter.emit(VAULTS_CONFIGURED)
@@ -226,13 +240,12 @@ class Store {
 
     const account = stores.accountStore.getStore('account')
     if(!account) {
-      return false
       //maybe throw an error
     }
 
     const web3 = await stores.accountStore.getWeb3Provider()
     if(!web3) {
-      return false
+
     }
 
     const provider = "https://eth-mainnet.alchemyapi.io/v2/XLj2FWLNMB4oOfFjbnrkuOCcaBIhipOJ";
@@ -240,7 +253,6 @@ class Store {
 
     const options = {
       provider,
-      web3,                      // Only required if not providing your own provider
       etherscan: {
         apiKey: etherscanApiKey, // Only required if not providing abi in contract request configuration
         delayTime: 300,          // delay time between etherscan ABI reqests. default is 300 ms
@@ -275,24 +287,45 @@ class Store {
         }
     }
 
-    const contracts = [
-      {
-        namespace: "vaults",
-        store: localStorage,
-        addresses: [
-          address
-        ],
-        allReadMethods: true,
-        groupByNamespace: false,
-        logging: false,
-        readMethods: [
-          {
-            name: "balanceOf",
-            args: [account.address],
-          }
-        ],
-      }
-    ];
+    let contracts = {}
+
+    if(!account || !account.address) {
+      contracts = [
+        {
+          namespace: "vaults",
+          store: localStorage,
+          addresses: [
+            address
+          ],
+          allReadMethods: true,
+          groupByNamespace: false,
+          logging: false,
+          readMethods: [],
+        }
+      ];
+    } else {
+      contracts = [
+        {
+          namespace: "vaults",
+          store: localStorage,
+          addresses: [
+            address
+          ],
+          allReadMethods: true,
+          groupByNamespace: false,
+          logging: false,
+          readMethods: [
+            {
+              name: "balanceOf",
+              args: [account.address],
+            }
+          ],
+        }
+      ];
+    }
+
+    console.log(contracts)
+    console.log(callOptions)
 
     const batchCall = new BatchCall(options);
     const result = await batchCall.execute(contracts, callOptions);
