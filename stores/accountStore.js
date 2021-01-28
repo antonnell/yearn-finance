@@ -62,7 +62,8 @@ class Store {
         "fast":100,
         "instant":130
       },
-      gasSpeed: 'fast'
+      gasSpeed: 'fast',
+      currentBlock: 11743358
     }
 
     dispatcher.register(
@@ -95,6 +96,7 @@ class Store {
   configure = async () => {
 
     this.getGasPrices()
+    this.getCurrentBlock()
 
     injected.isAuthorized().then(isAuthorized => {
       if (isAuthorized) {
@@ -198,6 +200,18 @@ class Store {
 
       const tokens = this.setStore({ tokens: tokensBalanced })
     })
+  }
+
+  getCurrentBlock = async (payload) => {
+    try {
+      console.log(process.env)
+      var web3 = new Web3(process.env.NEXT_PUBLIC_PROVIDER);
+      const block = await web3.eth.getBlockNumber()
+      this.setStore({ currentBlock: block })
+    } catch(ex) {
+      console.log(ex)
+    }
+
   }
 
   getGasPrices = async (payload) => {

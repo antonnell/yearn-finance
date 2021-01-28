@@ -83,10 +83,13 @@ export default function VaultPerformanceGraph({ vault }) {
 
   let data = []
 
+  const currentTime = new Date()
+  const currentBlock = stores.accountStore.getStore('currentBlock')
+
   if(vault && vault.historicData && vault.historicData.getPricePerFullShare && vault.historicData.getPricePerFullShare.length > 0) {
     data = vault.historicData.getPricePerFullShare[0].values.map((val, index) => {
       return {
-        time: val.blockNumber,
+        time: moment(currentTime - 14000*(currentBlock - val.blockNumber)).fromNow(),
         pricePerShare: BigNumber(val.value).div(bnDec(18)).toNumber(),
         balanceOf: vault.historicData.balanceOf ? BigNumber(vault.historicData.balanceOf[0].values[index].value).div(bnDec(18)).toNumber() : 0
       }
@@ -96,7 +99,7 @@ export default function VaultPerformanceGraph({ vault }) {
   if(vault && vault.historicData && vault.historicData.pricePerShare && vault.historicData.pricePerShare.length > 0) {
     data = vault.historicData.pricePerShare[0].values.map((val, index) => {
       return {
-        time: val.blockNumber,
+        time: moment(currentTime - 14000*(currentBlock - val.blockNumber)).fromNow(),
         pricePerShare: BigNumber(val.value).div(bnDec(18)).toNumber(),
         balanceOf: vault.historicData.balanceOf ? BigNumber(vault.historicData.balanceOf[0].values[index].value).div(bnDec(18)).toNumber() : 0
       }
