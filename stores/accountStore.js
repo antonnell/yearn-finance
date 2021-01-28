@@ -141,7 +141,8 @@ class Store {
   updateAccount = () => {
     const that = this
     const res = window.ethereum.on('accountsChanged', function (accounts) {
-      that.setStore({ account: { address: accounts[0] } })
+      console.log(window.ethereum)
+      that.setStore({ account: { address: accounts[0] }, web3context: { library: { provider: window.ethereum } } })
       that.emitter.emit(ACCOUNT_CHANGED)
       that.emitter.emit(ACCOUNT_CONFIGURED)
 

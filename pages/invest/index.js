@@ -44,15 +44,16 @@ function Invest({ changeTheme }) {
   const [ highestHoldings, setHighestHoldings ] = useState(storeHighestHoldings)
   const [ search, setSearch ] = useState('')
 
-  useEffect(function() {
-    const vaultsUpdated = () => {
-      setVaults(stores.investStore.getStore('vaults'))
-      setPorfolioBalance(stores.investStore.getStore('portfolioBalanceUSD'))
-      setPortfolioGrowth(stores.investStore.getStore('portfolioGrowth'))
-      setHighestHoldings(stores.investStore.getStore('highestHoldings'))
 
-      forceUpdate()
-    }
+  const vaultsUpdated = () => {
+    setVaults(stores.investStore.getStore('vaults'))
+    setPorfolioBalance(stores.investStore.getStore('portfolioBalanceUSD'))
+    setPortfolioGrowth(stores.investStore.getStore('portfolioGrowth'))
+    setHighestHoldings(stores.investStore.getStore('highestHoldings'))
+    forceUpdate()
+  }
+
+  useEffect(function() {
 
     stores.emitter.on(VAULTS_UPDATED, vaultsUpdated)
 

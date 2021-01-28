@@ -135,6 +135,7 @@ class Store {
 
   getVaultBalances = async () => {
     const account = stores.accountStore.getStore('account')
+    console.log(account)
     if(!account || !account.address) {
       this.emitter.emit(VAULTS_CONFIGURED)
       this.emitter.emit(VAULTS_UPDATED)
@@ -142,12 +143,14 @@ class Store {
     }
 
     const web3 = await stores.accountStore.getWeb3Provider()
+    console.log(web3)
     if(!web3) {
       return false
       //maybe throw an error
     }
 
     const vaults = this.getStore('vaults')
+    console.log(vaults)
     async.map(vaults, async (vault, callback) => {
       try {
 
@@ -214,6 +217,7 @@ class Store {
       }
     }, (err, vaultsBalanced) => {
       if(err) {
+        console.log(err)
         return this.emitter.emit(ERROR, err)
       }
 
@@ -229,8 +233,6 @@ class Store {
         return BigNumber(accumulator).plus(BigNumber(currentValue.balance).times(currentValue.pricePerFullShare).times(currentValue.tokenMetadata.priceUSD).div(portfolioBalanceUSD).times(currentValue.apy.oneMonthSample*100)).toNumber()
       }, 0)
 
-      console.log(portfolioGrowth)
-
       let highestHoldings = vaultsBalanced.reduce((prev, current) => (BigNumber(prev.balanceUSD).gt(current.balanceUSD)) ? prev : current)
       if(BigNumber(highestHoldings.balanceUSD).eq(0)) {
         highestHoldings = null
@@ -243,6 +245,7 @@ class Store {
         highestHoldings: highestHoldings
       })
 
+      console.log('EMITTING RETURN')
       this.emitter.emit(VAULTS_CONFIGURED)
       this.emitter.emit(VAULTS_UPDATED)
     })
