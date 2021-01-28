@@ -9,7 +9,7 @@ import BigNumber from 'bignumber.js'
 // }
 
 export function formatCurrency(amount, decimals=2) {
-  if(amount && !isNaN(amount)) {
+  if(!isNaN(amount)) {
     const formatter = new Intl.NumberFormat(undefined, {
       minimumFractionDigits: decimals,
       maximumFractionDigits: decimals,

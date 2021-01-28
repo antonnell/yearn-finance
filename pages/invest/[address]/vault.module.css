@@ -74,6 +74,18 @@
   width: min-content;
 }
 
+.vaultVersionContainer {
+  width: fit-content;
+  border-radius: 12px;
+  padding: 5px 16px;
+  background: rgba(25, 101, 233, 0.7);
+}
+
+.vaultVersionText {
+  font-size: 0.5rem;
+  color: #fff;
+}
+
 @media screen and (max-width: 576px) {
   .vaultContainer {
     padding: 12px;

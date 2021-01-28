@@ -29,6 +29,8 @@ import stores from '../../stores/index.js'
 import { VAULTS_UPDATED } from '../../stores/constants'
 
 function Invest({ changeTheme }) {
+  const [, updateState] = React.useState();
+  const forceUpdate = React.useCallback(() => updateState({}), []);
 
   const storeVaults = stores.investStore.getStore('vaults')
   const storePortfolioBalance = stores.investStore.getStore('portfolioBalanceUSD')
@@ -38,18 +40,20 @@ function Invest({ changeTheme }) {
 
   const [ vaults, setVaults ] = useState(storeVaults)
   const [ porfolioBalance, setPorfolioBalance ] = useState(storePortfolioBalance)
-  const [ porfolioGrowth, setPorfolioGrowth ] = useState(storePortfolioGrowth)
+  const [ portfolioGrowth, setPortfolioGrowth ] = useState(storePortfolioGrowth)
   const [ highestHoldings, setHighestHoldings ] = useState(storeHighestHoldings)
   const [ search, setSearch ] = useState('')
 
-  const vaultsUpdated = () => {
-    setVaults(stores.investStore.getStore('vaults'))
-    setPorfolioBalance(stores.investStore.getStore('portfolioBalanceUSD'))
-    setPorfolioGrowth(stores.investStore.getStore('portfolioGrowth'))
-    setHighestHoldings(stores.investStore.getStore('highestHoldings'))
-  }
-
   useEffect(function() {
+    const vaultsUpdated = () => {
+      setVaults(stores.investStore.getStore('vaults'))
+      setPorfolioBalance(stores.investStore.getStore('portfolioBalanceUSD'))
+      setPortfolioGrowth(stores.investStore.getStore('portfolioGrowth'))
+      setHighestHoldings(stores.investStore.getStore('highestHoldings'))
+
+      forceUpdate()
+    }
+
     stores.emitter.on(VAULTS_UPDATED, vaultsUpdated)
 
     return () => {
@@ -88,6 +92,9 @@ function Invest({ changeTheme }) {
     setSearch(event.target.value)
   }
 
+  console.log(porfolioBalance)
+  console.log(portfolioGrowth)
+
   return (
     <Layout changeTheme={ changeTheme }>
       <Head>
@@ -104,7 +111,7 @@ function Invest({ changeTheme }) {
                 </div>
                 <div>
                   <Typography variant='subtitle1' color='textSecondary'>Portfolio Balance</Typography>
-                  <Typography variant='h1'>{ (!porfolioBalance || porfolioBalance === '') ? <Skeleton /> : '$ '+formatCurrency(porfolioBalance) }</Typography>
+                  <Typography variant='h1'>{ '$ '+formatCurrency(porfolioBalance) }</Typography>
                 </div>
               </div>
               <div className={ classes.portfolioBalanceContainer }>
@@ -113,7 +120,7 @@ function Invest({ changeTheme }) {
                 </div>
                 <div>
                   <Typography variant='subtitle1' color='textSecondary'>Highest Holdings</Typography>
-                  <Typography variant='h6'>{ highestHoldings.displayName }</Typography>
+                  <Typography variant='h6'>{ highestHoldings ? highestHoldings.displayName : 'None' }</Typography>
                 </div>
               </div>
             </div>
@@ -127,7 +134,7 @@ function Invest({ changeTheme }) {
                 </div>
                 <div>
                   <Typography variant='subtitle1' color='textSecondary'>Yearly Growth</Typography>
-                  <Typography variant='h1'>{ (!porfolioBalance || porfolioBalance === '') ? <Skeleton /> : '$ '+formatCurrency(BigNumber(porfolioBalance).times(porfolioGrowth).div(100)) }</Typography>
+                  <Typography variant='h1'>{ '$ '+formatCurrency(BigNumber(porfolioBalance).times(portfolioGrowth).div(100)) }</Typography>
                 </div>
               </div>
               <div className={ classes.portfolioBalanceContainer }>
@@ -136,7 +143,7 @@ function Invest({ changeTheme }) {
                 </div>
                 <div>
                   <Typography variant='subtitle1' color='textSecondary'>Yearly Growth</Typography>
-                  <Typography variant='h6'>{ (!porfolioGrowth || porfolioGrowth === '') ? <Skeleton /> : formatCurrency(porfolioGrowth)+'%' }</Typography>
+                  <Typography variant='h6'>{ formatCurrency(portfolioGrowth)+'%' }</Typography>
                 </div>
               </div>
             </div>

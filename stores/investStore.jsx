@@ -41,6 +41,8 @@ class Store {
 
     this.store = {
       portfolioBalanceUSD: 0,
+      portfolioGrowth: 0,
+      highestHoldings: null,
       vaults: []
     }
 
@@ -120,6 +122,7 @@ class Store {
 
       this.emitter.emit(VAULTS_UPDATED)
 
+      console.log(payload.content)
       if(payload.content.connected) {
         this.dispatcher.dispatch({ type: GET_VAULT_BALANCES })
       } else {
@@ -226,11 +229,18 @@ class Store {
         return BigNumber(accumulator).plus(BigNumber(currentValue.balance).times(currentValue.pricePerFullShare).times(currentValue.tokenMetadata.priceUSD).div(portfolioBalanceUSD).times(currentValue.apy.oneMonthSample*100)).toNumber()
       }, 0)
 
+      console.log(portfolioGrowth)
+
+      let highestHoldings = vaultsBalanced.reduce((prev, current) => (BigNumber(prev.balanceUSD).gt(current.balanceUSD)) ? prev : current)
+      if(BigNumber(highestHoldings.balanceUSD).eq(0)) {
+        highestHoldings = null
+      }
+
       this.setStore({
         vaults: vaultsBalanced,
         portfolioBalanceUSD: portfolioBalanceUSD,
-        portfolioGrowth: portfolioGrowth,
-        highestHoldings: vaultsBalanced.reduce((prev, current) => (BigNumber(prev.balanceUSD).gt(current.balanceUSD)) ? prev : current)
+        portfolioGrowth: portfolioGrowth ? portfolioGrowth : 0,
+        highestHoldings: highestHoldings
       })
 
       this.emitter.emit(VAULTS_CONFIGURED)
@@ -271,26 +281,26 @@ class Store {
     switch (duration) {
       case 'Week':
         callOptions = {
-          blockHeight: 240 * 24 * 7,       // Historical blocks to read (60 * (60/15) = 240)... Enter 240 for one hours worth of data
-          blockResolution: 240 * 24,        // Historical block resolution. Enter 4 to scan in one minute intervals    - 1 day intervals
+          blockHeight: 272 * 24 * 7,       // Historical blocks to read (60 * (60/15) = 240)... Enter 240 for one hours worth of data - 272 = 13.2 seconds per block
+          blockResolution: 272 * 24,        // Historical block resolution. Enter 4 to scan in one minute intervals    - 1 day intervals - 272 = 13.2 seconds per block
         }
         break;
       case 'Month':
         callOptions = {
-          blockHeight: 240 * 24 * 30,       // Historical blocks to read (60 * (60/15) = 240)... Enter 240 for one hours worth of data
-          blockResolution: 240 * 24 * 3,        // Historical block resolution. Enter 4 to scan in one minute intervals    - 1 day intervals
+          blockHeight: 272 * 24 * 30,       // Historical blocks to read (60 * (60/15) = 240)... Enter 240 for one hours worth of data - 272 = 13.2 seconds per block
+          blockResolution: 272 * 24 * 3,        // Historical block resolution. Enter 4 to scan in one minute intervals    - 1 day intervals - 272 = 13.2 seconds per block
         }
         break;
       case 'Year':
         callOptions = {
-          blockHeight: 240 * 24 * 365,       // Historical blocks to read (60 * (60/15) = 240)... Enter 240 for one hours worth of data
-          blockResolution: 240 * 24 * 36,        // Historical block resolution. Enter 4 to scan in one minute intervals    - 1 day intervals
+          blockHeight: 272 * 24 * 365,       // Historical blocks to read (60 * (60/15) = 240)... Enter 240 for one hours worth of data - 272 = 13.2 seconds per block
+          blockResolution: 272 * 24 * 36,        // Historical block resolution. Enter 4 to scan in one minute intervals    - 1 day intervals - 272 = 13.2 seconds per block
         }
         break;
       default:
         callOptions = {
-          blockHeight: 240 * 24 * 30,       // Historical blocks to read (60 * (60/15) = 240)... Enter 240 for one hours worth of data
-          blockResolution: 240 * 24 * 3,        // Historical block resolution. Enter 4 to scan in one minute intervals    - 1 day intervals
+          blockHeight: 272 * 24 * 30,       // Historical blocks to read (60 * (60/15) = 240)... Enter 240 for one hours worth of data - 272 = 13.2 seconds per block
+          blockResolution: 272 * 24 * 3,        // Historical block resolution. Enter 4 to scan in one minute intervals    - 1 day intervals - 272 = 13.2 seconds per block
         }
     }
 

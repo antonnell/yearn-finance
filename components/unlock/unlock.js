@@ -17,7 +17,10 @@ import {
   ERROR,
   CONNECTION_DISCONNECTED,
   CONNECTION_CONNECTED,
-  CONFIGURE
+  CONFIGURE,
+  CONFIGURE_VAULTS,
+  CONFIGURE_LENDING,
+  CONFIGURE_COVER
 } from '../../stores/constants'
 
 import stores from '../../stores'
@@ -105,7 +108,11 @@ class Unlock extends Component {
   };
 
   connectionConnected = () => {
-    stores.dispatcher.dispatch({ type: CONFIGURE })
+
+    stores.dispatcher.dispatch({ type: CONFIGURE_VAULTS, content: { connected: true } })
+    stores.dispatcher.dispatch({ type: CONFIGURE_LENDING, content: { connected: true } })
+    stores.dispatcher.dispatch({ type: CONFIGURE_COVER, content: { connected: true } })
+
     if(this.props.closeModal != null) {
       this.props.closeModal()
     }

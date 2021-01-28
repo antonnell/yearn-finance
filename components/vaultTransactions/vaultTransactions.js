@@ -65,7 +65,7 @@ export default function VaultTransactions({ vault }) {
       <TransactionHeader />
       { vault && vault.transactions && (
         vault.transactions.map((tx) => {
-          return <TransactionEvent tx={ tx } vault={ vault } />
+          return <TransactionEvent key={ tx.address } tx={ tx } vault={ vault } />
         })
       )}
     </div>
