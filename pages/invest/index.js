@@ -93,9 +93,6 @@ function Invest({ changeTheme }) {
     setSearch(event.target.value)
   }
 
-  console.log(porfolioBalance)
-  console.log(portfolioGrowth)
-
   return (
     <Layout changeTheme={ changeTheme }>
       <Head>

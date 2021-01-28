@@ -114,21 +114,21 @@ export default function VaultPerformanceGraph({ vault }) {
   return (
     <div className={ classes.vaultPerformanceGraph }>
       <div className={ classes.vaultDataToggle }>
-      <ToggleButtonGroup
-        value={ dataDuration }
-        exclusive
-        onChange={ handleDataDuractionChanged }
-      >
-        <ToggleButton value="Week" >
-          Week
-        </ToggleButton>
-        <ToggleButton value="Month">
-          Month
-        </ToggleButton>
-        <ToggleButton value="Year">
-          Year
-        </ToggleButton>
-      </ToggleButtonGroup>
+        <ToggleButtonGroup
+          value={ dataDuration }
+          exclusive
+          onChange={ handleDataDuractionChanged }
+        >
+          <ToggleButton value="Week" >
+            Week
+          </ToggleButton>
+          <ToggleButton value="Month">
+            Month
+          </ToggleButton>
+          <ToggleButton value="Year">
+            Year
+          </ToggleButton>
+        </ToggleButtonGroup>
       </div>
       { (!vault || data.length === 0) ?
         <Skeleton variant="rect" width={ (window.innerWidth > 600 ? 600 : (window.innerWidth-24)) } height={300} /> :

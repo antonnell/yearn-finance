@@ -43,7 +43,8 @@ class Store {
       portfolioBalanceUSD: 0,
       portfolioGrowth: 0,
       highestHoldings: null,
-      vaults: []
+      vaults: [],
+      tvlInfo: null
     }
 
     dispatcher.register(
@@ -122,7 +123,6 @@ class Store {
 
       this.emitter.emit(VAULTS_UPDATED)
 
-      console.log(payload.content)
       if(payload.content.connected) {
         this.dispatcher.dispatch({ type: GET_VAULT_BALANCES })
       } else {
@@ -135,7 +135,6 @@ class Store {
 
   getVaultBalances = async () => {
     const account = stores.accountStore.getStore('account')
-    console.log(account)
     if(!account || !account.address) {
       this.emitter.emit(VAULTS_CONFIGURED)
       this.emitter.emit(VAULTS_UPDATED)
@@ -143,14 +142,36 @@ class Store {
     }
 
     const web3 = await stores.accountStore.getWeb3Provider()
-    console.log(web3)
     if(!web3) {
       return false
       //maybe throw an error
     }
 
+    let vaultInfo = null
+    try {
+      const url = `${YEARN_API}vaults`
+
+      const vaultsApiResult = await fetch(url);
+      vaultInfo = await vaultsApiResult.json()
+
+    } catch(ex) {
+      console.log(ex)
+      vaultInfo = []
+    }
+
+
+    let tvlInfo = null
+    try {
+      const url = `${YEARN_API}tvl`
+
+      const tvlAPIResult = await fetch(url);
+      tvlInfo = await tvlAPIResult.json()
+
+    } catch(ex) {
+      console.log(ex)
+    }
+
     const vaults = this.getStore('vaults')
-    console.log(vaults)
     async.map(vaults, async (vault, callback) => {
       try {
 
@@ -207,6 +228,21 @@ class Store {
         vault.tokenMetadata.priceUSD = price
         vault.balanceUSD = BigNumber(vault.balance).times(vault.pricePerFullShare).times(price)
 
+
+        if(!vault.strategies || vault.strategies.length === 0) {
+          const theVaultInfo = vaultInfo.filter((v) => {
+            return v.address === vault.address
+          })
+
+          if(theVaultInfo && theVaultInfo.length > 0) {
+            vault.strategies = [{
+              name: theVaultInfo[0].strategyName,
+              address: theVaultInfo[0].strategyAddress
+            }]
+          }
+
+        }
+
         if(callback) {
           callback(null, vault)
         } else {
@@ -242,10 +278,10 @@ class Store {
         vaults: vaultsBalanced,
         portfolioBalanceUSD: portfolioBalanceUSD,
         portfolioGrowth: portfolioGrowth ? portfolioGrowth : 0,
-        highestHoldings: highestHoldings
+        highestHoldings: highestHoldings,
+        tvlInfo: tvlInfo,
       })
 
-      console.log('EMITTING RETURN')
       this.emitter.emit(VAULTS_CONFIGURED)
       this.emitter.emit(VAULTS_UPDATED)
     })
@@ -343,9 +379,6 @@ class Store {
         }
       ];
     }
-
-    console.log(contracts)
-    console.log(callOptions)
 
     const batchCall = new BatchCall(options);
     const result = await batchCall.execute(contracts, callOptions);
@@ -463,12 +496,10 @@ class Store {
     const context = this
     contract.methods[method](...params).send({ from: account.address, gasPrice: web3.utils.toWei(gasPrice, 'gwei') })
       .on('transactionHash', function(hash){
-        console.log('hash: ', hash)
         context.emitter.emit(TX_SUBMITTED, hash)
         callback(null, hash)
       })
       .on('confirmation', function(confirmationNumber, receipt){
-        console.log('confirmed: ', confirmationNumber)
         if(dispatchEvent && confirmationNumber === 1) {
           context.dispatcher.dispatch({ type: dispatchEvent })
         }

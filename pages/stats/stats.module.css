@@ -1,8 +1,95 @@
-.comingSoon {
-  height: 100%;
-  min-height: 600px;
-  width: 100%;
+.statsTVLContainer {
+  padding: 48px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.tvlCardContainer  {
+  width: 420px;
+  border-radius: 10px;
+  padding: 48px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.statsContainer {
+  padding: 48px;
+}
+
+.txRow {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.32);
+  display: flex;
+  align-items: center;
+}
+
+.txCellDescription {
+  padding: 22px 0px;
+  flex: 2;
+  cursor: pointer;
+}
+
+.txCellAddress {
+  padding: 22px 0px;
+  flex: 1;
+  cursor: pointer;
+}
+
+.txCell {
+  padding: 22px 0px;
+  flex: 1;
+}
+
+.strategy {
+  padding: 6px 0px;
+}
+
+.descriptionCell {
+  display: flex;
+  align-items: center;
+}
+
+.vaultLogo {
+  margin-right: 12px;
+}
+
+.fontWeightBold {
+  font-weight: bold !important;
+}
+
+@media screen and (max-width: 1600px) {
+  .tvlCardContainer {
+    width: auto;
+  }
+}
+
+@media screen and (max-width: 1350px) {
+  .tvlCardContainer {
+    width: 100%;
+    padding: 24px 24px;
+    margin-bottom: 12px;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .statsContainer {
+    padding: 12px;
+  }
+  .statsTVLContainer{
+    padding: 12px;
+  }
+  .tvlCardContainer  {
+    width: 100%;
+    padding: 24px 24px;
+    margin-bottom: 12px;
+  }
+  .txCellAddress {
+    display: none;
+  }
+  .subTitle {
+    display: none;
+  }
+
 }

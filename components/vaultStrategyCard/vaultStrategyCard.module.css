@@ -39,3 +39,12 @@
 .strategyPercent {
   flex: 1;
 }
+
+@media screen and (max-width: 576px) {
+  .strategyContainer {
+    width: calc(100vw - 24px);
+    padding: 12px;
+    margin-right: 0px;
+    margin-bottom: 24px;
+  }
+}

@@ -141,7 +141,6 @@ class Store {
   updateAccount = () => {
     const that = this
     const res = window.ethereum.on('accountsChanged', function (accounts) {
-      console.log(window.ethereum)
       that.setStore({ account: { address: accounts[0] }, web3context: { library: { provider: window.ethereum } } })
       that.emitter.emit(ACCOUNT_CHANGED)
       that.emitter.emit(ACCOUNT_CONFIGURED)
@@ -205,7 +204,6 @@ class Store {
 
   getCurrentBlock = async (payload) => {
     try {
-      console.log(process.env)
       var web3 = new Web3(process.env.NEXT_PUBLIC_PROVIDER);
       const block = await web3.eth.getBlockNumber()
       this.setStore({ currentBlock: block })

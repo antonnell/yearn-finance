@@ -11,7 +11,7 @@
   margin: 24px;
   cursor: pointer;
   background: rgb(63,94,251);
-  background: radial-gradient(circle, rgba(63,94,251,0.7) 0%, rgba(47,128,237,0.7) 100%);
+  background: radial-gradient(circle, rgba(63,94,251,0.7) 0%, rgba(47,128,237,0.7) 48%) rgba(63,94,251,0.7) 100%;
 }
 
 .vaultTitle {
