@@ -1,0 +1,13 @@
+.coverContainer {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.coverSectionTitle {
+  margin: 12px 24px !important;
+}
+
+.searchContainer {
+  margin: 0px 24px !important;
+}

@@ -1,0 +1,113 @@
+import React, { useState, useEffect, useCallback } from 'react';
+import Head from 'next/head'
+import { useRouter } from 'next/router'
+import Layout from '../../../components/layout/layout.js'
+import {
+  Typography,
+  Paper,
+  TextField,
+  InputAdornment,
+  Button
+} from '@material-ui/core'
+import Skeleton from '@material-ui/lab/Skeleton';
+import * as moment from 'moment';
+
+import CoverActionCard from '../../../components/coverActionCard'
+import CoverSummaryCard from '../../../components/coverSummaryCard'
+
+import classes from './cover.module.css'
+
+import stores from '../../../stores'
+import {
+  COVER_UPDATED,
+  ACCOUNT_CHANGED
+} from '../../../stores/constants'
+
+function Cover(props) {
+
+  const [, updateState] = React.useState();
+  const forceUpdate = React.useCallback(() => updateState({}), []);
+
+  const router = useRouter()
+
+  const storeAccount = stores.accountStore.getStore('account')
+  const [ account, setAccount ] = useState(storeAccount)
+
+  const storeCoverProtocol = stores.coverStore.getCoverProtocol(router.query.address)
+  const [ coverProtocol, setCoverProtocol ] = useState(storeCoverProtocol)
+
+  const backClicked = () => {
+    router.push('/cover')
+  }
+
+  useEffect(() => {
+    function coverProtocolsUpdated() {
+      const c = stores.coverStore.getCoverProtocol(router.query.address)
+      setCoverProtocol(c)
+      forceUpdate()
+    }
+
+    stores.emitter.on(COVER_UPDATED, coverProtocolsUpdated)
+
+    return () => {
+      stores.emitter.removeListener(COVER_UPDATED, coverProtocolsUpdated)
+    }
+  }, [])
+
+  useEffect(() => {
+    const accountChanged = () => {
+      const storeAccount = stores.accountStore.getStore('account')
+      setAccount(storeAccount)
+    }
+
+    stores.emitter.on(ACCOUNT_CHANGED, accountChanged)
+    return () => {
+      stores.emitter.removeListener(ACCOUNT_CHANGED, accountChanged)
+    }
+  }, [])
+
+  function getLogoForProtocol(protocol) {
+    if (!protocol) {
+      return '/tokens/unknown-logo.png'
+    }
+    return `/cover/${protocol.toLowerCase()}_icon.png`
+  }
+
+  return (
+    <Layout changeTheme={ props.changeTheme } backClicked={ backClicked }>
+      <Head>
+        <title>Cover</title>
+      </Head>
+      <div className={ classes.coverContainer }>
+        <div className={ classes.coverStatsContainer }>
+          <div className={ classes.coverBalanceContainer }>
+            <div className={ classes.coverOutline } >
+              <div className={ classes.coverLogo }>
+                { !coverProtocol ? <Skeleton /> : <img src={ getLogoForProtocol(coverProtocol.name) } onError={(e)=>{e.target.onerror = null; e.target.src="/tokens/unknown-logo.png"}} alt='' width={ 50 } height={ 50 } /> }
+              </div>
+            </div>
+            <div className={ classes.coverTitle }>
+              <Typography variant='h1' className={ classes.coverTitleText}>{ !coverProtocol ? <Skeleton /> : `Buy Cover for ${coverProtocol.protocolDisplayName}` }</Typography>
+            </div>
+          </div>
+        </div>
+        <div className={ classes.coverInfoContainer }>
+          <div className={ classes.coverInfo}>
+            <Typography variant='h2' className={ classes.heading }>What are { coverProtocol.protocolDisplayName } Claim Tokens?</Typography>
+            <Typography  className={ classes.paragraph }>Each { coverProtocol.protocolDisplayName } Claim Token will pay out 1 { coverProtocol.poolData[0].collateralAsset.symbol } in the event that there is a successful attack on the protocol before the expiration date ({ moment(coverProtocol.expires[0]*1000).format('Do MMM YYYY') })</Typography>
+            <Typography variant='h2' className={ classes.heading }>What is covered?</Typography>
+            <Typography className={ classes.paragraph }>During the coverage period (before the expiration date) if { coverProtocol.protocolDisplayName } suffers a hack, bug, exploit or economic manipulation attack, and that there’s a material loss of deposited funds from the { coverProtocol.protocolDisplayName } smart contract, or smart contract system with funds either moved to another address which the original owner(s) do not control, or the funds are made permanently irrecoverable. You will get back 1 { coverProtocol.poolData[0].collateralAsset.symbol } per each { coverProtocol.protocolDisplayName } Claim Token.</Typography>
+
+            <CoverActionCard coverProtocol={ coverProtocol } />
+          </div>
+          <div className={ classes.coverSummaryCard }>
+            <CoverSummaryCard coverProtocol={ coverProtocol } />
+          </div>
+        </div>
+
+      </div>
+    </Layout>
+  )
+}
+
+export default Cover

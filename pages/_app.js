@@ -15,11 +15,13 @@ import {
   CONFIGURE,
   CONFIGURE_RETURNED,
   VAULTS_CONFIGURED,
-  ACCOUNT_CONFIGURED
+  ACCOUNT_CONFIGURED,
+  COVER_CONFIGURED,
 } from '../stores/constants'
 
 export default function MyApp({ Component, pageProps }) {
   const [ themeConfig, setThemeConfig ] = useState(lightTheme);
+  const [ coverConfigured, setCoverConfigured ] = useState(false)
   const [ vaultConfigured, setVaultConfigured ] = useState(false)
   const [ accountConfigure, setAccountConfigured ] = useState(false)
 
@@ -44,6 +46,10 @@ export default function MyApp({ Component, pageProps }) {
     setAccountConfigured(true)
   }
 
+  const coverConfigureReturned = () => {
+    setCoverConfigured(true)
+  }
+
   useEffect(function() {
     const localStorageDarkMode = window.localStorage.getItem('yearn.finance-dark-mode')
     changeTheme(localStorageDarkMode ? localStorageDarkMode === 'dark' : false)
@@ -52,6 +58,7 @@ export default function MyApp({ Component, pageProps }) {
   useEffect(function() {
     stores.emitter.on(VAULTS_CONFIGURED, vaultsConfigureReturned)
     stores.emitter.on(ACCOUNT_CONFIGURED, accountConfigureReturned)
+    stores.emitter.on(COVER_CONFIGURED, coverConfigureReturned)
 
     stores.dispatcher.dispatch({ type: CONFIGURE })
   },[]);
@@ -66,10 +73,10 @@ export default function MyApp({ Component, pageProps }) {
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
         {
-          vaultConfigured && accountConfigure && <Component {...pageProps} changeTheme={ changeTheme } />
+          vaultConfigured && accountConfigure && coverConfigured && <Component {...pageProps} changeTheme={ changeTheme } />
         }
         {
-          !(vaultConfigured && accountConfigure) && <Configure />
+          !(vaultConfigured && accountConfigure && coverConfigured) && <Configure />
         }
       </ThemeProvider>
     </React.Fragment>

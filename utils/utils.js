@@ -21,9 +21,12 @@ export function formatCurrency(amount, decimals=2) {
   }
 }
 
-export function formatAddress(address) {
-  if (address) {
+export function formatAddress(address, length='short') {
+  if (address && length==='short') {
     address = address.substring(0,6)+'...'+address.substring(address.length-4,address.length)
+    return address
+  } else if (address && length==='long') {
+    address = address.substring(0,12)+'...'+address.substring(address.length-8,address.length)
     return address
   } else {
     return null

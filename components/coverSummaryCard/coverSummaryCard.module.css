@@ -1,0 +1,34 @@
+.coverSummaryContainer {
+  width: 420px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  padding: 48px;
+}
+
+.coverTitleContainer {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.coverOutline {
+  margin-right: 12px;
+}
+
+.coverDetailGroup {
+  margin-top: 48px;
+}
+
+.coverDetailValue {
+  font-weight: bold !important;
+  font-size: 1.2rem !important;
+  margin-top: 6px !important;
+}
+
+@media screen and (max-width: 576px) {
+  .coverSummaryContainer {
+    width: calc(100vw - 24px);
+  }
+}

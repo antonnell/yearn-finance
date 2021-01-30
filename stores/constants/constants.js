@@ -5,6 +5,7 @@ import BigNumber from 'bignumber.js'
 export const YEARN_API = 'https://api.yearn.tools/'
 export const GAS_PRICE_API = 'https://gasprice.poa.network/'
 export const ETHERSCAN_URL = 'https://etherscan.io/'
+export const COVER_API = 'https://api.coverprotocol.com/protocol_data/production'
 
 
 // GENERAL
@@ -63,7 +64,20 @@ export const ACCOUNT_BALANCES_RETURNED = 'ACCOUNT_BALANCES_RETURNED'
 
 
 
+//COVER
+export const COVER_UPDATED = 'COVER_UPDATED'
 
+export const GET_COVER_BALANCES = 'GET_COVER_BALANCES'
+export const COVER_BALANCES_RETURNED = 'COVER_BALANCES_RETURNED'
+
+export const APPROVE_COVER = 'APPROVE_COVER'
+export const APPROVE_COVER_RETURNED = 'APPROVE_COVER_RETURNED'
+
+export const BUY_COVER = 'BUY_COVER'
+export const BUY_COVER_RETURNED = 'BUY_COVER_RETURNED'
+
+export const SELL_COVER = 'SELL_COVER'
+export const SELL_COVER_RETURNED = 'SELL_COVER_RETURNED'
 
 export const MAX_UINT256 = new BigNumber(2)
   .pow(256)

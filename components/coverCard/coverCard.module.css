@@ -1,0 +1,106 @@
+.coverContainer {
+  width: 360px;
+  border-radius: 10px;
+  margin: 24px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+}
+
+.coverContainerActive {
+  width: 360px;
+  border-radius: 10px;
+  margin: 24px;
+  cursor: pointer;
+  background: rgb(63,94,251);
+  background: radial-gradient(circle, rgba(63,94,251,0.7) 0%, rgba(47,128,237,0.7) 48%) rgba(63,94,251,0.7) 100%;
+}
+
+.coverTitle {
+  display: flex;
+  align-items: center;
+  padding: 24px;
+}
+
+.coverLogo {
+  width: 50;
+  height: 50;
+  border-radius: 25px;
+  margin-right: 12px;
+}
+
+.coverName {
+  flex: 1;
+}
+
+.coveredInfo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  padding: 12px;
+  margin-top: 24px;
+}
+
+.notCoveredInfo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  background: rgba(25, 101, 233, 0.7);
+  padding: 12px;
+  margin-top: 24px;
+}
+
+.coverInfoField {
+}
+
+.coverVersionContainer {
+  border-radius: 12px;
+  padding: 5px 16px;
+  background: rgba(25, 101, 233, 0.7);
+}
+
+.coverVersionText {
+  font-size: 0.5rem;
+  color: #fff;
+}
+
+.fontWeightBold {
+  font-weight: bold !important;
+}
+
+.coverProtocols {
+  padding: 24px;
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.liquidityInfo {
+
+}
+
+@media screen and (max-width: 576px) {
+  .coverContainer {
+    margin: 12px;
+  }
+  .coverContainerActive {
+    margin: 12px;
+  }
+  .coverTitle {
+    padding: 12px;
+  }
+  .coverProtocols {
+    padding: 12px;
+  }
+  .coveredInfo {
+    margin-top: 12px;
+  }
+  .notCoveredInfo {
+    margin-top: 12px;
+  }
+}

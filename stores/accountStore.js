@@ -241,8 +241,12 @@ class Store {
     }
   }
 
-  getGasPrice = async () => {
-    const gasSpeed = this.getStore('gasSpeed')
+  getGasPrice = async (speed) => {
+
+    let gasSpeed = speed
+    if(!speed) {
+      gasSpeed = this.getStore('gasSpeed')
+    }
 
     try {
       const url = GAS_PRICE_API

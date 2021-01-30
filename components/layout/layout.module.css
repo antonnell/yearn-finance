@@ -10,7 +10,7 @@
   flex: 1;
   min-height: 100vh;
   height: 100%;
-  margin-left: 200px;
+  margin-left: 240px;
 }
 
 @media screen and (max-width: 576px) {

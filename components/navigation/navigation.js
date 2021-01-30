@@ -117,9 +117,9 @@ function Navigation(props) {
         <div className={ classes.navigationOptionIcon_invest } ></div>
         <Typography variant='h2'>Invest</Typography>
       </div>
-      <div className={ activePath.includes('/insure') ? classes.navigationOptionActive : classes.navigationOption } onClick={ () => { handleNavigate('/insure') }}>
+      <div className={ activePath.includes('/cover') ? classes.navigationOptionActive : classes.navigationOption } onClick={ () => { handleNavigate('/cover') }}>
         <div className={ classes.navigationOptionIcon_insure } ></div>
-        <Typography variant='h2'>Insure</Typography>
+        <Typography variant='h2'>Cover</Typography>
       </div>
       <div className={ activePath.includes('/lend') ? classes.navigationOptionActive : classes.navigationOption } onClick={ () => { handleNavigate('/lend') }}>
         <div className={ classes.navigationOptionIcon_lending } ></div>

@@ -59,7 +59,7 @@ function StatsData({ vault }) {
           </div>
           <div>
             <Typography variant='h5'>{ vault.displayName }</Typography>
-            <Typography variant='subtitle1' className={ classes.subTitle }>{ vault.name}</Typography>
+            <Typography variant='subtitle1' className={ classes.subTitle } color='textSecondary'>{ vault.name}</Typography>
           </div>
         </div>
       </div>
@@ -108,15 +108,15 @@ function Stats({ changeTheme }) {
       </Head>
       <div className={ classes.statsTVLContainer }>
         <Paper elevation={0} className={ classes.tvlCardContainer }>
-          <Typography variant='h2'>Total Value Locked</Typography>
+          <Typography variant='h2'  color='textSecondary'>Total Value Locked</Typography>
           <Typography variant='h1'>{ !tvl ? <Skeleton /> : `$ ${formatCurrency(tvl.TvlUSD)}` }</Typography>
         </Paper>
         <Paper elevation={0} className={ classes.tvlCardContainer }>
-          <Typography variant='h2'>Total Vault Holdings</Typography>
+          <Typography variant='h2'  color='textSecondary'>Total Vault Holdings</Typography>
           <Typography variant='h1'>{ !tvl ? <Skeleton /> : `$ ${formatCurrency(tvl.totalVaultHoldingsUSD)}` }</Typography>
         </Paper>
         <Paper elevation={0} className={ classes.tvlCardContainer }>
-          <Typography variant='h2'>Total Earn Holdings</Typography>
+          <Typography variant='h2'  color='textSecondary'>Total Earn Holdings</Typography>
           <Typography variant='h1'>{ !tvl ? <Skeleton /> : `$ ${formatCurrency(tvl.totalEarnHoldingsUSD)}` }</Typography>
         </Paper>
       </div>

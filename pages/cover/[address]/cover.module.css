@@ -1,0 +1,73 @@
+.coverContainer {
+  height: 100%;
+  padding: 48px;
+  display: flex;
+  flex-direction: column;
+}
+
+.coverStatsContainer {
+  display: flex;
+  align-items: center;
+  margin-bottom: 48px;
+}
+
+.coverBalanceContainer {
+  display: flex;
+  align-items: center;
+  margin-right: 48px;
+}
+
+.coverOutline {
+  border-radius: 30px;
+  height: 60px;
+  width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 24px;
+}
+
+.coverLogo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.coverTitle {
+  min-width: 100px;
+}
+
+.heading {
+  padding-bottom: 12px !important;
+  font-weight: bold !important;
+}
+
+.paragraph {
+  padding-bottom: 12px;
+}
+
+.coverInfoContainer {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.coverSummaryCard {
+}
+
+.coverInfo {
+  flex: 1;
+  max-width: 900px;
+  margin-right: 48px;
+}
+
+@media screen and (max-width: 576px) {
+  .coverContainer {
+    padding: 12px;
+  }
+  .coverInfo {
+    width: 100%;
+    margin-right: 0px;
+  }
+}
