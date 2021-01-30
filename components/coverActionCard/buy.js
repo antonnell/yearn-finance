@@ -25,10 +25,13 @@ export default function Buy({ coverProtocol }) {
   const [ account, setAccount ] = useState(storeAccount)
   const [ loading, setLoading ] = useState(false)
   const [ amount, setAmount ] = useState('')
+  const [ amountError, setAmountError ] = useState(false)
   const [ receiveAmount, setReceiveAmount ] = useState('')
   const [ gasSpeed, setGasSpeed ] = useState('fast')
 
   const setAmountPercent = (percent) => {
+    setAmountError(false)
+
     const value = BigNumber(coverProtocol.poolData[0].collateralAsset.balance).times(percent).div(100).toFixed(coverProtocol.poolData[0].collateralAsset.decimals, BigNumber.ROUND_DOWN)
     setAmount(value)
 
@@ -38,6 +41,8 @@ export default function Buy({ coverProtocol }) {
   }
 3
   const onAmountChanged = (event) => {
+    setAmountError(false)
+
     setAmount(event.target.value)
 
     const claimPoolData = coverProtocol.poolData[0].claimPoolData
@@ -54,16 +59,31 @@ export default function Buy({ coverProtocol }) {
   }
 
   const onBuy = () => {
+    if(!amount || isNaN(amount) || amount <= 0 || BigNumber(amount).gt(coverProtocol.poolData[0].collateralAsset.balance)) {
+      setAmountError(true)
+      return false
+    }
+
     setLoading(true)
     stores.dispatcher.dispatch({ type: BUY_COVER, content: { asset: coverProtocol.poolData[0].claimAsset, collateral: coverProtocol.poolData[0].collateralAsset, amount: amount, amountOut: receiveAmount, pool: coverProtocol.poolData[0], gasSpeed: gasSpeed } })
   }
 
   const onApprove = () => {
+    if(!amount || isNaN(amount) || amount <= 0 || BigNumber(amount).gt(coverProtocol.poolData[0].collateralAsset.balance)) {
+      setAmountError(true)
+      return false
+    }
+
     setLoading(true)
     stores.dispatcher.dispatch({ type: APPROVE_COVER, content: { poolAddress: coverProtocol.poolData[0].claimPoolData.address, asset: coverProtocol.poolData[0].collateralAsset, amount: amount, gasSpeed: gasSpeed } })
   }
 
   const onApproveMax = () => {
+    if(!amount || isNaN(amount) || amount <= 0 || BigNumber(amount).gt(coverProtocol.poolData[0].collateralAsset.balance)) {
+      setAmountError(true)
+      return false
+    }
+
     setLoading(true)
     stores.dispatcher.dispatch({ type: APPROVE_COVER, content: { poolAddress: coverProtocol.poolData[0].claimPoolData.address, asset: coverProtocol.poolData[0].collateralAsset, amount: 'max', gasSpeed: gasSpeed } })
   }
@@ -112,6 +132,7 @@ export default function Buy({ coverProtocol }) {
           fullWidth
           placeholder=""
           value={ amount }
+          error={ amountError }
           onChange={ onAmountChanged }
           InputProps={{
             endAdornment: <InputAdornment position="end">

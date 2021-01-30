@@ -408,9 +408,9 @@ class Store {
       //maybe throw an error
     }
 
-    const { vault, amount } = payload.content
+    const { vault, amount, gasSpeed } = payload.content
 
-    this._callDepositVault(web3, vault, account, amount, (err, depositResult) => {
+    this._callDepositVault(web3, vault, account, amount, gasSpeed, (err, depositResult) => {
       if(err) {
         return this.emitter.emit(ERROR, err);
       }
@@ -419,7 +419,7 @@ class Store {
     })
   }
 
-  _callDepositVault = async (web3, vault, account, amount, callback) => {
+  _callDepositVault = async (web3, vault, account, amount, gasSpeed, callback) => {
     let abi = null
 
     switch (vault.type) {
@@ -437,7 +437,7 @@ class Store {
 
     const amountToSend = BigNumber(amount).times(10**vault.decimals).toFixed(0)
 
-    const gasPrice = await stores.accountStore.getGasPrice()
+    const gasPrice = await stores.accountStore.getGasPrice(gasSpeed)
 
     this._callContract(web3, vaultContract, 'deposit', [amountToSend], account, gasPrice, GET_VAULT_BALANCES, callback)
   }
@@ -456,9 +456,9 @@ class Store {
       //maybe throw an error
     }
 
-    const { vault, amount } = payload.content
+    const { vault, amount, gasSpeed } = payload.content
 
-    this._callWithdrawVault(web3, vault, account, amount, (err, withdrawResult) => {
+    this._callWithdrawVault(web3, vault, account, amount, gasSpeed, (err, withdrawResult) => {
       if(err) {
         return this.emitter.emit(ERROR, err);
       }
@@ -467,7 +467,7 @@ class Store {
     })
   }
 
-  _callWithdrawVault = async (web3, vault, account, amount, callback) => {
+  _callWithdrawVault = async (web3, vault, account, amount, gasSpeed, callback) => {
     let abi = null
 
     switch (vault.type) {
@@ -485,7 +485,7 @@ class Store {
 
     const amountToSend = BigNumber(amount).times(10**vault.decimals).toFixed(0)
 
-    const gasPrice = await stores.accountStore.getGasPrice()
+    const gasPrice = await stores.accountStore.getGasPrice(gasSpeed)
 
     this._callContract(web3, vaultContract, 'withdraw', [amountToSend], account, gasPrice, GET_VAULT_BALANCES, callback)
   }
@@ -535,9 +535,9 @@ class Store {
       //maybe throw an error
     }
 
-    const { vault, amount } = payload.content
+    const { vault, amount, gasSpeed } = payload.content
 
-    this._callApproveVault(web3, vault, account, amount, (err, approveResult) => {
+    this._callApproveVault(web3, vault, account, amount, gasSpeed, (err, approveResult) => {
       if(err) {
         return this.emitter.emit(ERROR, err);
       }
@@ -546,7 +546,7 @@ class Store {
     })
   }
 
-  _callApproveVault = async (web3, vault, account, amount, callback) => {
+  _callApproveVault = async (web3, vault, account, amount, gasSpeed, callback) => {
     const tokenContract = new web3.eth.Contract(ERC20ABI, vault.tokenMetadata.address)
 
     let amountToSend = '0'
@@ -556,7 +556,7 @@ class Store {
       amountToSend = BigNumber(amount).times(10**vault.decimals).toFixed(0)
     }
 
-    const gasPrice = await stores.accountStore.getGasPrice()
+    const gasPrice = await stores.accountStore.getGasPrice(gasSpeed)
 
     this._callContract(web3, tokenContract, 'approve', [vault.address, amountToSend], account, gasPrice, GET_VAULT_BALANCES, callback)
   }

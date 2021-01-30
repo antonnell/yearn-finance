@@ -25,10 +25,13 @@ export default function Sell({ coverProtocol }) {
   const [ account, setAccount ] = useState(storeAccount)
   const [ loading, setLoading ] = useState(false)
   const [ amount, setAmount ] = useState('')
+  const [ amountError, setAmountError ] = useState(false)
   const [ receiveAmount, setReceiveAmount ] = useState('')
   const [ gasSpeed, setGasSpeed ] = useState('fast')
 
   const setAmountPercent = (percent) => {
+    setAmountError(false)
+
     const value = BigNumber(coverProtocol.poolData[0].claimAsset.balance).times(percent).div(100).toFixed(coverProtocol.poolData[0].claimAsset.decimals, BigNumber.ROUND_DOWN)
     setAmount(value)
 
@@ -38,6 +41,8 @@ export default function Sell({ coverProtocol }) {
   }
 
   const onAmountChanged = (event) => {
+    setAmountError(false)
+
     setAmount(event.target.value)
 
     const claimPoolData = coverProtocol.poolData[0].claimPoolData
@@ -54,16 +59,31 @@ export default function Sell({ coverProtocol }) {
   }
 
   const onSell = () => {
+    if(!amount || isNaN(amount) || amount <= 0 || BigNumber(amount).gt(coverProtocol.poolData[0].claimAsset.balance)) {
+      setAmountError(true)
+      return false
+    }
+
     setLoading(true)
     stores.dispatcher.dispatch({ type: SELL_COVER, content: { asset: coverProtocol.poolData[0].claimAsset, collateral: coverProtocol.poolData[0].collateralAsset, amount: amount, amountOut: receiveAmount, pool: coverProtocol.poolData[0], gasSpeed: gasSpeed } })
   }
 
   const onApprove = () => {
+    if(!amount || isNaN(amount) || amount <= 0 || BigNumber(amount).gt(coverProtocol.poolData[0].claimAsset.balance)) {
+      setAmountError(true)
+      return false
+    }
+
     setLoading(true)
     stores.dispatcher.dispatch({ type: APPROVE_COVER, content: { poolAddress: coverProtocol.poolData[0].claimPoolData.address, asset: coverProtocol.poolData[0].claimAsset, amount: amount, gasSpeed: gasSpeed } })
   }
 
   const onApproveMax = () => {
+    if(!amount || isNaN(amount) || amount <= 0 || BigNumber(amount).gt(coverProtocol.poolData[0].claimAsset.balance)) {
+      setAmountError(true)
+      return false
+    }
+
     setLoading(true)
     stores.dispatcher.dispatch({ type: APPROVE_COVER, content: { poolAddress: coverProtocol.poolData[0].claimPoolData.address, asset: coverProtocol.poolData[0].claimAsset, amount: 'max', gasSpeed: gasSpeed } })
   }
@@ -113,6 +133,7 @@ export default function Sell({ coverProtocol }) {
           placeholder=""
           value={ amount }
           onChange={ onAmountChanged }
+          error={ amountError }
           InputProps={{
             endAdornment: <InputAdornment position="end">
               { coverProtocol.protocolDisplayName } Claim
@@ -189,7 +210,7 @@ export default function Sell({ coverProtocol }) {
         }
       { account && account.address &&
         <div className={ classes.actionButton } >
-          { (amount==='' || BigNumber(coverProtocol.poolData[0].claimAsset.allowance).gte(amount)) && (
+          { (amount === '' || BigNumber(coverProtocol.poolData[0].claimAsset.allowance).gte(amount)) && (
             <Button
               fullWidth
               disableElevation
@@ -202,7 +223,7 @@ export default function Sell({ coverProtocol }) {
               <Typography variant='h5'>{ loading ? <CircularProgress size={25} /> : 'Sell' }</Typography>
             </Button>
           )}
-          { (amount !=='' && (!coverProtocol.poolData[0].claimAsset.allowance || BigNumber(coverProtocol.poolData[0].claimAsset.allowance).eq(0) || BigNumber(coverProtocol.poolData[0].claimAsset.allowance).lt(amount))) && (
+          { (amount !=='' && BigNumber(amount).gt(0) && (!coverProtocol.poolData[0].claimAsset.allowance || BigNumber(coverProtocol.poolData[0].claimAsset.allowance).eq(0) || BigNumber(coverProtocol.poolData[0].claimAsset.allowance).lt(amount))) && (
             <React.Fragment>
               <Button
                 fullWidth

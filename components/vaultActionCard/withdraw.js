@@ -22,17 +22,27 @@ export default function Withdraw({ vault }) {
   const [ account, setAccount ] = useState(storeAccount)
   const [ loading, setLoading ] = useState(false)
   const [ amount, setAmount ] = useState('')
+  const [ amountError, setAmountError ] = useState(false)
   const [ gasSpeed, setGasSpeed ] = useState('')
 
   const setAmountPercent = (percent) => {
+    setAmountError(false)
+    
     setAmount(BigNumber(vault.balanceInToken).times(percent).div(100).toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN))
   }
 
   const onAmountChanged = (event) => {
+    setAmountError(false)
+
     setAmount(event.target.value)
   }
 
   const onWithdraw = () => {
+    if(!amount || isNaN(amount) || amount <= 0 || BigNumber(amount).gt(vault.balanceInToken)) {
+      setAmountError(true)
+      return false
+    }
+
     setLoading(true)
     stores.dispatcher.dispatch({ type: WITHDRAW_VAULT, content: { vault: vault, amount: BigNumber(amount).div(vault.pricePerFullShare).toFixed(vault.decimals, BigNumber.ROUND_DOWN), gasSpeed: gasSpeed } })
   }
@@ -75,6 +85,7 @@ export default function Withdraw({ vault }) {
           fullWidth
           placeholder=""
           value={ amount }
+          error={ amountError }
           onChange={ onAmountChanged }
           InputProps={{
             endAdornment: <InputAdornment position="end">

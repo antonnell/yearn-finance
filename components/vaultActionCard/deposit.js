@@ -24,27 +24,48 @@ export default function Deposit({ vault }) {
   const [ account, setAccount ] = useState(storeAccount)
   const [ loading, setLoading ] = useState(false)
   const [ amount, setAmount ] = useState('')
+  const [ amountError, setAmountError ] = useState(false)
   const [ gasSpeed, setGasSpeed ] = useState('')
 
   const setAmountPercent = (percent) => {
+    setAmountError(false)
+    
     setAmount(BigNumber(vault.tokenMetadata.balance).times(percent).div(100).toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN))
   }
 
   const onAmountChanged = (event) => {
+    setAmountError(false)
+
     setAmount(event.target.value)
   }
 
   const onDeposit = () => {
+    setAmountError(false)
+    if(!amount || isNaN(amount) || amount <= 0 || BigNumber(amount).gt(vault.tokenMetadata.balance)) {
+      setAmountError(true)
+      return false
+    }
+
     setLoading(true)
     stores.dispatcher.dispatch({ type: DEPOSIT_VAULT, content: { vault: vault, amount: amount, gasSpeed: gasSpeed } })
   }
 
   const onApprove = () => {
+    if(!amount || isNaN(amount) || amount <= 0 || BigNumber(amount).gt(vault.tokenMetadata.balance)) {
+      setAmountError(true)
+      return false
+    }
+
     setLoading(true)
     stores.dispatcher.dispatch({ type: APPROVE_VAULT, content: { vault: vault, amount: amount, gasSpeed: gasSpeed } })
   }
 
   const onApproveMax = () => {
+    if(!amount || isNaN(amount) || amount <= 0 || BigNumber(amount).gt(vault.tokenMetadata.balance)) {
+      setAmountError(true)
+      return false
+    }
+
     setLoading(true)
     stores.dispatcher.dispatch({ type: APPROVE_VAULT, content: { vault: vault, amount: 'max', gasSpeed: gasSpeed } })
   }
@@ -93,6 +114,7 @@ export default function Deposit({ vault }) {
           fullWidth
           placeholder=""
           value={ amount }
+          error={ amountError }
           onChange={ onAmountChanged }
           InputProps={{
             endAdornment: <InputAdornment position="end">

@@ -1,12 +1,12 @@
 .vaultContainer {
-  width: 360px;
+  width: 350px;
   border-radius: 10px;
   margin: 24px;
   cursor: pointer;
 }
 
 .vaultContainerActive {
-  width: 360px;
+  width: 350px;
   border-radius: 10px;
   margin: 24px;
   cursor: pointer;
