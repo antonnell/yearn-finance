@@ -192,14 +192,18 @@ class Store {
         const balanceOf = await vaultContract.methods.balanceOf(account.address).call()
         vault.balance = BigNumber(balanceOf).div(bnDec(vault.decimals)).toFixed(vault.decimals, BigNumber.ROUND_DOWN)
 
-        let pricePerFullShare = 1
-        if(vault.type === 'v1') {
-          pricePerFullShare = await vaultContract.methods.getPricePerFullShare().call()
-        } else {
-          pricePerFullShare = await vaultContract.methods.pricePerShare().call()
-        }
+        try { // this throws execution reverted: SafeMath: division by zero for not properly finalised vaults
+          let pricePerFullShare = 1
+          if(vault.type === 'v1') {
+            pricePerFullShare = await vaultContract.methods.getPricePerFullShare().call()
+          } else {
+            pricePerFullShare = await vaultContract.methods.pricePerShare().call()
+          }
 
-        vault.pricePerFullShare = BigNumber(pricePerFullShare).div(bnDec(18)).toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN)
+          vault.pricePerFullShare = BigNumber(pricePerFullShare).div(bnDec(18)).toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN)  // TODO: changed 18 decimals to vault decimals for v2
+        } catch(ex) {
+          vault.pricePerFullShare = 0
+        }
 
         vault.balanceInToken = BigNumber(vault.balance).times(vault.pricePerFullShare).toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN)
 
@@ -228,7 +232,6 @@ class Store {
         vault.tokenMetadata.priceUSD = price
         vault.balanceUSD = BigNumber(vault.balance).times(vault.pricePerFullShare).times(price)
 
-
         if(!vault.strategies || vault.strategies.length === 0) {
           const theVaultInfo = vaultInfo.filter((v) => {
             return v.address === vault.address
@@ -249,7 +252,17 @@ class Store {
           return vault
         }
       } catch(ex) {
+        console.log(vault)
         console.log(ex)
+
+
+        if(callback) {
+          callback(null, vault)
+        } else {
+          return vault
+        }
+
+        return vault
       }
     }, (err, vaultsBalanced) => {
       if(err) {
