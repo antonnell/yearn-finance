@@ -92,7 +92,7 @@ function Vault(props) {
           <div className={ classes.vaultBalanceContainer }>
             <div className={ classes.vaultOutline } >
               <div className={ classes.vaultLogo }>
-                { !vault ? <Skeleton /> : <img src={ vault.tokenMetadata.icon ? vault.tokenMetadata.icon : '/tokens/unknown-logo.png' } className={ classes.vaultIcon } alt='' width={ 50 } height={ 50 } /> }
+                { !vault ? <Skeleton /> : <img src={ vault.icon ? vault.icon : '/tokens/unknown-logo.png' } className={ classes.vaultIcon } alt='' width={ 50 } height={ 50 } /> }
               </div>
             </div>
             <div className={ classes.vaultTitle }>

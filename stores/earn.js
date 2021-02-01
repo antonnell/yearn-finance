@@ -29,6 +29,7 @@ export default [
       symbol: "DAI"
     },
     type: "Earn",
+    created: 9551248,
   },
   {
     address: "0x26EA744E5B887E5205727f55dFBE8685e3b21951",
@@ -59,6 +60,7 @@ export default [
       symbol: "USDC"
     },
     type: "Earn",
+    created: 9567169,
   },
   {
     address: "0xE6354ed5bC4b393a5Aad09f21c46E101e692d447",
@@ -89,6 +91,7 @@ export default [
       symbol: "USDT"
     },
     type: "Earn",
+    created: 9563847,
   },
   {
     address: "0x04bC0Ab673d88aE9dbC9DA2380cB6B79C4BCa9aE",
@@ -119,6 +122,7 @@ export default [
       symbol: "BUSD"
     },
     type: "Earn",
+    created: 9564411,
   },
   {
     address: "0x16de59092dAE5CcF4A1E6439D611fd0653f0Bd01",
@@ -149,6 +153,7 @@ export default [
       symbol: "DAI"
     },
     type: "Earn",
+    created: 9464936,
   },
   {
     address: "0xd6aD7a6750A7593E092a9B218d66C0A814a3436e",
@@ -179,6 +184,7 @@ export default [
       symbol: "USDC"
     },
     type: "Earn",
+    created: 9465014,
   },
   {
     address: "0x83f798e925BcD4017Eb265844FDDAbb448f1707D",
@@ -209,6 +215,7 @@ export default [
       symbol: "USDT"
     },
     type: "Earn",
+    created: 9465216,
   },
   {
     address: "0x73a052500105205d34daf004eab301916da8190f",
@@ -239,6 +246,7 @@ export default [
       symbol: "TUSD"
     },
     type: "Earn",
+    created: 9465571,
   },
   {
     address: "0xF61718057901F84C4eEC4339EF8f0D86D2B45600",
@@ -269,9 +277,10 @@ export default [
       symbol: "SUSD"
     },
     type: "Earn",
+    created: 9465292,
   },
   {
-    address: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+    address: "0x04Aa51bbcB46541455cCF1B8bef2ebc5d3787EC9",
     apy: {
       oneMonthSample: 0,
       inceptionSample: 0,
@@ -281,23 +290,24 @@ export default [
     balanceUSD: 0,
     decimals: 8,
     displayName: "yWBTC",
-    icon: "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo-128.png",
+    icon: "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0x04Aa51bbcB46541455cCF1B8bef2ebc5d3787EC9/logo-128.png",
     name: "iearn WBTC",
     pricePerFullShare: 1,
     strategies: [],
     symbol: "yWBTC",
-    tokenAddress: "0x04Aa51bbcB46541455cCF1B8bef2ebc5d3787EC9",
+    tokenAddress: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
     tokenMetadata: {
-      address: "0x04Aa51bbcB46541455cCF1B8bef2ebc5d3787EC9",
+      address: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
       allowance: 0,
       balance: 0,
       decimals: 8,
       displayName: "WBTC",
-      icon: "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0x04Aa51bbcB46541455cCF1B8bef2ebc5d3787EC9/logo-128.png",
+      icon: "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo-128.png",
       name: "Wrapped BTC",
       priceUSD: 1,
       symbol: "WBTC"
     },
     type: "Earn",
+    created: 9465729,
   },
 ]

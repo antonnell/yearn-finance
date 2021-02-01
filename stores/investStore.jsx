@@ -113,7 +113,7 @@ class Store {
     })
   };
 
-  configure = async(payload) => {
+  configure = async (payload) => {
     try {
       const url = `${YEARN_API}vaults/all`
 
@@ -123,11 +123,10 @@ class Store {
 
       //hack
       const earn = this.getStore('earn')
+      // for earn vaults, we need to calcualte the APY manually
+      const earnWithAPY = await this.getEarnAPYs(earn)
 
-      this.setStore({ vaults: [ ...vaults, ...earn ] })
-
-      // also get APY values
-      // store APY values
+      this.setStore({ vaults: [ ...vaults, ...earnWithAPY ] })
 
       this.emitter.emit(VAULTS_UPDATED)
 
@@ -140,6 +139,94 @@ class Store {
       console.log(ex)
     }
   };
+
+  getEarnAPYs = async (earn) => {
+    try {
+      const provider = "https://eth-mainnet.alchemyapi.io/v2/XLj2FWLNMB4oOfFjbnrkuOCcaBIhipOJ";
+      const etherscanApiKey = "GEQXZDY67RZ4QHNU1A57QVPNDV3RP1RYH4"
+
+      const options = {
+        provider,
+        etherscan: {
+          apiKey: etherscanApiKey, // Only required if not providing abi in contract request configuration
+          delayTime: 300,          // delay time between etherscan ABI reqests. default is 300 ms
+        },
+      }
+
+      let callOptions = {
+        blockHeight: (272 * 24 * 30)+1,
+        blockResolution: 272 * 24 * 30,
+      };
+
+      const contracts = [
+        {
+          namespace: "earn",
+          abi: EARNABI,
+          addresses: earn.map((e) => {
+            return e.address
+          }),
+          allReadMethods: false,
+          groupByNamespace: false,
+          logging: false,
+          readMethods: [
+            {
+              name: "getPricePerFullShare",
+              args: [],
+            },
+          ],
+        }
+      ];
+
+      const batchCall = new BatchCall(options);
+      const result = await batchCall.execute(contracts, callOptions);
+
+      const priceHistoric = result.map((res) => {
+        return {
+          address: res.address,
+          priceLastMonth: res.getPricePerFullShare[0].values[0].value,
+          priceNow: res.getPricePerFullShare[0].values[1].value,
+          blockLastMonth: res.getPricePerFullShare[0].values[0].blockNumber,
+          blockNow: res.getPricePerFullShare[0].values[1].blockNumber,
+        }
+      })
+
+      for(let i = 0; i < earn.length; i++) {
+        let apyObj = null
+
+        const historicPrice = priceHistoric.filter((pr) => {
+          return pr.address === earn[i].address
+        })
+
+        if(!historicPrice || historicPrice.length === 0) {
+          apyObj = {
+            oneMonthSample: 0,
+            inceptionSample: 0
+          }
+        } else {
+
+          const priceSinceLastMonth = historicPrice[0].priceNow - historicPrice[0].priceLastMonth
+          const priceSinceInception = historicPrice[0].priceNow - 1e18
+
+          const blocksSinceLastMonth = historicPrice[0].blockNow - historicPrice[0].blockLastMonth
+          const blocksSinceInception = historicPrice[0].blockNow - earn[i].created
+
+          const oneMonthAPY = (priceSinceLastMonth  * 242584600 / 1e20) / blocksSinceLastMonth
+          const inceptionAPY = (priceSinceInception  * 242584600 / 1e20) / blocksSinceInception
+
+          apyObj = {
+            oneMonthSample: oneMonthAPY,
+            inceptionSample: inceptionAPY,
+          }
+        }
+
+        earn[i].apy = apyObj
+      }
+
+      return earn
+    } catch(ex) {
+      console.log(ex)
+    }
+  }
 
   getVaultBalances = async () => {
     const account = stores.accountStore.getStore('account')
@@ -196,7 +283,7 @@ class Store {
             abi = EARNABI
             break;
           default:
-            abi = 'UNKNOWN'
+            abi = VAULTV2ABI
         }
 
         const vaultContract = new web3.eth.Contract(abi, vault.address)
@@ -205,13 +292,13 @@ class Store {
 
         try { // this throws execution reverted: SafeMath: division by zero for not properly finalised vaults
           let pricePerFullShare = 1
-          if(vault.type === 'v1') {
+          if(vault.type === 'v1' || vault.type === 'Earn') {
             pricePerFullShare = await vaultContract.methods.getPricePerFullShare().call()
+            vault.pricePerFullShare = BigNumber(pricePerFullShare).div(bnDec(18)).toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN)  // TODO: changed 18 decimals to vault decimals for v2
           } else {
             pricePerFullShare = await vaultContract.methods.pricePerShare().call()
+            vault.pricePerFullShare = BigNumber(pricePerFullShare).div(bnDec(vault.decimals)).toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN)  // TODO: changed 18 decimals to vault decimals for v2
           }
-
-          vault.pricePerFullShare = BigNumber(pricePerFullShare).div(bnDec(18)).toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN)  // TODO: changed 18 decimals to vault decimals for v2
         } catch(ex) {
           vault.pricePerFullShare = 0
         }
@@ -254,7 +341,6 @@ class Store {
               address: theVaultInfo[0].strategyAddress
             }]
           }
-
         }
 
         if(callback) {
