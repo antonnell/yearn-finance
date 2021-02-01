@@ -54,12 +54,15 @@
 }
 
 .coverSummaryCard {
+  display: flex;
+  flex-direction: row-reverse;
 }
 
 .coverInfo {
   flex: 1;
   max-width: 900px;
-  margin-right: 48px;
+  min-width: 400px;
+  margin-left: 48px;
 }
 
 @media screen and (max-width: 576px) {
@@ -69,5 +72,16 @@
   .coverInfo {
     width: 100%;
     margin-right: 0px;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .coverSummaryCard {
+    flex-direction: column;
+    margin-bottom: 24px;
+  }
+  .coverInfo {
+    min-width: auto;
+    margin-left: 0px;
   }
 }

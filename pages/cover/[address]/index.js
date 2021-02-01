@@ -79,29 +79,16 @@ function Cover(props) {
         <title>Cover</title>
       </Head>
       <div className={ classes.coverContainer }>
-        <div className={ classes.coverStatsContainer }>
-          <div className={ classes.coverBalanceContainer }>
-            <div className={ classes.coverOutline } >
-              <div className={ classes.coverLogo }>
-                { !coverProtocol ? <Skeleton /> : <img src={ getLogoForProtocol(coverProtocol.name) } onError={(e)=>{e.target.onerror = null; e.target.src="/tokens/unknown-logo.png"}} alt='' width={ 50 } height={ 50 } /> }
-              </div>
-            </div>
-            <div className={ classes.coverTitle }>
-              <Typography variant='h1' className={ classes.coverTitleText}>{ !coverProtocol ? <Skeleton /> : `Buy Cover for ${coverProtocol.protocolDisplayName}` }</Typography>
-            </div>
-          </div>
-        </div>
         <div className={ classes.coverInfoContainer }>
+          <Paper elevation={0} className={ classes.coverSummaryCard }>
+            <CoverActionCard coverProtocol={ coverProtocol } />
+            <CoverSummaryCard coverProtocol={ coverProtocol } />
+          </Paper>
           <div className={ classes.coverInfo}>
             <Typography variant='h2' className={ classes.heading }>What are { coverProtocol.protocolDisplayName } Claim Tokens?</Typography>
             <Typography  className={ classes.paragraph }>Each { coverProtocol.protocolDisplayName } Claim Token will pay out 1 { coverProtocol.poolData[0].collateralAsset.symbol } in the event that there is a successful attack on the protocol before the expiration date ({ moment(coverProtocol.expires[0]*1000).format('Do MMM YYYY') })</Typography>
             <Typography variant='h2' className={ classes.heading }>What is covered?</Typography>
             <Typography className={ classes.paragraph }>During the coverage period (before the expiration date) if { coverProtocol.protocolDisplayName } suffers a hack, bug, exploit or economic manipulation attack, and that there’s a material loss of deposited funds from the { coverProtocol.protocolDisplayName } smart contract, or smart contract system with funds either moved to another address which the original owner(s) do not control, or the funds are made permanently irrecoverable. You will get back 1 { coverProtocol.poolData[0].collateralAsset.symbol } per each { coverProtocol.protocolDisplayName } Claim Token.</Typography>
-
-            <CoverActionCard coverProtocol={ coverProtocol } />
-          </div>
-          <div className={ classes.coverSummaryCard }>
-            <CoverSummaryCard coverProtocol={ coverProtocol } />
           </div>
         </div>
 

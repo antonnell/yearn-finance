@@ -15,17 +15,38 @@ export default function VaultCard({ vault, account }) {
 
   const activeVault = BigNumber(vault.balance).gt(0)
 
+  const vaultType = (vault.type === 'v2' && !vault.endorsed) ? 'Exp' : vault.type
+
+  let vaultTypeClass = null
+  switch (vaultType) {
+    case 'v1':
+      vaultTypeClass = classes.vaultV1VersionContainer
+      break;
+    case 'v2':
+      vaultTypeClass = classes.vaultV2VersionContainer
+      break;
+    case 'Exp':
+      vaultTypeClass = classes.vaultExpVersionContainer
+      break;
+    case 'Earn':
+      vaultTypeClass = classes.vaultEarnVersionContainer
+      break;
+    default:
+      vaultTypeClass = classes.vaultVersionContainer
+      break;
+  }
+
   return (
     <Paper elevation={ 0 } className={ activeVault ? classes.vaultContainerActive : classes.vaultContainer } onClick={ handleNavigate }>
       <div className={ classes.vaultTitle }>
         <div className={ classes.vaultLogo }>
-          <img src={ vault.tokenMetadata.icon ? vault.tokenMetadata.icon : '/tokens/unknown-logo.png' } alt='' width={ 50 } height={ 50 } />
+          <img src={ vault.icon ? vault.icon : '/tokens/unknown-logo.png' } alt='' width={ 50 } height={ 50 } />
         </div>
         <div className={ classes.vaultName}>
           <Typography variant='h2' className={ classes.fontWeightBold }>{ vault.displayName }</Typography>
         </div>
         <div>
-          <div className={ classes.vaultVersionContainer }>
+          <div className={ vaultTypeClass }>
             <Typography  className={ classes.vaultVersionText }>{ (vault.type === 'v2' && !vault.endorsed) ? 'Exp' : vault.type }</Typography>
           </div>
         </div>

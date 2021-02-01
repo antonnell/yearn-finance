@@ -8,6 +8,8 @@ import {
   TextField,
   InputAdornment,
 } from '@material-ui/core'
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import Skeleton from '@material-ui/lab/Skeleton';
 import classes from './invest.module.css'
 import VaultCard from '../../components/vaultCard'
@@ -43,6 +45,7 @@ function Invest({ changeTheme }) {
   const [ portfolioGrowth, setPortfolioGrowth ] = useState(storePortfolioGrowth)
   const [ highestHoldings, setHighestHoldings ] = useState(storeHighestHoldings)
   const [ search, setSearch ] = useState('')
+  const [ versions, setVersions ] = useState([])
 
 
   const vaultsUpdated = () => {
@@ -63,8 +66,16 @@ function Invest({ changeTheme }) {
   },[]);
 
   const filteredVaults = vaults.filter((vault) => {
-    if(search && search !== '') {
-      return vault.displayName.toLowerCase().includes(search.toLowerCase()) ||
+
+    let returnValue = true
+
+    if(versions && versions.length > 0) {
+      const vaultType = (vault.type === 'v2' && !vault.endorsed) ? 'Exp' : vault.type
+      returnValue = versions.includes(vaultType)
+    }
+
+    if(returnValue === true && search && search !== '') {
+      returnValue = vault.displayName.toLowerCase().includes(search.toLowerCase()) ||
             vault.name.toLowerCase().includes(search.toLowerCase()) ||
             vault.symbol.toLowerCase().includes(search.toLowerCase()) ||
             vault.address.toLowerCase().includes(search.toLowerCase()) ||
@@ -72,9 +83,9 @@ function Invest({ changeTheme }) {
             vault.tokenMetadata.name.toLowerCase().includes(search.toLowerCase()) ||
             vault.tokenMetadata.symbol.toLowerCase().includes(search.toLowerCase()) ||
             vault.tokenMetadata.address.toLowerCase().includes(search.toLowerCase())
-    } else {
-      return true
     }
+
+    return returnValue
   }).sort((a, b) => {
     if(BigNumber(a.balance).gt(BigNumber(b.balance))) {
       return -1
@@ -91,6 +102,10 @@ function Invest({ changeTheme }) {
 
   const onSearchChanged = (event) => {
     setSearch(event.target.value)
+  }
+
+  const handleVersionsChanged = (event, newVals) => {
+    setVersions(newVals)
   }
 
   return (
@@ -148,20 +163,27 @@ function Invest({ changeTheme }) {
           </div>
         )}
         <div className={ classes.vaultsContainer }>
-          <Typography variant='h5' className={ classes.vaultSectionTitle }>Find Investment Opportunities</Typography>
-          <TextField
-            className={ classes.searchContainer }
-            variant="outlined"
-            fullWidth
-            placeholder="ETH, CRV, ..."
-            value={ search }
-            onChange={ onSearchChanged }
-            InputProps={{
-              startAdornment: <InputAdornment position="start">
-                <SearchIcon />
-              </InputAdornment>,
-            }}
-          />
+          <div className={ classes.vaultFilters }>
+            <ToggleButtonGroup className={ classes.vaultTypeButtons } value={ versions } onChange={ handleVersionsChanged } >
+              <ToggleButton className={ `${classes.vaultTypeButton} ${ versions.includes('v2') ? classes.v2Selected : classes.v2 }` } value='v2' ><Typography variant='body1'>V2</Typography></ToggleButton>
+              <ToggleButton className={ `${classes.vaultTypeButton} ${ versions.includes('v1') ? classes.v1Selected : classes.v1 }` } value='v1' ><Typography variant='body1'>V1</Typography></ToggleButton>
+              <ToggleButton className={ `${classes.vaultTypeButton} ${ versions.includes('Exp') ? classes.expSelected : classes.exp }` } value='Exp' ><Typography variant='body1'>Exp</Typography></ToggleButton>
+              <ToggleButton className={ `${classes.vaultTypeButton} ${ versions.includes('Earn') ? classes.earnSelected : classes.earn }` } value='Earn' ><Typography variant='body1'>Earn</Typography></ToggleButton>
+            </ToggleButtonGroup>
+            <TextField
+              className={ classes.searchContainer }
+              variant="outlined"
+              fullWidth
+              placeholder="ETH, CRV, ..."
+              value={ search }
+              onChange={ onSearchChanged }
+              InputProps={{
+                startAdornment: <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>,
+              }}
+            />
+          </div>
           {
             filteredVaults && filteredVaults.length > 0 && (
               filteredVaults.map((vault, index) => {

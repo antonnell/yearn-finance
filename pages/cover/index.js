@@ -40,6 +40,10 @@ function Cover({ changeTheme }) {
   },[]);
 
   const filteredCover = coverProtocols.filter((cover) => {
+    if(cover.poolData.length === 0) {
+      return false
+    }
+    
     if(search && search !== '') {
       return vault.name.toLowerCase().includes(search.toLowerCase())
     } else {

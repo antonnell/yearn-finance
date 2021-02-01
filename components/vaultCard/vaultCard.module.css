@@ -44,7 +44,31 @@
 .vaultVersionContainer {
   border-radius: 12px;
   padding: 5px 16px;
-  background: rgba(25, 101, 233, 0.7);
+  background: rgba(25, 101, 233, 1);
+}
+
+.vaultV1VersionContainer {
+  border-radius: 12px;
+  padding: 5px 16px;
+  background: rgba(229, 107, 115, 1);
+}
+
+.vaultV2VersionContainer {
+  border-radius: 12px;
+  padding: 5px 16px;
+  background: rgba(25, 101, 233, 1);
+}
+
+.vaultExpVersionContainer {
+  border-radius: 12px;
+  padding: 5px 16px;
+  background: rgba(255, 179, 71, 1);
+}
+
+.vaultEarnVersionContainer {
+  border-radius: 12px;
+  padding: 5px 16px;
+  background: rgba(220, 107, 229, 1);
 }
 
 .vaultVersionText {

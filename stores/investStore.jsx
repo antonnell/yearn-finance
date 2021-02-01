@@ -23,7 +23,9 @@ import {
 } from './constants';
 
 import stores from './'
-import { ERC20ABI, VAULTV1ABI, VAULTV2ABI } from './abis'
+import earnJSON from './earn.js'
+
+import { ERC20ABI, VAULTV1ABI, VAULTV2ABI, EARNABI } from './abis'
 import { bnDec } from '../utils'
 
 import BatchCall from "web3-batch-call";
@@ -44,7 +46,8 @@ class Store {
       portfolioGrowth: 0,
       highestHoldings: null,
       vaults: [],
-      tvlInfo: null
+      tvlInfo: null,
+      earn: earnJSON //These values don't really ever change anymore, but still, should get them dynamically. For now, this will save on some calls for alchemy. (symbols, decimals, underlying tokens, their symbols and decimals etc)
     }
 
     dispatcher.register(
@@ -116,7 +119,12 @@ class Store {
 
       const vaultsApiResult = await fetch(url);
       const vaults = await vaultsApiResult.json()
-      this.setStore({ vaults: vaults })
+
+
+      //hack
+      const earn = this.getStore('earn')
+
+      this.setStore({ vaults: [ ...vaults, ...earn ] })
 
       // also get APY values
       // store APY values
@@ -183,6 +191,9 @@ class Store {
             break;
           case 'v2':
             abi = VAULTV2ABI
+            break;
+          case 'Earn':
+            abi = EARNABI
             break;
           default:
             abi = 'UNKNOWN'
