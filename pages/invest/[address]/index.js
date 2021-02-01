@@ -82,6 +82,27 @@ function Vault(props) {
     stores.dispatcher.dispatch({ type: GET_VAULT_TRANSACTIONS, content: { address: router.query.address } })
   }, [])
 
+  const vaultType = (vault.type === 'v2' && !vault.endorsed) ? 'Exp' : vault.type
+
+  let vaultTypeClass = null
+  switch (vaultType) {
+    case 'v1':
+      vaultTypeClass = classes.vaultV1VersionContainer
+      break;
+    case 'v2':
+      vaultTypeClass = classes.vaultV2VersionContainer
+      break;
+    case 'Exp':
+      vaultTypeClass = classes.vaultExpVersionContainer
+      break;
+    case 'Earn':
+      vaultTypeClass = classes.vaultEarnVersionContainer
+      break;
+    default:
+      vaultTypeClass = classes.vaultVersionContainer
+      break;
+  }
+
   return (
     <Layout changeTheme={ props.changeTheme } backClicked={ backClicked }>
       <Head>
@@ -96,8 +117,8 @@ function Vault(props) {
               </div>
             </div>
             <div className={ classes.vaultTitle }>
-              <div className={ classes.vaultVersionContainer}>
-                <Typography  className={ classes.vaultVersionText }>{ (vault.type === 'v2' && !vault.endorsed) ? 'Experimental' : vault.type } Vault</Typography>
+              <div className={ vaultTypeClass }>
+                <Typography  className={ classes.vaultVersionText }>{ vaultType } Vault</Typography>
               </div>
               <Typography variant='h1'>
                 { !vault ? <Skeleton /> : vault.displayName }
@@ -120,7 +141,7 @@ function Vault(props) {
           </div>
         </div>
         <div className={ classes.vaultTransactionsContainer }>
-          { account && account.address && <VaultTransactions vault={ vault } /> }
+          { account && account.address && vaultType !== 'Earn' && <VaultTransactions vault={ vault } /> }
         </div>
       </div>
     </Layout>

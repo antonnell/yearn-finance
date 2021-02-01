@@ -204,14 +204,14 @@ class Store {
           }
         } else {
 
-          const priceSinceLastMonth = historicPrice[0].priceNow - historicPrice[0].priceLastMonth
-          const priceSinceInception = historicPrice[0].priceNow - 1e18
+          const priceGrowthSinceLastMonth = historicPrice[0].priceNow - historicPrice[0].priceLastMonth
+          const priceGrowthSinceInception = historicPrice[0].priceNow - 1e18
 
           const blocksSinceLastMonth = historicPrice[0].blockNow - historicPrice[0].blockLastMonth
           const blocksSinceInception = historicPrice[0].blockNow - earn[i].created
 
-          const oneMonthAPY = (priceSinceLastMonth  * 242584600 / 1e20) / blocksSinceLastMonth
-          const inceptionAPY = (priceSinceInception  * 242584600 / 1e20) / blocksSinceInception
+          const oneMonthAPY = (priceGrowthSinceLastMonth * 2389090 / 1e18) / blocksSinceLastMonth // 2389090 = (60/13.2) * 60 * 24 * 365
+          const inceptionAPY = (priceGrowthSinceInception * 2389090 / 1e18) / blocksSinceInception // 2389090 = (60/13.2) * 60 * 24 * 365
 
           apyObj = {
             oneMonthSample: oneMonthAPY,
@@ -538,6 +538,9 @@ class Store {
         break;
       case 'v2':
         abi = VAULTV2ABI
+        break;
+      case 'Earn':
+        abi = EARNABI
         break;
       default:
         abi = 'UNKNOWN'

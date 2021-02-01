@@ -31,7 +31,7 @@ export default function VaultSplitGraph({ vaults }) {
   }).map((vault) => {
     return {
       address: vault.address,
-      icon: vault.tokenMetadata.icon,
+      icon: vault.icon,
       displayName: vault.displayName,
       symbol: vault.symbol,
       value: parseFloat(vault.balanceUSD)
@@ -92,7 +92,7 @@ export default function VaultSplitGraph({ vaults }) {
           {`$ ${formatCurrency(value)}`}
         </text>
         <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} dy={18} textAnchor={textAnchor} fill="#999">
-          {`(Share ${(percent * 100).toFixed(2)}%)`}
+          {`Share ${(percent * 100).toFixed(2)}%`}
         </text>
       </g>
     );

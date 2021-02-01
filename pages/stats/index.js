@@ -30,7 +30,7 @@ function StatsHeader() {
         <Typography variant='h5'>Strategies</Typography>
       </div>
       <div className={ classes.txCell }>
-        <Typography variant='h5' align='right'>APY based on month</Typography>
+        <Typography variant='h5' align='right'>Last 30 days APY</Typography>
       </div>
       <div className={ classes.txCell }>
         <Typography variant='h5' align='right'>APY since Inception</Typography>

@@ -29,7 +29,7 @@ export default function Deposit({ vault }) {
 
   const setAmountPercent = (percent) => {
     setAmountError(false)
-    
+
     setAmount(BigNumber(vault.tokenMetadata.balance).times(percent).div(100).toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN))
   }
 
@@ -174,7 +174,7 @@ export default function Deposit({ vault }) {
         }
       { account && account.address &&
         <div className={ classes.actionButton } >
-          { (amount==='' || BigNumber(vault.tokenMetadata.allowance).gte(amount)) && (
+          { (amount === '' || BigNumber(vault.tokenMetadata.allowance).gte(amount)) && (
             <Button
               fullWidth
               disableElevation
@@ -187,7 +187,7 @@ export default function Deposit({ vault }) {
               <Typography variant='h5'>{ loading ? <CircularProgress size={25} /> : 'Deposit' }</Typography>
             </Button>
           )}
-          { (amount !=='' && (!vault.tokenMetadata.allowance || BigNumber(vault.tokenMetadata.allowance).eq(0) || BigNumber(vault.tokenMetadata.allowance).lt(amount))) && (
+          { (amount !=='' && BigNumber(amount).gt(0) && (!vault.tokenMetadata.allowance || BigNumber(vault.tokenMetadata.allowance).eq(0) || BigNumber(vault.tokenMetadata.allowance).lt(amount))) && (
             <React.Fragment>
               <Button
                 fullWidth
