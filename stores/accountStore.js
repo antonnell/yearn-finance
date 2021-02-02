@@ -26,7 +26,8 @@ import {
   walletconnect,
   walletlink,
   fortmatic,
-  portis
+  portis,
+  network
 } from './connectors';
 
 import BigNumber from 'bignumber.js'
@@ -265,16 +266,16 @@ class Store {
   getWeb3Provider = async () => {
     const web3context = this.getStore('web3context')
     if(!web3context) {
-      return null
-    }
-    const provider = web3context.library.provider
-    if(!provider) {
-      return null
-    }
+      const web3context = await network.activate()
+      console.log(web3context)
 
-    const web3 = new Web3(provider);
-
-    return web3
+    } else {
+      const provider = web3context.library.provider
+      if(!provider) {
+        return null
+      }
+      return new Web3(provider);
+    }
   }
 }
 

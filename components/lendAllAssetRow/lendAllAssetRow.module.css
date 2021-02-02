@@ -1,0 +1,74 @@
+.lendingRow {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.32);
+  flex: 1;
+  padding: 0px 24px;
+}
+
+.lendTitleCell {
+  flex: 2;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 12px 6px;
+}
+
+.lendValueCell {
+  flex: 1;
+  padding: 12px 6px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.lendActionsCell {
+  flex: 2;
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px 6px;
+}
+
+.lendBalanceCell {
+  flex: 1;
+  padding: 12px 6px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.logo {
+  width: 30px;
+  height: 30px;
+  margin-right: 12px;
+}
+
+.fontWeightBold {
+  font-weight: bold !important;
+}
+
+.balance {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media screen and (max-width: 576px) {
+  .lendingRow {
+    padding: 0px 6px;
+  }
+  .lendTitleCell {
+    flex: 1;
+    padding: 12px 0px;
+  }
+  .name {
+    display: none;
+  }
+  .lendBalanceCell {
+    display: none;
+  }
+  .lendValueCell {
+    padding: 12px 0px;
+  }
+  .lendActionsCell {
+    padding: 12px 0px;
+  }
+}

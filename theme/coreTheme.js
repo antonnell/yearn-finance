@@ -114,6 +114,16 @@ const coreTheme = {
   },
   overrides: {
     MuiButton: {
+      root: {
+        minWidth: '50px'
+      },
+      outlinedSizeSmall: {
+        fontSize: '0.7rem',
+        padding: '6px 9px',
+        ['@media (max-width:576px)']: { // eslint-disable-line no-useless-computed-key
+          padding: '3px 0px',
+        }
+      },
       sizeLarge: {
         padding: '19px 24px',
         minWidth: '150px'

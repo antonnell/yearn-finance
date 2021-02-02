@@ -23,7 +23,7 @@ import {
 } from './constants';
 
 import stores from './'
-import earnJSON from './earn.js'
+import earnJSON from './configurations/earn'
 
 import { ERC20ABI, VAULTV1ABI, VAULTV2ABI, EARNABI } from './abis'
 import { bnDec } from '../utils'
@@ -52,7 +52,6 @@ class Store {
 
     dispatcher.register(
       function (payload) {
-        console.log(payload)
         switch (payload.type) {
           case CONFIGURE_VAULTS:
             this.configure(payload)

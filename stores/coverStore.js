@@ -21,6 +21,7 @@ import {
 import * as moment from 'moment';
 
 import stores from './'
+
 import { ERC20ABI, BALANCERPROXYABI } from './abis'
 import { bnDec } from '../utils'
 
@@ -45,7 +46,6 @@ class Store {
 
     dispatcher.register(
       function (payload) {
-        console.log(payload)
         switch (payload.type) {
           case CONFIGURE_COVER:
             this.configure(payload)

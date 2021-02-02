@@ -218,7 +218,7 @@ export default [
     created: 9465216,
   },
   {
-    address: "0x73a052500105205d34daf004eab301916da8190f",
+    address: "0x73a052500105205d34Daf004eAb301916DA8190f",
     apy: {
       oneMonthSample: 0,
       inceptionSample: 0,
@@ -228,7 +228,7 @@ export default [
     balanceUSD: 0,
     decimals: 18,
     displayName: "yTUSD",
-    icon: "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0x73a052500105205d34daf004eab301916da8190f/logo-128.png",
+    icon: "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0x73a052500105205d34Daf004eAb301916DA8190f/logo-128.png",
     name: "iearn TUSD",
     pricePerFullShare: 1,
     strategies: [],
