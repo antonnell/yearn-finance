@@ -21,6 +21,10 @@ import {
   BORROW_LEND_RETURNED,
   REPAY_LEND,
   REPAY_LEND_RETURNED,
+  ENABLE_COLLATERAL_LEND,
+  ENABLE_COLLATERAL_LEND_RETURNED,
+  DISABLE_COLLATERAL_LEND,
+  DISABLE_COLLATERAL_LEND_RETURNED,
 } from './constants';
 
 import * as moment from 'moment';
@@ -55,6 +59,27 @@ class Store {
             break;
           case GET_LENDING_BALANCES:
             this.getLendingBalances(payload)
+            break;
+          case APPROVE_LEND:
+            this.approveLend(payload)
+            break;
+          case DEPOSIT_LEND:
+            this.depositLend(payload)
+            break;
+          case WITHDRAW_LEND:
+            this.withdrawLend(payload)
+            break;
+          case BORROW_LEND:
+            this.borrowLend(payload)
+            break;
+          case REPAY_LEND:
+            this.repayLend(payload)
+            break;
+          case ENABLE_COLLATERAL_LEND:
+            this.enableCollateralLend(payload)
+            break;
+          case DISABLE_COLLATERAL_LEND:
+            this.disableCollateralLend(payload)
             break;
           default: {
           }
@@ -261,6 +286,8 @@ class Store {
           let balance = await erc20Contract.methods.balanceOf(account.address).call()
           balance = new BigNumber(balance).div(bnDec(asset.tokenMetadata.decimals)).toFixed(asset.tokenMetadata.decimals, BigNumber.ROUND_DOWN)
 
+          const allowance = await erc20Contract.methods.allowance(account.address, asset.address).call()
+
           let supplyBalance = await marketContract.methods.balanceOf(account.address).call()
           supplyBalance = new BigNumber(supplyBalance).times(exchangeRateReal).div(bnDec(18)).toFixed(asset.tokenMetadata.decimals, BigNumber.ROUND_DOWN)
 
@@ -270,6 +297,7 @@ class Store {
           const dollarPerAsset = await creamPriceOracleContract.methods.getUnderlyingPrice(asset.address).call()
           const dollarPerAssetReal = dollarPerAsset/(10**(36-asset.tokenMetadata.decimals))
 
+          asset.tokenMetadata.allowance = BigNumber(allowance).div(bnDec(asset.tokenMetadata.decimals)).toFixed(asset.tokenMetadata.decimals, BigNumber.ROUND_DOWN)
           asset.tokenMetadata.balance = balance
           asset.price = dollarPerAssetReal
 
@@ -333,6 +361,273 @@ class Store {
       return this.emitter.emit(LENDING_BALANCES_RETURNED)
     })
 
+  }
+
+  approveLend = async (payload) => {
+    const account = stores.accountStore.getStore('account')
+    if(!account) {
+      return false
+      //maybe throw an error
+    }
+
+    const web3 = await stores.accountStore.getWeb3Provider()
+    if(!web3) {
+      return false
+      //maybe throw an error
+    }
+
+    const { lendingAsset, amount, gasSpeed } = payload.content
+
+    this._callApproveLend(web3, lendingAsset, account, amount, gasSpeed, (err, approveResult) => {
+      if(err) {
+        return this.emitter.emit(ERROR, err);
+      }
+
+      return this.emitter.emit(APPROVE_VAULT_RETURNED, approveResult)
+    })
+  }
+
+  _callApproveLend = async (web3, lendingAsset, account, amount, gasSpeed, callback) => {
+    const tokenContract = new web3.eth.Contract(ERC20ABI, lendingAsset.tokenMetadata.address)
+
+    let amountToSend = '0'
+    if(amount === 'max') {
+      amountToSend = MAX_UINT256
+    } else {
+      amountToSend = BigNumber(amount).times(10**lendingAsset.tokenMetadata.decimals).toFixed(0)
+    }
+
+    const gasPrice = await stores.accountStore.getGasPrice(gasSpeed)
+
+    this._callContract(web3, tokenContract, 'approve', [lendingAsset.address, amountToSend], account, gasPrice, GET_LENDING_BALANCES, callback)
+  }
+
+  depositLend = async (payload) => {
+    const account = stores.accountStore.getStore('account')
+    if(!account) {
+      return false
+      //maybe throw an error
+    }
+
+    const web3 = await stores.accountStore.getWeb3Provider()
+    if(!web3) {
+      return false
+      //maybe throw an error
+    }
+
+    const { lendingAsset, amount, gasSpeed } = payload.content
+
+    this._callDepositLend(web3, lendingAsset, account, amount, gasSpeed, (err, depositResult) => {
+      if(err) {
+        return this.emitter.emit(ERROR, err);
+      }
+
+      return this.emitter.emit(DEPOSIT_LEND_RETURNED, depositResult)
+    })
+  }
+
+  _callDepositLend = async (web3, lendingAsset, account, amount, gasSpeed, callback) => {
+    const lendingContract = new web3.eth.Contract(CERC20DELEGATORABI, lendingAsset.address)
+
+    const amountToSend = BigNumber(amount).times(bnDec(lendingAsset.tokenMetadata.decimals)).toFixed(0)
+    const gasPrice = await stores.accountStore.getGasPrice(gasSpeed)
+
+    this._callContract(web3, lendingContract, 'mint', [amountToSend], account, gasPrice, GET_LENDING_BALANCES, callback)
+  }
+
+  withdrawLend = async (payload) => {
+    const account = stores.accountStore.getStore('account')
+    if(!account) {
+      return false
+      //maybe throw an error
+    }
+
+    const web3 = await stores.accountStore.getWeb3Provider()
+    if(!web3) {
+      return false
+      //maybe throw an error
+    }
+
+    const { lendingAsset, amount, gasSpeed } = payload.content
+
+    this._callWithdrawLend(web3, lendingAsset, account, amount, gasSpeed, (err, depositResult) => {
+      if(err) {
+        return this.emitter.emit(ERROR, err);
+      }
+
+      return this.emitter.emit(WITHDRAW_LEND_RETURNED, depositResult)
+    })
+  }
+
+  _callWithdrawLend = async (web3, lendingAsset, account, amount, gasSpeed, callback) => {
+    const lendingContract = new web3.eth.Contract(CERC20DELEGATORABI, lendingAsset.address)
+
+    const amountToSend = BigNumber(amount).times(bnDec(lendingAsset.tokenMetadata.decimals)).toFixed(0)
+    const gasPrice = await stores.accountStore.getGasPrice(gasSpeed)
+
+    this._callContract(web3, lendingContract, 'redeemUnderlying', [amountToSend], account, gasPrice, GET_LENDING_BALANCES, callback)
+  }
+
+  borrowLend = async (payload) => {
+    const account = stores.accountStore.getStore('account')
+    if(!account) {
+      return false
+      //maybe throw an error
+    }
+
+    const web3 = await stores.accountStore.getWeb3Provider()
+    if(!web3) {
+      return false
+      //maybe throw an error
+    }
+
+    const { lendingAsset, amount, gasSpeed } = payload.content
+
+    this._callBorrowLend(web3, lendingAsset, account, amount, gasSpeed, (err, depositResult) => {
+      if(err) {
+        return this.emitter.emit(ERROR, err);
+      }
+
+      return this.emitter.emit(BORROW_LEND_RETURNED, depositResult)
+    })
+  }
+
+  _callBorrowLend = async (web3, lendingAsset, account, amount, gasSpeed, callback) => {
+    const lendingContract = new web3.eth.Contract(CERC20DELEGATORABI, lendingAsset.address)
+
+    const amountToSend = BigNumber(amount).times(bnDec(lendingAsset.tokenMetadata.decimals)).toFixed(0)
+    const gasPrice = await stores.accountStore.getGasPrice(gasSpeed)
+
+    this._callContract(web3, lendingContract, 'borrow', [amountToSend], account, gasPrice, GET_LENDING_BALANCES, callback)
+  }
+
+  repayLend = async (payload) => {
+    const account = stores.accountStore.getStore('account')
+    if(!account) {
+      return false
+      //maybe throw an error
+    }
+
+    const web3 = await stores.accountStore.getWeb3Provider()
+    if(!web3) {
+      return false
+      //maybe throw an error
+    }
+
+    const { lendingAsset, amount, gasSpeed } = payload.content
+
+    this._callRepayLend(web3, lendingAsset, account, amount, gasSpeed, (err, depositResult) => {
+      if(err) {
+        return this.emitter.emit(ERROR, err);
+      }
+
+      return this.emitter.emit(REPAY_LEND_RETURNED, depositResult)
+    })
+  }
+
+  _callRepayLend = async (web3, lendingAsset, account, amount, gasSpeed, callback) => {
+    const lendingContract = new web3.eth.Contract(CERC20DELEGATORABI, lendingAsset.address)
+
+    const amountToSend = BigNumber(amount).times(bnDec(lendingAsset.tokenMetadata.decimals)).toFixed(0)
+    const gasPrice = await stores.accountStore.getGasPrice(gasSpeed)
+
+    this._callContract(web3, lendingContract, 'repayBorrow', [amountToSend], account, gasPrice, GET_LENDING_BALANCES, callback)
+  }
+
+  enableCollateralLend = async (payload) => {
+    const account = stores.accountStore.getStore('account')
+    if(!account) {
+      return false
+      //maybe throw an error
+    }
+
+    const web3 = await stores.accountStore.getWeb3Provider()
+    if(!web3) {
+      return false
+      //maybe throw an error
+    }
+
+    const { lendingAsset, gasSpeed } = payload.content
+
+    this._callEnableCollateral(web3, lendingAsset, account, gasSpeed, (err, depositResult) => {
+      if(err) {
+        return this.emitter.emit(ERROR, err);
+      }
+
+      return this.emitter.emit(ENABLE_COLLATERAL_LEND_RETURNED, depositResult)
+    })
+  }
+
+  _callEnableCollateral = async (web3, lendingAsset, account, gasSpeed, callback) => {
+    const comptrollerContract = new web3.eth.Contract(COMPTROLLERABI, COMPTROLLER_ADDRESS)
+
+    const gasPrice = await stores.accountStore.getGasPrice(gasSpeed)
+
+    console.log(comptrollerContract, 'enterMarkets', [[lendingAsset.address]], account, gasPrice, GET_LENDING_BALANCES)
+
+    this._callContract(web3, comptrollerContract, 'enterMarkets', [[...lendingAsset.address]], account, gasPrice, GET_LENDING_BALANCES, callback)
+  }
+
+  disableCollateralLend = async (payload) => {
+    const account = stores.accountStore.getStore('account')
+    if(!account) {
+      return false
+      //maybe throw an error
+    }
+
+    const web3 = await stores.accountStore.getWeb3Provider()
+    if(!web3) {
+      return false
+      //maybe throw an error
+    }
+
+    const { lendingAsset, gasSpeed } = payload.content
+
+    this._callDIsableCollateral(web3, lendingAsset, account, gasSpeed, (err, depositResult) => {
+      if(err) {
+        return this.emitter.emit(ERROR, err);
+      }
+
+      return this.emitter.emit(DISABLE_COLLATERAL_LEND_RETURNED, depositResult)
+    })
+  }
+
+  _callDIsableCollateral = async (web3, lendingAsset, account, gasSpeed, callback) => {
+    const comptrollerContract = new web3.eth.Contract(COMPTROLLERABI, COMPTROLLER_ADDRESS)
+
+    const gasPrice = await stores.accountStore.getGasPrice(gasSpeed)
+
+    this._callContract(web3, comptrollerContract, 'exitMarket', [lendingAsset.address], account, gasPrice, GET_LENDING_BALANCES, callback)
+  }
+
+  _callContract = (web3, contract, method, params, account, gasPrice, dispatchEvent, callback) => {
+    const context = this
+    contract.methods[method](...params).send({ from: account.address, gasPrice: web3.utils.toWei(gasPrice, 'gwei') })
+      .on('transactionHash', function(hash){
+        context.emitter.emit(TX_SUBMITTED, hash)
+        callback(null, hash)
+      })
+      .on('confirmation', function(confirmationNumber, receipt){
+        if(dispatchEvent && confirmationNumber === 1) {
+          context.dispatcher.dispatch({ type: dispatchEvent })
+        }
+      })
+      .on('error', function(error) {
+        if (!error.toString().includes("-32601")) {
+          if(error.message) {
+            return callback(error.message)
+          }
+          callback(error)
+        }
+      })
+      .catch((error) => {
+        if (!error.toString().includes("-32601")) {
+          if(error.message) {
+            return callback(error.message)
+          }
+          callback(error)
+        }
+      })
   }
 
 }

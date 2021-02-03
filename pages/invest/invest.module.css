@@ -50,7 +50,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 24px;
+  margin-right: 34px;
 }
 
 .growthIcon {
@@ -68,6 +68,8 @@
 
 .searchContainer {
   flex: 1;
+  min-width: 300px !important;
+  max-width: 500px !important;
 }
 
 .vaultSectionTitle {
@@ -77,13 +79,15 @@
 
 .vaultTypeButtons {
   width: 400px;
+  padding-bottom: 12px;
+  padding-top: 12px;
 }
 
 .vaultTypeButton {
   border: 0px !important;
-  padding: 5px 16px !important;
+  padding: 5px 12px !important;
   border-radius: 10px !important;
-  margin: 0px 12px !important;
+  margin: 0px 6px !important;
   line-height: 1.167 !important;
   text-transform: none !important;
 }
@@ -108,6 +112,11 @@
   color: rgba(220, 107, 229, 1) !important;
 }
 
+.active {
+  border: 1px solid rgba(63,94,251,1) !important;
+  color: rgba(63,94,251,1) !important;
+}
+
 .v1Selected{
   background: rgba(229, 107, 115, 1) !important;
   color: #FFF !important;
@@ -125,6 +134,11 @@
 
 .earnSelected {
   background: rgba(220, 107, 229, 1) !important;
+  color: #FFF !important;
+}
+
+.activeSelected {
+  background: radial-gradient(circle, rgba(63,94,251,0.7) 0%, rgba(47,128,237,0.7) 48%) rgba(63,94,251,0.7) 100% !important;
   color: #FFF !important;
 }
 
@@ -176,9 +190,11 @@
     margin: 12px !important;
   }
   .vaultTypeButtons {
-    width: auto;
+    width: 100%;
+    padding-bottom: 12px;
+    padding-top: 12px;
   }
   .searchContainer {
-    min-width: 300px;
+    min-width: 300px !important;
   }
 }

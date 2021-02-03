@@ -70,8 +70,14 @@ function Invest({ changeTheme }) {
     let returnValue = true
 
     if(versions && versions.length > 0) {
-      const vaultType = (vault.type === 'v2' && !vault.endorsed) ? 'Exp' : vault.type
-      returnValue = versions.includes(vaultType)
+      if(versions.includes('Active')) {
+        const vaultType = (vault.type === 'v2' && !vault.endorsed) ? 'Exp' : vault.type
+
+        returnValue = BigNumber(vault.balance).gt(0) && (versions.length > 1 ? versions.includes(vaultType) : true)
+      } else {
+        const vaultType = (vault.type === 'v2' && !vault.endorsed) ? 'Exp' : vault.type
+        returnValue = versions.includes(vaultType)
+      }
     }
 
     if(returnValue === true && search && search !== '') {
@@ -169,6 +175,7 @@ function Invest({ changeTheme }) {
               <ToggleButton className={ `${classes.vaultTypeButton} ${ versions.includes('v1') ? classes.v1Selected : classes.v1 }` } value='v1' ><Typography variant='body1'>V1</Typography></ToggleButton>
               <ToggleButton className={ `${classes.vaultTypeButton} ${ versions.includes('Exp') ? classes.expSelected : classes.exp }` } value='Exp' ><Typography variant='body1'>Exp</Typography></ToggleButton>
               <ToggleButton className={ `${classes.vaultTypeButton} ${ versions.includes('Earn') ? classes.earnSelected : classes.earn }` } value='Earn' ><Typography variant='body1'>Earn</Typography></ToggleButton>
+              <ToggleButton className={ `${classes.vaultTypeButton} ${ versions.includes('Active') ? classes.activeSelected : classes.active }` } value='Active' ><Typography variant='body1'>Active</Typography></ToggleButton>
             </ToggleButtonGroup>
             <TextField
               className={ classes.searchContainer }

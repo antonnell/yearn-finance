@@ -124,4 +124,7 @@
   .lendValueCell {
     padding: 12px 0px;
   }
+  .lendActionsCell {
+    display: none;
+  }
 }

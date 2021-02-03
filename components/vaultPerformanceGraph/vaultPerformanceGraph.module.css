@@ -35,6 +35,16 @@
   justify-content: space-between;
 }
 
+.orangeDot {
+  border: 5px solid #FF9029;
+  border-radius: 10px;
+}
+
+.blueDot {
+  border: 5px solid #2F80ED;
+  border-radius: 10px;
+}
+
 @media screen and (max-width: 576px) {
   .vaultPerformanceGraph {
     max-width: auto;

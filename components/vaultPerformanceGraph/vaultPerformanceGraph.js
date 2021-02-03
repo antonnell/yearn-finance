@@ -25,7 +25,7 @@ function CustomTooltip({ payload, label, active }) {
           <React.Fragment>
             <div className={ classes.tooltipInfo}>
               <div className={ classes.tooltipIcon } >
-                <AttachMoneyicon className={ classes.growthIcon } />
+                <div className={ classes.blueDot }></div>
               </div>
               <div>
                 <Typography>Holdings</Typography>
@@ -34,7 +34,7 @@ function CustomTooltip({ payload, label, active }) {
             </div>
             <div className={ classes.tooltipInfo}>
               <div className={ classes.tooltipIcon } >
-                <TrendingUpIcon className={ classes.growthIcon } />
+                <div className={ classes.orangeDot }></div>
               </div>
               <div>
                 <Typography>Share Price:</Typography>
@@ -46,7 +46,7 @@ function CustomTooltip({ payload, label, active }) {
         { payload.length === 1 && (
           <div className={ classes.tooltipInfo}>
             <div className={ classes.tooltipIcon } >
-              <TrendingUpIcon className={ classes.growthIcon } />
+              <div className={ classes.orangeDot }></div>
             </div>
             <div>
               <Typography>Share Price:</Typography>
@@ -89,7 +89,7 @@ export default function VaultPerformanceGraph({ vault }) {
   if(vault && vault.historicData && vault.historicData.getPricePerFullShare && vault.historicData.getPricePerFullShare.length > 0) {
     data = vault.historicData.getPricePerFullShare[0].values.map((val, index) => {
       return {
-        time: moment(currentTime - 13200*(currentBlock - val.blockNumber)).format('Do MMM'),
+        time: moment(currentTime - 13200*(currentBlock - val.blockNumber)).format('D MMM'),
         pricePerShare: BigNumber(val.value).div(bnDec(18)).toNumber(),
         balanceOf: vault.historicData.balanceOf ? BigNumber(vault.historicData.balanceOf[0].values[index].value).div(bnDec(18)).toNumber() : 0
       }
@@ -99,7 +99,7 @@ export default function VaultPerformanceGraph({ vault }) {
   if(vault && vault.historicData && vault.historicData.pricePerShare && vault.historicData.pricePerShare.length > 0) {
     data = vault.historicData.pricePerShare[0].values.map((val, index) => {
       return {
-        time: moment(currentTime - 13200*(currentBlock - val.blockNumber)).format('Do MMM'),
+        time: moment(currentTime - 13200*(currentBlock - val.blockNumber)).format('D MMM'),
         pricePerShare: BigNumber(val.value).div(bnDec(18)).toNumber(),
         balanceOf: vault.historicData.balanceOf ? BigNumber(vault.historicData.balanceOf[0].values[index].value).div(bnDec(18)).toNumber() : 0
       }
@@ -138,20 +138,14 @@ export default function VaultPerformanceGraph({ vault }) {
             height={ 350 }
             data={data}
             >
-            <defs>
-              <linearGradient id="colorUv" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="5%" stopColor="#2F80ED" stopOpacity={0.6}/>
-                <stop offset="70%" stopColor="#8884d8" stopOpacity={0}/>
-              </linearGradient>
-            </defs>
             <Tooltip content={<CustomTooltip />}/>
             <XAxis dataKey="time" tickCount={5} />
 
             <YAxis yAxisId="left" tickLine={false} axisLine={false} padding={{ top: 50, bottom: 50 }} hide domain={[1, 'dataMax']} /> />
-            <YAxis yAxisId="right" orientation='right' tickCount={3} tickLine={false} axisLine={false} hide />
+            <YAxis yAxisId="right" orientation='right' tickCount={3} tickLine={false} axisLine={false} />
 
-            { account && account.address && <Area type="monotone" yAxisId="right" dataKey="balanceOf" stroke="#2F80ED" fillOpacity={1} fill="url(#colorUv)"  /> }
-            <Line type='natural' yAxisId="left" dataKey="pricePerShare" stroke="#888" dot={<div></div>} />
+            { account && account.address && <Line type='natural' yAxisId="right" dataKey="balanceOf" stroke="#2F80ED" dot={<div></div>} strokeWidth={ 3 } /> }
+            <Line type='natural' yAxisId="left" dataKey="pricePerShare" stroke="#FF9029" dot={<div></div>} strokeWidth={ 3 } />
           </ComposedChart>
         </ResponsiveContainer>
       }

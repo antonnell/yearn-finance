@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import {
   Typography,
-  Paper
+  Paper,
 } from '@material-ui/core'
 import Skeleton from '@material-ui/lab/Skeleton';
 import BigNumber from 'bignumber.js'
@@ -38,7 +38,7 @@ function Lend({ changeTheme }) {
   const [ lendingBorrowLimit, setLendingBorrowLimit ] = useState(storeLendingBorrowLimit)
 
   const lendingUpdated = () => {
-    setCoverProtocols(stores.coverStore.getStore('lendingAssets'))
+    setLendingAssets(stores.coverStore.getStore('lendingAssets'))
     setLendingSupply(stores.coverStore.getStore('lendingSupply'))
     setLendingBorrow(stores.coverStore.getStore('lendingBorrow'))
     setLendingBorrowLimit(stores.coverStore.getStore('lendingBorrowLimit'))
@@ -106,7 +106,6 @@ function Lend({ changeTheme }) {
         <div className={ classes.lendValueCell}><Typography variant='h5'>Supplied</Typography></div>
         <div className={ classes.lendBalanceCell}><Typography variant='h5'>Balance</Typography></div>
         <div className={ classes.lendValueCell}><Typography variant='h5'>APY</Typography></div>
-        <div className={ classes.lendActionsCell}><Typography variant='h5'>Actions</Typography></div>
       </div>
     )
   }
@@ -118,7 +117,6 @@ function Lend({ changeTheme }) {
         <div className={ classes.lendValueCell}><Typography variant='h5'>Borrowed</Typography></div>
         <div className={ classes.lendBalanceCell}><Typography variant='h5'>Balance</Typography></div>
         <div className={ classes.lendValueCell}><Typography variant='h5'>APY</Typography></div>
-        <div className={ classes.lendActionsCell}><Typography variant='h5'>Actions</Typography></div>
       </div>
     )
   }
@@ -130,7 +128,6 @@ function Lend({ changeTheme }) {
         <div className={ classes.lendBalanceCell}><Typography variant='h5'>Balance</Typography></div>
         <div className={ classes.lendValueCell}><Typography variant='h5'>Borrow APY</Typography></div>
         <div className={ classes.lendValueCell}><Typography variant='h5'>Supply APY</Typography></div>
-        <div className={ classes.lendActionsCell}><Typography variant='h5'>Actions</Typography></div>
       </div>
     )
   }
@@ -151,43 +148,43 @@ function Lend({ changeTheme }) {
         </Paper>
         <Paper elevation={0} className={ classes.overviewCard }>
           <Typography variant='h2'  color='textSecondary'>Borrow Limit Used</Typography>
-          <Typography variant='h1'>{ !lendingBorrowLimit ? <Skeleton /> : `$ ${formatCurrency(lendingBorrowLimit)}` }</Typography>
+          <Typography variant='h1'>{ !lendingBorrowLimit ? <Skeleton /> : `${formatCurrency(lendingBorrowLimit > 0 ? lendingBorrow*100/lendingBorrowLimit : 0)} %` }</Typography>
         </Paper>
       </div>
       <div className={ classes.lendingContainer }>
         <Typography variant='h6' className={ classes.tableHeader }>Supplied Assets</Typography>
-        <div className={ classes.lendingTable }>
+        <Paper elevation={0} className={ classes.lendingTable }>
           { renderSupplyHeaders() }
           {
-            lendingAssets.filter(filterSupplied).sort(sortSupply).map((asset) => {
+            lendingAssets && lendingAssets.filter(filterSupplied).sort(sortSupply).map((asset) => {
               return (
-                <LendSupplyAssetRow key={ asset.address } lendingAsset={ asset } />
+                <LendSupplyAssetRow key={ asset.address } lendingAsset={ asset } lendingBorrow={ lendingBorrow } lendingSupply={ lendingSupply } lendingBorrowLimit={ lendingBorrowLimit } />
               )
             })
           }
-        </div>
+        </Paper>
         <Typography variant='h6' className={ classes.tableHeader }>Borrowed Assets</Typography>
-        <div className={ classes.lendingTable }>
+        <Paper elevation={0} className={ classes.lendingTable }>
           { renderBorrowHeaders() }
           {
-            lendingAssets.filter(filterBorrowed).sort(sortBorrow).map((asset) => {
+            lendingAssets && lendingAssets.filter(filterBorrowed).sort(sortBorrow).map((asset) => {
               return (
-                <LendBorrowAssetRow key={ asset.address } lendingAsset={ asset } />
+                <LendBorrowAssetRow key={ asset.address } lendingAsset={ asset } lendingBorrow={ lendingBorrow } lendingSupply={ lendingSupply } lendingBorrowLimit={ lendingBorrowLimit } />
               )
             })
           }
-        </div>
+        </Paper>
         <Typography variant='h6' className={ classes.tableHeader }>All Assets</Typography>
-        <div className={ classes.lendingTable }>
+        <Paper elevation={0} className={ classes.lendingTable }>
           { renderAllHeaders() }
           {
-            lendingAssets.sort(sortAll).map((asset) => {
+            lendingAssets && lendingAssets.sort(sortAll).map((asset) => {
               return (
-                <LendAllAssetRow key={ asset.address } lendingAsset={ asset } />
+                <LendAllAssetRow key={ asset.address } lendingAsset={ asset } lendingBorrow={ lendingBorrow } lendingSupply={ lendingSupply } lendingBorrowLimit={ lendingBorrowLimit } />
               )
             })
           }
-        </div>
+        </Paper>
       </div>
     </Layout>
   )

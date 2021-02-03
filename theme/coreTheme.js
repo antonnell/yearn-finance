@@ -111,6 +111,9 @@ const coreTheme = {
     secondary: {
       main: '#EFEFEF',
     },
+    error: {
+      main: '#dc3545'
+    }
   },
   overrides: {
     MuiButton: {
@@ -157,6 +160,34 @@ const coreTheme = {
           bottom: '50px',
           left: '80px'
         }
+      }
+    },
+    MuiAccordion: {
+      root: {
+        margin: '0px',
+        '&:before': { //underline color when textfield is inactive
+          backgroundColor: 'none',
+          height: '0px'
+        },
+        '&$expanded': {
+          margin: '0px'
+        }
+      }
+    },
+    MuiAccordionSummary: {
+      root: {
+        padding: '0px 24px',
+        '@media (max-width:576px)': {
+          padding: '0px 6px',
+        }
+      },
+      content: {
+        margin: '0px !important'
+      }
+    },
+    MuiAccordionDetails: {
+      root: {
+        padding: '0',
       }
     },
   }

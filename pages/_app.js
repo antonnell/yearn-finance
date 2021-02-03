@@ -90,7 +90,7 @@ export default function MyApp({ Component, pageProps }) {
           vaultConfigured && accountConfigured && coverConfigured && lendingConfigured && <Component {...pageProps} changeTheme={ changeTheme } />
         }
         {
-          !(vaultConfigured && accountConfigured && coverConfigured && lendingConfigured) && <Configure />
+          !(vaultConfigured && accountConfigured && coverConfigured && lendingConfigured) && <Configure {...pageProps} />
         }
       </ThemeProvider>
     </React.Fragment>

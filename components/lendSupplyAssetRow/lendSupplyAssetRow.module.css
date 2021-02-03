@@ -11,7 +11,7 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  padding: 12px 6px;
+  padding: 18px 6px;
 }
 
 .lendValueCell {
@@ -19,6 +19,7 @@
   padding: 12px 6px;
   display: flex;
   justify-content: flex-end;
+  align-items: center;
 }
 
 .lendActionsCell {
@@ -33,6 +34,7 @@
   padding: 12px 6px;
   display: flex;
   justify-content: flex-end;
+  align-items: center;
 }
 
 .logo {
@@ -50,6 +52,119 @@
   display: flex;
   justify-content: flex-end;
 }
+
+.removePaper {
+  background-color: rgba(0,0,0,0) !important;
+}
+
+.assetActions {
+  width: 100%;
+  border-top: 1px solid rgba(128, 128, 128, 0.32);
+  border-bottom: 1px solid rgba(128, 128, 128, 0.32);
+}
+
+.assetInfo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  padding: 36px;
+  width: 100%;
+  flex-wrap: wrap;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.32);
+  background: radial-gradient(circle, rgba(63,94,251,0.7) 0%, rgba(47,128,237,0.7) 48%) rgba(63,94,251,0.7) 100%;
+}
+
+.infoField {
+  flex: 1;
+}
+
+.flexy {
+  padding: 6px 0px;
+}
+
+.actionsContainer {
+  display: flex;
+  flex: 1;
+  justify-content: space-evenly;
+}
+
+.tradeContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 36px;
+  max-width: 500px;
+}
+
+.balances {
+  width: 100%;
+  text-align: right;
+  cursor: pointer;
+  padding-right: 12px;
+  padding-bottom: 6px;
+}
+
+.actionInput {
+  padding: 0px 0px 12px 0px;
+  font-size: 0.5rem;
+}
+
+.scaleContainer {
+  margin: 24px 0px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.scale {
+  width: 60px;
+  height: 60px;
+  border-radius: 30px !important;
+}
+
+.buttons {
+  display: flex;
+  width: 100%;
+}
+
+.separator {
+  border-bottom: none;
+  width: 0px;
+  margin: 0px;
+}
+
+.inputTitleContainer {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.inputTitle {
+  padding-bottom: 6px;
+  margin-left: 12px;
+}
+
+.gasSpeedContainer {
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.assetInfoError {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  padding: 36px;
+  width: 100%;
+  flex-wrap: wrap;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.32);
+  background: #dc3545;
+}
+
 
 @media screen and (max-width: 576px) {
   .lendingRow {
@@ -69,6 +184,23 @@
     padding: 12px 0px;
   }
   .lendActionsCell {
-    padding: 12px 0px;
+    display: none;
+  }
+  .actionsContainer {
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  .tradeContainer {
+    padding: 12px;
+    width: 100%;
+  }
+  .separator {
+    border-bottom: 1px solid rgba(124, 124, 124, 0.32);
+    margin: 12px;
+    width: 100%;
+  }
+  .emptyScale {
+    height: 12px
   }
 }
