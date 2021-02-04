@@ -59,7 +59,7 @@
     margin-top: 12px;
   }
   .warningIcon {
-    display: none;
+    display: none !important;
   }
   .warningMobile {
     color: #FF9029;
