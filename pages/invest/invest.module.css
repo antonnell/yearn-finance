@@ -23,6 +23,7 @@
   flex-direction: column;
   justify-content: space-evenly;
   padding: 48px 0px;
+  margin: 0 auto;
 }
 
 .portfolioOutline {
@@ -230,6 +231,7 @@
   .portfolioBalanceCombined {
     max-height: 150px;
     padding: 0px;
+    margin: 0;
   }
   .vaultTypeButton {
     margin: 0px 3px !important;
