@@ -31,6 +31,9 @@ export default function VaultCard({ vault, account }) {
     case 'Earn':
       vaultTypeClass = classes.vaultEarnVersionContainer
       break;
+    case 'Lockup':
+      vaultTypeClass = classes.vaultLockupVersionContainer
+      break;
     default:
       vaultTypeClass = classes.vaultVersionContainer
       break;

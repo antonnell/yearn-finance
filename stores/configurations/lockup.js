@@ -10,7 +10,7 @@ export default [
     balanceInToken: 0,
     balanceUSD: 0,
     decimals: 18,
-    displayName: "Curve Lockup Vault",
+    displayName: "veCRV Lockup",
     icon: "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0xc5bDdf9843308380375a611c18B50Fb9341f502A/logo-128.png",
     name: "Curve Lockup Vault",
     pricePerFullShare: 1,
