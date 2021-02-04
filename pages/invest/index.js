@@ -12,10 +12,10 @@ import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import Skeleton from '@material-ui/lab/Skeleton';
 import classes from './invest.module.css'
+import VaultAssetRow from '../../components/vaultAssetRow'
 import VaultCard from '../../components/vaultCard'
 import VaultGrowthNumbers from '../../components/vaultGrowthNumbers'
 import VaultSplitGraph from '../../components/vaultSplitGraph'
-import VaultPerformanceGraph from '../../components/vaultPerformanceGraph'
 
 import BigNumber from 'bignumber.js'
 
@@ -24,6 +24,8 @@ import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 import SearchIcon from '@material-ui/icons/Search';
 import PieChartIcon from '@material-ui/icons/PieChart';
+import AppsIcon from '@material-ui/icons/Apps';
+import ListIcon from '@material-ui/icons/List';
 
 import { formatCurrency } from '../../utils'
 
@@ -40,14 +42,19 @@ function Invest({ changeTheme }) {
   const storeHighestHoldings = stores.investStore.getStore('highestHoldings')
   const account = stores.accountStore.getStore('account')
 
+  const localStorageCoinTypes = localStorage.getItem('yearn.finance-invest-coin-types')
+  const localStoragelayout = localStorage.getItem('yearn.finance-invest-layout')
+  const localStorageversions = localStorage.getItem('yearn.finance-invest-versions')
+
+
   const [ vaults, setVaults ] = useState(storeVaults)
   const [ porfolioBalance, setPorfolioBalance ] = useState(storePortfolioBalance)
   const [ portfolioGrowth, setPortfolioGrowth ] = useState(storePortfolioGrowth)
   const [ highestHoldings, setHighestHoldings ] = useState(storeHighestHoldings)
   const [ search, setSearch ] = useState('')
-  const [ versions, setVersions ] = useState([])
-  const [ coinTypes, setCoinTypes ] = useState([])
-
+  const [ versions, setVersions ] = useState(JSON.parse(localStorageversions ? localStorageversions : '[]'))
+  const [ coinTypes, setCoinTypes ] = useState(JSON.parse(localStorageCoinTypes ? localStorageCoinTypes : '[]'))
+  const [ layout, setLayout ] = useState(localStoragelayout ? localStoragelayout : 'grid')
 
   const vaultsUpdated = () => {
     setVaults(stores.investStore.getStore('vaults'))
@@ -121,10 +128,31 @@ function Invest({ changeTheme }) {
 
   const handleVersionsChanged = (event, newVals) => {
     setVersions(newVals)
+    localStorage.setItem('yearn.finance-invest-versions', newVals && newVals.length ? JSON.stringify(newVals) : '')
   }
 
   const handeCoinTypesChanged = (event, newVals) => {
     setCoinTypes(newVals)
+    localStorage.setItem('yearn.finance-invest-coin-types', newVals && newVals.length ? JSON.stringify(newVals) : '')
+  }
+
+  const handleLayoutChanged = (event, newVal) => {
+    if(newVal !== null) {
+      setLayout(newVal)
+      localStorage.setItem('yearn.finance-invest-layout', newVal ? newVal : '')
+    }
+  }
+
+  const renderVaultHeaders = () => {
+    return (
+      <div className={ classes.vaultRow} >
+        <div className={ classes.vaultTitleCell}><Typography variant='h5'>Name</Typography></div>
+        <div className={ classes.vaultVersionCell}><Typography variant='h5'>Version</Typography></div>
+        <div className={ classes.vaultBalanceCell}><Typography variant='h5'>Invested Balance</Typography></div>
+        <div className={ classes.vaultBalanceCell}><Typography variant='h5'>Available To Deposit</Typography></div>
+        <div className={ classes.vaultBalanceCell}><Typography variant='h5'>APY</Typography></div>
+      </div>
+    )
   }
 
   return (
@@ -157,7 +185,7 @@ function Invest({ changeTheme }) {
               </div>
             </div>
             <div className={ classes.spllitContainer }>
-              <VaultSplitGraph vaults={ vaults } />
+              { porfolioBalance === null ? <Skeleton variant='circle' width={ 150 } height={ 150 } style={{ marginLeft: '200px', marginRight:'200px', marginTop: '75px' }} /> : <VaultSplitGraph vaults={ vaults } /> }
             </div>
             <div className={ classes.portfolioBalanceCombined}>
               <div className={ classes.portfolioBalanceContainer }>
@@ -184,6 +212,7 @@ function Invest({ changeTheme }) {
         <div className={ classes.vaultsContainer }>
           <div className={ classes.vaultFilters }>
             <ToggleButtonGroup className={ classes.vaultTypeButtons } value={ versions } onChange={ handleVersionsChanged } >
+              <ToggleButton className={ `${classes.vaultTypeButton} ${ versions.includes('Lockup') ? classes.lockupSelected : classes.lockup }` } value='Lockup' ><Typography variant='body1'>Lockup</Typography></ToggleButton>
               <ToggleButton className={ `${classes.vaultTypeButton} ${ versions.includes('v2') ? classes.v2Selected : classes.v2 }` } value='v2' ><Typography variant='body1'>V2</Typography></ToggleButton>
               <ToggleButton className={ `${classes.vaultTypeButton} ${ versions.includes('v1') ? classes.v1Selected : classes.v1 }` } value='v1' ><Typography variant='body1'>V1</Typography></ToggleButton>
               <ToggleButton className={ `${classes.vaultTypeButton} ${ versions.includes('Exp') ? classes.expSelected : classes.exp }` } value='Exp' ><Typography variant='body1'>Exp</Typography></ToggleButton>
@@ -203,13 +232,33 @@ function Invest({ changeTheme }) {
                 </InputAdornment>,
               }}
             />
+            <ToggleButtonGroup className={ classes.layoutToggleButtons } value={ layout } onChange={ handleLayoutChanged } exclusive >
+              <ToggleButton className={ classes.layoutToggleButton } value={ 'grid' }>
+                <AppsIcon />
+              </ToggleButton>
+              <ToggleButton className={ classes.layoutToggleButton } value={ 'list' }>
+                <ListIcon />
+              </ToggleButton>
+            </ToggleButtonGroup>
           </div>
           {
-            filteredVaults && filteredVaults.length > 0 && (
+            layout === 'grid' && filteredVaults && filteredVaults.length > 0 && (
               filteredVaults.map((vault, index) => {
                 return <VaultCard key={ index } vault={vault} account={ account } />
               })
             )
+          }
+          { layout === 'list' &&
+            <Paper elevation={0} className={ classes.vaultsTable }>
+              { renderVaultHeaders() }
+              {
+                filteredVaults && filteredVaults.length > 0 && (
+                  filteredVaults.map((vault, index) => {
+                    return <VaultAssetRow key={ index } vault={vault} account={ account } />
+                  })
+                )
+              }
+            </Paper>
           }
         </div>
       </div>

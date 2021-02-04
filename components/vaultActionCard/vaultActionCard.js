@@ -26,12 +26,12 @@ export default function VaultActionCard({ vault }) {
         onChange={ handleTabChange }
       >
         <Tab label="Deposit" />
-        <Tab label="Withdraw"  />
+        { vault.type !== 'Lockup' && <Tab label="Withdraw"  /> }
       </Tabs>
       { tabValue === 0 && (
         <Deposit vault={ vault } />
       )}
-      { tabValue === 1 && (
+      { tabValue === 1 && vault.type !== 'Lockup' && (
         <Withdraw vault={ vault } />
       )}
     </Paper>

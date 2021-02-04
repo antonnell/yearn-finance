@@ -69,7 +69,8 @@
 .searchContainer {
   flex: 1;
   min-width: 300px !important;
-  max-width: 500px !important;
+  margin-left: 48px !important;
+  margin-right: 48px !important;
 }
 
 .vaultSectionTitle {
@@ -117,6 +118,11 @@
   color: rgba(63,94,251,1) !important;
 }
 
+.lockup {
+  border: 1px solid rgba(244,220,10,1) !important;
+  color: rgba(244,220,10,1) !important;
+}
+
 .v1Selected{
   background: rgba(229, 107, 115, 1) !important;
   color: #FFF !important;
@@ -142,6 +148,11 @@
   color: #FFF !important;
 }
 
+.lockupSelected {
+  background: rgba(244, 220, 10, 0.8) !important;
+  color: #22252E !important;
+}
+
 .vaultFilters {
   width: 100%;
   display: flex;
@@ -159,6 +170,60 @@
 .typeSelected {
   background: rgba(125, 125, 125, 1) !important;
   color: #FFF !important;
+}
+
+.layoutToggleButton {
+  max-width: 50px;
+}
+
+.layoutToggleButtons {
+  width: 100px;
+}
+
+.vaultsTable {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin: 24px;
+  border: 1px solid rgba(128, 128, 128, 0.32);
+  border-radius: 10px;
+  width: calc(100% - 96px)
+}
+
+.vaultRow {
+  display: flex;
+  align-items: center;
+  padding: 24px 24px;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.32);
+  flex: 1;
+}
+
+.vaultTitleCell {
+  flex: 2;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 12px 6px;
+}
+
+.vaultVersionCell {
+  flex: 1;
+  padding: 12px 6px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.vaultBalanceCell {
+  flex: 1;
+  padding: 12px 6px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media screen and (max-width: 1200px) {
+  .searchContainer {
+    margin-left: 0px !important;
+  }
 }
 
 @media screen and (max-width: 576px) {
@@ -206,5 +271,7 @@
   }
   .searchContainer {
     min-width: 300px !important;
+    margin-left: 0px;
+    margin-right: 0px;
   }
 }

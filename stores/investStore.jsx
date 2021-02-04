@@ -19,13 +19,16 @@ import {
   APPROVE_VAULT,
   APPROVE_VAULT_RETURNED,
   GET_VAULT_TRANSACTIONS,
-  VAULT_TRANSACTIONS_RETURNED
+  VAULT_TRANSACTIONS_RETURNED,
+  CLAIM_VAULT,
+  CLAIM_VAULT_RETURNED,
 } from './constants';
 
 import stores from './'
 import earnJSON from './configurations/earn'
+import lockupJSON from './configurations/lockup'
 
-import { ERC20ABI, VAULTV1ABI, VAULTV2ABI, EARNABI } from './abis'
+import { ERC20ABI, VAULTV1ABI, VAULTV2ABI, EARNABI, LOCKUPABI, VOTINGESCROWABI } from './abis'
 import { bnDec } from '../utils'
 
 import BatchCall from "web3-batch-call";
@@ -47,7 +50,8 @@ class Store {
       highestHoldings: null,
       vaults: [],
       tvlInfo: null,
-      earn: earnJSON //These values don't really ever change anymore, but still, should get them dynamically. For now, this will save on some calls for alchemy. (symbols, decimals, underlying tokens, their symbols and decimals etc)
+      earn: earnJSON, //These values don't really ever change anymore, but still, should get them dynamically. For now, this will save on some calls for alchemy. (symbols, decimals, underlying tokens, their symbols and decimals etc)
+      lockup: lockupJSON, // same
     }
 
     dispatcher.register(
@@ -73,6 +77,9 @@ class Store {
             break;
           case GET_VAULT_TRANSACTIONS:
             this.getVaultTransactions(payload);
+            break;
+          case CLAIM_VAULT:
+            this.claimVault(payload);
             break;
           default: {
           }
@@ -125,7 +132,9 @@ class Store {
       // for earn vaults, we need to calcualte the APY manually
       const earnWithAPY = await this.getEarnAPYs(earn)
 
-      this.setStore({ vaults: [ ...vaults, ...earnWithAPY ] })
+      const lockup = this.getStore('lockup')
+
+      this.setStore({ vaults: [ ...vaults, ...earnWithAPY, ...lockup ] })
 
       this.emitter.emit(VAULTS_UPDATED)
       this.emitter.emit(VAULTS_CONFIGURED)
@@ -297,6 +306,9 @@ class Store {
           case 'Earn':
             abi = EARNABI
             break;
+          case 'Lockup':
+            abi = LOCKUPABI
+            break;
           default:
             abi = VAULTV2ABI
         }
@@ -307,7 +319,9 @@ class Store {
 
         try { // this throws execution reverted: SafeMath: division by zero for not properly finalised vaults
           let pricePerFullShare = 1
-          if(vault.type === 'v1' || vault.type === 'Earn') {
+          if(vault.type === 'Lockup') {
+            pricePerFullShare = 1    // GET ASSET PRICE?
+          } else if(vault.type === 'v1' || vault.type === 'Earn' ) {
             pricePerFullShare = await vaultContract.methods.getPricePerFullShare().call()
             vault.pricePerFullShare = BigNumber(pricePerFullShare).div(bnDec(18)).toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN)  // TODO: changed 18 decimals to vault decimals for v2
           } else {
@@ -355,6 +369,24 @@ class Store {
               name: theVaultInfo[0].strategyName,
               address: theVaultInfo[0].strategyAddress
             }]
+          }
+        }
+
+        if(vault.type === 'Lockup') {
+          const votingEscrowContract = new web3.eth.Contract(VOTINGESCROWABI, '0x5f3b5DfEb7B28CDbD7FAba78963EE202a494e2A2')
+
+          const totalSupply = await vaultContract.methods.totalSupply().call()
+          const votingEscrowBalanceOf = await votingEscrowContract.methods.balanceOf('0xF147b8125d2ef93FB6965Db97D6746952a133934').call()
+
+          const index = await vaultContract.methods.index().call()
+          const supply_index = await vaultContract.methods.supplyIndex(account.address).call()
+
+          console.log(votingEscrowBalanceOf)
+          console.log(totalSupply)
+
+          vault.lockupMetadata = {
+            vaultVsSolo: BigNumber(votingEscrowBalanceOf).div(totalSupply).toNumber(),
+            claimable: (BigNumber(index).minus(supply_index)).times(vault.balance).div(bnDec(vault.decimals)).toNumber()
           }
         }
 
@@ -734,6 +766,38 @@ class Store {
     } catch (ex) {
       console.log(ex)
     }
+  }
+
+  claimVault = async (payload) => {
+    const account = stores.accountStore.getStore('account')
+    if(!account) {
+      return false
+      //maybe throw an error
+    }
+
+    const web3 = await stores.accountStore.getWeb3Provider()
+    if(!web3) {
+      return false
+      //maybe throw an error
+    }
+
+    const { vault, gasSpeed } = payload.content
+
+    this._callClaimVault(web3, vault, account, gasSpeed, (err, result) => {
+      if(err) {
+        return this.emitter.emit(ERROR, err);
+      }
+
+      return this.emitter.emit(CLAIM_VAULT_RETURNED, result)
+    })
+  }
+
+  _callClaimVault = async (web3, vault, account, gasSpeed, callback) => {
+    const vaultContract = new web3.eth.Contract(LOCKUPABI, vault.address)
+
+    const gasPrice = await stores.accountStore.getGasPrice(gasSpeed)
+
+    this._callContract(web3, vaultContract, 'claim', [], account, gasPrice, GET_VAULT_BALANCES, callback)
   }
 }
 

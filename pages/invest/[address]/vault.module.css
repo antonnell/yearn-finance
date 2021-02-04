@@ -109,6 +109,13 @@
   background: rgba(220, 107, 229, 1);
 }
 
+.vaultLockupVersionContainer {
+  width: fit-content;
+  border-radius: 12px;
+  padding: 5px 16px;
+  background: rgba(244, 220, 10, 0.8);
+}
+
 .vaultVersionText {
   font-size: 0.5rem;
   color: #fff;

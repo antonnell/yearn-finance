@@ -275,7 +275,6 @@ class Store {
       provider = web3context.library.provider
     }
 
-    console.log(provider)
     if(!provider) {
       return null
     }

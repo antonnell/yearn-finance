@@ -2,6 +2,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  min-width: 500px;
 }
 
 .vaultGrowthContainer {
@@ -43,6 +44,7 @@
     align-items: flex-start;
     justify-content: flex-start;
     margin-top: 12px;
+    min-width: 0px;
   }
   .vaultGrowthContainer {
     max-width: calc(100vw - 24px);

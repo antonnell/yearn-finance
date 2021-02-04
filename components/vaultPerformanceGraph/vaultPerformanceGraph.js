@@ -18,7 +18,6 @@ import stores from '../../stores/index.js'
 import classes from './vaultPerformanceGraph.module.css'
 
 function CustomTooltip({ payload, label, active }) {
-  console.log(payload)
   if (active && payload && payload.length > 0) {
     return (
       <div className={ classes.tooltipContainer }>
@@ -92,7 +91,7 @@ export default function VaultPerformanceGraph({ vault }) {
       return {
         time: moment(currentTime - 13200*(currentBlock - val.blockNumber)).format('D MMM'),
         pricePerShare: BigNumber(val.value).div(bnDec(18)).toPrecision(6),
-        balanceOf: vault.historicData.balanceOf ? BigNumber(vault.historicData.balanceOf[0].values[index].value).div(bnDec(18)).toNumber() : 0
+        balanceOf: vault.historicData.balanceOf ? BigNumber(vault.historicData.balanceOf[0].values[index].value).div(bnDec(18)).times(val.value).div(bnDec(18)).toNumber() : 0
       }
     })
   }
@@ -102,7 +101,7 @@ export default function VaultPerformanceGraph({ vault }) {
       return {
         time: moment(currentTime - 13200*(currentBlock - val.blockNumber)).format('D MMM'),
         pricePerShare: BigNumber(val.value).div(bnDec(vault.decimals)).toPrecision(6),
-        balanceOf: vault.historicData.balanceOf ? BigNumber(vault.historicData.balanceOf[0].values[index].value).div(bnDec(18)).toNumber() : 0
+        balanceOf: vault.historicData.balanceOf ? BigNumber(vault.historicData.balanceOf[0].values[index].value).div(bnDec(18)).times(val.value).div(bnDec(vault.decimals)).toNumber() : 0
       }
     })
   }

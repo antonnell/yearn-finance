@@ -132,12 +132,8 @@ function Lend({ changeTheme }) {
     )
   }
 
-  console.log(lendingAssets)
-
   const supplyAssets = lendingAssets ? lendingAssets.filter(filterSupplied).sort(sortSupply) : []
   const borrowAssets = lendingAssets ? lendingAssets.filter(filterBorrowed).sort(sortBorrow) : []
-
-  console.log(lendingAssets)
 
   return (
     <Layout changeTheme={ changeTheme }>

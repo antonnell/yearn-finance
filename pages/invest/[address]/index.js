@@ -19,6 +19,7 @@ import VaultActionCard from '../../../components/vaultActionCard'
 import VaultGrowthNumbers from '../../../components/vaultGrowthNumbers'
 import VaultPerformanceGraph from '../../../components/vaultPerformanceGraph'
 import VaultTransactions from '../../../components/vaultTransactions'
+import VaultLockupNotice from '../../../components/vaultLockupNotice'
 
 import stores from '../../../stores'
 import {
@@ -131,11 +132,12 @@ function Vault(props) {
           </div>
           <div className={ classes.cardSeparation }>
             { account && account.address && <VaultGrowthNumbers vault={ vault } />}
-            <VaultPerformanceGraph vault={ vault } />
+            { vaultType !== 'Lockup' && <VaultPerformanceGraph vault={ vault } />}
+            { vaultType === 'Lockup' && <VaultLockupNotice vault={ vault } account={ account } /> }
           </div>
         </div>
         <div className={ classes.vaultTransactionsContainer }>
-          { account && account.address && vaultType !== 'Earn' && <VaultTransactions vault={ vault } /> }
+          { account && account.address && vaultType !== 'Earn' && vaultType !== 'Lockup' && <VaultTransactions vault={ vault } /> }
         </div>
       </div>
     </Layout>

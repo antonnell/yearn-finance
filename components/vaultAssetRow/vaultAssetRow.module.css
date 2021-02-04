@@ -1,0 +1,254 @@
+.vaultRow {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.32);
+  flex: 1;
+  padding: 0px 24px;
+}
+
+.vaultTitleCell {
+  flex: 2;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 18px 6px;
+}
+
+.vaultValueCell {
+  flex: 1;
+  padding: 12px 6px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.vaultActionsCell {
+  flex: 2;
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px 6px;
+}
+
+.vaultBalanceCell {
+  flex: 1;
+  padding: 12px 6px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.logo {
+  width: 30px;
+  height: 30px;
+  margin-right: 12px;
+}
+
+.fontWeightBold {
+  font-weight: bold !important;
+}
+
+.balance {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.removePaper {
+  background-color: rgba(0,0,0,0) !important;
+}
+
+.assetActions {
+  width: 100%;
+  border-top: 1px solid rgba(128, 128, 128, 0.32);
+  border-bottom: 1px solid rgba(128, 128, 128, 0.32);
+}
+
+.assetInfo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  padding: 36px;
+  width: 100%;
+  flex-wrap: wrap;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.32);
+  background: radial-gradient(circle, rgba(63,94,251,0.7) 0%, rgba(47,128,237,0.7) 48%) rgba(63,94,251,0.7) 100%;
+}
+
+.infoField {
+  flex: 1;
+}
+
+.flexy {
+  padding: 6px 0px;
+}
+
+.actionsContainer {
+  display: flex;
+  flex: 1;
+  justify-content: space-evenly;
+}
+
+.tradeContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 36px;
+  max-width: 500px;
+}
+
+.balances {
+  width: 100%;
+  text-align: right;
+  cursor: pointer;
+  padding-right: 12px;
+  padding-bottom: 6px;
+}
+
+.actionInput {
+  padding: 0px 0px 12px 0px;
+  font-size: 0.5rem;
+}
+
+.scaleContainer {
+  margin: 24px 0px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.scale {
+  width: 60px;
+  height: 60px;
+  border-radius: 30px !important;
+}
+
+.buttons {
+  display: flex;
+  width: 100%;
+}
+
+.separator {
+  border-bottom: none;
+  width: 0px;
+  margin: 0px;
+}
+
+.inputTitleContainer {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.inputTitle {
+  padding-bottom: 6px;
+  margin-left: 12px;
+}
+
+.gasSpeedContainer {
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.assetInfoError {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  padding: 36px;
+  width: 100%;
+  flex-wrap: wrap;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.32);
+  background: #dc3545;
+}
+
+.vaultVersionCell {
+  flex: 1;
+  padding: 12px 6px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.vaultVersionContainer {
+  border-radius: 12px;
+  padding: 5px 16px;
+  background: rgba(25, 101, 233, 1);
+  height: fit-content;
+}
+
+.vaultV1VersionContainer {
+  border-radius: 12px;
+  padding: 5px 16px;
+  background: rgba(229, 107, 115, 1);
+  height: fit-content;
+}
+
+.vaultV2VersionContainer {
+  border-radius: 12px;
+  padding: 5px 16px;
+  background: rgba(25, 101, 233, 1);
+  height: fit-content;
+}
+
+.vaultExpVersionContainer {
+  border-radius: 12px;
+  padding: 5px 16px;
+  background: rgba(255, 179, 71, 1);
+  height: fit-content;
+}
+
+.vaultEarnVersionContainer {
+  border-radius: 12px;
+  padding: 5px 16px;
+  background: rgba(220, 107, 229, 1);
+  height: fit-content;
+}
+
+.vaultLockupVersionContainer {
+  border-radius: 12px;
+  padding: 5px 16px;
+  background: rgba(244, 220, 10, 0.8);
+  height: fit-content;
+}
+
+.vaultVersionText {
+  font-size: 0.5rem;
+  color: #fff;
+}
+
+
+@media screen and (max-width: 576px) {
+  .vaultRow {
+    padding: 0px 6px;
+  }
+  .name {
+
+  }
+  .actionsContainer {
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  .tradeContainer {
+    padding: 12px;
+    width: 100%;
+  }
+  .separator {
+    border-bottom: 1px solid rgba(124, 124, 124, 0.32);
+    margin: 12px;
+    width: 100%;
+  }
+  .emptyScale {
+    height: 12px
+  }
+  .assetInfo {
+    padding: 12px;
+  }
+  .assetInfoError {
+    padding: 12px;
+  }
+}
