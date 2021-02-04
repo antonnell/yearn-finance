@@ -71,7 +71,6 @@
 .cardSeparation {
   display: flex;
   flex-direction: column;
-  width: min-content;
 }
 
 .vaultVersionContainer {

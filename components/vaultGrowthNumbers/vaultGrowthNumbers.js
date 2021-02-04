@@ -26,15 +26,17 @@ export default function VaultGrowthNumbers({ vault }) {
             <Typography variant='h6'>{ (!vault || !vault.balanceInToken) ? <Skeleton style={{ minWidth: '200px '}} /> : ( formatCurrency(vault.balanceInToken)+' '+vault.tokenMetadata.displayName ) }</Typography>
           </div>
         </div>
-        <div className={ classes.portfolioGrowthContainer }>
-          <div className={ classes.growthOutline } >
-            <TrendingUpIcon className={ classes.growthIcon } />
+        { vault.type !== 'Lockup' && (
+          <div className={ classes.portfolioGrowthContainer }>
+            <div className={ classes.growthOutline } >
+              <TrendingUpIcon className={ classes.growthIcon } />
+            </div>
+            <div>
+              <Typography variant='subtitle1' color='textSecondary'>Yearly Growth</Typography>
+              <Typography variant='h6'>{ !vault ? <Skeleton /> : BigNumber(vault.apy.oneMonthSample).times(100).toFixed(2)+'%' }</Typography>
+            </div>
           </div>
-          <div>
-            <Typography variant='subtitle1' color='textSecondary'>Yearly Growth</Typography>
-            <Typography variant='h6'>{ !vault ? <Skeleton /> : BigNumber(vault.apy.oneMonthSample).times(100).toFixed(2)+'%' }</Typography>
-          </div>
-        </div>
+        )}
       </div>
       <div className={ classes.vaultGrowthContainer }>
         {

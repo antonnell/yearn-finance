@@ -59,21 +59,29 @@ export default function VaultLockupNotice({ vault, account }) {
       <div className={ classes.noticeContainer}>
         <ReportProblemOutlinedIcon className={ classes.warningIcon } />
         <div className={ classes.textContainer }>
-          <Typography variant='h6' className={ classes.warning }>Warning</Typography>
+          <div className={ classes.head }>
+            <ReportProblemOutlinedIcon className={ classes.warningMobile } />
+            <Typography variant='h6' className={ classes.warning }>Warning</Typography>
+          </div>
           <div className={ classes.notice }>
             <Typography className={ classes.paragraph }>This vault accepts CRV in exchange for perpetual claim on Curve DAO admin fees across all Yearn products.</Typography>
             <Typography className={ classes.paragraph }>Since it locks CRV in Curve Voting Escrow for 4 years and regularly prolongs the lock, this vault doesn't have withdrawal functionality.</Typography>
             <Typography className={ classes.paragraph } variant='h5'>You will NOT get your CRV back. Ever.</Typography>
           </div>
           <div>
+
+          { account && account.address && (
             <div className={ classes.vaultInfoField }>
               <Typography variant='subtitle1' color='textSecondary'>Vault vs Solo</Typography>
               <Typography variant='h6'>{ !(vault && vault.lockupMetadata) ? <Skeleton style={{ minWidth: '100px '}} /> : (BigNumber(vault.lockupMetadata.vaultVsSolo).toFixed(3) + 'x') }</Typography>
             </div>
+          )}
+          { account && account.address && (
             <div className={ classes.vaultInfoField }>
               <Typography variant='subtitle1' color='textSecondary'>Claimable</Typography>
               <Typography variant='h6'>{ !(vault && vault.lockupMetadata) ? <Skeleton style={{ minWidth: '100px '}} /> : `${formatCurrency(vault.lockupMetadata.claimable)} ${vault.tokenMetadata.symbol}` }</Typography>
             </div>
+          )}
 
             { (!account || !account.address) &&
               <div className={ classes.actionButton } >

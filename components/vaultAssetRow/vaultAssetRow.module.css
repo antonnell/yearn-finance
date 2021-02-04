@@ -37,6 +37,14 @@
   align-items: center;
 }
 
+.vaultAvailableBalanceCell {
+  flex: 1;
+  padding: 12px 6px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
 .logo {
   width: 30px;
   height: 30px;
@@ -250,5 +258,11 @@
   }
   .assetInfoError {
     padding: 12px;
+  }
+  .vaultVersionCell {
+    display: none;
+  }
+  .vaultAvailableBalanceCell {
+    display: none;
   }
 }

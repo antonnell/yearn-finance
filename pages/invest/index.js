@@ -148,8 +148,8 @@ function Invest({ changeTheme }) {
       <div className={ classes.vaultRow} >
         <div className={ classes.vaultTitleCell}><Typography variant='h5'>Name</Typography></div>
         <div className={ classes.vaultVersionCell}><Typography variant='h5'>Version</Typography></div>
-        <div className={ classes.vaultBalanceCell}><Typography variant='h5'>Invested Balance</Typography></div>
-        <div className={ classes.vaultBalanceCell}><Typography variant='h5'>Available To Deposit</Typography></div>
+        { account && account.address && (<div className={ classes.vaultBalanceCell}><Typography variant='h5'>Invested Balance</Typography></div>) }
+        { account && account.address && (<div className={ classes.vaultAvailableBalanceCell}><Typography variant='h5'>Available To Deposit</Typography></div>) }
         <div className={ classes.vaultBalanceCell}><Typography variant='h5'>APY</Typography></div>
       </div>
     )

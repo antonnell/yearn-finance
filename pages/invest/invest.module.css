@@ -269,9 +269,26 @@
     padding-bottom: 12px;
     padding-top: 12px;
   }
+  .vaultTypeButton {
+    margin: 0px !important;
+    padding: 5px 6px !important;
+  }
   .searchContainer {
     min-width: 300px !important;
     margin-left: 0px;
-    margin-right: 0px;
+    margin-right: 0px !important;
+  }
+  .layoutToggleButtons {
+    margin-top: 12px;
+  }
+  .vaultsTable {
+    margin: 12px;
+    width: calc(100% - 24px)
+  }
+  .vaultVersionCell {
+    display: none;
+  }
+  .vaultAvailableBalanceCell {
+    display: none;
   }
 }

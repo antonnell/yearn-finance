@@ -474,12 +474,18 @@ export default function VaultAssetRow({ vault, account }) {
             <Typography  className={ classes.vaultVersionText }>{ (vault.type === 'v2' && !vault.endorsed) ? 'Exp' : vault.type }</Typography>
           </div>
         </div>
-        <div className={ classes.vaultBalanceCell }>
-          <Typography variant='h5' className={ classes.fontWeightBold }>{ !(vault && vault.balance) ? <Skeleton stlye={{ minWidth: '100px' }} /> : ('$ ' + formatCurrency(BigNumber(vault.balance).times(vault.pricePerFullShare).times(vault.tokenMetadata.priceUSD))) }</Typography>
-        </div>
-        <div className={ classes.vaultBalanceCell }>
-          <Typography variant='h5' className={ classes.fontWeightBold }>{ !(vault && vault.tokenMetadata && vault.tokenMetadata.balance) ? <Skeleton stlye={{ minWidth: '100px' }} /> : (formatCurrency(vault.tokenMetadata.balance) + ' ' + vault.tokenMetadata.displayName ) }</Typography>
-        </div>
+        { account && account.address && (
+            <div className={ classes.vaultBalanceCell }>
+              <Typography variant='h5' className={ classes.fontWeightBold }>{ !(vault && vault.balance) ? <Skeleton stlye={{ minWidth: '100px' }} /> : ('$ ' + formatCurrency(BigNumber(vault.balance).times(vault.pricePerFullShare).times(vault.tokenMetadata.priceUSD))) }</Typography>
+            </div>
+          )
+        }
+        { account && account.address && (
+            <div className={ classes.vaultAvailableBalanceCell }>
+              <Typography variant='h5' className={ classes.fontWeightBold }>{ !(vault && vault.tokenMetadata && vault.tokenMetadata.balance) ? <Skeleton stlye={{ minWidth: '100px' }} /> : (formatCurrency(vault.tokenMetadata.balance) + ' ' + vault.tokenMetadata.displayName ) }</Typography>
+            </div>
+          )
+        }
         <div className={ classes.vaultBalanceCell }>
           <Typography variant='h5' className={ classes.fontWeightBold }>{ !(vault.apy) ? <Skeleton stlye={{ minWidth: '100px' }} /> :  ( vault.apy.oneMonthSample ? (BigNumber(vault.apy.oneMonthSample).times(100).toFixed(2) + '%') : 'Unknown') }</Typography>
         </div>

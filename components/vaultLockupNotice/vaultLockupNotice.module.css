@@ -1,6 +1,7 @@
 .noticeContainer {
   display: flex;
   align-items: flex-start;
+  max-width: 600px;
 }
 
 .textContainer {
@@ -39,6 +40,15 @@
   margin-top: 24px;
 }
 
+.warningMobile {
+  display: none !important;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
 
 @media screen and (max-width: 576px) {
   .claimActionContainer {
@@ -47,5 +57,19 @@
   }
   .actionButton {
     margin-top: 12px;
+  }
+  .warningIcon {
+    display: none;
+  }
+  .warningMobile {
+    color: #FF9029;
+    margin-right: 12px;
+    font-size: 32px !important;
+  }
+  .textContainer {
+    padding: 0px;
+  }
+  .warning {
+    margin-bottom: 0px !important;
   }
 }
