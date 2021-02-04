@@ -131,8 +131,8 @@ export default function VaultPerformanceGraph({ vault }) {
         </ToggleButtonGroup>
       </div>
       { (!vault || data.length === 0) ?
-        <Skeleton variant="rect" width={ (window.innerWidth > 600 ? 600 : (window.innerWidth-24)) } height={300} /> :
-        <ResponsiveContainer width={ (window.innerWidth > 600 ? 600 : (window.innerWidth-24)) } height={ 300 }>
+        <Skeleton variant="rect" width={ (window.innerWidth > 600 ? '99%' : (window.innerWidth-24)) } height={300} /> :
+        <ResponsiveContainer width={ (window.innerWidth > 600 ? '99%' : (window.innerWidth-24)) } height={ 300 }>
           <ComposedChart
             width={ (window.innerWidth > 600 ? 600 : (window.innerWidth-24) ) }
             height={ 350 }

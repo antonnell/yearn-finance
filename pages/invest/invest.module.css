@@ -8,11 +8,14 @@
 .portfolioStatsContainer {
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .portfolioBalanceContainer {
   display: flex;
   align-items: center;
+  margin-bottom: 12px;
 }
 
 .portfolioBalanceCombined {
@@ -221,8 +224,30 @@
 }
 
 @media screen and (max-width: 1200px) {
+  .investContainer {
+    padding: 24px;
+  }
+  .portfolioBalanceCombined {
+    max-height: 150px;
+    padding: 0px;
+  }
+  .vaultTypeButton {
+    margin: 0px 3px !important;
+  }
+}
+
+@media screen and (max-width: 1440px) {
+  .vaultFilters {
+    margin: 12px !important;
+  }
+}
+
+@media screen and (max-width: 900px) {
   .searchContainer {
     margin-left: 0px !important;
+  }
+  .spllitContainer {
+    display: none;
   }
 }
 
@@ -274,7 +299,7 @@
     padding: 5px 6px !important;
   }
   .searchContainer {
-    min-width: 300px !important;
+    min-width: calc(100vw - 24px) !important;
     margin-left: 0px;
     margin-right: 0px !important;
   }

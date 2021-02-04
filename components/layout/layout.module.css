@@ -13,7 +13,7 @@
   margin-left: 240px;
 }
 
-@media screen and (max-width: 576px) {
+@media screen and (max-width: 1200px) {
   .container {
     flex-direction: column;
   }

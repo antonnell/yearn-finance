@@ -84,6 +84,16 @@
 
 }
 
+
+@media screen and (max-width: 1440px) {
+  .coverContainer {
+    margin: 12px;
+  }
+  .coverContainerActive {
+    margin: 12px;
+  }
+}
+
 @media screen and (max-width: 576px) {
   .coverContainer {
     margin: 12px;

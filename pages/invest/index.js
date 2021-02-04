@@ -185,7 +185,7 @@ function Invest({ changeTheme }) {
               </div>
             </div>
             <div className={ classes.spllitContainer }>
-              { porfolioBalance === null ? <Skeleton variant='circle' width={ 150 } height={ 150 } style={{ marginLeft: '200px', marginRight:'200px', marginTop: '75px' }} /> : <VaultSplitGraph vaults={ vaults } /> }
+              { porfolioBalance === null ? <Skeleton variant='circle' width={ 150 } height={ 150 } style={{ marginLeft: '200px', marginRight:'200px', marginTop: '60px' }} /> : <VaultSplitGraph vaults={ vaults } /> }
             </div>
             <div className={ classes.portfolioBalanceCombined}>
               <div className={ classes.portfolioBalanceContainer }>

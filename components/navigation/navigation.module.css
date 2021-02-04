@@ -124,6 +124,7 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
+  max-width: 400px;
 }
 
 
@@ -180,7 +181,7 @@
 }
 
 
-@media screen and (max-width: 576px) {
+@media screen and (max-width: 1200px) {
   .navigationContainer {
     position: relative;
     min-height: 80px;
@@ -201,12 +202,12 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
     justify-content: space-between;
     width: 100%;
     padding: 24px;
     height: 100vh;
     z-index: 999;
+    align-items: center;
   }
   .menuIcon {
     position: absolute;
@@ -229,8 +230,4 @@
     left: 12px;
     display: flex;
   }
-}
-
-@media screen and (min-width: 992px) {
-
 }

@@ -55,13 +55,6 @@ export default function VaultSplitGraph({ vaults }) {
     } = props;
     const sin = Math.sin(-RADIAN * midAngle);
     const cos = Math.cos(-RADIAN * midAngle);
-    const sx = cx + (outerRadius + 10) * cos;
-    const sy = cy + (outerRadius + 10) * sin;
-    const mx = cx + (outerRadius + 30) * cos;
-    const my = cy + (outerRadius + 30) * sin;
-    const ex = mx + (cos >= 0 ? 1 : -1) * 22;
-    const ey = my;
-    const textAnchor = cos >= 0 ? 'start' : 'end';
 
     return (
       <g>
@@ -86,9 +79,7 @@ export default function VaultSplitGraph({ vaults }) {
           fill={fill}
           onClick={ () => { sectorClicked(props.payload) } }
         />
-        <path d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`} stroke={fill} fill="none" />
-        <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
-        <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} textAnchor={textAnchor} fill="#888">
+        <text x={cx - 50} y={270} textAnchor={'start'} fill="#888">
           {`$ ${formatCurrency(value)}`}
         </text>
       </g>
@@ -97,13 +88,13 @@ export default function VaultSplitGraph({ vaults }) {
 
   return (
     <div className={ classes.vaultPerformanceGraph }>
-      <ResponsiveContainer width='100%' height={ 300 }>
-        <PieChart width={ '100%' } height={300}>
+      <ResponsiveContainer width='99%' height={ 300 }>
+        <PieChart width={ '99%' } height={300}>
           <Pie
             activeIndex={ activeIndex }
             activeShape={ renderActiveShape }
             data={ data }
-            cx={300}
+            cx={150}
             cy={150}
             innerRadius={60}
             outerRadius={80}

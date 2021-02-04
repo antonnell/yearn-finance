@@ -88,6 +88,14 @@
 
 
 
+@media screen and (max-width: 1440px) {
+  .vaultContainerActive {
+    margin: 12px;
+  }
+  .vaultContainer {
+    margin: 12px;
+  }
+}
 
 @media screen and (max-width: 576px) {
   .vaultContainer {

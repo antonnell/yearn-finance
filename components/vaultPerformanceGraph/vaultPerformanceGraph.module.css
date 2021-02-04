@@ -3,6 +3,7 @@
   justify-content: space-between;
   width: 100%;
   min-height: 400px;
+  max-width: 600px;
   flex: 1;
   flex-wrap: wrap;
   margin-bottom: 24px;
