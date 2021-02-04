@@ -41,19 +41,19 @@ export default function coverSummaryCard({ coverProtocol }) {
         </div>
         <div className={ classes.coverDetailGroup }>
           <Typography className={ classes.coverDetailTitle }>Liquidity Available</Typography>
-          <Typography className={ classes.coverDetailValue }>$ { formatCurrency(claimPoolData.liquidity) }</Typography>
+          <Typography className={ classes.coverDetailValue }>$ { !claimPoolData ? <Skeleton style={{ minWidth: '200px '}} /> : formatCurrency(claimPoolData.liquidity) }</Typography>
         </div>
         <div className={ classes.coverDetailGroup }>
           <Typography className={ classes.coverDetailTitle }>Purchase Fee</Typography>
-          <Typography className={ classes.coverDetailValue }>{ formatCurrency(BigNumber(claimPoolData.swapFee)) } %</Typography>
+          <Typography className={ classes.coverDetailValue }>{ !claimPoolData ? <Skeleton style={{ minWidth: '200px '}} /> : formatCurrency(BigNumber(claimPoolData.swapFee)) } %</Typography>
         </div>
         <div className={ classes.coverDetailGroup }>
           <Typography className={ classes.coverDetailTitle }>Token Price</Typography>
-          <Typography className={ classes.coverDetailValue }>$ { formatCurrency(claimPoolData.price, 4) }</Typography>
+          <Typography className={ classes.coverDetailValue }>$ { !claimPoolData ? <Skeleton style={{ minWidth: '200px '}} /> : formatCurrency(claimPoolData.price, 4) }</Typography>
         </div>
         <div className={ classes.coverDetailGroup }>
           <Typography className={ classes.coverDetailTitle }>Cover Amount</Typography>
-          <Typography className={ classes.coverDetailValue }>$ { formatCurrency(claimAsset.balance) }</Typography>
+          <Typography className={ classes.coverDetailValue }>$ { !claimAsset ? <Skeleton style={{ minWidth: '200px '}} /> : formatCurrency(claimAsset.balance) }</Typography>
         </div>
       </div>
     </Paper>

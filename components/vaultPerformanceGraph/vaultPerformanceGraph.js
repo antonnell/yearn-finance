@@ -18,6 +18,7 @@ import stores from '../../stores/index.js'
 import classes from './vaultPerformanceGraph.module.css'
 
 function CustomTooltip({ payload, label, active }) {
+  console.log(payload)
   if (active && payload && payload.length > 0) {
     return (
       <div className={ classes.tooltipContainer }>
@@ -90,7 +91,7 @@ export default function VaultPerformanceGraph({ vault }) {
     data = vault.historicData.getPricePerFullShare[0].values.map((val, index) => {
       return {
         time: moment(currentTime - 13200*(currentBlock - val.blockNumber)).format('D MMM'),
-        pricePerShare: BigNumber(val.value).div(bnDec(18)).toNumber(),
+        pricePerShare: BigNumber(val.value).div(bnDec(18)).toPrecision(6),
         balanceOf: vault.historicData.balanceOf ? BigNumber(vault.historicData.balanceOf[0].values[index].value).div(bnDec(18)).toNumber() : 0
       }
     })
@@ -100,7 +101,7 @@ export default function VaultPerformanceGraph({ vault }) {
     data = vault.historicData.pricePerShare[0].values.map((val, index) => {
       return {
         time: moment(currentTime - 13200*(currentBlock - val.blockNumber)).format('D MMM'),
-        pricePerShare: BigNumber(val.value).div(bnDec(18)).toNumber(),
+        pricePerShare: BigNumber(val.value).div(bnDec(vault.decimals)).toPrecision(6),
         balanceOf: vault.historicData.balanceOf ? BigNumber(vault.historicData.balanceOf[0].values[index].value).div(bnDec(18)).toNumber() : 0
       }
     })
@@ -138,14 +139,15 @@ export default function VaultPerformanceGraph({ vault }) {
             height={ 350 }
             data={data}
             >
+            <CartesianGrid strokeDasharray="5 8" vertical={ false } />
             <Tooltip content={<CustomTooltip />}/>
             <XAxis dataKey="time" tickCount={5} />
 
-            <YAxis yAxisId="left" tickLine={false} axisLine={false} padding={{ top: 50, bottom: 50 }} hide domain={[1, 'dataMax']} /> />
-            <YAxis yAxisId="right" orientation='right' tickCount={3} tickLine={false} axisLine={false} />
+            <YAxis yAxisId="left" tickLine={false} axisLine={false} tickCount={6} hide domain={[1, 'dataMax']}  /> />
+            <YAxis yAxisId="right" orientation='right' tickCount={6} tickLine={false} axisLine={false} allowDecimals />
 
-            { account && account.address && <Line type='natural' yAxisId="right" dataKey="balanceOf" stroke="#2F80ED" dot={<div></div>} strokeWidth={ 3 } /> }
-            <Line type='natural' yAxisId="left" dataKey="pricePerShare" stroke="#FF9029" dot={<div></div>} strokeWidth={ 3 } />
+            { account && account.address && <Line type='monotone' yAxisId="right" dataKey="balanceOf" stroke="#2F80ED" dot={<div></div>} strokeWidth={ 3 } /> }
+            <Line type='monotone' yAxisId="left" dataKey="pricePerShare" stroke="#FF9029" dot={<div></div>} strokeWidth={ 3 } />
           </ComposedChart>
         </ResponsiveContainer>
       }

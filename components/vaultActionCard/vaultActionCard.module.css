@@ -6,7 +6,6 @@
   padding: 24px;
   margin-right: 48px;
   margin-bottom: 24px;
-  border: 1px solid rgba(0, 0, 0, 0.32);
 }
 
 .depositContainer {
@@ -33,6 +32,19 @@
   height: 60px;
   border-radius: 30px !important;
 }
+
+.inputTitleContainer {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.inputTitle {
+  padding-bottom: 6px;
+  margin-left: 12px;
+}
+
 
 .balances {
   display: flex;

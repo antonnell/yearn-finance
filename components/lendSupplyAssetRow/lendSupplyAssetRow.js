@@ -9,7 +9,8 @@ import {
   TextField,
   Paper,
   CircularProgress,
-  Grid
+  Grid,
+  InputAdornment
 } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles';
 import Skeleton from '@material-ui/lab/Skeleton';
@@ -267,6 +268,14 @@ function LendSupplyAssetDetails({ lendingAsset, account, lendingBorrow, lendingS
             disabled={ loading }
             placeholder="0.00"
             variant="outlined"
+            InputProps={{
+              endAdornment: <InputAdornment position="end">
+                { lendingAsset.tokenMetadata.displayName }
+              </InputAdornment>,
+              startAdornment: <InputAdornment position="start">
+                <img src={ lendingAsset.tokenMetadata.icon } alt='' width={ 30 } height={ 30 } />
+              </InputAdornment>,
+            }}
           />
           <div className={ classes.scaleContainer }>
             <Button
@@ -374,6 +383,14 @@ function LendSupplyAssetDetails({ lendingAsset, account, lendingBorrow, lendingS
             disabled={ loading }
             placeholder="0.00"
             variant="outlined"
+            InputProps={{
+              endAdornment: <InputAdornment position="end">
+                { lendingAsset.tokenMetadata.displayName }
+              </InputAdornment>,
+              startAdornment: <InputAdornment position="start">
+                <img src={ lendingAsset.tokenMetadata.icon } alt='' width={ 30 } height={ 30 } />
+              </InputAdornment>,
+            }}
           />
           <div className={ classes.scaleContainer }>
             <Button

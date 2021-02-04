@@ -10,6 +10,8 @@ import {
   CONFIGURE_VAULTS,
   CONFIGURE_LENDING,
   CONFIGURE_COVER,
+  LENDING_CONFIGURED,
+  COVER_CONFIGURED,
   ACCOUNT_CHANGED,
   GET_GAS_PRICES,
   GAS_PRICES_RETURNED
@@ -121,10 +123,10 @@ class Store {
       } else {
         //we can ignore if not authorized.
         this.emitter.emit(ACCOUNT_CONFIGURED)
+        this.emitter.emit(LENDING_CONFIGURED)
+        this.emitter.emit(COVER_CONFIGURED)
 
         this.dispatcher.dispatch({ type: CONFIGURE_VAULTS, content: { connected: false } })
-        this.dispatcher.dispatch({ type: CONFIGURE_LENDING, content: { connected: false } })
-        this.dispatcher.dispatch({ type: CONFIGURE_COVER, content: { connected: false } })
       }
     });
 
@@ -264,18 +266,21 @@ class Store {
   }
 
   getWeb3Provider = async () => {
-    const web3context = this.getStore('web3context')
-    if(!web3context) {
-      const web3context = await network.activate()
-      console.log(web3context)
+    let web3context = this.getStore('web3context')
+    let provider = null
 
+    if(!web3context) {
+      provider = network.providers['1']
     } else {
-      const provider = web3context.library.provider
-      if(!provider) {
-        return null
-      }
-      return new Web3(provider);
+      provider = web3context.library.provider
     }
+
+    console.log(provider)
+    if(!provider) {
+      return null
+    }
+    return new Web3(provider);
+
   }
 }
 

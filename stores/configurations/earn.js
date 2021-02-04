@@ -28,6 +28,12 @@ export default [
       priceUSD: 1,
       symbol: "DAI"
     },
+    strategies: [
+      {
+        name: 'LPProfitSwitching',
+        address: '0xC2cB1040220768554cf699b0d863A3cd4324ce32'
+      }
+    ],
     type: "Earn",
     created: 9551248,
   },
@@ -59,6 +65,12 @@ export default [
       priceUSD: 1,
       symbol: "USDC"
     },
+    strategies: [
+      {
+        name: 'LPProfitSwitching',
+        address: '0xC2cB1040220768554cf699b0d863A3cd4324ce32'
+      }
+    ],
     type: "Earn",
     created: 9567169,
   },
@@ -90,6 +102,12 @@ export default [
       priceUSD: 1,
       symbol: "USDT"
     },
+    strategies: [
+      {
+        name: 'LPProfitSwitching',
+        address: '0xC2cB1040220768554cf699b0d863A3cd4324ce32'
+      }
+    ],
     type: "Earn",
     created: 9563847,
   },
@@ -121,6 +139,12 @@ export default [
       priceUSD: 1,
       symbol: "BUSD"
     },
+    strategies: [
+      {
+        name: 'LPProfitSwitching',
+        address: '0x04bC0Ab673d88aE9dbC9DA2380cB6B79C4BCa9aE'
+      }
+    ],
     type: "Earn",
     created: 9564411,
   },
@@ -152,6 +176,12 @@ export default [
       priceUSD: 1,
       symbol: "DAI"
     },
+    strategies: [
+      {
+        name: 'LPProfitSwitching',
+        address: '0x16de59092dAE5CcF4A1E6439D611fd0653f0Bd01'
+      }
+    ],
     type: "Earn",
     created: 9464936,
   },
@@ -183,6 +213,12 @@ export default [
       priceUSD: 1,
       symbol: "USDC"
     },
+    strategies: [
+      {
+        name: 'LPProfitSwitching',
+        address: '0xd6aD7a6750A7593E092a9B218d66C0A814a3436e'
+      }
+    ],
     type: "Earn",
     created: 9465014,
   },
@@ -214,6 +250,12 @@ export default [
       priceUSD: 1,
       symbol: "USDT"
     },
+    strategies: [
+      {
+        name: 'LPProfitSwitching',
+        address: '0x83f798e925BcD4017Eb265844FDDAbb448f1707D'
+      }
+    ],
     type: "Earn",
     created: 9465216,
   },
@@ -245,6 +287,12 @@ export default [
       priceUSD: 1,
       symbol: "TUSD"
     },
+    strategies: [
+      {
+        name: 'LPProfitSwitching',
+        address: '0x73a052500105205d34Daf004eAb301916DA8190f'
+      }
+    ],
     type: "Earn",
     created: 9465571,
   },
@@ -276,6 +324,12 @@ export default [
       priceUSD: 1,
       symbol: "SUSD"
     },
+    strategies: [
+      {
+        name: 'LPProfitSwitching',
+        address: '0xF61718057901F84C4eEC4339EF8f0D86D2B45600'
+      }
+    ],
     type: "Earn",
     created: 9465292,
   },
@@ -307,6 +361,12 @@ export default [
       priceUSD: 1,
       symbol: "WBTC"
     },
+    strategies: [
+      {
+        name: 'LPProfitSwitching',
+        address: '0x04Aa51bbcB46541455cCF1B8bef2ebc5d3787EC9'
+      }
+    ],
     type: "Earn",
     created: 9465729,
   },

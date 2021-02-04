@@ -18,6 +18,7 @@ const RPC_URLS = {
   4: "https://rinkeby.infura.io/v3/bd80ce1ca1f94da48e151bb6868bb150"
 };
 
+console.log(process.env.NEXT_PUBLIC_PROVIDER)
 
 export const network = new NetworkConnector({ urls: { 1: RPC_URLS[1] } })
 

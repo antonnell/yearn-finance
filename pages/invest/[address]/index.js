@@ -15,7 +15,6 @@ import classes from './vault.module.css'
 
 import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 
-import VaultStrategyCard from '../../../components/vaultStrategyCard'
 import VaultActionCard from '../../../components/vaultActionCard'
 import VaultGrowthNumbers from '../../../components/vaultGrowthNumbers'
 import VaultPerformanceGraph from '../../../components/vaultPerformanceGraph'
@@ -128,11 +127,6 @@ function Vault(props) {
         </div>
         <div className={ classes.vaultInfo }>
           <div className={ classes.cardSeparation }>
-            {
-              vault && vault.strategies && vault.strategies.map((strategy) => {
-                return <VaultStrategyCard strategy={ strategy } />
-              })
-            }
             <VaultActionCard vault={ vault } />
           </div>
           <div className={ classes.cardSeparation }>

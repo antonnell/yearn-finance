@@ -1,14 +1,23 @@
+.extraContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .vaultGrowthContainer {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
   flex: 1;
   flex-wrap: wrap;
-  margin-bottom: 24px;
+  height: 100%;
 }
 
 .portfolioGrowthContainer {
   display: flex;
   align-items: center;
+  padding: 6px 0px;
 }
 
 .growthOutline {
@@ -29,6 +38,12 @@
 
 
 @media screen and (max-width: 576px) {
+  .extraContainer {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin-top: 12px;
+  }
   .vaultGrowthContainer {
     max-width: calc(100vw - 24px);
     min-width: auto;

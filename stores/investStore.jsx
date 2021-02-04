@@ -42,8 +42,8 @@ class Store {
     this.emitter = emitter
 
     this.store = {
-      portfolioBalanceUSD: 0,
-      portfolioGrowth: 0,
+      portfolioBalanceUSD: null,
+      portfolioGrowth: null,
       highestHoldings: null,
       vaults: [],
       tvlInfo: null,
@@ -128,12 +128,9 @@ class Store {
       this.setStore({ vaults: [ ...vaults, ...earnWithAPY ] })
 
       this.emitter.emit(VAULTS_UPDATED)
+      this.emitter.emit(VAULTS_CONFIGURED)
+      this.dispatcher.dispatch({ type: GET_VAULT_BALANCES })
 
-      if(payload.content.connected) {
-        this.dispatcher.dispatch({ type: GET_VAULT_BALANCES })
-      } else {
-        this.emitter.emit(VAULTS_CONFIGURED)
-      }
     } catch (ex) {
       console.log(ex)
     }
@@ -228,18 +225,6 @@ class Store {
   }
 
   getVaultBalances = async () => {
-    const account = stores.accountStore.getStore('account')
-    if(!account || !account.address) {
-      this.emitter.emit(VAULTS_CONFIGURED)
-      this.emitter.emit(VAULTS_UPDATED)
-      return false
-    }
-
-    const web3 = await stores.accountStore.getWeb3Provider()
-    if(!web3) {
-      return false
-      //maybe throw an error
-    }
 
     let vaultInfo = null
     try {
@@ -253,7 +238,6 @@ class Store {
       vaultInfo = []
     }
 
-
     let tvlInfo = null
     try {
       const url = `${YEARN_API}tvl`
@@ -266,6 +250,38 @@ class Store {
     }
 
     const vaults = this.getStore('vaults')
+
+    const account = stores.accountStore.getStore('account')
+    if(!account || !account.address) {
+
+      const vaultPopulated = vaults.map((vault) => {
+        if(!vault.strategies || vault.strategies.length === 0) {
+          const theVaultInfo = vaultInfo.filter((v) => {
+            return v.address === vault.address
+          })
+
+          if(theVaultInfo && theVaultInfo.length > 0) {
+            vault.strategies = [{
+              name: theVaultInfo[0].strategyName,
+              address: theVaultInfo[0].strategyAddress
+            }]
+          }
+        }
+        return vault
+      })
+
+      this.setStore({
+        vaults: vaultPopulated,
+        tvlInfo: tvlInfo
+      })
+
+      this.emitter.emit(VAULTS_UPDATED)
+      return false
+    }
+
+
+    const web3 = await stores.accountStore.getWeb3Provider()
+
     async.map(vaults, async (vault, callback) => {
       try {
 
@@ -351,7 +367,6 @@ class Store {
         console.log(vault)
         console.log(ex)
 
-
         if(callback) {
           callback(null, vault)
         } else {
@@ -380,7 +395,7 @@ class Store {
 
       let highestHoldings = vaultsBalanced.reduce((prev, current) => (BigNumber(prev.balanceUSD).gt(current.balanceUSD)) ? prev : current)
       if(BigNumber(highestHoldings.balanceUSD).eq(0)) {
-        highestHoldings = null
+        highestHoldings = 'None'
       }
 
       this.setStore({
@@ -391,7 +406,6 @@ class Store {
         tvlInfo: tvlInfo,
       })
 
-      this.emitter.emit(VAULTS_CONFIGURED)
       this.emitter.emit(VAULTS_UPDATED)
     })
 

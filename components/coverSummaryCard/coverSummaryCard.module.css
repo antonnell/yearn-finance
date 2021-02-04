@@ -30,5 +30,7 @@
 @media screen and (max-width: 576px) {
   .coverSummaryContainer {
     width: calc(100vw - 24px);
+    padding: 12px;
   }
+
 }

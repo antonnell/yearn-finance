@@ -80,16 +80,18 @@ function Cover(props) {
       </Head>
       <div className={ classes.coverContainer }>
         <div className={ classes.coverInfoContainer }>
-          <Paper elevation={0} className={ classes.coverSummaryCard }>
+          <Paper elevation={2} className={ classes.coverSummaryCard }>
             <CoverActionCard coverProtocol={ coverProtocol } />
             <CoverSummaryCard coverProtocol={ coverProtocol } />
           </Paper>
-          <div className={ classes.coverInfo}>
-            <Typography variant='h2' className={ classes.heading }>What are { coverProtocol.protocolDisplayName } Claim Tokens?</Typography>
-            <Typography  className={ classes.paragraph }>Each { coverProtocol.protocolDisplayName } Claim Token will pay out 1 { coverProtocol.poolData[0].collateralAsset.symbol } in the event that there is a successful attack on the protocol before the expiration date ({ moment(coverProtocol.expires[0]*1000).format('Do MMM YYYY') })</Typography>
-            <Typography variant='h2' className={ classes.heading }>What is covered?</Typography>
-            <Typography className={ classes.paragraph }>During the coverage period (before the expiration date) if { coverProtocol.protocolDisplayName } suffers a hack, bug, exploit or economic manipulation attack, and that there’s a material loss of deposited funds from the { coverProtocol.protocolDisplayName } smart contract, or smart contract system with funds either moved to another address which the original owner(s) do not control, or the funds are made permanently irrecoverable. You will get back 1 { coverProtocol.poolData[0].collateralAsset.symbol } per each { coverProtocol.protocolDisplayName } Claim Token.</Typography>
-          </div>
+          { coverProtocol.poolData && coverProtocol.poolData[0] && coverProtocol.poolData[0].collateralAsset &&
+            <div className={ classes.coverInfo}>
+              <Typography variant='h2' className={ classes.heading }>What are { coverProtocol.protocolDisplayName } Claim Tokens?</Typography>
+              <Typography  className={ classes.paragraph }>Each { coverProtocol.protocolDisplayName } Claim Token will pay out 1 { coverProtocol.poolData[0].collateralAsset.symbol } in the event that there is a successful attack on the protocol before the expiration date ({ moment(coverProtocol.expires[0]*1000).format('Do MMM YYYY') })</Typography>
+              <Typography variant='h2' className={ classes.heading }>What is covered?</Typography>
+              <Typography className={ classes.paragraph }>During the coverage period (before the expiration date) if { coverProtocol.protocolDisplayName } suffers a hack, bug, exploit or economic manipulation attack, and that there’s a material loss of deposited funds from the { coverProtocol.protocolDisplayName } smart contract, or smart contract system with funds either moved to another address which the original owner(s) do not control, or the funds are made permanently irrecoverable. You will get back 1 { coverProtocol.poolData[0].collateralAsset.symbol } per each { coverProtocol.protocolDisplayName } Claim Token.</Typography>
+            </div>
+          }
         </div>
 
       </div>

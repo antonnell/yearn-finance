@@ -18,9 +18,10 @@ export default function VaultActionCard({ vault }) {
   };
 
   return (
-    <Paper elevation={ 0 } className={ classes.vaultActionContainer }>
+    <Paper elevation={ 2 } className={ classes.vaultActionContainer }>
       <Tabs
         variant='fullWidth'
+        indicatorColor='primary'
         value={ tabValue }
         onChange={ handleTabChange }
       >

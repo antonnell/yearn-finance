@@ -27,7 +27,7 @@ export default function Withdraw({ vault }) {
 
   const setAmountPercent = (percent) => {
     setAmountError(false)
-    
+
     setAmount(BigNumber(vault.balanceInToken).times(percent).div(100).toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN))
   }
 
@@ -77,8 +77,13 @@ export default function Withdraw({ vault }) {
     <div className={ classes.depositContainer }>
 
       <div className={ classes.textField }>
-        <div className={ classes.balances }>
-          <Typography variant='h5' onClick={ () => { setAmountPercent(100) } } className={ classes.value } noWrap>Balance: { !vault.balanceInToken ? <Skeleton /> : formatCurrency(vault.balanceInToken) }</Typography>
+        <div className={ classes.inputTitleContainer }>
+          <div className={ classes.inputTitle }>
+            <Typography variant='h5' noWrap>Withdraw</Typography>
+          </div>
+          <div className={ classes.balances }>
+            <Typography variant='h5' onClick={ () => { setAmountPercent(100) } } className={ classes.value } noWrap>Balance: { !vault.balanceInToken ? <Skeleton /> : formatCurrency(vault.balanceInToken) }</Typography>
+          </div>
         </div>
         <TextField
           variant="outlined"
@@ -90,6 +95,9 @@ export default function Withdraw({ vault }) {
           InputProps={{
             endAdornment: <InputAdornment position="end">
               { vault.tokenMetadata.displayName }
+            </InputAdornment>,
+            startAdornment: <InputAdornment position="start">
+              <img src={ vault.tokenMetadata.icon } alt='' width={ 30 } height={ 30 }  />
             </InputAdornment>,
           }}
         />

@@ -151,6 +151,16 @@
   margin: 24px !important;
 }
 
+.type {
+  border: 1px solid rgba(125, 125, 125, 1) !important;
+  color: rgba(125, 125, 125, 1) !important;
+}
+
+.typeSelected {
+  background: rgba(125, 125, 125, 1) !important;
+  color: #FFF !important;
+}
+
 @media screen and (max-width: 576px) {
   .investContainer {
     padding: 12px;

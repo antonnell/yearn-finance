@@ -32,14 +32,14 @@ export default [
     "address": "0x7589C9E17BCFcE1Ccaa1f921196FDa177F0207Fc",
     "symbol": "cyY3CRV",
     "decimals": 8,
-    "displayName": "Yearn Y3CRV",
+    "displayName": "Yearn 3CRV",
     "icon": "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0x9cA85572E6A3EbF24dEDd195623F188735A5179f/logo-128.png",
     "tokenMetadata": {
       "address": "0x9cA85572E6A3EbF24dEDd195623F188735A5179f",
       "icon": "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0x9cA85572E6A3EbF24dEDd195623F188735A5179f/logo-128.png",
       "symbol": "y3Crv",
       "decimals": 18,
-      "displayName": "yearn Curve.fi DAI/USDC/USDT"
+      "displayName": "Yearn 3CRV"
     }
   },
   {

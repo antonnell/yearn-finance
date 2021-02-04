@@ -277,10 +277,10 @@ class Store {
         this.setStore({ coverProtocols: coverProtocols })
 
         this.emitter.emit(COVER_UPDATED)
+        this.emitter.emit(COVER_CONFIGURED)
+
         if(payload.content.connected) {
           this.dispatcher.dispatch({ type: GET_COVER_BALANCES })
-        } else {
-          this.emitter.emit(COVER_CONFIGURED)
         }
       })
 
@@ -383,6 +383,7 @@ class Store {
         symbol: symbol,
         balance: balance,
         allowance: allowance,
+        icon: symbol === 'DAI' ? `https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/${asset}/logo-128.png` : '/tokens/cover-logo.png'
       }
     } catch(ex) {
       console.log(ex)
@@ -418,15 +419,12 @@ class Store {
   }
 
   _callSwapExactAmountIn = async (web3, assetIn, assetOut, amountIn, amountOut, account, pool, gasSpeed, callback) => {
-    console.log(pool.claimPoolData.address)
     let balancerContract = new web3.eth.Contract(BALANCERPROXYABI, pool.claimPoolData.address)
 
     const amountToSend = new BigNumber(amountIn).times(bnDec(assetIn.decimals)).toFixed(0);
     const tokenAmountOut = new BigNumber(amountOut).times(95/100).times(bnDec(assetOut.decimals)).toFixed(0);
 
     const gasPrice = await stores.accountStore.getGasPrice(gasSpeed)
-
-    console.log(balancerContract, 'swapExactAmountIn', [assetIn.address, amountToSend, assetOut.address, tokenAmountOut, MAX_UINT256], account, gasPrice, GET_COVER_BALANCES)
 
     this._callContract(web3, balancerContract, 'swapExactAmountIn', [assetIn.address, amountToSend, assetOut.address, tokenAmountOut, MAX_UINT256], account, gasPrice, GET_COVER_BALANCES, callback)
   }

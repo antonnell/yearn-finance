@@ -120,6 +120,10 @@ export default function Buy({ coverProtocol }) {
     }
   })
 
+  if(!coverProtocol || !coverProtocol.poolData[0] || !coverProtocol.poolData[0].collateralAsset || !coverProtocol.poolData[0].claimAsset) {
+    return <Skeleton style={{ width: '100%', height: '100%' }} />
+  }
+
   return (
     <div className={ classes.buyContainer }>
 
@@ -137,6 +141,9 @@ export default function Buy({ coverProtocol }) {
           InputProps={{
             endAdornment: <InputAdornment position="end">
               { coverProtocol.poolData[0].collateralAsset.symbol }
+            </InputAdornment>,
+            startAdornment: <InputAdornment position="start">
+              <img src={ coverProtocol.poolData[0].collateralAsset.icon } alt='' width={ 30 } height={ 30 } />
             </InputAdornment>,
           }}
         />
@@ -183,6 +190,9 @@ export default function Buy({ coverProtocol }) {
           InputProps={{
             endAdornment: <InputAdornment position="end">
               $ Cover
+            </InputAdornment>,
+            startAdornment: <InputAdornment position="start">
+              <img src={ coverProtocol.poolData[0].claimAsset.icon } alt='' width={ 30 } height={ 30 } />
             </InputAdornment>,
           }}
         />

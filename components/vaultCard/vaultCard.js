@@ -56,15 +56,15 @@ export default function VaultCard({ vault, account }) {
         {
           activeVault && (
             <div className={ classes.vaultInfoField }>
-              <Typography variant='h2' className={ classes.fontWeightBold }>{ !(vault && vault.balance) ? <Skeleton /> : formatCurrency(BigNumber(vault.balance).times(vault.pricePerFullShare))+' '+vault.displayName }</Typography>
-              <Typography variant='body1'>Deposited</Typography>
+              <Typography variant='h2' className={ classes.fontWeightBold }>{ !(vault && vault.balance) ? <Skeleton /> : ('$ ' + formatCurrency(BigNumber(vault.balance).times(vault.pricePerFullShare).times(vault.tokenMetadata.priceUSD))) }</Typography>
+              <Typography variant='body1'>Balance</Typography>
             </div>
           )
         }
         {
           !activeVault && account && account.address && (
             <div className={ classes.vaultInfoField }>
-              <Typography variant='h2' className={ classes.fontWeightBold }>{ !(vault && vault.tokenMetadata && vault.tokenMetadata.balance) ? <Skeleton /> : formatCurrency(vault.tokenMetadata.balance) }</Typography>
+              <Typography variant='h2' className={ classes.fontWeightBold }>{ !(vault && vault.tokenMetadata && vault.tokenMetadata.balance) ? <Skeleton /> : (formatCurrency(vault.tokenMetadata.balance) + ' ' + vault.tokenMetadata.displayName ) }</Typography>
               <Typography variant='body1'>Available to deposit</Typography>
             </div>
           )

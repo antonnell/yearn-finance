@@ -46,6 +46,7 @@ function Invest({ changeTheme }) {
   const [ highestHoldings, setHighestHoldings ] = useState(storeHighestHoldings)
   const [ search, setSearch ] = useState('')
   const [ versions, setVersions ] = useState([])
+  const [ coinTypes, setCoinTypes ] = useState([])
 
 
   const vaultsUpdated = () => {
@@ -102,7 +103,15 @@ function Invest({ changeTheme }) {
     } else if (BigNumber(a.tokenMetadata.balance).lt(BigNumber(b.tokenMetadata.balance))) {
       return 1
     } else {
-      return 0
+      const aType = (a.type === 'v2' && !a.endorsed) ? 'Exp' : a.type
+      const bType = (b.type === 'v2' && !b.endorsed) ? 'Exp' : b.type
+      if(aType > bType) {
+        return -1
+      } else if(bType > aType) {
+        return 1
+      } else {
+        return 0
+      }
     }
   })
 
@@ -112,6 +121,10 @@ function Invest({ changeTheme }) {
 
   const handleVersionsChanged = (event, newVals) => {
     setVersions(newVals)
+  }
+
+  const handeCoinTypesChanged = (event, newVals) => {
+    setCoinTypes(newVals)
   }
 
   return (
@@ -130,7 +143,7 @@ function Invest({ changeTheme }) {
                 </div>
                 <div>
                   <Typography variant='subtitle1' color='textSecondary'>Portfolio Balance</Typography>
-                  <Typography variant='h1'>{ '$ '+formatCurrency(porfolioBalance) }</Typography>
+                  { <Typography variant='h1'>{ porfolioBalance === null ? <Skeleton style={{ minWidth: '200px '}} /> : ('$ '+formatCurrency(porfolioBalance)) }</Typography> }
                 </div>
               </div>
               <div className={ classes.portfolioBalanceContainer }>
@@ -139,7 +152,7 @@ function Invest({ changeTheme }) {
                 </div>
                 <div>
                   <Typography variant='subtitle1' color='textSecondary'>Highest Holdings</Typography>
-                  <Typography variant='h6'>{ highestHoldings ? highestHoldings.displayName : 'None' }</Typography>
+                  <Typography variant='h6'>{ highestHoldings === null ? <Skeleton style={{ minWidth: '200px '}} /> : (highestHoldings === 'None' ? highestHoldings : highestHoldings.displayName) }</Typography>
                 </div>
               </div>
             </div>
@@ -153,7 +166,7 @@ function Invest({ changeTheme }) {
                 </div>
                 <div>
                   <Typography variant='subtitle1' color='textSecondary'>Yearly Growth</Typography>
-                  <Typography variant='h1'>{ '$ '+formatCurrency(BigNumber(porfolioBalance).times(portfolioGrowth).div(100)) }</Typography>
+                  <Typography variant='h1'>{ porfolioBalance === null ? <Skeleton style={{ minWidth: '200px '}} /> : ('$ '+formatCurrency(BigNumber(porfolioBalance).times(portfolioGrowth).div(100))) }</Typography>
                 </div>
               </div>
               <div className={ classes.portfolioBalanceContainer }>
@@ -162,7 +175,7 @@ function Invest({ changeTheme }) {
                 </div>
                 <div>
                   <Typography variant='subtitle1' color='textSecondary'>Yearly Growth</Typography>
-                  <Typography variant='h6'>{ formatCurrency(portfolioGrowth)+'%' }</Typography>
+                  <Typography variant='h6'>{ portfolioGrowth === null ? <Skeleton style={{ minWidth: '100px '}} /> : (formatCurrency(portfolioGrowth)+'%') }</Typography>
                 </div>
               </div>
             </div>
@@ -203,5 +216,15 @@ function Invest({ changeTheme }) {
     </Layout>
   )
 }
+
+/*
+
+<ToggleButtonGroup className={ classes.vaultTypeButtons } value={ coinTypes } onChange={ handeCoinTypesChanged } >
+  <ToggleButton className={ `${classes.vaultTypeButton} ${ coinTypes.includes('Stablecoins') ? classes.typeSelected : classes.type }` } value='Stablecoins' >Stable</ToggleButton>
+  <ToggleButton className={ `${classes.vaultTypeButton} ${ coinTypes.includes('BTC') ? classes.typeSelected : classes.type }` } value='BTC' >BTC</ToggleButton>
+  <ToggleButton className={ `${classes.vaultTypeButton} ${ coinTypes.includes('Eth') ? classes.typeSelected : classes.type }` } value='Eth' >ETH</ToggleButton>
+</ToggleButtonGroup>
+
+*/
 
 export default Invest

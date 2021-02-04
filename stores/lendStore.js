@@ -48,7 +48,10 @@ class Store {
     this.emitter = emitter
 
     this.store = {
-      lendingAssets: []
+      lendingAssets: [],
+      lendingSupply: null,
+      lendingBorrowLimit: null,
+      lendingBorrow: null
     }
 
     dispatcher.register(
@@ -99,7 +102,6 @@ class Store {
   };
 
   configure = async(payload) => {
-    const account = stores.accountStore.getStore('account')
     const web3 = await stores.accountStore.getWeb3Provider()
     if(!web3) {
       return null
@@ -205,6 +207,7 @@ class Store {
       })
 
       this.emitter.emit(LEND_UPDATED)
+      this.emitter.emit(LENDING_CONFIGURED)
 
       this.dispatcher.dispatch({ type: GET_LENDING_BALANCES })
     })
@@ -356,7 +359,6 @@ class Store {
         lendingBorrow: lendingBorrow
       })
 
-      this.emitter.emit(LENDING_CONFIGURED)
       this.emitter.emit(LEND_UPDATED)
       return this.emitter.emit(LENDING_BALANCES_RETURNED)
     })

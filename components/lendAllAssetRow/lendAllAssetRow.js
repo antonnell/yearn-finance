@@ -9,7 +9,8 @@ import {
   TextField,
   Paper,
   CircularProgress,
-  Grid
+  Grid,
+  InputAdornment
 } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles';
 import Skeleton from '@material-ui/lab/Skeleton';
@@ -263,6 +264,14 @@ function LendAllAssetRowDetails({ lendingAsset, account, lendingBorrow, lendingS
             disabled={ loading }
             placeholder="0.00"
             variant="outlined"
+            InputProps={{
+              endAdornment: <InputAdornment position="end">
+                { lendingAsset.tokenMetadata.displayName }
+              </InputAdornment>,
+              startAdornment: <InputAdornment position="start">
+                <img src={ lendingAsset.tokenMetadata.icon } alt='' width={ 30 } height={ 30 } />
+              </InputAdornment>,
+            }}
           />
           <div className={ classes.scaleContainer }>
             <Button
@@ -370,6 +379,14 @@ function LendAllAssetRowDetails({ lendingAsset, account, lendingBorrow, lendingS
             disabled={ loading }
             placeholder="0.00"
             variant="outlined"
+            InputProps={{
+              endAdornment: <InputAdornment position="end">
+                { lendingAsset.tokenMetadata.displayName }
+              </InputAdornment>,
+              startAdornment: <InputAdornment position="start">
+                <img src={ lendingAsset.tokenMetadata.icon } alt='' width={ 30 } height={ 30 } />
+              </InputAdornment>,
+            }}
           />
           <div className={ classes.scaleContainer }>
             <div className={ classes.emptyScale }></div>
@@ -419,11 +436,11 @@ export default function LendAllAssetRow({ lendingAsset, account, lendingBorrow, 
             <Typography variant='h5' className={ classes.fontWeightBold }>{ lendingAsset.tokenMetadata.displayName }</Typography>
           </div>
         </div>
-        <div className={ classes.lendValueCell}>
-          <Typography variant='h5' className={ classes.balance } noWrap>{ formatCurrency(lendingAsset.supplyBalance) } { lendingAsset.tokenMetadata.symbol }</Typography>
-        </div>
         <div className={ classes.lendBalanceCell}>
           <Typography variant='h5' className={ classes.balance } noWrap>{ formatCurrency(lendingAsset.tokenMetadata.balance) } { lendingAsset.tokenMetadata.symbol }</Typography>
+        </div>
+        <div className={ classes.lendValueCell}>
+            <Typography variant='h5'>{ formatCurrency(lendingAsset.borrowAPY) } %</Typography>
         </div>
         <div className={ classes.lendValueCell}>
             <Typography variant='h5'>{ formatCurrency(lendingAsset.supplyAPY) } %</Typography>

@@ -38,10 +38,10 @@ function Lend({ changeTheme }) {
   const [ lendingBorrowLimit, setLendingBorrowLimit ] = useState(storeLendingBorrowLimit)
 
   const lendingUpdated = () => {
-    setLendingAssets(stores.coverStore.getStore('lendingAssets'))
-    setLendingSupply(stores.coverStore.getStore('lendingSupply'))
-    setLendingBorrow(stores.coverStore.getStore('lendingBorrow'))
-    setLendingBorrowLimit(stores.coverStore.getStore('lendingBorrowLimit'))
+    setLendingAssets(stores.lendStore.getStore('lendingAssets'))
+    setLendingSupply(stores.lendStore.getStore('lendingSupply'))
+    setLendingBorrow(stores.lendStore.getStore('lendingBorrow'))
+    setLendingBorrowLimit(stores.lendStore.getStore('lendingBorrowLimit'))
     forceUpdate()
   }
 
@@ -132,6 +132,13 @@ function Lend({ changeTheme }) {
     )
   }
 
+  console.log(lendingAssets)
+
+  const supplyAssets = lendingAssets ? lendingAssets.filter(filterSupplied).sort(sortSupply) : []
+  const borrowAssets = lendingAssets ? lendingAssets.filter(filterBorrowed).sort(sortBorrow) : []
+
+  console.log(lendingAssets)
+
   return (
     <Layout changeTheme={ changeTheme }>
       <Head>
@@ -140,40 +147,48 @@ function Lend({ changeTheme }) {
       <div className={ classes.lendingOverviewContainer }>
         <Paper elevation={0} className={ classes.overviewCard }>
           <Typography variant='h2'  color='textSecondary'>Total Supplied</Typography>
-          <Typography variant='h1'>{ !lendingSupply ? <Skeleton /> : `$ ${formatCurrency(lendingSupply)}` }</Typography>
+          <Typography variant='h1'>{ lendingSupply === null ? <Skeleton style={{ minWidth: '200px '}}/> : `$ ${formatCurrency(lendingSupply)}` }</Typography>
         </Paper>
         <Paper elevation={0} className={ classes.overviewCard }>
           <Typography variant='h2'  color='textSecondary'>Total Borrowed</Typography>
-          <Typography variant='h1'>{ !lendingBorrow ? <Skeleton /> : `$ ${formatCurrency(lendingBorrow)}` }</Typography>
+          <Typography variant='h1'>{ lendingBorrow === null ? <Skeleton style={{ minWidth: '200px '}}/> : `$ ${formatCurrency(lendingBorrow)}` }</Typography>
         </Paper>
         <Paper elevation={0} className={ classes.overviewCard }>
           <Typography variant='h2'  color='textSecondary'>Borrow Limit Used</Typography>
-          <Typography variant='h1'>{ !lendingBorrowLimit ? <Skeleton /> : `${formatCurrency(lendingBorrowLimit > 0 ? lendingBorrow*100/lendingBorrowLimit : 0)} %` }</Typography>
+          <Typography variant='h1'>{ lendingBorrowLimit === null ? <Skeleton style={{ minWidth: '200px '}}/> : `${formatCurrency(lendingBorrowLimit > 0 ? lendingBorrow*100/lendingBorrowLimit : 0)} %` }</Typography>
         </Paper>
       </div>
       <div className={ classes.lendingContainer }>
-        <Typography variant='h6' className={ classes.tableHeader }>Supplied Assets</Typography>
-        <Paper elevation={0} className={ classes.lendingTable }>
-          { renderSupplyHeaders() }
-          {
-            lendingAssets && lendingAssets.filter(filterSupplied).sort(sortSupply).map((asset) => {
-              return (
-                <LendSupplyAssetRow key={ asset.address } lendingAsset={ asset } lendingBorrow={ lendingBorrow } lendingSupply={ lendingSupply } lendingBorrowLimit={ lendingBorrowLimit } />
-              )
-            })
-          }
-        </Paper>
-        <Typography variant='h6' className={ classes.tableHeader }>Borrowed Assets</Typography>
-        <Paper elevation={0} className={ classes.lendingTable }>
-          { renderBorrowHeaders() }
-          {
-            lendingAssets && lendingAssets.filter(filterBorrowed).sort(sortBorrow).map((asset) => {
-              return (
-                <LendBorrowAssetRow key={ asset.address } lendingAsset={ asset } lendingBorrow={ lendingBorrow } lendingSupply={ lendingSupply } lendingBorrowLimit={ lendingBorrowLimit } />
-              )
-            })
-          }
-        </Paper>
+        { supplyAssets.length > 0 &&
+          <React.Fragment>
+            <Typography variant='h6' className={ classes.tableHeader }>Supplied Assets</Typography>
+            <Paper elevation={0} className={ classes.lendingTable }>
+              { renderSupplyHeaders() }
+              {
+                supplyAssets.map((asset) => {
+                  return (
+                    <LendSupplyAssetRow key={ asset.address } lendingAsset={ asset } lendingBorrow={ lendingBorrow } lendingSupply={ lendingSupply } lendingBorrowLimit={ lendingBorrowLimit } />
+                  )
+                })
+              }
+            </Paper>
+          </React.Fragment>
+        }
+        { borrowAssets.length > 0 &&
+          <React.Fragment>
+            <Typography variant='h6' className={ classes.tableHeader }>Borrowed Assets</Typography>
+            <Paper elevation={0} className={ classes.lendingTable }>
+              { renderBorrowHeaders() }
+              {
+                borrowAssets.map((asset) => {
+                  return (
+                    <LendBorrowAssetRow key={ asset.address } lendingAsset={ asset } lendingBorrow={ lendingBorrow } lendingSupply={ lendingSupply } lendingBorrowLimit={ lendingBorrowLimit } />
+                  )
+                })
+              }
+            </Paper>
+          </React.Fragment>
+        }
         <Typography variant='h6' className={ classes.tableHeader }>All Assets</Typography>
         <Paper elevation={0} className={ classes.lendingTable }>
           { renderAllHeaders() }

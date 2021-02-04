@@ -21,6 +21,7 @@ export default function CoverActionCard({ coverProtocol }) {
     <Paper elevation={ 0 } className={ classes.vaultActionContainer }>
       <Tabs
         variant='fullWidth'
+        indicatorColor='primary'
         value={ tabValue }
         onChange={ handleTabChange }
       >

@@ -106,8 +106,13 @@ export default function Deposit({ vault }) {
     <div className={ classes.depositContainer }>
 
       <div className={ classes.textField }>
-        <div className={ classes.balances }>
-          <Typography variant='h5' onClick={ () => { setAmountPercent(100) } } className={ classes.value } noWrap>Balance: { !vault.tokenMetadata.balance ? <Skeleton /> : formatCurrency(vault.tokenMetadata.balance) }</Typography>
+        <div className={ classes.inputTitleContainer }>
+          <div className={ classes.inputTitle }>
+            <Typography variant='h5' noWrap>Deposit</Typography>
+          </div>
+          <div className={ classes.balances }>
+            <Typography variant='h5' onClick={ () => { setAmountPercent(100) } } className={ classes.value } noWrap>Balance: { !vault.tokenMetadata.balance ? <Skeleton /> : formatCurrency(vault.tokenMetadata.balance) }</Typography>
+          </div>
         </div>
         <TextField
           variant="outlined"
@@ -119,6 +124,9 @@ export default function Deposit({ vault }) {
           InputProps={{
             endAdornment: <InputAdornment position="end">
               { vault.tokenMetadata.displayName }
+            </InputAdornment>,
+            startAdornment: <InputAdornment position="start">
+              <img src={ vault.tokenMetadata.icon } alt='' width={ 30 } height={ 30 } />
             </InputAdornment>,
           }}
         />

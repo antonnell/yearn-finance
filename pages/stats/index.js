@@ -68,7 +68,7 @@ function StatsData({ vault }) {
       </div>
       <div className={ classes.txCellAddress} >
         { vault && vault.strategies && vault.strategies.map((strategy) => {
-          return <Typography variant='h5' onClick={ () => { onStrategyClicked(strategy) } } className={ classes.strategy }>{ strategy.name ? strategy.name.replace(/^Strategy/, '') : '' }</Typography>
+          return <Typography key={ strategy.address } variant='h5' onClick={ () => { onStrategyClicked(strategy) } } className={ classes.strategy }>{ strategy.name ? strategy.name.replace(/^Strategy/, '') : '' }</Typography>
         }) }
       </div>
       <div className={ classes.txCell}>
@@ -82,18 +82,22 @@ function StatsData({ vault }) {
 }
 
 function Stats({ changeTheme }) {
+  const [, updateState] = React.useState();
+  const forceUpdate = React.useCallback(() => updateState({}), []);
+
   const storeVaults = stores.investStore.getStore('vaults')
   const storeTvl = stores.investStore.getStore('tvlInfo')
 
   const [ vaults, setVaults ] = useState(storeVaults)
   const [ tvl, setTvl ] = useState(storeTvl)
 
-  const vaultsUpdated = () => {
-    setVaults(stores.investStore.getStore('vaults'))
-    setTvl(stores.investStore.getStore('tvlInfo'))
-  }
-
   useEffect(function() {
+    const vaultsUpdated = () => {
+      setVaults(stores.investStore.getStore('vaults'))
+      setTvl(stores.investStore.getStore('tvlInfo'))
+      forceUpdate()
+    }
+
     stores.emitter.on(VAULTS_UPDATED, vaultsUpdated)
 
     return () => {
@@ -109,15 +113,15 @@ function Stats({ changeTheme }) {
       <div className={ classes.statsTVLContainer }>
         <Paper elevation={0} className={ classes.tvlCardContainer }>
           <Typography variant='h2'  color='textSecondary'>Total Value Locked</Typography>
-          <Typography variant='h1'>{ !tvl ? <Skeleton /> : `$ ${formatCurrency(tvl.TvlUSD)}` }</Typography>
+          <Typography variant='h1'>{ !tvl ? <Skeleton style={{ minWidth: '200px '}} /> : `$ ${formatCurrency(tvl.TvlUSD)}` }</Typography>
         </Paper>
         <Paper elevation={0} className={ classes.tvlCardContainer }>
           <Typography variant='h2'  color='textSecondary'>Total Vault Holdings</Typography>
-          <Typography variant='h1'>{ !tvl ? <Skeleton /> : `$ ${formatCurrency(tvl.totalVaultHoldingsUSD)}` }</Typography>
+          <Typography variant='h1'>{ !tvl ? <Skeleton style={{ minWidth: '200px '}} /> : `$ ${formatCurrency(tvl.totalVaultHoldingsUSD)}` }</Typography>
         </Paper>
         <Paper elevation={0} className={ classes.tvlCardContainer }>
           <Typography variant='h2'  color='textSecondary'>Total Earn Holdings</Typography>
-          <Typography variant='h1'>{ !tvl ? <Skeleton /> : `$ ${formatCurrency(tvl.totalEarnHoldingsUSD)}` }</Typography>
+          <Typography variant='h1'>{ !tvl ? <Skeleton style={{ minWidth: '200px '}} /> : `$ ${formatCurrency(tvl.totalEarnHoldingsUSD)}` }</Typography>
         </Paper>
       </div>
       <div className={ classes.statsContainer }>

@@ -175,7 +175,6 @@
     padding: 12px 0px;
   }
   .name {
-    display: none;
   }
   .lendBalanceCell {
     display: none;
@@ -202,5 +201,11 @@
   }
   .emptyScale {
     height: 12px
+  }
+  .assetInfo {
+    padding: 12px;
+  }
+  .assetInfoError {
+    padding: 12px;
   }
 }
