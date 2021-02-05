@@ -22,7 +22,7 @@ export default function CoverCard({ cover, account }) {
   }
 
   const covered = cover.poolData.filter((c) => {
-    return c.claimAsset.balance > 0
+    return c.claimAsset ? c.claimAsset.balance > 0 : false
   })
 
   return (

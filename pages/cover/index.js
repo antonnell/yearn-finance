@@ -43,7 +43,7 @@ function Cover({ changeTheme }) {
     if(cover.poolData.length === 0) {
       return false
     }
-    
+
     if(search && search !== '') {
       return vault.name.toLowerCase().includes(search.toLowerCase())
     } else {
@@ -52,11 +52,11 @@ function Cover({ changeTheme }) {
   }).sort((a, b) => {
 
     const coveredA = a.poolData.filter((c) => {
-      return c.claimAsset.balance > 0
+      return c.claimAsset ? c.claimAsset.balance > 0 : false
     })
 
     const coveredB = b.poolData.filter((c) => {
-      return c.claimAsset.balance > 0
+      return c.claimAsset ? c.claimAsset.balance > 0 : false
     })
 
     if(BigNumber(coveredA.length).gt(coveredB.length)) {
