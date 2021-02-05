@@ -147,8 +147,8 @@ class Store {
 
   getEarnAPYs = async (earn) => {
     try {
-      const provider = "https://eth-mainnet.alchemyapi.io/v2/k2--UT_xVVXMOvAyoxJYqtKhlmyBbqnX";
-      const etherscanApiKey = "GEQXZDY67RZ4QHNU1A57QVPNDV3RP1RYH4"
+      const provider = process.env.NEXT_PUBLIC_PROVIDER;
+      const etherscanApiKey = process.env.NEXT_PUBLIC_ETHERSCAN_KEY
 
       const options = {
         provider,
@@ -459,8 +459,8 @@ class Store {
 
     }
 
-    const provider = "https://eth-mainnet.alchemyapi.io/v2/k2--UT_xVVXMOvAyoxJYqtKhlmyBbqnX";
-    const etherscanApiKey = "GEQXZDY67RZ4QHNU1A57QVPNDV3RP1RYH4"
+    const provider = process.env.NEXT_PUBLIC_PROVIDER;
+    const etherscanApiKey = process.env.NEXT_PUBLIC_ETHERSCAN_KEY
 
     const options = {
       provider,
