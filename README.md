@@ -1,25 +1,25 @@
 # Yearn.Finance
 
 ## TODO:
-[x] check values ( work in root token for all inputs, not processed/vault token)
-[x] add earn page
-[x] add cream lending
-[x] add cover protocol
-[x] add overall vault statistics
-[x] remember vault filter selections
-[x] Add row based view for dashboard/invest
-[x] Implement more breakpoints
-[x] add Backscrather vault
-[ ] add withdrawal fee amount under withdraw
-[ ] add how many vault tokens you will get under deposit
-[ ] add balance auto refreshing every x seconds ( change to x48 subscription maybe )
-[ ] Refactor coingecko API call to be 1 call for all assets. If possible. (probably 2 (get all supported assets) filter addresses that are valid, do call)
-[ ] Change coingecko API to uniquote onchain calls if connected
-[ ] Include V1 style actions (deposit/withdraw) expanded for vaults. Similar to lending currently
-[ ] Add vault type groupings (Stablecoin, Bitcoin, Ethereum, )
-[ ] Expand stats screen to include a dashboard style view. Cards with customised vaults displayed. Graphs, the whole shebang.
-[ ] Graphs show $ value growth instead of just holdings
-[ ] implement mobx
+- [x] check values ( work in root token for all inputs, not processed/vault token)
+- [x] add earn page
+- [x] add cream lending
+- [x] add cover protocol
+- [x] add overall vault statistics
+- [x] remember vault filter selections
+- [x] Add row based view for dashboard/invest
+- [x] Implement more breakpoints
+- [x] add Backscrather vault
+- [ ] add withdrawal fee amount under withdraw
+- [ ] add how many vault tokens you will get under deposit
+- [ ] add balance auto refreshing every x seconds ( change to x48 subscription maybe )
+- [ ] Refactor coingecko API call to be 1 call for all assets. If possible. (probably 2 (get all supported assets) filter addresses that are valid, do call)
+- [ ] Change coingecko API to uniquote onchain calls if connected
+- [ ] Include V1 style actions (deposit/withdraw) expanded for vaults. Similar to lending currently
+- [ ] Add vault type groupings (Stablecoin, Bitcoin, Ethereum, )
+- [ ] Expand stats screen to include a dashboard style view. Cards with customised vaults displayed. Graphs, the whole shebang.
+- [ ] Graphs show $ value growth instead of just holdings
+- [ ] implement mobx
 
 
 ## TO REVIEW WHETHER WE COMPLY/IF WE WANT TO COMPLY
