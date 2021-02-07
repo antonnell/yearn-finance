@@ -45,7 +45,7 @@ function Cover({ changeTheme }) {
     }
 
     if(search && search !== '') {
-      return vault.name.toLowerCase().includes(search.toLowerCase())
+      return cover.name.toLowerCase().includes(search.toLowerCase())
     } else {
       return true
     }
