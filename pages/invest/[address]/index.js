@@ -28,7 +28,8 @@ import {
   VAULT_PERFORMANCE_RETURNED,
   GET_VAULT_TRANSACTIONS,
   VAULT_TRANSACTIONS_RETURNED,
-  ACCOUNT_CHANGED
+  ACCOUNT_CHANGED,
+  ETHERSCAN_URL
 } from '../../../stores/constants'
 
 function Vault(props) {
@@ -103,6 +104,10 @@ function Vault(props) {
       break;
   }
 
+  const onVaultClicked = () => {
+    window.open(`${ETHERSCAN_URL}/address/${vault.address}`)
+  }
+
   return (
     <Layout changeTheme={ props.changeTheme } backClicked={ backClicked }>
       <Head>
@@ -110,7 +115,7 @@ function Vault(props) {
       </Head>
       <div className={ classes.vaultContainer }>
         <div className={ classes.vaultStatsContainer }>
-          <div className={ classes.vaultBalanceContainer }>
+          <div className={ classes.vaultBalanceContainer } onClick={ onVaultClicked }>
             <div className={ classes.vaultOutline } >
               <div className={ classes.vaultLogo }>
                 { !vault ? <Skeleton /> : <img src={ vault.icon ? vault.icon : '/tokens/unknown-logo.png' } className={ classes.vaultIcon } alt='' width={ 50 } height={ 50 } /> }

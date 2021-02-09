@@ -15,6 +15,7 @@
   display: flex;
   align-items: center;
   margin-right: 48px;
+  cursor: pointer;
 }
 
 .vaultOutline {
@@ -134,6 +135,7 @@
   }
   .vaultBalanceContainer {
     margin-right: 12px;
+    cursor: pointer;
   }
   .vaultOutline {
     border-radius: 25px;
