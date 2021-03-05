@@ -8,6 +8,7 @@ import { creamPriceOracleABI } from './creamPriceOracleABI';
 import { cERC20DelegatorABI } from './cERC20DelegatorABI';
 import { lockupABI } from './lockupABI';
 import { votingEscrowABI } from './votingEscrowABI'
+import { cdpVaultABI } from './cdpVaultABI'
 
 export const ERC20ABI = erc20ABI
 export const VAULTV1ABI = vaultV1ABI
@@ -19,3 +20,4 @@ export const CREAMPRICEORACLEABI = creamPriceOracleABI
 export const CERC20DELEGATORABI = cERC20DelegatorABI
 export const LOCKUPABI = lockupABI
 export const VOTINGESCROWABI = votingEscrowABI
+export const CDPVAULTABI = cdpVaultABI
