@@ -118,12 +118,6 @@ function Navigation(props) {
         <Typography variant='h2'>Invest</Typography>
       </div>
       { account && account.address &&
-        <div className={ activePath.includes('/cover') ? classes.navigationOptionActive : classes.navigationOption } onClick={ () => { handleNavigate('/cover') }}>
-          <div className={ classes.navigationOptionIcon_insure } ></div>
-          <Typography variant='h2'>Cover</Typography>
-        </div>
-      }
-      { account && account.address &&
         <div className={ activePath.includes('/lend') ? classes.navigationOptionActive : classes.navigationOption } onClick={ () => { handleNavigate('/lend') }}>
           <div className={ classes.navigationOptionIcon_lending } ></div>
           <Typography variant='h2'>Lend</Typography>
