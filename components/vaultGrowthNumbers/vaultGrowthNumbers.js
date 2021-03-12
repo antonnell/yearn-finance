@@ -1,8 +1,6 @@
 import { Typography, Paper } from '@material-ui/core'
 import Skeleton from '@material-ui/lab/Skeleton';
 
-import VaultStrategyCard from '../vaultStrategyCard'
-
 import AccountBalanceWalletOutlinedIcon from '@material-ui/icons/AccountBalanceWalletOutlined';
 import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 
@@ -22,7 +20,7 @@ export default function VaultGrowthNumbers({ vault }) {
             <AccountBalanceWalletOutlinedIcon className={ classes.growthIcon } />
           </div>
           <div>
-            <Typography variant='subtitle1' color='textSecondary'>Holdings</Typography>
+            <Typography variant='subtitle1' color='textSecondary'>Your Balance</Typography>
             <Typography variant='h6'>{ (!vault || !vault.balanceInToken) ? <Skeleton style={{ minWidth: '200px '}} /> : ( formatCurrency(vault.balanceInToken)+' '+vault.tokenMetadata.displayName ) }</Typography>
           </div>
         </div>
@@ -37,13 +35,6 @@ export default function VaultGrowthNumbers({ vault }) {
             </div>
           </div>
         )}
-      </div>
-      <div className={ classes.vaultGrowthContainer }>
-        {
-          vault && vault.strategies && vault.strategies.map((strategy, index) => {
-            return <VaultStrategyCard key={ index } strategy={ strategy } />
-          })
-        }
       </div>
     </div>
   )

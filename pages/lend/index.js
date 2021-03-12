@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import {
   Typography,
   Paper,
+  Tooltip,
 } from '@material-ui/core'
 import Skeleton from '@material-ui/lab/Skeleton';
 import BigNumber from 'bignumber.js'
@@ -18,6 +19,8 @@ import { formatCurrency } from '../../utils'
 import LendSupplyAssetRow from '../../components/lendSupplyAssetRow'
 import LendBorrowAssetRow from '../../components/lendBorrowAssetRow'
 import LendAllAssetRow from '../../components/lendAllAssetRow'
+import LendSupplyGraph from '../../components/lendSupplyGraph'
+import LendBorrowGraph from '../../components/lendBorrowGraph'
 
 function Lend({ changeTheme }) {
   const tvl = null
@@ -30,17 +33,23 @@ function Lend({ changeTheme }) {
   const storeLendingSupply = stores.lendStore.getStore('lendingSupply')
   const storeLendingBorrow = stores.lendStore.getStore('lendingBorrow')
   const storeLendingBorrowLimit = stores.lendStore.getStore('lendingBorrowLimit')
+  const storeLendingSupplyAPY = stores.lendStore.getStore('lendingSupplyAPY')
+  const storeLendingBorrowAPY = stores.lendStore.getStore('lendingBorrowAPY')
 
 
   const [ lendingAssets, setLendingAssets ] = useState(storeLendingAssets)
   const [ lendingSupply, setLendingSupply ] = useState(storeLendingSupply)
   const [ lendingBorrow, setLendingBorrow ] = useState(storeLendingBorrow)
   const [ lendingBorrowLimit, setLendingBorrowLimit ] = useState(storeLendingBorrowLimit)
+  const [ lendingSupplyAPY, setLendingSupplyAPY ] = useState(storeLendingSupplyAPY)
+  const [ lendingBorrowAPY, setLendingBorrowAPY ] = useState(storeLendingBorrowAPY)
 
   const lendingUpdated = () => {
     setLendingAssets(stores.lendStore.getStore('lendingAssets'))
     setLendingSupply(stores.lendStore.getStore('lendingSupply'))
     setLendingBorrow(stores.lendStore.getStore('lendingBorrow'))
+    setLendingSupplyAPY(stores.lendStore.getStore('lendingSupplyAPY'))
+    setLendingBorrowAPY(stores.lendStore.getStore('lendingBorrowAPY'))
     setLendingBorrowLimit(stores.lendStore.getStore('lendingBorrowLimit'))
     forceUpdate()
   }
@@ -135,26 +144,76 @@ function Lend({ changeTheme }) {
   const supplyAssets = lendingAssets ? lendingAssets.filter(filterSupplied).sort(sortSupply) : []
   const borrowAssets = lendingAssets ? lendingAssets.filter(filterBorrowed).sort(sortBorrow) : []
 
+  const renderSupplyTootip = () => {
+    return (
+      <div className={ classes.tooltipContainer }>
+        { supplyAssets.map((asset) => {
+            return (
+              <div className={ classes.tooltipValue }>
+                <Typography className={ classes.val }>{ asset.tokenMetadata.symbol }</Typography>
+                <Typography className={ classes.valBold }>{ formatCurrency(asset.supplyAPY) }%</Typography>
+              </div>
+            )
+          })
+        }
+      </div>
+    )
+  }
+
+  const renderBorrowTooltip = () => {
+    return (
+      <div className={ classes.tooltipContainer }>
+        { borrowAssets.map((asset) => {
+            return (
+              <div className={ classes.tooltipValue }>
+                <Typography className={ classes.val }>{ asset.tokenMetadata.symbol }</Typography>
+                <Typography className={ classes.valBold }>{ formatCurrency(asset.borrowAPY) }%</Typography>
+              </div>
+            )
+          })
+        }
+      </div>
+    )
+  }
+
   return (
     <Layout changeTheme={ changeTheme }>
       <Head>
         <title>Lend</title>
       </Head>
-      <div className={ classes.lendingOverviewContainer }>
-        <Paper elevation={0} className={ classes.overviewCard }>
-          <Typography variant='h2'  color='textSecondary'>Total Supplied</Typography>
-          <Typography variant='h1'>{ lendingSupply === null ? <Skeleton style={{ minWidth: '200px '}}/> : `$ ${formatCurrency(lendingSupply)}` }</Typography>
-        </Paper>
-        <Paper elevation={0} className={ classes.overviewCard }>
-          <Typography variant='h2'  color='textSecondary'>Total Borrowed</Typography>
-          <Typography variant='h1'>{ lendingBorrow === null ? <Skeleton style={{ minWidth: '200px '}}/> : `$ ${formatCurrency(lendingBorrow)}` }</Typography>
-        </Paper>
-        <Paper elevation={0} className={ classes.overviewCard }>
-          <Typography variant='h2'  color='textSecondary'>Borrow Limit Used</Typography>
-          <Typography variant='h1'>{ lendingBorrowLimit === null ? <Skeleton style={{ minWidth: '200px '}}/> : `${formatCurrency(lendingBorrowLimit > 0 ? lendingBorrow*100/lendingBorrowLimit : 0)} %` }</Typography>
-        </Paper>
-      </div>
       <div className={ classes.lendingContainer }>
+        <Paper elevation={ 0 } className={ classes.lendingOverviewContainer }>
+          <div className={ classes.overviewCard }>
+            <LendSupplyGraph assets={ supplyAssets } />
+            <div>
+              <Typography variant='h2'>Total Supplied</Typography>
+              <Typography variant='h1' className={ classes.headAmount }>{ lendingSupply === null ? <Skeleton style={{ minWidth: '200px '}} /> : `$ ${formatCurrency(lendingSupply)}` }</Typography>
+              <Tooltip title={ renderSupplyTootip() }>
+                <Typography>{ !lendingSupplyAPY ? <Skeleton style={{ minWidth: '200px '}} /> : `${ formatCurrency(lendingSupplyAPY) } % Average APY` }</Typography>
+              </Tooltip>
+            </div>
+          </div>
+          <div className={ classes.separator }></div>
+          <div className={ classes.overviewCard }>
+            <Tooltip title="View transaction">
+              <LendBorrowGraph assets={ borrowAssets } />
+            </Tooltip>
+            <div>
+              <Typography variant='h2'>Total Borrowed</Typography>
+              <Typography variant='h1' className={ classes.headAmount }>{ lendingBorrow === null ? <Skeleton style={{ minWidth: '200px '}} /> : `$ ${formatCurrency(lendingBorrow)}` }</Typography>
+              <Tooltip title={ renderBorrowTooltip() }>
+                <Typography>{ !lendingBorrowAPY ? <Skeleton style={{ minWidth: '200px '}} /> : `${ formatCurrency(lendingBorrowAPY) } % Average APY` }</Typography>
+              </Tooltip>
+            </div>
+          </div>
+          <div className={ classes.separator }></div>
+          <div className={ classes.overviewCard }>
+            <div>
+              <Typography variant='h2'>Borrow Limit Used</Typography>
+              <Typography variant='h1'>{ lendingBorrowLimit === null ? <Skeleton style={{ minWidth: '200px '}} /> : `${formatCurrency(lendingBorrowLimit > 0 ? lendingBorrow*100/lendingBorrowLimit : 0)} %` }</Typography>
+            </div>
+          </div>
+        </Paper>
         { supplyAssets.length > 0 &&
           <React.Fragment>
             <Typography variant='h6' className={ classes.tableHeader }>Supplied Assets</Typography>

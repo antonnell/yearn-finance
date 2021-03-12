@@ -6,7 +6,7 @@ import { formatCurrency } from '../../utils'
 
 import BigNumber from 'bignumber.js'
 
-import classes from './vaultSplitGraph.module.css'
+import classes from './lendBorrowGraph.module.css'
 
 function CustomTooltip({ payload, label, active }) {
   if (active && payload && payload.length > 0) {
@@ -23,24 +23,24 @@ function CustomTooltip({ payload, label, active }) {
   return null;
 }
 
-export default function VaultSplitGraph({ vaults }) {
+export default function LendBorrowGraph({ assets }) {
   const router = useRouter()
 
   const [ activeIndex, setActiveIndex ] = useState(0)
 
-  const data = vaults.filter((vault) => {
-    return BigNumber(vault.balanceUSD).gt(0)
-  }).map((vault) => {
+  const data = assets.filter((asset) => {
+    return BigNumber(asset.borrowBalance).gt(0)
+  }).map((asset) => {
     return {
-      address: vault.address,
-      icon: vault.icon,
-      displayName: vault.displayName,
-      symbol: vault.symbol,
-      value: BigNumber(vault.balanceUSD).toNumber()
+      address: asset.address,
+      icon: asset.tokenMetadata.icon,
+      displayName: asset.tokenMetadata.displayName,
+      symbol: asset.tokenMetadata.symbol,
+      value: parseFloat(asset.borrowBalance)
     }
   })
 
-  const COLORS = ['#FFE8B0', '#B4E4FF', '#B4C8FF', '#C9FFCD', '#AAEBFF', '#004BBC', '#4782ED', '#BDE7FF',  '#8EC3FF']
+  const COLORS = ['#C9FFCD', '#AAEBFF', '#FFE8B0', '#B4E4FF', '#B4C8FF', '#004BBC', '#4782ED', '#BDE7FF',  '#8EC3FF']
   const onPieEnter = (data, index) => {
     setActiveIndex(index)
   }
@@ -48,7 +48,6 @@ export default function VaultSplitGraph({ vaults }) {
   const sectorClicked = (payload) => {
     router.push('/invest/'+payload.address)
   }
-
 
   return (
     <div className={ classes.vaultPerformanceGraph }>

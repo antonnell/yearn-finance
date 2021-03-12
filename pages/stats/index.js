@@ -110,20 +110,28 @@ function Stats({ changeTheme }) {
       <Head>
         <title>Stats</title>
       </Head>
-      <div className={ classes.statsTVLContainer }>
-        <Paper elevation={0} className={ classes.tvlCardContainer }>
-          <Typography variant='h2'  color='textSecondary'>Total Value Locked</Typography>
-          <Typography variant='h1'>{ !tvl ? <Skeleton style={{ minWidth: '200px '}} /> : `$ ${formatCurrency(tvl.TvlUSD)}` }</Typography>
-        </Paper>
-        <Paper elevation={0} className={ classes.tvlCardContainer }>
-          <Typography variant='h2'  color='textSecondary'>Total Vault Holdings</Typography>
-          <Typography variant='h1'>{ !tvl ? <Skeleton style={{ minWidth: '200px '}} /> : `$ ${formatCurrency(tvl.totalVaultHoldingsUSD)}` }</Typography>
-        </Paper>
-        <Paper elevation={0} className={ classes.tvlCardContainer }>
-          <Typography variant='h2'  color='textSecondary'>Total Earn Holdings</Typography>
-          <Typography variant='h1'>{ !tvl ? <Skeleton style={{ minWidth: '200px '}} /> : `$ ${formatCurrency(tvl.totalEarnHoldingsUSD)}` }</Typography>
-        </Paper>
-      </div>
+      <Paper elevation={ 0 } className={ classes.overviewContainer }>
+        <div className={ classes.overviewCard }>
+          <div>
+            <Typography variant='h2'>Total Value Locked</Typography>
+            <Typography variant='h1'>{ !tvl ? <Skeleton style={{ minWidth: '200px '}} /> : `$ ${formatCurrency(tvl.TvlUSD)}` }</Typography>
+          </div>
+        </div>
+        <div className={ classes.separator }></div>
+        <div className={ classes.overviewCard }>
+          <div>
+            <Typography variant='h2'>Total Vault Balance</Typography>
+            <Typography variant='h1'>{ !tvl ? <Skeleton style={{ minWidth: '200px '}} /> : `$ ${formatCurrency(tvl.totalVaultHoldingsUSD)}` }</Typography>
+          </div>
+        </div>
+        <div className={ classes.separator }></div>
+        <div className={ classes.overviewCard }>
+          <div>
+            <Typography variant='h2'>Total Earn Balance</Typography>
+            <Typography variant='h1'>{ !tvl ? <Skeleton style={{ minWidth: '200px '}} /> : `$ ${formatCurrency(tvl.totalEarnHoldingsUSD)}` }</Typography>
+          </div>
+        </div>
+      </Paper>
       <div className={ classes.statsContainer }>
         <StatsHeader />
         { vaults && (

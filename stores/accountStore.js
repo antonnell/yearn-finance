@@ -9,10 +9,8 @@ import {
   ACCOUNT_BALANCES_RETURNED,
   CONFIGURE_VAULTS,
   CONFIGURE_LENDING,
-  CONFIGURE_COVER,
   CONFIGURE_CDP,
   LENDING_CONFIGURED,
-  COVER_CONFIGURED,
   CDP_CONFIGURED,
   ACCOUNT_CHANGED,
   GET_GAS_PRICES,
@@ -112,7 +110,6 @@ class Store {
 
           this.dispatcher.dispatch({ type: CONFIGURE_VAULTS, content: { connected: true } })
           this.dispatcher.dispatch({ type: CONFIGURE_LENDING, content: { connected: true } })
-          this.dispatcher.dispatch({ type: CONFIGURE_COVER, content: { connected: true } })
           this.dispatcher.dispatch({ type: CONFIGURE_CDP, content: { connected: true } })
         })
         .catch((e) => {
@@ -121,14 +118,12 @@ class Store {
 
           this.dispatcher.dispatch({ type: CONFIGURE_VAULTS, content: { connected: false } })
           this.dispatcher.dispatch({ type: CONFIGURE_LENDING, content: { connected: false } })
-          this.dispatcher.dispatch({ type: CONFIGURE_COVER, content: { connected: false } })
           this.dispatcher.dispatch({ type: CONFIGURE_CDP, content: { connected: false } })
         })
       } else {
         //we can ignore if not authorized.
         this.emitter.emit(ACCOUNT_CONFIGURED)
         this.emitter.emit(LENDING_CONFIGURED)
-        this.emitter.emit(COVER_CONFIGURED)
         this.emitter.emit(CDP_CONFIGURED)
 
         this.dispatcher.dispatch({ type: CONFIGURE_VAULTS, content: { connected: false } })
@@ -155,8 +150,7 @@ class Store {
 
       that.dispatcher.dispatch({ type: CONFIGURE_VAULTS, content: { connected: true } })
       that.dispatcher.dispatch({ type: CONFIGURE_LENDING, content: { connected: true } })
-      that.dispatcher.dispatch({ type: CONFIGURE_COVER, content: { connected: true } })
-      this.dispatcher.dispatch({ type: CONFIGURE_CDP, content: { connected: true } })
+      that.dispatcher.dispatch({ type: CONFIGURE_CDP, content: { connected: true } })
     })
   }
 

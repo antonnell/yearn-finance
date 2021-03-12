@@ -26,16 +26,15 @@ const coreTheme = {
       '"Segoe UI Symbol"',
     ].join(','),
     h1: {   // Portfolio balance numbers
-      fontSize: '2rem',
+      fontSize: '32px',
       fontWeight: 700,
       lineHeight: 1.167,
-      letterSpacing: '2px',
       ['@media (max-width:576px)']: { // eslint-disable-line no-useless-computed-key
         fontSize: '1.6rem'
       }
     },
     h2: {   // Navigation tabs / section headers
-      fontSize: '1.2rem',
+      fontSize: '16px',
       fontWeight: 500,
       lineHeight: 1.5,
       ['@media (max-width:576px)']: { // eslint-disable-line no-useless-computed-key
@@ -146,7 +145,10 @@ const coreTheme = {
     MuiToggleButton: {
       root: {
         flex: 1,
-        padding: '12px 6px'
+        border: 'none',
+        padding: '0px',
+        borderRadius: '4px !important',
+        margin: '0px 6px'
       }
     },
     MuiSnackbar : {

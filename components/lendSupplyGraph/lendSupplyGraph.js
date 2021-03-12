@@ -6,7 +6,7 @@ import { formatCurrency } from '../../utils'
 
 import BigNumber from 'bignumber.js'
 
-import classes from './vaultSplitGraph.module.css'
+import classes from './lendSupplyGraph.module.css'
 
 function CustomTooltip({ payload, label, active }) {
   if (active && payload && payload.length > 0) {
@@ -23,20 +23,20 @@ function CustomTooltip({ payload, label, active }) {
   return null;
 }
 
-export default function VaultSplitGraph({ vaults }) {
+export default function LendSupplyGraph({ assets }) {
   const router = useRouter()
 
   const [ activeIndex, setActiveIndex ] = useState(0)
 
-  const data = vaults.filter((vault) => {
-    return BigNumber(vault.balanceUSD).gt(0)
-  }).map((vault) => {
+  const data = assets.filter((asset) => {
+    return BigNumber(asset.supplyBalance).gt(0)
+  }).map((asset) => {
     return {
-      address: vault.address,
-      icon: vault.icon,
-      displayName: vault.displayName,
-      symbol: vault.symbol,
-      value: BigNumber(vault.balanceUSD).toNumber()
+      address: asset.address,
+      icon: asset.tokenMetadata.icon,
+      displayName: asset.tokenMetadata.displayName,
+      symbol: asset.tokenMetadata.symbol,
+      value: parseFloat(asset.supplyBalance)
     }
   })
 
@@ -48,7 +48,6 @@ export default function VaultSplitGraph({ vaults }) {
   const sectorClicked = (payload) => {
     router.push('/invest/'+payload.address)
   }
-
 
   return (
     <div className={ classes.vaultPerformanceGraph }>

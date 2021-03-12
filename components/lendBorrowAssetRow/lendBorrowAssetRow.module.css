@@ -169,7 +169,7 @@
   background: #dc3545;
 }
 
-@media screen and (max-width: 576px) {
+@media screen and (max-width: 1000px) {
   .lendingRow {
     padding: 0px 6px;
   }

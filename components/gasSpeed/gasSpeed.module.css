@@ -8,6 +8,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding: 3px 0px;
 }
 
 .gasSpeed {
@@ -22,5 +23,5 @@
 
 .title {
   padding-left: 12px;
-  padding-bottom: 6px;
+  padding-bottom: 12px;
 }

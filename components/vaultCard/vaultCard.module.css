@@ -1,14 +1,12 @@
 .vaultContainer {
-  width: 350px;
+  width: 100%;
   border-radius: 10px;
-  margin: 24px;
   cursor: pointer;
 }
 
 .vaultContainerActive {
-  width: 350px;
+  width: 100%;
   border-radius: 10px;
-  margin: 24px;
   cursor: pointer;
   background: rgb(63,94,251);
   background: radial-gradient(circle, rgba(63,94,251,0.7) 0%, rgba(47,128,237,0.7) 48%) rgba(63,94,251,0.7) 100%;
@@ -89,19 +87,9 @@
 
 
 @media screen and (max-width: 1440px) {
-  .vaultContainerActive {
-    margin: 12px;
-  }
-  .vaultContainer {
-    margin: 12px;
-  }
+
 }
 
 @media screen and (max-width: 576px) {
-  .vaultContainer {
-    margin: 12px;
-  }
-  .vaultContainerActive {
-    margin: 12px;
-  }
+
 }

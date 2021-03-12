@@ -103,6 +103,11 @@ class Store {
     // get open CDPS
     const vaultContract = new web3.eth.Contract(CDPVAULTABI, CDP_VAULT_ADDRESS)
     async.map(allAssets, async (asset, callback) => {
+      if(!asset || !asset.address) {
+        callback(null, null)
+        return null
+      }
+
       const tokenDebts = await vaultContract.methods.tokenDebts(asset.address).call()
 
       // these are balances apparently
@@ -142,7 +147,7 @@ class Store {
         return this.emitter.emit(ERROR)
       }
 
-      this.setStore({ cdpActive: allAssetsPopulated.filter((asset) => { return (BigNumber(asset.collateral).gt(0) || BigNumber(asset.debt).gt(0)) }) })
+      this.setStore({ cdpActive: allAssetsPopulated.filter((asset) => { if(!asset) { return false }; return (BigNumber(asset.collateral).gt(0) || BigNumber(asset.debt).gt(0)) }) })
       this.setStore({ cdpAssets: allAssetsPopulated })
 
       this.emitter.emit(CDP_UPDATED)

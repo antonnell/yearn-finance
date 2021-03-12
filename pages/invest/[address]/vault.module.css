@@ -36,8 +36,6 @@
 
 .vaultInfo {
   display: flex;
-  max-width: 1400px;
-  flex-wrap: wrap;
 }
 
 .vaultTitle {
@@ -77,53 +75,81 @@
 .vaultVersionContainer {
   width: fit-content;
   border-radius: 12px;
-  padding: 5px 16px;
-  background: rgba(25, 101, 233, 1);
+  padding: 3px 12px;
+  border: 1px solid rgba(25, 101, 233, 1);
+  color: rgba(25, 101, 233, 1);
 }
 
 .vaultV1VersionContainer {
   width: fit-content;
   border-radius: 12px;
-  padding: 5px 16px;
-  background: rgba(229, 107, 115, 1);
+  padding: 3px 12px;
+  border: 1px solid rgba(229, 107, 115, 1);
+  color: rgba(229, 107, 115, 1);
 }
 
 .vaultV2VersionContainer {
   width: fit-content;
   border-radius: 12px;
-  padding: 5px 16px;
-  background: rgba(25, 101, 233, 1);
+  padding: 3px 12px;
+  border: 1px solid rgba(25, 101, 233, 1);
+  color: rgba(25, 101, 233, 1);
 }
 
 .vaultExpVersionContainer {
   width: fit-content;
   border-radius: 12px;
-  padding: 5px 16px;
-  background: rgba(255, 179, 71, 1);
+  padding: 3px 12px;
+  border: 1px solid rgba(255, 179, 71, 1);
+  color: rgba(255, 179, 71, 1);
 }
 
 .vaultEarnVersionContainer {
   width: fit-content;
   border-radius: 12px;
-  padding: 5px 16px;
-  background: rgba(220, 107, 229, 1);
+  padding: 3px 12px;
+  border: 1px solid rgba(220, 107, 229, 1);
+  color: rgba(220, 107, 229, 1);
 }
 
 .vaultLockupVersionContainer {
   width: fit-content;
   border-radius: 12px;
-  padding: 5px 16px;
-  background: rgba(244, 220, 10, 0.8);
+  padding: 3px 12px;
+  border: 1px solid rgba(244, 220, 10, 0.8);
+  color: rgba(244, 220, 10, 0.8);
 }
 
 .vaultVersionText {
   font-size: 0.5rem;
-  color: #fff;
 }
 
 .vaultIcon {
   width: 50px;
   height: 50px;
+}
+
+.borderedSection {
+  border: 1px solid rgba(128, 128, 128, 0.25);
+  border-radius: 10px;
+  padding: 24px;
+  padding-bottom: 0px;
+  flex: 1;
+}
+
+@media screen and (max-width: 1400px) {
+  .vaultContainer {
+    padding: 24px;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .vaultInfo {
+    flex-wrap: wrap;
+  }
+  .borderedSection {
+    min-width: 600px;
+  }
 }
 
 @media screen and (max-width: 576px) {

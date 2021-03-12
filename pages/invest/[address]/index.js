@@ -99,6 +99,9 @@ function Vault(props) {
     case 'Earn':
       vaultTypeClass = classes.vaultEarnVersionContainer
       break;
+    case 'Lockup':
+      vaultTypeClass = classes.vaultLockupVersionContainer
+      break;
     default:
       vaultTypeClass = classes.vaultVersionContainer
       break;
@@ -135,10 +138,12 @@ function Vault(props) {
           <div className={ classes.cardSeparation }>
             <VaultActionCard vault={ vault } />
           </div>
-          <div className={ classes.cardSeparation }>
-            { account && account.address && <VaultGrowthNumbers vault={ vault } />}
-            { vaultType !== 'Lockup' && <VaultPerformanceGraph vault={ vault } />}
-            { vaultType === 'Lockup' && <VaultLockupNotice vault={ vault } account={ account } /> }
+          <div className={ classes.borderedSection }>
+            <div className={ classes.cardSeparation }>
+              { account && account.address && <VaultGrowthNumbers vault={ vault } />}
+              { vaultType !== 'Lockup' && <VaultPerformanceGraph vault={ vault } />}
+              { vaultType === 'Lockup' && <VaultLockupNotice vault={ vault } account={ account } /> }
+            </div>
           </div>
         </div>
         <div className={ classes.vaultTransactionsContainer }>

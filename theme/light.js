@@ -9,7 +9,7 @@ const theme = createMuiTheme({
     ...coreTheme.palette,
     background: {
       default: '#fff',
-      paper: '#F2F3F8'
+      paper: '#F8F9FE'
     },
     accountButton: {
       default: '#EFEFEF'
@@ -21,7 +21,7 @@ const theme = createMuiTheme({
     MuiSnackbarContent: {
       root: {
         color: 'rgba(0, 0, 0, 0.87)',
-        backgroundColor: '#F2F3F8',
+        backgroundColor: '#F8F9FE',
         padding: '0px',
         minWidth: 'auto',
         '@media (min-width: 960px)': {
@@ -33,6 +33,14 @@ const theme = createMuiTheme({
       },
       action: {
         marginRight: '0px'
+      }
+    },
+    MuiTooltip: {
+      tooltip: {
+        background: '#fff !important',
+        border: '1px solid #000',
+        borderRadius: '8px',
+        color: '#000'
       }
     },
   }
