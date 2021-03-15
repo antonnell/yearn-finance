@@ -1,130 +1,80 @@
-.lendingContainer {
+.cdpContainer {
   height: 100%;
   width: 100%;
   display: flex;
   flex-direction: column;
-}
-
-.lendingTable {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  margin: 48px;
-  border: 1px solid rgba(128, 128, 128, 0.32);
-  border-radius: 10px;
-  width: calc(100% - 96px)
-}
-
-.lendingRow {
-  display: flex;
-  align-items: center;
-  padding: 24px 24px;
-  border-bottom: 1px solid rgba(128, 128, 128, 0.32);
-  flex: 1;
-}
-
-.lendTitleCell {
-  flex: 2;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 12px 6px;
-}
-
-.lendValueCell {
-  flex: 1;
-  padding: 12px 6px;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.lendActionsCell {
-  flex: 2;
-  display: flex;
-  justify-content: flex-end;
-  padding: 12px 6px;
-}
-
-.lendBalanceCell {
-  flex: 1;
-  padding: 12px 6px;
-  display: flex;
-  justify-content: flex-end;
+  padding: 0px 48px;
 }
 
 .tableHeader {
   margin-top: 48px !important;
-  margin-left: 72px !important;
+  margin-bottom: 12px !important;
+  margin-left: 24px !important;
 }
 
-.lendingOverviewContainer {
-  padding: 48px;
+.tableContainer {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  border: 1px solid rgba(128, 128, 128, 0.25);
+  border-radius: 10px;
+  width: 100%;
+}
+
+.overviewContainer {
+  padding: 32px 48px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
+  border: 1px solid rgba(128, 128, 128, 0.25);
+  border-radius: 10px;
+}
+
+.separator {
+  border-right: 1px solid rgba(128, 128, 128, 0.25);
+  height: 100px;
+  margin-right: 48px;
+  margin-left: 48px;
 }
 
 .overviewCard {
-  width: 420px;
-  border-radius: 10px;
-  padding: 48px 24px;
   display: flex;
-  flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
+  flex: 1;
 }
-
 
 @media screen and (max-width: 1600px) {
-  .overviewCard {
-    flex: 1;
-    margin: 0px 12px;
-    width: auto;
+  .cdpContainer {
+    padding: 0px 24px;
+  }
+  .overviewContainer {
+    padding: 24px 24px;
+  }
+  .separator {
+    margin-left: 24px;
+    margin-right: 24px;
+  }
+  .portfolioOutline {
+    margin-right: 12px;
   }
 }
 
-@media screen and (max-width: 1350px) {
+@media screen and (max-width: 1000px) {
+  .overviewContainer {
+    padding: 24px;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+  .separator {
+    border-bottom: 1px solid rgba(128, 128, 128, 0.25);
+    width: calc(100%);
+    margin: 12px 0px 12px 0px;
+    height: 0px;
+  }
   .overviewCard {
-    width: 100%;
-    padding: 24px 24px;
-    margin: 0;
-    flex: auto;
-    margin-bottom: 12px;
-  }
-}
-
-@media screen and (max-width: 576px) {
-  .lendingOverviewContainer{
-    padding: 12px;
-  }
-  .overviewCard  {
-    width: 100%;
-    padding: 24px 24px;
-    margin-bottom: 12px;
-  }
-  .tableHeader {
-    margin-top: 12px !important;
-    margin-left: 24px !important;
-  }
-  .lendingTable {
-    margin: 12px;
-    border: 1px solid rgba(128, 128, 128, 0.32);
-    width: calc(100% - 24px)
-  }
-  .lendingRow {
-    padding: 12px 6px;
-  }
-  .lendTitleCell {
-    flex: 1;
-    padding: 12px 0px;
-  }
-  .lendBalanceCell {
-    display: none;
-  }
-  .lendValueCell {
-    padding: 12px 0px;
-  }
-  .lendActionsCell {
-    display: none;
+    padding-bottom: 12px;
   }
 }

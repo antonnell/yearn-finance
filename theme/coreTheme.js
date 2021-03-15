@@ -81,7 +81,6 @@ const coreTheme = {
       fontSize: '1.5rem',
       fontWeight: 700,
       lineHeight: 1.167,
-      letterSpacing: '2px',
       ['@media (max-width:576px)']: { // eslint-disable-line no-useless-computed-key
         fontSize: '1.2rem'
       }
@@ -192,6 +191,15 @@ const coreTheme = {
         padding: '0',
       }
     },
+    MuiTableCell: {
+      head: {
+        padding: '36px 24px'
+      },
+      body: {
+        padding: '12px 24px',
+        borderBottom: 'none'
+      }
+    }
   }
 }
 

@@ -112,7 +112,7 @@
 }
 
 .scaleContainer {
-  margin: 24px 0px;
+  margin: 12px 0px 72px 0px;
   width: 100%;
   display: flex;
   align-items: center;
@@ -121,8 +121,8 @@
 
 .scale {
   width: 60px;
-  height: 60px;
-  border-radius: 30px !important;
+  height: 30px;
+  border-radius: 10px !important;
 }
 
 .buttons {

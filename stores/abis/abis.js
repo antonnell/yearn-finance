@@ -9,6 +9,10 @@ import { cERC20DelegatorABI } from './cERC20DelegatorABI';
 import { lockupABI } from './lockupABI';
 import { votingEscrowABI } from './votingEscrowABI'
 import { cdpVaultABI } from './cdpVaultABI'
+import { keep3rV1OracleABI } from './keep3rV1OracleABI'
+import { oracleRegistryABI } from './oracleRegistryABI'
+import { vaultManagerParamsABI } from './vaultManagerParamsABI'
+import { vaultParametersABI } from './vaultParametersABI'
 
 export const ERC20ABI = erc20ABI
 export const VAULTV1ABI = vaultV1ABI
@@ -21,3 +25,7 @@ export const CERC20DELEGATORABI = cERC20DelegatorABI
 export const LOCKUPABI = lockupABI
 export const VOTINGESCROWABI = votingEscrowABI
 export const CDPVAULTABI = cdpVaultABI
+export const KEEP3RV1ORACLEABI = keep3rV1OracleABI
+export const ORACLEREGISTRYABI = oracleRegistryABI
+export const VAULTMANAGERPARAMSABI = vaultManagerParamsABI
+export const VAULTPARAMETERSABI = vaultParametersABI
