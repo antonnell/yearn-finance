@@ -12,6 +12,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import WbSunnyOutlinedIcon from '@material-ui/icons/WbSunnyOutlined';
 import Brightness2Icon from '@material-ui/icons/Brightness2';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import BallotIcon from '@material-ui/icons/Ballot';
 
 import Unlock from '../unlock'
 
@@ -123,6 +124,10 @@ function Navigation(props) {
           <Typography variant='h2'>Lend</Typography>
         </div>
       }
+      <div className={ activePath.includes('/ltv') ? classes.navigationOptionActive : classes.navigationOption } onClick={ () => { handleNavigate('/ltv') }}>
+        <BallotIcon className={ classes.navigationOptionIcon } />
+        <Typography variant='h2'>LTV</Typography>
+      </div>
       <div className={ activePath.includes('/stats') ? classes.navigationOptionActive : classes.navigationOption } onClick={ () => { handleNavigate('/stats') }}>
         <BarChartIcon className={ classes.navigationOptionIcon } />
         <Typography variant='h2'>Stats</Typography>

@@ -2,6 +2,7 @@ import AccountStore from "./accountStore";
 import InvestStore from "./investStore";
 import CoverStore from "./coverStore";
 import LendStore from "./lendStore";
+import LTVStore from "./ltvStore";
 
 const Dispatcher = require('flux').Dispatcher;
 const Emitter = require('events').EventEmitter;
@@ -13,8 +14,10 @@ const accountStore = new AccountStore(dispatcher, emitter)
 const investStore = new InvestStore(dispatcher, emitter)
 const coverStore = new CoverStore(dispatcher, emitter)
 const lendStore = new LendStore(dispatcher, emitter)
+const ltvStore = new LTVStore(dispatcher, emitter)
 
 export default {
+  ltvStore: ltvStore,
   accountStore: accountStore,
   investStore: investStore,
   coverStore: coverStore,
