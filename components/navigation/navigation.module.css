@@ -180,6 +180,10 @@
   display: none;
 }
 
+.smallVersion {
+  font-size: 10px !important;
+  letter-spacing: 1px;
+}
 
 @media screen and (max-width: 1200px) {
   .navigationContainer {
