@@ -1,0 +1,58 @@
+.ltvContainer {
+  padding: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  min-height: calc(100vh - 200px);
+}
+
+.searchContainer {
+  padding: 24px;
+  min-width: 400px;
+}
+
+.inputTitleContainer {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.inputTitle {
+  padding-bottom: 6px;
+  margin-left: 12px;
+}
+
+.poolSelectOption {
+  display: flex;
+  align-items: center;
+}
+
+.poolIcon {
+  margin-right: 12px;
+}
+
+.pair {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+}
+
+.copyContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 500px;
+  padding: 24px;
+  margin-left: 100px;
+}
+
+.titleSpacing {
+  margin-bottom: 24px !important;
+}
+
+.lineHeightIncrease {
+  line-height: 1.6 !important;
+}
