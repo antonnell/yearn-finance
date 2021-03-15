@@ -124,10 +124,12 @@ function Navigation(props) {
           <Typography variant='h2'>Lend</Typography>
         </div>
       }
-      <div className={ activePath.includes('/ltv') ? classes.navigationOptionActive : classes.navigationOption } onClick={ () => { handleNavigate('/ltv') }}>
-        <BallotIcon className={ classes.navigationOptionIcon } />
-        <Typography variant='h2'>LTV</Typography>
-      </div>
+      { account && account.address &&
+        <div className={ activePath.includes('/ltv') ? classes.navigationOptionActive : classes.navigationOption } onClick={ () => { handleNavigate('/ltv') }}>
+          <BallotIcon className={ classes.navigationOptionIcon } />
+          <Typography variant='h2'>LTV</Typography>
+        </div>
+      }
       <div className={ activePath.includes('/stats') ? classes.navigationOptionActive : classes.navigationOption } onClick={ () => { handleNavigate('/stats') }}>
         <BarChartIcon className={ classes.navigationOptionIcon } />
         <Typography variant='h2'>Stats</Typography>
