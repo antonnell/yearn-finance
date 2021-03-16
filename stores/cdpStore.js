@@ -134,11 +134,22 @@ class Store {
       console.log(ethPrice)
     } catch(ex) {
       console.log(ex)
-      this.emitter.emit(CDP_UPDATED)
-      this.emitter.emit(CDP_CONFIGURED)
+      try {
+        const sendAmount0 = (1e18).toFixed(0)
+        const keep3rContract = new web3.eth.Contract(KEEP3RV1ORACLEABI, KEEP3R_ORACLE_ADDRESS)
+        ethPrice = await keep3rContract.methods.current('0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', sendAmount0, '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48').call({ })
+        ethPrice = BigNumber(ethPrice).div(1e6).toNumber()
 
-      this.emitter.emit(ERROR, ex)
-      return null
+        console.log("ETH PRICE")
+        console.log(ethPrice)
+      } catch(ex) {
+        console.log(ex)
+        this.emitter.emit(CDP_UPDATED)
+        this.emitter.emit(CDP_CONFIGURED)
+
+        this.emitter.emit(ERROR, ex)
+        return null
+      }
     }
 
     const vaultManagerParamsContract = new web3.eth.Contract(VAULTMANAGERPARAMSABI, VAULT_MANAGER_PARAMETERS_ADDRESS)
