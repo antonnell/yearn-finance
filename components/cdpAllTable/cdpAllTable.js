@@ -67,7 +67,7 @@ function stableSort(array, comparator) {
 
 const headCells = [
   { id: 'symbol', numeric: false, disablePadding: false, label: 'Asset' },
-  { id: 'balance', numeric: true, disablePadding: false, label: 'Available to deposit' },
+  { id: 'balance', numeric: true, disablePadding: false, label: 'Available to Supply' },
   { id: 'stabilityFee', numeric: true, disablePadding: false, label: 'Stability Fee' },
   { id: 'liquidationFee', numeric: true, disablePadding: false, label: 'Liquidation Fee' },
   { id: '', numeric: false, disablePadding: false, label: '' },
@@ -200,8 +200,10 @@ const useStyles = makeStyles((theme) => ({
   cdpActions: {
     display: 'flex',
     alignItems: 'flex-start',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     borderBottom: '1px solid rgba(128, 128, 128, 0.32)',
+    borderTop: '1px solid rgba(128, 128, 128, 0.25)',
+    background: theme.palette.type === 'dark' ? '#22252E' : '#fff',
   },
   assetInfo: {
     display: 'flex',

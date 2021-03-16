@@ -64,7 +64,7 @@ function stableSort(array, comparator) {
 
 const headCells = [
   { id: 'symbol', numeric: false, disablePadding: false, label: 'Asset' },
-  { id: 'balance', numeric: true, disablePadding: false, label: 'Available to supply' },
+  { id: 'balance', numeric: true, disablePadding: false, label: 'Available to Supply' },
   { id: 'collateral', numeric: true, disablePadding: false, label: 'Supplied' },
   { id: 'debt', numeric: true, disablePadding: false, label: 'USDP Borrowed' },
   { id: 'status', numeric: true, disablePadding: false, label: 'Health' },
