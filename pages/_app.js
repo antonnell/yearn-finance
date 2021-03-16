@@ -16,13 +16,11 @@ import {
   CONFIGURE_RETURNED,
   VAULTS_CONFIGURED,
   ACCOUNT_CONFIGURED,
-  COVER_CONFIGURED,
   LENDING_CONFIGURED
 } from '../stores/constants'
 
 export default function MyApp({ Component, pageProps }) {
   const [ themeConfig, setThemeConfig ] = useState(lightTheme);
-  const [ coverConfigured, setCoverConfigured ] = useState(false)
   const [ vaultConfigured, setVaultConfigured ] = useState(false)
   const [ accountConfigured, setAccountConfigured ] = useState(false)
   const [ lendingConfigured, setLendingConfigured ] = useState(false)
@@ -48,10 +46,6 @@ export default function MyApp({ Component, pageProps }) {
     setVaultConfigured(true)
   }
 
-  const coverConfigureReturned = () => {
-    setCoverConfigured(true)
-  }
-
   const lendingConfigureReturned = () => {
     setLendingConfigured(true)
   }
@@ -64,7 +58,6 @@ export default function MyApp({ Component, pageProps }) {
   useEffect(function() {
     stores.emitter.on(VAULTS_CONFIGURED, vaultsConfigureReturned)
     stores.emitter.on(ACCOUNT_CONFIGURED, accountConfigureReturned)
-    stores.emitter.on(COVER_CONFIGURED, coverConfigureReturned)
     stores.emitter.on(LENDING_CONFIGURED, lendingConfigureReturned)
 
     stores.dispatcher.dispatch({ type: CONFIGURE })
@@ -72,7 +65,6 @@ export default function MyApp({ Component, pageProps }) {
     return () => {
       stores.emitter.removeListener(VAULTS_CONFIGURED, vaultsConfigureReturned)
       stores.emitter.removeListener(ACCOUNT_CONFIGURED, accountConfigureReturned)
-      stores.emitter.removeListener(COVER_CONFIGURED, coverConfigureReturned)
       stores.emitter.removeListener(LENDING_CONFIGURED, lendingConfigureReturned)
     }
   },[]);
@@ -87,10 +79,10 @@ export default function MyApp({ Component, pageProps }) {
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
         {
-          vaultConfigured && accountConfigured && coverConfigured && lendingConfigured && <Component {...pageProps} changeTheme={ changeTheme } />
+          vaultConfigured && accountConfigured && lendingConfigured && <Component {...pageProps} changeTheme={ changeTheme } />
         }
         {
-          !(vaultConfigured && accountConfigured && coverConfigured && lendingConfigured) && <Configure {...pageProps} />
+          !(vaultConfigured && accountConfigured && lendingConfigured) && <Configure {...pageProps} />
         }
       </ThemeProvider>
     </React.Fragment>

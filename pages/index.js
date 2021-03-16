@@ -1,3 +1,4 @@
-import Invest from './invest'
+import Home from './home.js'
 
-export default Invest
+
+export default Home

@@ -111,7 +111,6 @@ function Navigation(props) {
 
 
   const activePath = router.asPath
-  console.log(router)
   const renderNavs = () => {
     return (<React.Fragment>
       <div className={ (activePath.includes('/invest') || activePath === '/') ? classes.navigationOptionActive : classes.navigationOption } onClick={ () => { handleNavigate('/invest') }}>

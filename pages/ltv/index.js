@@ -22,7 +22,7 @@ import {
 
 import { formatCurrency, formatAddress } from '../../utils'
 
-function Stats({ changeTheme }) {
+function LTV({ changeTheme }) {
 
   const [ asset, setAsset ] = useState('')
   const [ loading, setLoading ] = useState(false)
@@ -152,4 +152,4 @@ function Stats({ changeTheme }) {
   )
 }
 
-export default Stats
+export default LTV
