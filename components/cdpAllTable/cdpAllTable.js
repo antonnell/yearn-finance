@@ -19,18 +19,27 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 
 import PublishIcon from '@material-ui/icons/Publish';
 import GetAppIcon from '@material-ui/icons/GetApp';
 
 import BigNumber from 'bignumber.js'
 
+import CDPDepositAndBorrow from '../cdpDepositAndBorrow'
+import CDPRepayAndWithdraw from '../cdpRepayAndWithdraw'
+import CDPInformation from '../cdpInformation'
 
 import { formatCurrency, formatAddress } from '../../utils'
 
 import * as moment from 'moment'
 
 function descendingComparator(a, b, orderBy) {
+  if(!a || !b) {
+    return 0
+  }
+
   if (b[orderBy] < a[orderBy]) {
     return -1;
   }
@@ -61,6 +70,7 @@ const headCells = [
   { id: 'balance', numeric: true, disablePadding: false, label: 'Available to deposit' },
   { id: 'stabilityFee', numeric: true, disablePadding: false, label: 'Stability Fee' },
   { id: 'liquidationFee', numeric: true, disablePadding: false, label: 'Liquidation Fee' },
+  { id: '', numeric: false, disablePadding: false, label: '' },
 ];
 
 function EnhancedTableHead(props) {
@@ -159,6 +169,7 @@ const useStyles = makeStyles((theme) => ({
     lineHeight: '1.5'
   },
   cell: {
+
   },
   cellSuccess: {
     color: '#4eaf0a',
@@ -185,12 +196,115 @@ const useStyles = makeStyles((theme) => ({
   tableBottomSkelly: {
     display: 'flex',
     justifyContent: 'flex-end'
+  },
+  cdpActions: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    borderBottom: '1px solid rgba(128, 128, 128, 0.32)',
+  },
+  assetInfo: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flex: 1,
+    padding: '24px',
+    width: '100%',
+    flexWrap: 'wrap',
+    borderBottom: '1px solid rgba(128, 128, 128, 0.32)',
+    background: 'radial-gradient(circle, rgba(63,94,251,0.7) 0%, rgba(47,128,237,0.7) 48%) rgba(63,94,251,0.7) 100%'
+  },
+  assetInfoError: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flex: 1,
+    padding: '24px',
+    width: '100%',
+    flexWrap: 'wrap',
+    borderBottom: '1px solid rgba(128, 128, 128, 0.32)',
+    background: '#dc3545'
+  },
+  infoField: {
+    flex: 1
+  },
+  flexy: {
+    padding: '6px 0px'
+  },
+  overrideCell: {
+    padding: '0px'
+  },
+  hoverRow: {
+    cursor: 'pointer'
+  },
+  statusLiquid: {
+    color: '#dc3545'
+  },
+  statusWarning: {
+    color: '#FF9029'
+  },
+  statusSafe: {
+    color: 'green'
   }
 }));
 
-export default function EnhancedTable({ cdps }) {
+const CDPDetails = ({ cdp, borrowAsset, classes }) => {
+  return (
+    <TableCell colSpan="6" className={ classes.overrideCell }>
+      <div className={ classes.assetInfo }>
+        <div className={ classes.infoField }>
+          <Typography variant={ 'h5' } color='textSecondary'>Oracle Price:</Typography>
+          <div className={ classes.flexy }>
+            <Typography variant={ 'h6' } noWrap>$ { formatCurrency(cdp.dolarPrice, 4) }</Typography>
+          </div>
+        </div>
+        <div className={ classes.infoField }>
+          <Typography variant={ 'h5' } color='textSecondary'>Liquidation Price:</Typography>
+          <div className={ classes.flexy }>
+            <Typography variant={ 'h6' } noWrap>$ { formatCurrency(cdp.liquidationPrice) }</Typography>
+          </div>
+        </div>
+        <div className={ classes.infoField }>
+          <Typography variant={ 'h5' } color='textSecondary'>Utilization:</Typography>
+          <div className={ classes.flexy }>
+            <Typography variant={ 'h6' } noWrap>{ formatCurrency(cdp.utilizationRatio) }%</Typography>
+          </div>
+        </div>
+      </div>
+      <div className={ classes.cdpActions }>
+        <CDPInformation cdp={ cdp } />
+        <CDPDepositAndBorrow cdp={ cdp } borrowAsset={ borrowAsset } />
+      </div>
+    </TableCell>
+  )
+}
+
+const ExpandableTableRow = ({ children, expandComponent, ...otherProps }) => {
+  const [isExpanded, setIsExpanded] = React.useState(false);
   const classes = useStyles();
-  const [order, setOrder] = React.useState('asc');
+
+  return (
+    <React.Fragment>
+      <TableRow hover className={ classes.hoverRow } {...otherProps} onClick={() => setIsExpanded(!isExpanded)}>
+        {children}
+        <TableCell padding="checkbox">
+          <IconButton>
+            {isExpanded ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
+      </TableRow>
+      {isExpanded && (
+        <TableRow>
+          {expandComponent}
+        </TableRow>
+      )}
+    </React.Fragment>
+  );
+};
+
+export default function EnhancedTable({ cdps, borrowAsset }) {
+  const classes = useStyles();
+  const [order, setOrder] = React.useState('desc');
   const [orderBy, setOrderBy] = React.useState('balance');
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -246,36 +360,38 @@ export default function EnhancedTable({ cdps }) {
             rowCount={cdps.length}
           />
           <TableBody>
-            {stableSort(cdps, getComparator(order, orderBy))
-              .map((row, index) => {
-                const labelId = `enhanced-table-checkbox-${index}`;
+          {stableSort(cdps, getComparator(order, orderBy))
+            .map((row, index) => {
+              if(!row) {
+                return null
+              }
+              const labelId = `enhanced-table-checkbox-${index}`;
 
-                return (
-                  <TableRow
-                    hover
-                    tabIndex={-1}
-                    key={row.txid}
-                  >
-                    <TableCell className={ classes.cell }>
-                      <div className={ classes.inline }>
-                        <img src={`${row.tokenMetadata ? row.tokenMetadata.icon : '/tokens/unknown-logo.png'}`} width={ 30 } height={ 30 } alt='' onError={(e)=>{e.target.onerror = null; e.target.src='/tokens/unknown-logo.png' }} className={ classes.icon } />
-                        <div className={ classes.aligntRight}>
-                          <Typography variant='h5' className={ classes.textSpaced }>{ row.tokenMetadata.symbol }</Typography>
-                        </div>
+              return (
+                <ExpandableTableRow
+                  key={row.name}
+                  expandComponent={<CDPDetails cdp={ row } borrowAsset={ borrowAsset } classes={ classes } />}
+                >
+                  <TableCell className={ classes.cell }>
+                    <div className={ classes.inline }>
+                      <img src={`${row.tokenMetadata ? row.tokenMetadata.icon : '/tokens/unknown-logo.png'}`} width={ 30 } height={ 30 } alt='' onError={(e)=>{e.target.onerror = null; e.target.src='/tokens/unknown-logo.png' }} className={ classes.icon } />
+                      <div className={ classes.aligntRight}>
+                        <Typography variant='h5' className={ classes.textSpaced }>{ row.tokenMetadata.symbol }</Typography>
                       </div>
-                    </TableCell>
-                    <TableCell className={ classes.cell } align='right'>
-                      <Typography variant='h5' className={ classes.textSpaced }>{ formatCurrency(row.tokenMetadata.balance) } { row.tokenMetadata.symbol }</Typography>
-                    </TableCell>
-                    <TableCell className={ classes.cell } align='right'>
-                      <Typography variant='h5' className={ classes.textSpaced }>{ formatCurrency(row.stabilityFee) } %</Typography>
-                    </TableCell>
-                    <TableCell className={ classes.cell } align='right'>
-                      <Typography variant='h5' className={ classes.textSpaced }>{ formatCurrency(row.liquidationFee) } %</Typography>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
+                    </div>
+                  </TableCell>
+                  <TableCell className={ classes.cell } align='right'>
+                    <Typography variant='h5' className={ classes.textSpaced }>{ formatCurrency(row.tokenMetadata.balance) } { row.tokenMetadata.symbol }</Typography>
+                  </TableCell>
+                  <TableCell className={ classes.cell } align='right'>
+                    <Typography variant='h5' className={ classes.textSpaced }>{ formatCurrency(row.stabilityFee) } %</Typography>
+                  </TableCell>
+                  <TableCell className={ classes.cell } align='right'>
+                    <Typography variant='h5' className={ classes.textSpaced }>{ formatCurrency(row.liquidationFee) } %</Typography>
+                  </TableCell>
+                </ExpandableTableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </TableContainer>

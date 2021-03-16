@@ -233,6 +233,15 @@ const useStyles = makeStyles((theme) => ({
   },
   hoverRow: {
     cursor: 'pointer'
+  },
+  statusLiquid: {
+    color: '#dc3545'
+  },
+  statusWarning: {
+    color: '#FF9029'
+  },
+  statusSafe: {
+    color: 'green'
   }
 }));
 
@@ -293,7 +302,7 @@ const ExpandableTableRow = ({ children, expandComponent, ...otherProps }) => {
 
 export default function EnhancedTable({ cdps, borrowAsset }) {
   const classes = useStyles();
-  const [order, setOrder] = React.useState('asc');
+  const [order, setOrder] = React.useState('desc');
   const [orderBy, setOrderBy] = React.useState('balance');
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -376,7 +385,7 @@ export default function EnhancedTable({ cdps, borrowAsset }) {
                       <Typography variant='h5' className={ classes.textSpaced }>{ formatCurrency(row.debt) } USDP</Typography>
                     </TableCell>
                     <TableCell className={ classes.cell } align='right'>
-                    <Typography variant='h5'>{ row.status }</Typography>
+                      <Typography variant='h5' className={ row.status === 'Liquidatable' ? classes.statusLiquid : ['Dangerous', 'Moderate'].includes(row.status) ? classes.statusWarning : classes.statusSafe }>{ row.status }</Typography>
                     </TableCell>
                   </ExpandableTableRow>
                 );

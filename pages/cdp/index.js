@@ -51,10 +51,14 @@ function CDP({ changeTheme }) {
     }
   },[]);
 
-  const renderCDPs = () => {
+  const getStatus = (cdps) => {
     const cdpStatuses = cdps.map((cdp) => { return cdp.status })
-    return (<div>
+    return cdpStatuses.includes('Liquidatable') ? 'Liquidatable' : (cdpStatuses.includes('Dangerous') ? 'Dangerous' : (cdpStatuses.includes('Moderate') ? 'Moderate' : 'Safe'))
+  }
 
+  const renderCDPs = () => {
+    const status = getStatus(cdps)
+    return (<div>
       <Paper elevation={ 0 } className={ classes.overviewContainer }>
         <div className={ classes.overviewCard }>
           <CDPSuppliedGraph assets={ cdps } />
@@ -75,7 +79,7 @@ function CDP({ changeTheme }) {
         <div className={ classes.overviewCard }>
           <div>
             <Typography variant='h2'>Status</Typography>
-            <Typography variant='h1'>{ cdpStatuses.includes('Dangerous') ? 'Dangerous' : (cdpStatuses.includes('Moderate') ? 'Moderate' : 'Safe') }</Typography>
+            <Typography variant='h1' className={ status === 'Liquidatable' ? classes.statusLiquid : ['Dangerous', 'Moderate'].includes(status) ? classes.statusWarning : classes.statusSafe }>{ status }</Typography>
           </div>
         </div>
       </Paper>
@@ -92,7 +96,15 @@ function CDP({ changeTheme }) {
   }
 
   const renderNoCDPs = () => {
-
+    return (<div>
+      <Paper elevation={ 0 } className={ classes.overviewContainer }>
+        Banner Explaining what is going on here.
+      </Paper>
+      <Typography variant='h6' className={ classes.tableHeader }>All CDP Options</Typography>
+      <Paper elevation={ 0 } className={ classes.tableContainer }>
+        <CDPAllTable cdps={ cdpAssets } borrowAsset={ borrowAsset }/>
+      </Paper>
+    </div>)
   }
 
   return (

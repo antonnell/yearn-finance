@@ -13,6 +13,7 @@ import WbSunnyOutlinedIcon from '@material-ui/icons/WbSunnyOutlined';
 import Brightness2Icon from '@material-ui/icons/Brightness2';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
+import BallotIcon from '@material-ui/icons/Ballot';
 
 import Unlock from '../unlock'
 
@@ -339,6 +340,7 @@ function Navigation(props) {
           </svg>
         </a>
       </div>
+      <Typography className={ classes.smallVersion }>Version 1.0.1</Typography>
     </Paper>
   )
 }

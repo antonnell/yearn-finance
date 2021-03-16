@@ -8,7 +8,8 @@ import {
   InputAdornment,
   Button,
   Grid,
-  Slider
+  Slider,
+  CircularProgress
 } from '@material-ui/core'
 import Skeleton from '@material-ui/lab/Skeleton';
 import BigNumber from 'bignumber.js'
@@ -22,8 +23,10 @@ import {
   DEPOSIT_BORROW_CDP,
   DEPOSIT_BORROW_CDP_RETURNED,
   APPROVE_CDP,
-  APPROVE_CDP_RETURNED
+  APPROVE_CDP_RETURNED,
+  ERROR
 } from '../../stores/constants'
+import stores from '../../stores'
 
 export default function CDPDepositAndBorrow({ cdp, borrowAsset }) {
 
@@ -51,14 +54,47 @@ export default function CDPDepositAndBorrow({ cdp, borrowAsset }) {
 
   const [ loading, setLoading ] = useState(false)
 
+  useEffect(function() {
+    const depositBorrowReturned = () => {
+      setLoading(false)
+    }
+
+    const approveReturned = () => {
+      setLoading(false)
+    }
+
+    const errorReturned = () => {
+      setLoading(false)
+    }
+
+    stores.emitter.on(DEPOSIT_BORROW_CDP_RETURNED, depositBorrowReturned)
+    stores.emitter.on(APPROVE_CDP_RETURNED, approveReturned)
+    stores.emitter.on(ERROR, errorReturned)
+
+    return () => {
+      stores.emitter.removeListener(DEPOSIT_BORROW_CDP_RETURNED, depositBorrowReturned)
+      stores.emitter.removeListener(APPROVE_CDP_RETURNED, approveReturned)
+      stores.emitter.removeListener(ERROR, errorReturned)
+    }
+  },[]);
+
   const onDepositAmountChanged = (event) => {
     setDepositAmountError(false)
     setDepositAmount(event.target.value)
+
+    handleSliderChange(null, borrowAmountPerc, event.target.value)
   }
 
   const onBorrowAmountChanged = (event) => {
     setBorrowAmountError(false)
     setBorrowAmount(event.target.value)
+
+    let depositUSDPAvailable = (depositAmount && depositAmount > 0) ? depositAmount : 0
+    depositUSDPAvailable = BigNumber(depositUSDPAvailable).times(cdp.dolarPrice).times(cdp.initialCollateralRatio).div(100).toNumber()
+    const debtAvailable = BigNumber(cdp.maxUSDPAvailable).plus(depositUSDPAvailable).minus(cdp.debt).toNumber()
+
+    let borrowAmountPercentage = BigNumber(event.target.value).times(100).div(debtAvailable)
+    setBorrowAmountPerc(borrowAmountPercentage)
   }
 
   const onDeposit = () => {
@@ -66,7 +102,7 @@ export default function CDPDepositAndBorrow({ cdp, borrowAsset }) {
     setBorrowAmountError(false)
 
     setLoading(true)
-    stores.dispatcher.dispatch({ type: DEPOSIT_BORROW_CDP, content: { cdp: cdp, amount: depositAmount, gasSpeed: gasSpeed } })
+    stores.dispatcher.dispatch({ type: DEPOSIT_BORROW_CDP, content: { cdp: cdp, depositAmount: depositAmount, borrowAmount: borrowAmount } })
   }
 
   const onApprove = () => {
@@ -76,7 +112,7 @@ export default function CDPDepositAndBorrow({ cdp, borrowAsset }) {
     }
 
     setLoading(true)
-    stores.dispatcher.dispatch({ type: APPROVE_CDP, content: { cdp: cdp, amount: depositAmount, gasSpeed: gasSpeed } })
+    stores.dispatcher.dispatch({ type: APPROVE_CDP, content: { asset: cdp, amount: depositAmount } })
   }
 
   const onApproveMax = () => {
@@ -86,7 +122,7 @@ export default function CDPDepositAndBorrow({ cdp, borrowAsset }) {
     }
 
     setLoading(true)
-    stores.dispatcher.dispatch({ type: APPROVE_CDP, content: { cdp: cdp, amount: 'max', gasSpeed: gasSpeed } })
+    stores.dispatcher.dispatch({ type: APPROVE_CDP, content: { asset: cdp, amount: 'max' } })
   }
 
   const setDepositAmountPercent = (percent) => {
@@ -95,23 +131,37 @@ export default function CDPDepositAndBorrow({ cdp, borrowAsset }) {
     }
     const amount = BigNumber(cdp.tokenMetadata.balance).times(percent).div(100).toFixed(cdp.tokenMetadata.decimals)
     setDepositAmount(amount)
+
+    handleSliderChange(null, borrowAmountPerc, amount)
   }
 
   const setBorrowAmountPercent = (percent) => {
     if(loading) {
       return
     }
-    const amount = BigNumber(BigNumber(cdp.maxUSDPAvailable).minus(cdp.debt).toNumber()).times(percent).div(100).toFixed(cdp.tokenMetadata.decimals)
+
+    let depositUSDPAvailable = (depositAmount && depositAmount > 0) ? depositAmount : 0
+    depositUSDPAvailable = BigNumber(depositUSDPAvailable).times(cdp.initialCollateralRatio).div(100).toNumber()
+
+    const amount = BigNumber(BigNumber(cdp.maxUSDPAvailable).plus(depositUSDPAvailable).minus(cdp.debt).toNumber()).times(percent).div(100).toFixed(cdp.tokenMetadata.decimals)
     setBorrowAmount(amount)
   }
 
-  const handleSliderChange = (event, percent) => {
+  const handleSliderChange = (event, percent, deposittedAmount) => {
     if(loading) {
       return
     }
     setBorrowAmountPerc(percent)
 
-    const amount = BigNumber(BigNumber(cdp.maxUSDPAvailable).minus(cdp.debt).toNumber()).times(percent).div(100).toFixed(cdp.tokenMetadata.decimals)
+    let dep = depositAmount
+    if(deposittedAmount) {
+      dep = deposittedAmount
+    }
+
+    let depositUSDPAvailable = (dep && dep > 0) ? dep : 0
+    depositUSDPAvailable = BigNumber(depositUSDPAvailable).times(cdp.dolarPrice).times(cdp.initialCollateralRatio).div(100).toNumber()
+
+    const amount = BigNumber(BigNumber(cdp.maxUSDPAvailable).plus(depositUSDPAvailable).minus(cdp.debt).toNumber()).times(percent).div(100).toFixed(cdp.tokenMetadata.decimals)
     setBorrowAmount(amount)
   }
 
@@ -123,7 +173,7 @@ export default function CDPDepositAndBorrow({ cdp, borrowAsset }) {
             <Typography variant='h5' noWrap>Supply Collateral</Typography>
           </div>
           <div className={ classes.balances }>
-            <Typography variant='h5' onClick={ () => { setDepositAmountPercent(100) } } className={ classes.value } noWrap>Balance: { !cdp.tokenMetadata.balance ? <Skeleton /> : formatCurrency(cdp.tokenMetadata.balance) }</Typography>
+            <Typography variant='h5' onClick={ () => { setDepositAmountPercent(100) } } className={ classes.value } noWrap>Balance: { (!cdp.tokenMetadata.balance && cdp.tokenMetadata.balance !== 0) ? <Skeleton /> : formatCurrency(cdp.tokenMetadata.balance) }</Typography>
           </div>
         </div>
         <TextField
@@ -191,7 +241,7 @@ export default function CDPDepositAndBorrow({ cdp, borrowAsset }) {
             onClick={ onDeposit }
             disabled={ loading }
             >
-            <Typography variant='h5'>{ loading ? <CircularProgress size={25} /> : 'Supply And Mint' }</Typography>
+            <Typography variant='h5'>{ loading ? <CircularProgress size={25} /> : (BigNumber(cdp.collateral).gt(0) ? 'Supply And Mint' : 'Open CDP') }</Typography>
           </Button>
         )}
         { (depositAmount !=='' && BigNumber(depositAmount).gt(0) && (!cdp.tokenMetadata.allowance || BigNumber(cdp.tokenMetadata.allowance).eq(0) || BigNumber(cdp.tokenMetadata.allowance).lt(depositAmount))) && (

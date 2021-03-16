@@ -45,6 +45,18 @@
   flex: 1;
 }
 
+.statusLiquid {
+  color: #dc3545;
+}
+
+.statusWarning {
+  color: #FF9029;
+}
+
+.statusSafe {
+  color: green;
+}
+
 @media screen and (max-width: 1600px) {
   .cdpContainer {
     padding: 0px 24px;

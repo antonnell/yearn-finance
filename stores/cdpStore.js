@@ -20,7 +20,10 @@ import {
   KEEP3R_SUSHI_ORACLE_ADDRESS,
   UNIT_ORACLE_REGISTRY_ADDRESS,
   VAULT_MANAGER_PARAMETERS_ADDRESS,
-  VAULT_PARAMETERS_ADDRESS
+  VAULT_PARAMETERS_ADDRESS,
+  VAULT_MANAGER_KEYDONIX_ASSET,
+  VAULT_MANAGER_KEEP3R_ASSET,
+  VAULT_MANAGER_KEEP3R_SUSHI_ASSET,
 } from './constants';
 
 import * as moment from 'moment';
@@ -32,7 +35,9 @@ import {
   KEEP3RV1ORACLEABI,
   ORACLEREGISTRYABI,
   VAULTMANAGERPARAMSABI,
-  VAULTPARAMETERSABI
+  VAULTPARAMETERSABI,
+  VAULTMANAGERKEEP3RABI,
+  VAULTMANAGERKEEP3RSUSHIABI
 } from './abis'
 import { bnDec } from '../utils'
 import cdpJSON from './configurations/cdp'
@@ -47,7 +52,8 @@ class Store {
     this.emitter = emitter
 
     this.store = {
-      cdpAssets: cdpJSON.collaterals,
+      rawCDPAssets: cdpJSON.collaterals,
+      cdpAssets: [],
       cdpActive: [],
       borrowAsset: cdpJSON.borrowAsset
     }
@@ -172,7 +178,11 @@ class Store {
       let status = 'Unknown'
 
       if(BigNumber(collateral).gt(0)) {
-        utilizationRatio = BigNumber(debt).times(10000).div(BigNumber(collateral).times(liquidationRatio).times(dolarPrice).toNumber()).toNumber()
+
+        let theDebt = BigNumber(debt).div(bnDec(borrowAsset.decimals))
+        let theCollateral = BigNumber(collateral).div(bnDec(asset.decimals))
+
+        utilizationRatio = BigNumber(theDebt).times(10000).div(BigNumber(theCollateral).times(liquidationRatio).times(dolarPrice).toNumber()).toNumber()
         maxUSDPAvailable = BigNumber(collateral).div(bnDec(asset.decimals)).times(liquidationRatio).div(100).times(dolarPrice).toNumber()
         liquidationPrice = BigNumber(dolarPrice).times(utilizationRatio).div(100).toNumber()
         if(BigNumber(utilizationRatio).gt(90)) {
@@ -188,13 +198,13 @@ class Store {
 
       const returnAsset = {
         defaultOracleType: asset.defaultOracleType,
-        collateral: BigNumber(collateral).div(bnDec(asset.decimals)).toFixed(asset.decimals, BigNumber.ROUND_DOWN),
-        collateralDolar: BigNumber(collateral).times(dolarPrice).div(bnDec(asset.decimals)).toFixed(asset.decimals, BigNumber.ROUND_DOWN),
-        debt: BigNumber(debt).div(bnDec(borrowAsset.decimals)).toFixed(borrowAsset.decimals, BigNumber.ROUND_DOWN),
-        stabilityFee: BigNumber(stabilityFee).div(1000).toFixed(asset.decimals, BigNumber.ROUND_DOWN),
-        liquidationFee: BigNumber(liquidationFee).toFixed(asset.decimals, BigNumber.ROUND_DOWN),
+        collateral: BigNumber(BigNumber(collateral).div(bnDec(asset.decimals)).toFixed(asset.decimals, BigNumber.ROUND_DOWN)).toNumber(),
+        collateralDolar: BigNumber(BigNumber(collateral).times(dolarPrice).div(bnDec(asset.decimals)).toFixed(asset.decimals, BigNumber.ROUND_DOWN)).toNumber(),
+        debt: BigNumber(BigNumber(debt).div(bnDec(borrowAsset.decimals)).toFixed(borrowAsset.decimals, BigNumber.ROUND_DOWN)).toNumber(),
+        stabilityFee: BigNumber(BigNumber(stabilityFee).div(1000).toFixed(asset.decimals, BigNumber.ROUND_DOWN)).toNumber(),
+        liquidationFee: BigNumber(BigNumber(liquidationFee).toFixed(asset.decimals, BigNumber.ROUND_DOWN)).toNumber(),
         symbol: asset.symbol,
-        balance: BigNumber(balanceOf).div(bnDec(asset.decimals)).toFixed(asset.decimals, BigNumber.ROUND_DOWN),
+        balance: BigNumber(BigNumber(balanceOf).div(bnDec(asset.decimals)).toFixed(asset.decimals, BigNumber.ROUND_DOWN)).toNumber(),
         dolarPrice: dolarPrice,
         utilizationRatio: utilizationRatio,
         liquidationPrice: liquidationPrice,
@@ -203,17 +213,17 @@ class Store {
         maxColPercent: maxColPercent,
         minColPercent: minColPercent,
         maxUSDPAvailable: maxUSDPAvailable,
-        tokenDebts: BigNumber(tokenDebts).div(bnDec(asset.decimals)).toFixed(asset.decimals, BigNumber.ROUND_DOWN),
-        tokenDebtLimit: BigNumber(tokenDebtLimit).div(bnDec(asset.decimals)).toFixed(asset.decimals, BigNumber.ROUND_DOWN),
-        tokenDebtAvailable: BigNumber(tokenDebtLimit-tokenDebts).div(bnDec(asset.decimals)).toFixed(asset.decimals, BigNumber.ROUND_DOWN),
+        tokenDebts: BigNumber(BigNumber(tokenDebts).div(10**18).toFixed(asset.decimals, BigNumber.ROUND_DOWN)).toNumber(),
+        tokenDebtLimit: BigNumber(BigNumber(tokenDebtLimit).div(10**18).toFixed(asset.decimals, BigNumber.ROUND_DOWN)).toNumber(),
+        tokenDebtAvailable: BigNumber(BigNumber(tokenDebtLimit-tokenDebts).div(10**18).toFixed(asset.decimals, BigNumber.ROUND_DOWN)).toNumber(),
         status: status,
         tokenMetadata: {
           address: web3.utils.toChecksumAddress(asset.address),
           symbol: asset.symbol,
           decimals: asset.decimals,
-          balance: BigNumber(balanceOf).div(bnDec(asset.decimals)).toFixed(asset.decimals, BigNumber.ROUND_DOWN),
-          balanceDolar: BigNumber(balanceOf).times(dolarPrice).div(bnDec(asset.decimals)).toFixed(asset.decimals, BigNumber.ROUND_DOWN),
-          allowance: BigNumber(allowance).div(bnDec(asset.decimals)).toFixed(asset.decimals),
+          balance: BigNumber(BigNumber(balanceOf).div(bnDec(asset.decimals)).toFixed(asset.decimals, BigNumber.ROUND_DOWN)).toNumber(),
+          balanceDolar: BigNumber(BigNumber(balanceOf).times(dolarPrice).div(bnDec(asset.decimals)).toFixed(asset.decimals, BigNumber.ROUND_DOWN)).toNumber(),
+          allowance: BigNumber(BigNumber(allowance).div(bnDec(asset.decimals)).toFixed(asset.decimals)).toNumber(),
           icon: `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${web3.utils.toChecksumAddress(addy)}/logo.png`,
         }
       }
@@ -288,7 +298,7 @@ class Store {
         const ethPerAsset = await keep3rContract.methods.current(asset.address, sendAmount0, '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2').call({ })
 
         //Somewhere get ETH price
-        dolar = BigNumber(ethPerAsset).times(ethPrice).div(10**asset.decimals).toNumber()
+        dolar = BigNumber(ethPerAsset).times(ethPrice).div(10**18).toNumber()
 
       } else if (this.isKeep3rSushiSwapOracle(asset.defaultOracleType)) {
 
@@ -296,7 +306,7 @@ class Store {
         const ethPerAsset = await keep3rContract.methods.current(asset.address, sendAmount0, '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2').call({ })
 
         //Somewhere get ETH price
-        dolar = BigNumber(ethPerAsset).times(ethPrice).div(10**asset.decimals).toNumber()
+        dolar = BigNumber(ethPerAsset).times(ethPrice).div(10**18).toNumber()
 
       } else {
         //don't know?
@@ -311,7 +321,7 @@ class Store {
   }
 
   _getAssets = async () => {
-    return this.getStore('cdpAssets')
+    return this.getStore('rawCDPAssets')
   }
 
 
@@ -350,7 +360,7 @@ class Store {
         return this.emitter.emit(ERROR, err);
       }
 
-      return this.emitter.emit(APPROVE_VAULT_RETURNED, approveResult)
+      return this.emitter.emit(APPROVE_CDP_RETURNED, approveResult)
     })
   }
 
@@ -366,7 +376,7 @@ class Store {
 
     const gasPrice = await stores.accountStore.getGasPrice(gasSpeed)
 
-    this._callContract(web3, tokenContract, 'approve', [asset.address, amountToSend], account, gasPrice, GET_CDP_BALANCES, callback)
+    this._callContract(web3, tokenContract, 'approve', [CDP_VAULT_ADDRESS, amountToSend], account, gasPrice, CONFIGURE_CDP, callback)
   }
 
   depositCDP = async (payload) => {
@@ -382,24 +392,45 @@ class Store {
       //maybe throw an error
     }
 
-    const { asset, amount, gasSpeed } = payload.content
+    const { cdp, depositAmount, borrowAmount, gasSpeed } = payload.content
 
-    this._callDepositCDP(web3, asset, account, amount, gasSpeed, (err, depositResult) => {
+    this._callDepositCDP(web3, cdp, account, depositAmount, borrowAmount, gasSpeed, (err, depositResult) => {
       if(err) {
         return this.emitter.emit(ERROR, err);
       }
 
-      return this.emitter.emit(DEPOSIT_CDP_RETURNED, depositResult)
+      return this.emitter.emit(DEPOSIT_BORROW_CDP_RETURNED, depositResult)
     })
   }
 
-  _callDepositCDP = async (web3, asset, account, amount, gasSpeed, callback) => {
-    const cdpContract = new web3.eth.Contract(CERC20DELEGATORABI, asset.address)
+  _callDepositCDP = async (web3, asset, account, depositAmount, borrowAmount, gasSpeed, callback) => {
+    try {
+      let cdpContract = null
 
-    const amountToSend = BigNumber(amount).times(bnDec(asset.tokenMetadata.decimals)).toFixed(0)
-    const gasPrice = await stores.accountStore.getGasPrice(gasSpeed)
+      if(this.isKeydonixOracle(asset.defaultOracleType)) {
+        return
+      } else if (this.isKeep3rOracle(asset.defaultOracleType)) {
+        cdpContract = new web3.eth.Contract(VAULTMANAGERKEEP3RABI, VAULT_MANAGER_KEEP3R_ASSET)
+      } else if (this.isKeep3rSushiSwapOracle(asset.defaultOracleType)) {
+        cdpContract = new web3.eth.Contract(VAULTMANAGERKEEP3RSUSHIABI, VAULT_MANAGER_KEEP3R_SUSHI_ASSET)
+      }
 
-    this._callContract(web3, cdpContract, 'mint', [amountToSend], account, gasPrice, GET_CDP_BALANCES, callback)
+      const depositAmountToSend = BigNumber(depositAmount).times(bnDec(asset.tokenMetadata.decimals)).toFixed(0)
+      const borrowAmountToSend = BigNumber(borrowAmount).times(10**18).toFixed(0)
+      const gasPrice = await stores.accountStore.getGasPrice(gasSpeed)
+
+      console.log(asset.tokenMetadata.address, depositAmountToSend, borrowAmountToSend)
+
+      if(BigNumber(asset.debt).gt(0)) {
+        this._callContract(web3, cdpContract, 'depositAndBorrow', [asset.tokenMetadata.address, depositAmountToSend, borrowAmountToSend], account, gasPrice, CONFIGURE_CDP, callback)
+      } else {
+        this._callContract(web3, cdpContract, 'spawn', [asset.tokenMetadata.address, depositAmountToSend, borrowAmountToSend], account, gasPrice, CONFIGURE_CDP, callback)
+      }
+
+    } catch(ex) {
+      console.log(ex)
+      return this.emitter.emit(ERROR, ex);
+    }
   }
 
   withdrawCDP = async (payload) => {
@@ -436,6 +467,11 @@ class Store {
   }
 
   _callContract = (web3, contract, method, params, account, gasPrice, dispatchEvent, callback) => {
+
+    console.log(method)
+    console.log(params)
+    console.log(account)
+
     const context = this
     contract.methods[method](...params).send({ from: account.address, gasPrice: web3.utils.toWei(gasPrice, 'gwei') })
       .on('transactionHash', function(hash){
@@ -443,7 +479,7 @@ class Store {
         callback(null, hash)
       })
       .on('confirmation', function(confirmationNumber, receipt){
-        if(dispatchEvent && confirmationNumber === 1) {
+        if(dispatchEvent && confirmationNumber === 0) {
           context.dispatcher.dispatch({ type: dispatchEvent })
         }
       })

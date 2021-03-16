@@ -7,6 +7,7 @@ import {
   TextField,
   InputAdornment,
   Button,
+  CircularProgress
 } from '@material-ui/core'
 import Skeleton from '@material-ui/lab/Skeleton';
 import BigNumber from 'bignumber.js'
@@ -22,6 +23,7 @@ import {
   APPROVE_CDP,
   APPROVE_CDP_RETURNED
 } from '../../stores/constants'
+import stores from '../../stores'
 
 export default function CDPRepayAndWithdraw({ cdp, borrowAsset }) {
   const [ repayAmount, setRepayAmount ] = useState('')
@@ -47,17 +49,17 @@ export default function CDPRepayAndWithdraw({ cdp, borrowAsset }) {
     setWithdrawAmountError(false)
 
     setLoading(true)
-    stores.dispatcher.dispatch({ type: WITHDRAW_REPAY_CDP, content: { cdp: cdp, withdrawAmount: withdrawAmount, repayAmount: repayAmount, gasSpeed: gasSpeed } })
+    stores.dispatcher.dispatch({ type: WITHDRAW_REPAY_CDP, content: { cdp: cdp, withdrawAmount: withdrawAmount, repayAmount: repayAmount } })
   }
 
   const onApprove = () => {
     setLoading(true)
-    stores.dispatcher.dispatch({ type: APPROVE_CDP, content: { cdp: cdp, repayAmount: repayAmount, gasSpeed: gasSpeed } })
+    stores.dispatcher.dispatch({ type: APPROVE_CDP, content: { cdp: cdp, repayAmount: repayAmount } })
   }
 
   const onApproveMax = () => {
     setLoading(true)
-    stores.dispatcher.dispatch({ type: APPROVE_CDP, content: { cdp: cdp, repayAmount: 'max', gasSpeed: gasSpeed } })
+    stores.dispatcher.dispatch({ type: APPROVE_CDP, content: { cdp: cdp, repayAmount: 'max' } })
   }
 
   const setRepayAmountPercent = (percent) => {
@@ -84,7 +86,7 @@ export default function CDPRepayAndWithdraw({ cdp, borrowAsset }) {
             <Typography variant='h5' noWrap>Repay USDP</Typography>
           </div>
           <div className={ classes.balances }>
-            <Typography variant='h5' onClick={ () => { setRepayAmountPercent(100) } } className={ classes.value } noWrap>Balance: { !borrowAsset.balance ? <Skeleton /> : formatCurrency(borrowAsset.balance) }</Typography>
+            <Typography variant='h5' onClick={ () => { setRepayAmountPercent(100) } } className={ classes.value } noWrap>Balance: { (!borrowAsset.balance && borrowAsset.balance !== 0) ? <Skeleton /> : formatCurrency(borrowAsset.balance) }</Typography>
           </div>
         </div>
         <TextField
@@ -111,7 +113,7 @@ export default function CDPRepayAndWithdraw({ cdp, borrowAsset }) {
             <Typography variant='h5' noWrap>Withdraw Collateral</Typography>
           </div>
           <div className={ classes.balances }>
-            <Typography variant='h5' onClick={ () => { setWithdrawAmountPercent(100) } } className={ classes.value } noWrap>Balance: { !cdp.collateral ? <Skeleton /> : formatCurrency(cdp.collateral) }</Typography>
+            <Typography variant='h5' onClick={ () => { setWithdrawAmountPercent(100) } } className={ classes.value } noWrap>Balance: { (!cdp.collateral && cdp.collateral !== 0) ? <Skeleton /> : formatCurrency(cdp.collateral) }</Typography>
           </div>
         </div>
         <TextField

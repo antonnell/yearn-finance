@@ -132,6 +132,10 @@
   display: none;
 }
 
+.smallVersion {
+  font-size: 10px !important;
+  letter-spacing: 1px;
+}
 
 
 .navigationOptionContainer {
