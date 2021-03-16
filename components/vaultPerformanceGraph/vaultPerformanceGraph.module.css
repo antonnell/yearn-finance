@@ -2,11 +2,9 @@
   display: flex;
   justify-content: space-between;
   width: 100%;
-  min-height: 400px;
-  max-width: 600px;
+  min-height: 360px;
   flex: 1;
   flex-wrap: wrap;
-  margin-bottom: 24px;
 }
 
 .tooltipContainer {
@@ -46,11 +44,14 @@
   border-radius: 10px;
 }
 
+.durationToggle {
+  width: 220px;
+}
+
 @media screen and (max-width: 576px) {
   .vaultPerformanceGraph {
     max-width: auto;
     min-width: auto;
     width: calc(100vw - 24px);
-    margin-bottom: 12px;
   }
 }

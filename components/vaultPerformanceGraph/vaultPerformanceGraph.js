@@ -28,7 +28,7 @@ function CustomTooltip({ payload, label, active }) {
                 <div className={ classes.blueDot }></div>
               </div>
               <div>
-                <Typography>Holdings</Typography>
+                <Typography>Balance</Typography>
                 <Typography>{ formatCurrency(payload[0].value) }</Typography>
               </div>
             </div>
@@ -115,6 +115,7 @@ export default function VaultPerformanceGraph({ vault }) {
     <div className={ classes.vaultPerformanceGraph }>
       <div className={ classes.vaultDataToggle }>
         <ToggleButtonGroup
+          className={ classes.durationToggle }
           value={ dataDuration }
           exclusive
           onChange={ handleDataDuractionChanged }
@@ -131,7 +132,7 @@ export default function VaultPerformanceGraph({ vault }) {
         </ToggleButtonGroup>
       </div>
       { (!vault || data.length === 0) ?
-        <Skeleton variant="rect" width={ (window.innerWidth > 600 ? '99%' : (window.innerWidth-24)) } height={300} /> :
+        <Skeleton variant="rect" width={ (window.innerWidth > 600 ? '100%' : (window.innerWidth-24)) } height={300} /> :
         <ResponsiveContainer width={ (window.innerWidth > 600 ? '99%' : (window.innerWidth-24)) } height={ 300 }>
           <ComposedChart
             width={ (window.innerWidth > 600 ? 600 : (window.innerWidth-24) ) }
@@ -140,10 +141,10 @@ export default function VaultPerformanceGraph({ vault }) {
             >
             <CartesianGrid strokeDasharray="5 8" vertical={ false } />
             <Tooltip content={<CustomTooltip />}/>
-            <XAxis dataKey="time" tickCount={5} />
+            <XAxis dataKey="time" tickCount={5} height={15} />
 
             <YAxis yAxisId="left" tickLine={false} axisLine={false} tickCount={6} hide domain={[1, 'dataMax']}  /> />
-            <YAxis yAxisId="right" orientation='right' tickCount={6} tickLine={false} axisLine={false} allowDecimals />
+            <YAxis yAxisId="right" orientation='right' tickCount={6} tickLine={false} axisLine={false} allowDecimals width={ 50 } />
 
             { account && account.address && <Line type='monotone' yAxisId="right" dataKey="balanceOf" stroke="#2F80ED" dot={<div></div>} strokeWidth={ 3 } /> }
             <Line type='monotone' yAxisId="left" dataKey="pricePerShare" stroke="#FF9029" dot={<div></div>} strokeWidth={ 3 } />

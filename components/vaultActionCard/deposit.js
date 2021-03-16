@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Typography, InputAdornment, Button, CircularProgress } from '@material-ui/core'
+import { TextField, Typography, InputAdornment, Button, CircularProgress, Tooltip } from '@material-ui/core'
 import BigNumber from 'bignumber.js'
 import Skeleton from '@material-ui/lab/Skeleton';
 import { formatCurrency } from '../../utils'
@@ -132,34 +132,42 @@ export default function Deposit({ vault }) {
         />
       </div>
       <div className={ classes.scaleContainer }>
-        <Button
-          className={ classes.scale }
-          variant='outlined'
-          color="primary"
-          onClick={ () => { setAmountPercent(25) } }>
-          <Typography variant={'h5'}>25%</Typography>
-        </Button>
-        <Button
-          className={ classes.scale }
-          variant='outlined'
-          color="primary"
-          onClick={ () => { setAmountPercent(50) } }>
-          <Typography variant={'h5'}>50%</Typography>
-        </Button>
-        <Button
-          className={ classes.scale }
-          variant='outlined'
-          color="primary"
-          onClick={ () => { setAmountPercent(75) } }>
-          <Typography variant={'h5'}>75%</Typography>
-        </Button>
-        <Button
-          className={ classes.scale }
-          variant='outlined'
-          color="primary"
-          onClick={ () => { setAmountPercent(100) } }>
-          <Typography variant={'h5'}>100%</Typography>
-        </Button>
+        <Tooltip title='25% of your wallet balance'>
+          <Button
+            className={ classes.scale }
+            variant='outlined'
+            color="primary"
+            onClick={ () => { setAmountPercent(25) } }>
+            <Typography variant={'h5'}>25%</Typography>
+          </Button>
+        </Tooltip>
+        <Tooltip title='50% of your wallet balance'>
+          <Button
+            className={ classes.scale }
+            variant='outlined'
+            color="primary"
+            onClick={ () => { setAmountPercent(50) } }>
+            <Typography variant={'h5'}>50%</Typography>
+          </Button>
+        </Tooltip>
+        <Tooltip title='75% of your wallet balance'>
+          <Button
+            className={ classes.scale }
+            variant='outlined'
+            color="primary"
+            onClick={ () => { setAmountPercent(75) } }>
+            <Typography variant={'h5'}>75%</Typography>
+          </Button>
+        </Tooltip>
+        <Tooltip title='100% of your wallet balance'>
+          <Button
+            className={ classes.scale }
+            variant='outlined'
+            color="primary"
+            onClick={ () => { setAmountPercent(100) } }>
+            <Typography variant={'h5'}>100%</Typography>
+          </Button>
+        </Tooltip>
       </div>
       <div >
         <GasSpeed setParentSpeed={ setSpeed } />

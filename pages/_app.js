@@ -16,7 +16,8 @@ import {
   CONFIGURE_RETURNED,
   VAULTS_CONFIGURED,
   ACCOUNT_CONFIGURED,
-  LENDING_CONFIGURED
+  LENDING_CONFIGURED,
+  CDP_CONFIGURED
 } from '../stores/constants'
 
 export default function MyApp({ Component, pageProps }) {
@@ -24,6 +25,7 @@ export default function MyApp({ Component, pageProps }) {
   const [ vaultConfigured, setVaultConfigured ] = useState(false)
   const [ accountConfigured, setAccountConfigured ] = useState(false)
   const [ lendingConfigured, setLendingConfigured ] = useState(false)
+  const [ cdpConfigured, setCDPConfigured ] = useState(false)
 
   useEffect(() => {
     // Remove the server-side injected CSS.
@@ -50,6 +52,10 @@ export default function MyApp({ Component, pageProps }) {
     setLendingConfigured(true)
   }
 
+  const cdpConfigureReturned = () => {
+    setCDPConfigured(true)
+  }
+
   useEffect(function() {
     const localStorageDarkMode = window.localStorage.getItem('yearn.finance-dark-mode')
     changeTheme(localStorageDarkMode ? localStorageDarkMode === 'dark' : false)
@@ -59,6 +65,7 @@ export default function MyApp({ Component, pageProps }) {
     stores.emitter.on(VAULTS_CONFIGURED, vaultsConfigureReturned)
     stores.emitter.on(ACCOUNT_CONFIGURED, accountConfigureReturned)
     stores.emitter.on(LENDING_CONFIGURED, lendingConfigureReturned)
+    stores.emitter.on(CDP_CONFIGURED, cdpConfigureReturned)
 
     stores.dispatcher.dispatch({ type: CONFIGURE })
 
@@ -66,6 +73,7 @@ export default function MyApp({ Component, pageProps }) {
       stores.emitter.removeListener(VAULTS_CONFIGURED, vaultsConfigureReturned)
       stores.emitter.removeListener(ACCOUNT_CONFIGURED, accountConfigureReturned)
       stores.emitter.removeListener(LENDING_CONFIGURED, lendingConfigureReturned)
+      stores.emitter.removeListener(CDP_CONFIGURED, cdpConfigureReturned)
     }
   },[]);
 
@@ -79,10 +87,10 @@ export default function MyApp({ Component, pageProps }) {
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
         {
-          vaultConfigured && accountConfigured && lendingConfigured && <Component {...pageProps} changeTheme={ changeTheme } />
+          vaultConfigured && accountConfigured && lendingConfigured && cdpConfigured && <Component {...pageProps} changeTheme={ changeTheme } />
         }
         {
-          !(vaultConfigured && accountConfigured && lendingConfigured) && <Configure {...pageProps} />
+          !(vaultConfigured && accountConfigured && lendingConfigured && cdpConfigured) && <Configure {...pageProps} />
         }
       </ThemeProvider>
     </React.Fragment>

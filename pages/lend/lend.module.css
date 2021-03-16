@@ -3,23 +3,23 @@
   width: 100%;
   display: flex;
   flex-direction: column;
+  padding: 0px 48px;
 }
 
 .lendingTable {
   display: flex;
   flex-direction: column;
   flex: 1;
-  margin: 48px;
-  border: 1px solid rgba(128, 128, 128, 0.32);
+  border: 1px solid rgba(128, 128, 128, 0.25);
   border-radius: 10px;
-  width: calc(100% - 96px)
+  width: 100%;
 }
 
 .lendingRow {
   display: flex;
   align-items: center;
   padding: 24px 24px;
-  border-bottom: 1px solid rgba(128, 128, 128, 0.32);
+  border-bottom: 1px solid rgba(128, 128, 128, 0.25);
   flex: 1;
 }
 
@@ -54,62 +54,103 @@
 
 .tableHeader {
   margin-top: 48px !important;
-  margin-left: 72px !important;
+  margin-bottom: 12px !important;
+  margin-left: 24px !important;
 }
 
 .lendingOverviewContainer {
-  padding: 48px;
+  padding: 32px 48px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
+  border: 1px solid rgba(128, 128, 128, 0.25);
+  border-radius: 10px;
+}
+
+.separator {
+  border-right: 1px solid rgba(128, 128, 128, 0.25);
+  height: 100px;
+  margin-right: 48px;
+  margin-left: 48px;
 }
 
 .overviewCard {
-  width: 420px;
-  border-radius: 10px;
-  padding: 48px 24px;
   display: flex;
-  flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
+  flex: 1;
+}
+
+.headAmount {
+  padding-bottom: 12px;
+}
+
+.tooltipContainer {
+  min-width: 200px;
+}
+
+.tooltipValue {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+.val {
+  flex: 1;
+}
+
+.valBold {
+  flex: 1;
+  font-weight: bold !important;
+}
+
+.portfolioOutline {
+  margin-right: 24px;
 }
 
 
 @media screen and (max-width: 1600px) {
-  .overviewCard {
-    flex: 1;
-    margin: 0px 12px;
-    width: auto;
+  .lendingContainer {
+    padding: 0px 24px;
   }
-}
-
-@media screen and (max-width: 1350px) {
-  .overviewCard {
-    width: 100%;
+  .lendingOverviewContainer {
     padding: 24px 24px;
-    margin: 0;
-    flex: auto;
-    margin-bottom: 12px;
+  }
+  .separator {
+    margin-left: 24px;
+    margin-right: 24px;
+  }
+  .portfolioOutline {
+    margin-right: 12px;
   }
 }
 
-@media screen and (max-width: 576px) {
-  .lendingOverviewContainer{
-    padding: 12px;
+@media screen and (max-width: 1000px) {
+  .lendingOverviewContainer {
+    padding: 24px;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+  .separator {
+    border-bottom: 1px solid rgba(128, 128, 128, 0.25);
+    width: calc(100%);
+    margin: 12px 0px 12px 0px;
+    height: 0px;
   }
   .overviewCard  {
-    width: 100%;
-    padding: 24px 24px;
-    margin-bottom: 12px;
+    padding-bottom: 12px;
   }
   .tableHeader {
     margin-top: 12px !important;
     margin-left: 24px !important;
   }
   .lendingTable {
-    margin: 12px;
-    border: 1px solid rgba(128, 128, 128, 0.32);
-    width: calc(100% - 24px)
+    border: 1px solid rgba(128, 128, 128, 0.25);
   }
   .lendingRow {
     padding: 12px 6px;

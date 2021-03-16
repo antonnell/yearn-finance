@@ -1,26 +1,37 @@
 .vaultPerformanceGraph {
   display: flex;
-  justify-content: space-between;
-  max-width: 300px;
-  min-width: 300px;
-  flex: 1;
-  flex-wrap: wrap;
-  margin-bottom: 24px;
-  cursor: pointer;
+  margin-right: 24px;
 }
 
 .tooltipContainer {
-  background: rgba(0, 0, 0, 0.87);
-  border-radius: 10px;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #000;
   padding: 12px;
-  color: #fff;
+  color: #000;
 }
 
+.tooltipValue {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  min-width: 240px;
+}
 
-@media screen and (max-width: 576px) {
+.val {
+  flex: 1
+}
+
+.valBold {
+  flex: 1;
+  font-weight: bold !important;
+}
+
+@media screen and (max-width: 1600px) {
   .vaultPerformanceGraph {
-    width: calc(100vw - 24px);
-    max-width: max-content;
-    min-width: auto;
+    margin-right: 12px;
   }
 }

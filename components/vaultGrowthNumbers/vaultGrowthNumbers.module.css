@@ -2,24 +2,25 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  max-width: 600px;
   width: 100%;
 }
 
 .vaultGrowthContainer {
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
+  justify-content: space-between;
+  align-items: center;
   flex: 1;
   flex-wrap: wrap;
   height: 100%;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.25);
+  padding-bottom: 24px;
 }
 
 .portfolioGrowthContainer {
   display: flex;
   align-items: center;
   padding: 6px 0px;
+  flex: 1;
 }
 
 .growthOutline {

@@ -1,6 +1,6 @@
 .investContainer {
   height: 100%;
-  padding: 48px;
+  padding: 0px 48px;
   display: flex;
   flex-direction: column;
 }
@@ -66,8 +66,7 @@
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: flex-start;
-  padding-top: 48px;
-  margin: 0px -24px;
+  padding-top: 24px;
 }
 
 .searchContainer {
@@ -163,7 +162,7 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  margin: 24px !important;
+  margin: 48px 0px 24px 0px;
 }
 
 .type {
@@ -178,27 +177,27 @@
 
 .layoutToggleButton {
   max-width: 50px;
+  padding: 16px  !important;
+
 }
 
 .layoutToggleButtons {
-  width: 100px;
+  width: 112px;
 }
 
 .vaultsTable {
   display: flex;
   flex-direction: column;
   flex: 1;
-  margin: 24px;
-  border: 1px solid rgba(128, 128, 128, 0.32);
+  border: 1px solid rgba(128, 128, 128, 0.25);
   border-radius: 10px;
-  width: calc(100% - 96px)
 }
 
 .vaultRow {
   display: flex;
   align-items: center;
   padding: 24px 24px;
-  border-bottom: 1px solid rgba(128, 128, 128, 0.32);
+  border-bottom: 1px solid rgba(128, 128, 128, 0.25);
   flex: 1;
 }
 
@@ -224,6 +223,81 @@
   justify-content: flex-end;
 }
 
+.vaultAvailableBalanceCell {
+  flex: 1;
+  padding: 12px 6px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+
+
+
+.overviewContainer {
+  padding: 32px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  border: 1px solid rgba(128, 128, 128, 0.25);
+  border-radius: 10px;
+}
+
+.separator {
+  border-right: 1px solid rgba(128, 128, 128, 0.25);
+  height: 100px;
+  margin-right: 48px;
+  margin-left: 48px;
+}
+
+.overviewCard {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex: 1;
+}
+
+.headAmount {
+}
+
+.tooltipContainer {
+  min-width: 200px;
+}
+
+.tooltipValue {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+.val {
+  flex: 1;
+}
+
+.valBold {
+  flex: 1;
+  font-weight: bold !important;
+}
+
+@media screen and (max-width: 1600px) {
+  .investContainer {
+    padding: 0px 24px;
+  }
+  .overviewContainer {
+    padding: 24px 24px;
+  }
+  .separator {
+    margin-left: 24px;
+    margin-right: 24px;
+  }
+  .portfolioOutline {
+    margin-right: 12px;
+  }
+}
+
 @media screen and (max-width: 1200px) {
   .investContainer {
     padding: 24px;
@@ -238,22 +312,28 @@
   }
 }
 
-@media screen and (max-width: 1440px) {
-  .vaultFilters {
-    margin: 12px !important;
+@media screen and (max-width: 1000px) {
+  .overviewContainer {
+    padding: 24px;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
   }
-}
-
-@media screen and (max-width: 900px) {
+  .separator {
+    border-bottom: 1px solid rgba(128, 128, 128, 0.25);
+    width: calc(100%);
+    margin: 12px 0px 12px 0px;
+    height: 0px;
+  }
+  .overviewCard {
+    padding-bottom: 12px;
+  }
   .searchContainer {
     margin-left: 0px !important;
   }
   .spllitContainer {
     display: none;
   }
-}
-
-@media screen and (max-width: 576px) {
   .investContainer {
     padding: 12px;
   }
@@ -263,33 +343,8 @@
   .portfolioBalanceContainer {
     margin-bottom: 12px;
   }
-  .portfolioOutline {
-    border-radius: 20px;
-    height: 40px;
-    width: 40px;
-    margin-right: 12px;
-  }
-  .portfolioIcon {
-    font-size: 1.8rem !important;
-  }
-  .growthOutline {
-    border-radius: 20px;
-    height: 40px;
-    width: 40px;
-    margin-right: 12px;
-  }
-  .growthIcon {
-    font-size: 1.8rem !important;
-  }
   .spllitContainer {
     display: none;
-  }
-  .vaultsContainer {
-    padding-top: 24px;
-    margin: 0px -12px;
-  }
-  .vaultFilters {
-    margin: 12px !important;
   }
   .vaultTypeButtons {
     width: 100%;
@@ -307,10 +362,6 @@
   }
   .layoutToggleButtons {
     margin-top: 12px;
-  }
-  .vaultsTable {
-    margin: 12px;
-    width: calc(100% - 24px)
   }
   .vaultVersionCell {
     display: none;

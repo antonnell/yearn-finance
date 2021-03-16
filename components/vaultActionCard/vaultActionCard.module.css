@@ -5,22 +5,21 @@
   flex-direction: column;
   padding: 24px;
   margin-right: 48px;
-  margin-bottom: 24px;
 }
 
 .depositContainer {
-  padding-top: 24px;
+  padding-top: 48px;
 }
 
 .actionButton {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 24px;
+  margin-top: 48px;
 }
 
 .scaleContainer {
-  margin: 24px 0px;
+  margin: 12px 0px 72px 0px;
   width: 100%;
   display: flex;
   align-items: center;
@@ -29,8 +28,8 @@
 
 .scale {
   width: 60px;
-  height: 60px;
-  border-radius: 30px !important;
+  height: 30px;
+  border-radius: 10px !important;
 }
 
 .inputTitleContainer {
@@ -65,6 +64,18 @@
   margin-right: 6px !important;
 }
 
+@media screen and (max-width: 1400px) {
+  .vaultActionContainer {
+    margin-right: 24px;
+  }
+}
+
+
+@media screen and (max-width: 1000px) {
+  .vaultActionContainer {
+    margin-bottom: 24px;
+  }
+}
 
 @media screen and (max-width: 576px) {
   .vaultActionContainer {

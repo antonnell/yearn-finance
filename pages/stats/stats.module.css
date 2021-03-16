@@ -1,5 +1,5 @@
 .statsTVLContainer {
-  padding: 48px;
+  padding: 0px 48px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -59,21 +59,62 @@
   font-weight: bold !important;
 }
 
+.overviewContainer {
+  padding: 32px 48px;
+  margin: 0px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  border: 1px solid rgba(128, 128, 128, 0.25);
+  border-radius: 10px;
+}
+
+.separator {
+  border-right: 1px solid rgba(128, 128, 128, 0.25);
+  height: 100px;
+  margin-right: 48px;
+  margin-left: 48px;
+}
+
+.overviewCard {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex: 1;
+}
+
 @media screen and (max-width: 1600px) {
-  .tvlCardContainer {
-    width: auto;
-  }
-}
-
-@media screen and (max-width: 1350px) {
-  .tvlCardContainer {
-    width: 100%;
+  .overviewContainer {
+    margin: 0px 24px;
     padding: 24px 24px;
-    margin-bottom: 12px;
+  }
+  .separator {
+    margin-left: 24px;
+    margin-right: 24px;
+  }
+  .statsContainer {
+    padding: 24px;
   }
 }
 
-@media screen and (max-width: 576px) {
+@media screen and (max-width: 1000px) {
+  .overviewContainer {
+    margin: 0px 12px;
+    padding: 24px;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+  .separator {
+    border-bottom: 1px solid rgba(128, 128, 128, 0.25);
+    width: calc(100%);
+    margin: 12px 0px 12px 0px;
+    height: 0px;
+  }
+  .overviewCard {
+    padding-bottom: 12px;
+  }
   .statsContainer {
     padding: 12px;
   }

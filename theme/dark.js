@@ -34,6 +34,14 @@ const theme = createMuiTheme({
         marginRight: '0px'
       }
     },
+    MuiTooltip: {
+      tooltip: {
+        background: '#000 !important',
+        border: '1px solid #fff',
+        borderRadius: '8px',
+        color: '#fff'
+      }
+    },
   }
 });
 

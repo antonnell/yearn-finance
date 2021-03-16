@@ -257,7 +257,6 @@ function LendAllAssetRowDetails({ lendingAsset, account, lendingBorrow, lendingS
           <TextField
             fullWidth
             className={ classes.actionInput }
-            id='supplyAmount'
             value={ supplyAmount }
             error={ supplyAmountError }
             onChange={ onSupplyAmountChange }
@@ -372,7 +371,6 @@ function LendAllAssetRowDetails({ lendingAsset, account, lendingBorrow, lendingS
           <TextField
             fullWidth
             className={ classes.actionInput }
-            id='borrowAmount'
             value={ borrowAmount }
             error={ borrowAmountError }
             onChange={ onBorrowAmountChanged }

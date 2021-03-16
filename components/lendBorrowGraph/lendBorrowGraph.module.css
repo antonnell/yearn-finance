@@ -1,0 +1,37 @@
+.vaultPerformanceGraph {
+  display: flex;
+  margin-right: 24px;
+}
+
+.tooltipContainer {
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #000;
+  padding: 12px;
+  color: #000;
+}
+
+.tooltipValue {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  min-width: 200px;
+}
+
+.val {
+  flex: 1
+}
+
+.valBold {
+  flex: 1;
+  font-weight: bold !important;
+}
+
+@media screen and (max-width: 1600px) {
+  .vaultPerformanceGraph {
+    margin-right: 12px;
+  }
+}

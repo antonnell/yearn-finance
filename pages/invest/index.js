@@ -7,6 +7,7 @@ import {
   Paper,
   TextField,
   InputAdornment,
+  Grid,
 } from '@material-ui/core'
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
@@ -20,12 +21,16 @@ import VaultSplitGraph from '../../components/vaultSplitGraph'
 import BigNumber from 'bignumber.js'
 
 import AccountBalanceWalletOutlinedIcon from '@material-ui/icons/AccountBalanceWalletOutlined';
+import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 import SearchIcon from '@material-ui/icons/Search';
 import PieChartIcon from '@material-ui/icons/PieChart';
 import AppsIcon from '@material-ui/icons/Apps';
 import ListIcon from '@material-ui/icons/List';
+
+import LendSupplyGraph from '../../components/lendSupplyGraph'
+import LendBorrowGraph from '../../components/lendBorrowGraph'
 
 import { formatCurrency } from '../../utils'
 
@@ -163,52 +168,33 @@ function Invest({ changeTheme }) {
       <div className={ classes.investContainer }>
 
         { account && account.address && (
-          <div className={ classes.portfolioStatsContainer }>
-            <div className={ classes.portfolioBalanceCombined}>
-              <div className={ classes.portfolioBalanceContainer }>
-                <div className={ classes.portfolioOutline } >
-                  <AccountBalanceWalletOutlinedIcon className={ classes.portfolioIcon } />
-                </div>
-                <div>
-                  <Typography variant='subtitle1' color='textSecondary'>Portfolio Balance</Typography>
-                  { <Typography variant='h1'>{ porfolioBalance === null ? <Skeleton style={{ minWidth: '200px '}} /> : ('$ '+formatCurrency(porfolioBalance)) }</Typography> }
-                </div>
-              </div>
-              <div className={ classes.portfolioBalanceContainer }>
-                <div className={ classes.growthOutline } >
-                  <AttachMoneyIcon className={ classes.growthIcon } />
-                </div>
-                <div>
-                  <Typography variant='subtitle1' color='textSecondary'>Highest Holdings</Typography>
-                  <Typography variant='h6'>{ highestHoldings === null ? <Skeleton style={{ minWidth: '200px '}} /> : (highestHoldings === 'None' ? highestHoldings : highestHoldings.displayName) }</Typography>
-                </div>
+          <Paper elevation={ 0 } className={ classes.overviewContainer }>
+            <div className={ classes.overviewCard }>
+              { porfolioBalance !== null ? <VaultSplitGraph vaults={ vaults } /> : <Skeleton variant='circle' width={ 80 } height={80} /> }
+              <div>
+                <Typography variant='h2'>Portfolio Balance</Typography>
+                <Typography variant='h1' className={ classes.headAmount }>{ porfolioBalance === null ? <Skeleton style={{ minWidth: '200px '}} /> : ('$ '+formatCurrency(porfolioBalance)) }</Typography>
               </div>
             </div>
-            <div className={ classes.spllitContainer }>
-              { porfolioBalance === null ? <Skeleton variant='circle' width={ 150 } height={ 150 } style={{ marginLeft: '200px', marginRight:'200px', marginTop: '60px' }} /> : <VaultSplitGraph vaults={ vaults } /> }
-            </div>
-            <div className={ classes.portfolioBalanceCombined}>
-              <div className={ classes.portfolioBalanceContainer }>
-                <div className={ classes.portfolioOutline } >
-                  <TrendingUpIcon className={ classes.portfolioIcon } />
-                </div>
-                <div>
-                  <Typography variant='subtitle1' color='textSecondary'>Yearly Growth</Typography>
-                  <Typography variant='h1'>{ porfolioBalance === null ? <Skeleton style={{ minWidth: '200px '}} /> : ('$ '+formatCurrency(BigNumber(porfolioBalance).times(portfolioGrowth).div(100))) }</Typography>
-                </div>
-              </div>
-              <div className={ classes.portfolioBalanceContainer }>
-                <div className={ classes.growthOutline } >
-                  <TrendingUpIcon className={ classes.growthIcon } />
-                </div>
-                <div>
-                  <Typography variant='subtitle1' color='textSecondary'>Yearly Growth</Typography>
-                  <Typography variant='h6'>{ portfolioGrowth === null ? <Skeleton style={{ minWidth: '100px '}} /> : (formatCurrency(portfolioGrowth)+'%') }</Typography>
-                </div>
+            <div className={ classes.separator }></div>
+            <div className={ classes.overviewCard }>
+              { porfolioBalance !== null ? <div className={ classes.portfolioOutline } ><TrendingUpIcon className={ classes.portfolioIcon } /></div> : <Skeleton variant='circle' width={ 80 } height={80} /> }
+              <div>
+                <Typography variant='h2'>Yearly Growth</Typography>
+                <Typography variant='h1' className={ classes.headAmount }>{ porfolioBalance === null ? <Skeleton style={{ minWidth: '200px '}} /> : ('$ '+formatCurrency(BigNumber(porfolioBalance).times(portfolioGrowth).div(100))) }</Typography>
               </div>
             </div>
-          </div>
-        )}
+            <div className={ classes.separator }></div>
+            <div className={ classes.overviewCard }>
+              { porfolioBalance !== null ? <div className={ classes.portfolioOutline } > <AccountBalanceIcon className={ classes.portfolioIcon } /></div> : <Skeleton variant='circle' width={ 80 } height={80} /> }
+              <div>
+                <Typography variant='h2'>Highest Balance</Typography>
+                <Typography variant='h1'>{ highestHoldings === null ? <Skeleton style={{ minWidth: '200px '}} /> : (highestHoldings === 'None' ? highestHoldings : highestHoldings.displayName) }</Typography>
+              </div>
+            </div>
+          </Paper>
+          )
+        }
         <div className={ classes.vaultsContainer }>
           <div className={ classes.vaultFilters }>
             <ToggleButtonGroup className={ classes.vaultTypeButtons } value={ versions } onChange={ handleVersionsChanged } >
@@ -241,25 +227,29 @@ function Invest({ changeTheme }) {
               </ToggleButton>
             </ToggleButtonGroup>
           </div>
-          {
-            layout === 'grid' && filteredVaults && filteredVaults.length > 0 && (
-              filteredVaults.map((vault, index) => {
-                return <VaultCard key={ index } vault={vault} account={ account } />
-              })
-            )
-          }
-          { layout === 'list' &&
-            <Paper elevation={0} className={ classes.vaultsTable }>
-              { renderVaultHeaders() }
-              {
-                filteredVaults && filteredVaults.length > 0 && (
-                  filteredVaults.map((vault, index) => {
-                    return <VaultAssetRow key={ index } vault={vault} account={ account } />
-                  })
-                )
-              }
-            </Paper>
-          }
+          <Grid container spacing={ 2 }>
+            {
+              layout === 'grid' && filteredVaults && filteredVaults.length > 0 && (
+                filteredVaults.map((vault, index) => {
+                  return <VaultCard key={ index } vault={vault} account={ account } />
+                })
+              )
+            }
+            { layout === 'list' &&
+              <Grid item xs={12}>
+                <Paper elevation={0} className={ classes.vaultsTable }>
+                  { renderVaultHeaders() }
+                  {
+                    filteredVaults && filteredVaults.length > 0 && (
+                      filteredVaults.map((vault, index) => {
+                        return <VaultAssetRow key={ index } vault={vault} account={ account } />
+                      })
+                    )
+                  }
+                </Paper>
+              </Grid>
+            }
+          </Grid>
         </div>
       </div>
     </Layout>

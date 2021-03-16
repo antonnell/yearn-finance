@@ -51,7 +51,9 @@ class Store {
       lendingAssets: [],
       lendingSupply: null,
       lendingBorrowLimit: null,
-      lendingBorrow: null
+      lendingBorrow: null,
+      lendingSupplyAPY: null,
+      lendingBorrowAPY: null,
     }
 
     dispatcher.register(
@@ -199,6 +201,7 @@ class Store {
       }
     }, (err, allMarketsData) => {
       if(err) {
+        this.emitter.emit(LENDING_CONFIGURED)
         return this.emitter.emit(ERROR, err)
       }
 
@@ -344,6 +347,11 @@ class Store {
         return BigNumber(val).plus(market.supplyBalanceDolar).toNumber()
       }, 0)
 
+      const lendingSupplyAPY = populatedLendingAssets.reduce((val, market) => {
+        const vvvv = BigNumber(market.supplyBalanceDolar).div(lendingSupply).times(market.supplyAPY).toNumber()
+        return BigNumber(vvvv).plus(val).toNumber()
+      }, 0)
+
       const lendingBorrowLimit = populatedLendingAssets.reduce((val, market) => {
         return BigNumber(val).plus(market.collateralEnabled ? BigNumber(market.supplyBalanceDolar).times(market.collateralPercent).div(100) : 0).toNumber()
       }, 0)
@@ -352,11 +360,21 @@ class Store {
         return BigNumber(val).plus(market.borrowBalanceDolar).toNumber()
       }, 0)
 
+      const lendingBorrowAPY = populatedLendingAssets.reduce((val, market) => {
+        const vvvv = BigNumber(market.borrowBalanceDolar).div(lendingBorrow).times(market.borrowAPY).toNumber()
+        return BigNumber(vvvv).plus(val).toNumber()
+      }, 0)
+
+      console.log(lendingSupplyAPY)
+      console.log(lendingBorrowAPY)
+
       this.setStore({
         lendingAssets: populatedLendingAssets,
         lendingSupply: lendingSupply,
+        lendingSupplyAPY: lendingSupplyAPY,
         lendingBorrowLimit: lendingBorrowLimit,
-        lendingBorrow: lendingBorrow
+        lendingBorrow: lendingBorrow,
+        lendingBorrowAPY: lendingBorrowAPY
       })
 
       this.emitter.emit(LEND_UPDATED)

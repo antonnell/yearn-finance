@@ -251,7 +251,6 @@ function LendBorrowAssetDetails({ lendingAsset, account, lendingBorrow, lendingS
           <TextField
             fullWidth
             className={ classes.actionInput }
-            id='borrowAmount'
             value={ borrowAmount }
             error={ borrowAmountError }
             onChange={ onBorrowAmountChanged }
@@ -304,7 +303,6 @@ function LendBorrowAssetDetails({ lendingAsset, account, lendingBorrow, lendingS
           <TextField
             fullWidth
             className={ classes.actionInput }
-            id='repayAmount'
             value={ repayAmount }
             error={ repayAmountError }
             onChange={ onRepayAmountChanged }
