@@ -251,26 +251,6 @@ const useStyles = makeStyles((theme) => ({
 const CDPDetails = ({ cdp, borrowAsset, classes }) => {
   return (
     <TableCell colSpan="6" className={ classes.overrideCell }>
-      <div className={ classes.assetInfo }>
-        <div className={ classes.infoField }>
-          <Typography variant={ 'h5' } color='textSecondary'>Oracle Price:</Typography>
-          <div className={ classes.flexy }>
-            <Typography variant={ 'h6' } noWrap>$ { formatCurrency(cdp.dolarPrice, 4) }</Typography>
-          </div>
-        </div>
-        <div className={ classes.infoField }>
-          <Typography variant={ 'h5' } color='textSecondary'>Liquidation Price:</Typography>
-          <div className={ classes.flexy }>
-            <Typography variant={ 'h6' } noWrap>$ { formatCurrency(cdp.liquidationPrice) }</Typography>
-          </div>
-        </div>
-        <div className={ classes.infoField }>
-          <Typography variant={ 'h5' } color='textSecondary'>Utilization:</Typography>
-          <div className={ classes.flexy }>
-            <Typography variant={ 'h6' } noWrap>{ formatCurrency(cdp.utilizationRatio) }%</Typography>
-          </div>
-        </div>
-      </div>
       <div className={ classes.cdpActions }>
         <CDPInformation cdp={ cdp } />
         <CDPDepositAndBorrow cdp={ cdp } borrowAsset={ borrowAsset } />

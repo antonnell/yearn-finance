@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {
   Typography,
-  Tooltip
+  Tooltip,
+  Paper
 } from '@material-ui/core'
 import Skeleton from '@material-ui/lab/Skeleton';
 import { withTheme } from '@material-ui/core/styles';
@@ -14,7 +15,7 @@ import { formatCurrency } from '../../utils'
 
 function CDPInformation({ cdp, theme }) {
   return (
-    <div className={ theme.palette.type === 'dark' ? classes.vaultActionContainerDark : classes.vaultActionContainer }>
+    <Paper elevation={ 0 } className={ theme.palette.type === 'dark' ? classes.vaultActionContainerDark : classes.vaultActionContainer }>
       <div className={ classes.cdpTitleContainer }>
         <img src={ cdp.tokenMetadata.icon } alt='' width={ 30 } height={ 30 } className={ classes.cdpIcon } />
         <Typography variant='h2'>{ cdp.tokenMetadata.symbol } CDP Vault</Typography>
@@ -49,7 +50,7 @@ function CDPInformation({ cdp, theme }) {
         </Tooltip>
         <Typography variant='h5' className={ classes.valueLineHeight }>{ formatCurrency(cdp.tokenDebtAvailable) } of { formatCurrency(cdp.tokenDebtLimit) }</Typography>
       </div>
-    </div>
+    </Paper>
   )
 }
 

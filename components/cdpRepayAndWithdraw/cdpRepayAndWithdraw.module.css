@@ -3,7 +3,7 @@
   border-radius: 10px;
   display: flex;
   flex-direction: column;
-  padding: 24px;
+  padding: 48px;
   max-width: 420px;
 }
 
@@ -43,4 +43,10 @@
 
 .sliderPlaceholder {
   height: 72px;
+}
+
+@media screen and (max-width: 1600px) {
+  .vaultActionContainer{
+    padding: 24px;
+  }
 }

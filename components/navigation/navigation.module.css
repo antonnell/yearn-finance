@@ -5,7 +5,7 @@
   flex-direction: column;
   align-items: center;
   width: 170px;
-  padding: 48px 0px;
+  padding: 48px 0px 24px 0px;
   border-radius: 0px !important;
 }
 
@@ -138,6 +138,7 @@
 .smallVersion {
   font-size: 10px !important;
   letter-spacing: 1px;
+  padding-top: 12px;
 }
 
 
@@ -213,6 +214,12 @@
 .yearnLogo {
   width: 123px !important;
   height: 42.3px !important;
+}
+
+.iconHack {
+  width: 24px !important;
+  height: 24px !important;
+  margin: 12px;
 }
 
 @media screen and (max-width: 1200px) {

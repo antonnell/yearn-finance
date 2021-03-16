@@ -71,14 +71,14 @@ function CDP({ changeTheme }) {
         <div className={ classes.overviewCard }>
           <CDPMintedGraph assets={ cdps } />
           <div>
-            <Typography variant='h2'>Total Minted</Typography>
+            <Typography variant='h2'>Total Borrowed</Typography>
             <Typography variant='h1' className={ classes.headAmount }>{ `$ ${formatCurrency(cdpMinted)}` }</Typography>
           </div>
         </div>
         <div className={ classes.separator }></div>
         <div className={ classes.overviewCard }>
           <div>
-            <Typography variant='h2'>Status</Typography>
+            <Typography variant='h2'>Health</Typography>
             <Typography variant='h1' className={ status === 'Liquidatable' ? classes.statusLiquid : ['Dangerous', 'Moderate'].includes(status) ? classes.statusWarning : classes.statusSafe }>{ status }</Typography>
           </div>
         </div>
@@ -98,7 +98,23 @@ function CDP({ changeTheme }) {
   const renderNoCDPs = () => {
     return (<div>
       <Paper elevation={ 0 } className={ classes.overviewContainer }>
-        Banner Explaining what is going on here.
+        <div className={ classes.overviewCard }>
+          <Typography variant='h1' className={ classes.fillerContent }>Unit</Typography>
+          <div>
+            <Typography>Yearn CDP's are powered by Unit Protocol</Typography>
+            <a href='https://docs.unit.xyz/' target='_blank'><Typography>Learn more</Typography></a>
+          </div>
+        </div>
+        <div className={ classes.separator }></div>
+        <div className={ classes.overviewCard }>
+          <Typography variant='h1' className={ classes.fillerContent }>About</Typography>
+          <Typography >Unit Protocol is a decentralized protocol that allows you to mint stablecoin $USDP using a variety of tokens as collateral.</Typography>
+        </div>
+        <div className={ classes.separator }></div>
+        <div className={ classes.overviewCard }>
+          <Typography variant='h1' className={ classes.fillerContent }>Start</Typography>
+          <Typography>To get started with Yearn CDPs, click on the asset from the table below and open your CDP.</Typography>
+        </div>
       </Paper>
       <Typography variant='h6' className={ classes.tableHeader }>All CDP Options</Typography>
       <Paper elevation={ 0 } className={ classes.tableContainer }>

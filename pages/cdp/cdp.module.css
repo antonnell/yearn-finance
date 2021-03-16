@@ -57,6 +57,10 @@
   color: green;
 }
 
+.fillerContent {
+  margin-right: 24px !important;
+}
+
 @media screen and (max-width: 1600px) {
   .cdpContainer {
     padding: 0px 24px;

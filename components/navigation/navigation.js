@@ -13,7 +13,7 @@ import WbSunnyOutlinedIcon from '@material-ui/icons/WbSunnyOutlined';
 import Brightness2Icon from '@material-ui/icons/Brightness2';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
-import BallotIcon from '@material-ui/icons/Ballot';
+import AddBoxIcon from '@material-ui/icons/AddBox';
 
 import Unlock from '../unlock'
 
@@ -21,7 +21,7 @@ import stores from '../../stores'
 import { formatAddress } from '../../utils'
 
 import classes from './navigation.module.css'
-
+import LocalParkingIcon from '@material-ui/icons/LocalParking';
 function YearnIcon(props) {
   const { color, altColor, className, width, height } = props
   return (
@@ -120,6 +120,48 @@ function LendIconSelected(props) {
   )
 }
 
+function LTVIcon(props) {
+  const { color, altColor, className } = props
+  return (
+    <SvgIcon viewBox="0, 0, 24, 24" className={ className }>
+      <path fill={ color } d="M13 9.5h5v-2h-5v2zm0 7h5v-2h-5v2zm6 4.5H5c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2h14c1.1 0 2 .9 2 2v14c0 1.1-.9 2-2 2zM6 11h5V6H6v5zm1-4h3v3H7V7zM6 18h5v-5H6v5zm1-4h3v3H7v-3z"></path>
+    </SvgIcon>
+  )
+}
+
+function LTVIconSelected(props) {
+  const { color, altColor, className } = props
+  return (
+    <div style={{ background: color, borderRadius: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '12px' }}>
+      <SvgIcon viewBox="0, 0, 24, 24" className={ className } >
+        <path fill={ altColor } d="M13 9.5h5v-2h-5v2zm0 7h5v-2h-5v2zm6 4.5H5c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2h14c1.1 0 2 .9 2 2v14c0 1.1-.9 2-2 2zM6 11h5V6H6v5zm1-4h3v3H7V7zM6 18h5v-5H6v5zm1-4h3v3H7v-3z"></path>
+      </SvgIcon>
+    </div>
+  )
+}
+
+function CDPIcon(props) {
+  const { color, altColor, className } = props
+  return (
+    <SvgIcon viewBox="0, 0, 24, 24" className={ className }>
+      <path fill={ color } d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"></path>
+    </SvgIcon>
+  )
+}
+
+function CDPIconSelected(props) {
+  const { color, altColor, className } = props
+  return (
+    <div style={{ background: color, borderRadius: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '12px' }}>
+      <SvgIcon viewBox="0, 0, 24, 24" className={ className } >
+        <path fill={ altColor } d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"></path>
+      </SvgIcon>
+    </div>
+  )
+}
+
+
+
 const StyledSwitch = withStyles((theme) => ({
   root: {
     width: 58,
@@ -217,7 +259,9 @@ function Navigation(props) {
   const renderNavs = () => {
     return (<React.Fragment>
       { renderNav('Invest', 'invest', <InvestIcon className={ classes.icon } color={ darkMode ? 'white' : 'black' } altColor={ darkMode ? 'black' : 'white' } />, <InvestIconSelected className={ classes.iconSelected } color={ darkMode ? 'white' : 'black' } altColor={ darkMode ? 'black' : 'white' } />) }
-      { renderNav('Lend', 'lend', <LendIcon className={ classes.icon } color={ darkMode ? 'white' : 'black' } altColor={ darkMode ? 'black' : 'white' } />, <LendIconSelected className={ classes.iconSelected } color={ darkMode ? 'white' : 'black' } altColor={ darkMode ? 'black' : 'white' } />) }
+      { (account && account.address) && renderNav('Lend', 'lend', <LendIcon className={ classes.icon } color={ darkMode ? 'white' : 'black' } altColor={ darkMode ? 'black' : 'white' } />, <LendIconSelected className={ classes.iconSelected } color={ darkMode ? 'white' : 'black' } altColor={ darkMode ? 'black' : 'white' } />) }
+      { (account && account.address) && renderNav('CDP', 'cdp', <CDPIcon className={ classes.icon } color={ darkMode ? 'white' : 'black' } altColor={ darkMode ? 'black' : 'white' } />, <CDPIconSelected className={ classes.iconHack } color={ darkMode ? 'white' : 'black' } altColor={ darkMode ? 'black' : 'white' } />) }
+      { (account && account.address) && renderNav('LTV', 'ltv', <LTVIcon className={ classes.icon } color={ darkMode ? 'white' : 'black' } altColor={ darkMode ? 'black' : 'white' } />, <LTVIconSelected className={ classes.iconHack } color={ darkMode ? 'white' : 'black' } altColor={ darkMode ? 'black' : 'white' } />) }
       { renderNav('Stats', 'stats', <StatsIcon className={ classes.icon } color={ darkMode ? 'white' : 'black' } altColor={ darkMode ? 'black' : 'white' } />, <StatsIconSelected className={ classes.iconSelected } color={ darkMode ? 'white' : 'black' } altColor={ darkMode ? 'black' : 'white' } />) }
     </React.Fragment>)
   }

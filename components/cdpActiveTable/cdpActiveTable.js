@@ -30,6 +30,7 @@ import BigNumber from 'bignumber.js'
 import CDPDepositAndBorrow from '../cdpDepositAndBorrow'
 import CDPRepayAndWithdraw from '../cdpRepayAndWithdraw'
 import CDPInformation from '../cdpInformation'
+import CDPActiveInformation from '../cdpActiveInformation'
 
 import { formatCurrency, formatAddress } from '../../utils'
 
@@ -65,7 +66,7 @@ const headCells = [
   { id: 'symbol', numeric: false, disablePadding: false, label: 'Asset' },
   { id: 'balance', numeric: true, disablePadding: false, label: 'Available to supply' },
   { id: 'collateral', numeric: true, disablePadding: false, label: 'Supplied' },
-  { id: 'debt', numeric: true, disablePadding: false, label: 'USDP Minted' },
+  { id: 'debt', numeric: true, disablePadding: false, label: 'USDP Borrowed' },
   { id: 'status', numeric: true, disablePadding: false, label: 'Health' },
   { id: '', numeric: false, disablePadding: false, label: '' },
 ];
@@ -197,33 +198,26 @@ const useStyles = makeStyles((theme) => ({
   cdpActions: {
     display: 'flex',
     alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    borderBottom: '1px solid rgba(128, 128, 128, 0.32)',
+    justifyContent: 'flex-start',
+    borderBottom: '1px solid rgba(128, 128, 128, 0.25)',
+    borderTop: '1px solid rgba(128, 128, 128, 0.25)',
+    background: theme.palette.type === 'dark' ? '#22252E' : '#fff',
+    borderRadius: '0px 0px 10px 10px'
   },
   assetInfo: {
     display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    flex: 1,
-    padding: '24px',
-    width: '100%',
-    flexWrap: 'wrap',
-    borderBottom: '1px solid rgba(128, 128, 128, 0.32)',
-    background: 'radial-gradient(circle, rgba(63,94,251,0.7) 0%, rgba(47,128,237,0.7) 48%) rgba(63,94,251,0.7) 100%'
-  },
-  assetInfoError: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    flex: 1,
-    padding: '24px',
-    width: '100%',
-    flexWrap: 'wrap',
-    borderBottom: '1px solid rgba(128, 128, 128, 0.32)',
-    background: '#dc3545'
+    flexDirection: 'column',
+    borderRadius: '10px',
+    border: '1px solid rgba(128, 128, 128, 0.25)',
+    margin: '24px',
+    maxWidth: '300px',
+    background: '#fff',
+    flex: 1
   },
   infoField: {
-    flex: 1
+    display: 'flex',
+    flexDirection: 'column',
+    padding: '18px 24px'
   },
   flexy: {
     padding: '6px 0px'
@@ -242,36 +236,25 @@ const useStyles = makeStyles((theme) => ({
   },
   statusSafe: {
     color: 'green'
+  },
+  cdpActionInputs: {
+    display: 'flex',
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 }));
 
 const CDPDetails = ({ cdp, borrowAsset, classes }) => {
   return (
     <TableCell colSpan="6" className={ classes.overrideCell }>
-      <div className={ classes.assetInfo }>
-        <div className={ classes.infoField }>
-          <Typography variant={ 'h5' } color='textSecondary'>Oracle Price:</Typography>
-          <div className={ classes.flexy }>
-            <Typography variant={ 'h6' } noWrap>$ { formatCurrency(cdp.dolarPrice, 4) }</Typography>
-          </div>
-        </div>
-        <div className={ classes.infoField }>
-          <Typography variant={ 'h5' } color='textSecondary'>Liquidation Price:</Typography>
-          <div className={ classes.flexy }>
-            <Typography variant={ 'h6' } noWrap>$ { formatCurrency(cdp.liquidationPrice) }</Typography>
-          </div>
-        </div>
-        <div className={ classes.infoField }>
-          <Typography variant={ 'h5' } color='textSecondary'>Utilization:</Typography>
-          <div className={ classes.flexy }>
-            <Typography variant={ 'h6' } noWrap>{ formatCurrency(cdp.utilizationRatio) }%</Typography>
-          </div>
-        </div>
-      </div>
       <div className={ classes.cdpActions }>
         <CDPInformation cdp={ cdp } />
-        <CDPDepositAndBorrow cdp={ cdp } borrowAsset={ borrowAsset } />
-        <CDPRepayAndWithdraw cdp={ cdp } borrowAsset={ borrowAsset } />
+        <div className={ classes.cdpActionInputs }>
+          <CDPDepositAndBorrow cdp={ cdp } borrowAsset={ borrowAsset } />
+          <CDPRepayAndWithdraw cdp={ cdp } borrowAsset={ borrowAsset } />
+        </div>
+        <CDPActiveInformation cdp={ cdp } />
       </div>
     </TableCell>
   )
