@@ -58,13 +58,15 @@ class Store {
     const ib = max[2]
     const aave1 = max[3]
     const aave2 = max[4]
+    const unit = max[5]
 
     this.emitter.emit(MAX_RETURNED, {
       cream,
       compound,
       ironBank: ib,
       aave1,
-      aave2
+      aave2,
+      unit
     })
   }
 }
