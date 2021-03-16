@@ -134,6 +134,10 @@ class Store {
       console.log(ethPrice)
     } catch(ex) {
       console.log(ex)
+      this.emitter.emit(CDP_UPDATED)
+      this.emitter.emit(CDP_CONFIGURED)
+
+      this.emitter.emit(ERROR, ex)
       return null
     }
 
