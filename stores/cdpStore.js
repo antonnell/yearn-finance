@@ -24,6 +24,7 @@ import {
   VAULT_MANAGER_KEYDONIX_ASSET,
   VAULT_MANAGER_KEEP3R_ASSET,
   VAULT_MANAGER_KEEP3R_SUSHI_ASSET,
+  VAULT_MANAGER_STANDARD
 } from './constants';
 
 import * as moment from 'moment';
@@ -37,7 +38,8 @@ import {
   VAULTMANAGERPARAMSABI,
   VAULTPARAMETERSABI,
   VAULTMANAGERKEEP3RABI,
-  VAULTMANAGERKEEP3RSUSHIABI
+  VAULTMANAGERKEEP3RSUSHIABI,
+  VAULTMANAGERSTANDARDABI
 } from './abis'
 import { bnDec } from '../utils'
 import cdpJSON from './configurations/cdp'
@@ -110,6 +112,8 @@ class Store {
     const borrowAssetContract = new web3.eth.Contract(ERC20ABI, borrowAsset.address)
     const borrowBalanceOf = await borrowAssetContract.methods.balanceOf(account.address).call()
     borrowAsset.balance = BigNumber(borrowBalanceOf).div(bnDec(borrowAsset.decimals)).toFixed(borrowAsset.decimals, BigNumber.ROUND_DOWN)
+    const allowanceOf = await borrowAssetContract.methods.allowance(account.address, CDP_VAULT_ADDRESS).call()
+    borrowAsset.allowance = BigNumber(allowanceOf).div(bnDec(borrowAsset.decimals)).toFixed(borrowAsset.decimals, BigNumber.ROUND_DOWN)
 
     this.setStore({ borrowAsset: borrowAsset })
 
@@ -394,37 +398,68 @@ class Store {
 
     const { cdp, depositAmount, borrowAmount, gasSpeed } = payload.content
 
-    this._callDepositCDP(web3, cdp, account, depositAmount, borrowAmount, gasSpeed, (err, depositResult) => {
-      if(err) {
-        return this.emitter.emit(ERROR, err);
-      }
+    // all others for now
+    if (BigNumber(depositAmount).gt(0) && (!borrowAmount || borrowAmount === '' || BigNumber(borrowAmount).eq(0))) {
+      this._callDepositCDP(web3, cdp, account, depositAmount, borrowAmount, gasSpeed, (err, depositResult) => {
+        if(err) {
+          return this.emitter.emit(ERROR, err);
+        }
 
-      return this.emitter.emit(DEPOSIT_BORROW_CDP_RETURNED, depositResult)
-    })
+        return this.emitter.emit(DEPOSIT_BORROW_CDP_RETURNED, depositResult)
+      })
+    } else {
+      this._callDepositAndBorrowCDP(web3, cdp, account, depositAmount, borrowAmount, gasSpeed, (err, depositResult) => {
+        if(err) {
+          return this.emitter.emit(ERROR, err);
+        }
+
+        return this.emitter.emit(DEPOSIT_BORROW_CDP_RETURNED, depositResult)
+      })
+    }
   }
 
   _callDepositCDP = async (web3, asset, account, depositAmount, borrowAmount, gasSpeed, callback) => {
     try {
+      let cdpContract = new web3.eth.Contract(VAULTMANAGERSTANDARDABI, VAULT_MANAGER_STANDARD)
+
+      const depositAmountToSend = BigNumber(depositAmount === '' ? 0 : depositAmount).times(10**18).toFixed(0)
+      const gasPrice = await stores.accountStore.getGasPrice(gasSpeed)
+
+      console.log(asset.tokenMetadata.address, depositAmountToSend)
+
+      this._callContract(web3, cdpContract, 'deposit', [asset.tokenMetadata.address, depositAmountToSend], account, gasPrice, CONFIGURE_CDP, callback)
+    } catch(ex) {
+      console.log(ex)
+      return this.emitter.emit(ERROR, ex);
+    }
+  }
+
+  _callDepositAndBorrowCDP = async (web3, asset, account, depositAmount, borrowAmount, gasSpeed, callback) => {
+    try {
+
+      const depositAmountToSend = BigNumber(depositAmount === '' ? 0 : depositAmount).times(bnDec(asset.tokenMetadata.decimals)).toFixed(0)
+      const borrowAmountToSend = BigNumber(borrowAmount === '' ? 0 : borrowAmount).times(10**18).toFixed(0)
+      const gasPrice = await stores.accountStore.getGasPrice(gasSpeed)
+
+      console.log(asset.tokenMetadata.address, depositAmountToSend, borrowAmountToSend)
+
       let cdpContract = null
+      let params = null
 
       if(this.isKeydonixOracle(asset.defaultOracleType)) {
         return
       } else if (this.isKeep3rOracle(asset.defaultOracleType)) {
         cdpContract = new web3.eth.Contract(VAULTMANAGERKEEP3RABI, VAULT_MANAGER_KEEP3R_ASSET)
+        params = [asset.tokenMetadata.address, depositAmountToSend, '0', borrowAmountToSend]
       } else if (this.isKeep3rSushiSwapOracle(asset.defaultOracleType)) {
         cdpContract = new web3.eth.Contract(VAULTMANAGERKEEP3RSUSHIABI, VAULT_MANAGER_KEEP3R_SUSHI_ASSET)
+        params = [asset.tokenMetadata.address, depositAmountToSend, borrowAmountToSend]
       }
 
-      const depositAmountToSend = BigNumber(depositAmount).times(bnDec(asset.tokenMetadata.decimals)).toFixed(0)
-      const borrowAmountToSend = BigNumber(borrowAmount).times(10**18).toFixed(0)
-      const gasPrice = await stores.accountStore.getGasPrice(gasSpeed)
-
-      console.log(asset.tokenMetadata.address, depositAmountToSend, borrowAmountToSend)
-
       if(BigNumber(asset.debt).gt(0)) {
-        this._callContract(web3, cdpContract, 'depositAndBorrow', [asset.tokenMetadata.address, depositAmountToSend, borrowAmountToSend], account, gasPrice, CONFIGURE_CDP, callback)
+        this._callContract(web3, cdpContract, 'depositAndBorrow', params, account, gasPrice, CONFIGURE_CDP, callback)
       } else {
-        this._callContract(web3, cdpContract, 'spawn', [asset.tokenMetadata.address, depositAmountToSend, borrowAmountToSend], account, gasPrice, CONFIGURE_CDP, callback)
+        this._callContract(web3, cdpContract, 'spawn', params, account, gasPrice, CONFIGURE_CDP, callback)
       }
 
     } catch(ex) {
@@ -446,31 +481,99 @@ class Store {
       //maybe throw an error
     }
 
-    const { asset, amount, gasSpeed } = payload.content
+    const { cdp, repayAmount, withdrawAmount, gasSpeed } = payload.content
 
-    this._callWithdrawCDP(web3, asset, account, amount, gasSpeed, (err, depositResult) => {
-      if(err) {
-        return this.emitter.emit(ERROR, err);
-      }
+    if(BigNumber(repayAmount).eq(cdp.debt) || ((!repayAmount || repayAmount === '' || BigNumber(repayAmount).eq(0)) && BigNumber(cdp.debt).eq(0))) {
+      this._callRepayAllAndWithdrawCDP(web3, cdp, account, repayAmount, withdrawAmount, gasSpeed, (err, depositResult) => {
+        if(err) {
+          return this.emitter.emit(ERROR, err);
+        }
 
-      return this.emitter.emit(WITHDRAW_CDP_RETURNED, depositResult)
-    })
+        return this.emitter.emit(WITHDRAW_REPAY_CDP_RETURNED, depositResult)
+      })
+    } else if (BigNumber(repayAmount).gt(0) && (!withdrawAmount || withdrawAmount === '' || BigNumber(withdrawAmount).eq(0))) {
+      this._callRepayCDP(web3, cdp, account, repayAmount, withdrawAmount, gasSpeed, (err, depositResult) => {
+        if(err) {
+          return this.emitter.emit(ERROR, err);
+        }
+
+        return this.emitter.emit(WITHDRAW_REPAY_CDP_RETURNED, depositResult)
+      })
+    } else {
+      this._callWithdrawCDP(web3, cdp, account, repayAmount, withdrawAmount, gasSpeed, (err, depositResult) => {
+        if(err) {
+          return this.emitter.emit(ERROR, err);
+        }
+
+        return this.emitter.emit(WITHDRAW_REPAY_CDP_RETURNED, depositResult)
+      })
+    }
   }
 
-  _callWithdrawCDP = async (web3, asset, account, amount, gasSpeed, callback) => {
-    const cdpContract = new web3.eth.Contract(CERC20DELEGATORABI, asset.address)
+  _callRepayAllAndWithdrawCDP = async (web3, asset, account, repayAmount, withdrawAmount, gasSpeed, callback) => {
+    try {
+      let cdpContract = new web3.eth.Contract(VAULTMANAGERSTANDARDABI, VAULT_MANAGER_STANDARD)
 
-    const amountToSend = BigNumber(amount).times(bnDec(asset.tokenMetadata.decimals)).toFixed(0)
-    const gasPrice = await stores.accountStore.getGasPrice(gasSpeed)
+      const withdrawAmountToSend = BigNumber(withdrawAmount === '' ? 0 : withdrawAmount).times(bnDec(asset.tokenMetadata.decimals)).toFixed(0)
+      const gasPrice = await stores.accountStore.getGasPrice(gasSpeed)
 
-    this._callContract(web3, cdpContract, 'redeemUnderlying', [amountToSend], account, gasPrice, GET_CDP_BALANCES, callback)
+      console.log(asset.tokenMetadata.address, withdrawAmountToSend)
+
+      this._callContract(web3, cdpContract, 'repayAllAndWithdraw', [asset.tokenMetadata.address, withdrawAmountToSend], account, gasPrice, CONFIGURE_CDP, callback)
+    } catch(ex) {
+      console.log(ex)
+      return this.emitter.emit(ERROR, ex);
+    }
+  }
+
+  _callRepayCDP = async (web3, asset, account, repayAmount, withdrawAmount, gasSpeed, callback) => {
+    try {
+      let cdpContract = new web3.eth.Contract(VAULTMANAGERSTANDARDABI, VAULT_MANAGER_STANDARD)
+
+      const repayAmountToSend = BigNumber(repayAmount === '' ? 0 : repayAmount).times(10**18).toFixed(0)
+      const gasPrice = await stores.accountStore.getGasPrice(gasSpeed)
+
+      console.log(asset.tokenMetadata.address, repayAmountToSend)
+
+      this._callContract(web3, cdpContract, 'repay', [asset.tokenMetadata.address, repayAmountToSend], account, gasPrice, CONFIGURE_CDP, callback)
+    } catch(ex) {
+      console.log(ex)
+      return this.emitter.emit(ERROR, ex);
+    }
+  }
+
+  _callWithdrawCDP = async (web3, asset, account, repayAmount, withdrawAmount, gasSpeed, callback) => {
+    try {
+      const repayAmountToSend = BigNumber(repayAmount === '' ? 0 : repayAmount).times(10**18).toFixed(0)
+      const withdrawAmountToSend = BigNumber(withdrawAmount === '' ? 0 : withdrawAmount).times(bnDec(asset.tokenMetadata.decimals)).toFixed(0)
+      const gasPrice = await stores.accountStore.getGasPrice(gasSpeed)
+
+      let cdpContract = null
+      let params = null
+
+      if(this.isKeydonixOracle(asset.defaultOracleType)) {
+        return
+      } else if (this.isKeep3rOracle(asset.defaultOracleType)) {
+        cdpContract = new web3.eth.Contract(VAULTMANAGERKEEP3RABI, VAULT_MANAGER_KEEP3R_ASSET)
+        params = [asset.tokenMetadata.address, withdrawAmountToSend, '0', repayAmountToSend]
+      } else if (this.isKeep3rSushiSwapOracle(asset.defaultOracleType)) {
+        cdpContract = new web3.eth.Contract(VAULTMANAGERKEEP3RSUSHIABI, VAULT_MANAGER_KEEP3R_SUSHI_ASSET)
+        params = [asset.tokenMetadata.address, withdrawAmountToSend, repayAmountToSend]
+      }
+
+      console.log(asset.tokenMetadata.address, repayAmountToSend, withdrawAmountToSend)
+
+      this._callContract(web3, cdpContract, 'withdrawAndRepay', params, account, gasPrice, CONFIGURE_CDP, callback)
+    } catch(ex) {
+      console.log(ex)
+      return this.emitter.emit(ERROR, ex);
+    }
   }
 
   _callContract = (web3, contract, method, params, account, gasPrice, dispatchEvent, callback) => {
 
     console.log(method)
     console.log(params)
-    console.log(account)
 
     const context = this
     contract.methods[method](...params).send({ from: account.address, gasPrice: web3.utils.toWei(gasPrice, 'gwei') })

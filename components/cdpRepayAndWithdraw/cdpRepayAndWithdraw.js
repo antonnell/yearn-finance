@@ -18,6 +18,7 @@ import classes from './cdpRepayAndWithdraw.module.css'
 import { formatCurrency } from '../../utils'
 
 import {
+  ERROR,
   WITHDRAW_REPAY_CDP,
   WITHDRAW_REPAY_CDP_RETURNED,
   APPROVE_CDP,
@@ -33,6 +34,30 @@ export default function CDPRepayAndWithdraw({ cdp, borrowAsset }) {
   const [ withdrawAmountError, setWithdrawAmountError ] = useState(false)
 
   const [ loading, setLoading ] = useState(false)
+
+  useEffect(function() {
+    const withdrawAndRepayReturned = () => {
+      setLoading(false)
+    }
+
+    const approveReturned = () => {
+      setLoading(false)
+    }
+
+    const errorReturned = () => {
+      setLoading(false)
+    }
+
+    stores.emitter.on(WITHDRAW_REPAY_CDP_RETURNED, withdrawAndRepayReturned)
+    stores.emitter.on(APPROVE_CDP_RETURNED, approveReturned)
+    stores.emitter.on(ERROR, errorReturned)
+
+    return () => {
+      stores.emitter.removeListener(WITHDRAW_REPAY_CDP_RETURNED, withdrawAndRepayReturned)
+      stores.emitter.removeListener(APPROVE_CDP_RETURNED, approveReturned)
+      stores.emitter.removeListener(ERROR, errorReturned)
+    }
+  },[]);
 
   const onRepayAmountChanged = (event) => {
     setRepayAmountError(false)
@@ -54,12 +79,16 @@ export default function CDPRepayAndWithdraw({ cdp, borrowAsset }) {
 
   const onApprove = () => {
     setLoading(true)
-    stores.dispatcher.dispatch({ type: APPROVE_CDP, content: { cdp: cdp, repayAmount: repayAmount } })
+    let sendAsset = borrowAsset
+    sendAsset.tokenMetadata = borrowAsset
+    stores.dispatcher.dispatch({ type: APPROVE_CDP, content: { asset: sendAsset, amount: repayAmount } })
   }
 
   const onApproveMax = () => {
     setLoading(true)
-    stores.dispatcher.dispatch({ type: APPROVE_CDP, content: { cdp: cdp, repayAmount: 'max' } })
+    let sendAsset = borrowAsset
+    sendAsset.tokenMetadata = borrowAsset
+    stores.dispatcher.dispatch({ type: APPROVE_CDP, content: { asset: sendAsset, amount: 'max' } })
   }
 
   const setRepayAmountPercent = (percent) => {
@@ -74,7 +103,16 @@ export default function CDPRepayAndWithdraw({ cdp, borrowAsset }) {
     if(loading) {
       return
     }
-    const amount = BigNumber(BigNumber(cdp.collateral).minus(BigNumber(cdp.collateral).times(cdp.utilizationRatio).div(100))).times(percent).div(100).toFixed(cdp.tokenMetadata.decimals)
+
+    let repayUSDPAvailable = (repayAmount && repayAmount > 0) ? repayAmount : 0
+    repayUSDPAvailable = BigNumber(repayUSDPAvailable).times(1/cdp.dolarPrice).times(100).div(cdp.liquidationRatio).toNumber()
+
+    let amount = BigNumber(BigNumber(cdp.collateral).plus(repayUSDPAvailable).minus(BigNumber(cdp.collateral).times(cdp.utilizationRatio).div(100))).times(percent).div(100).toFixed(cdp.tokenMetadata.decimals)
+
+    if(amount > cdp.collateral) {
+      amount = cdp.collateral
+    }
+
     setWithdrawAmount(amount)
   }
 
@@ -137,7 +175,7 @@ export default function CDPRepayAndWithdraw({ cdp, borrowAsset }) {
 
       </div>
       <div className={ classes.actionButton } >
-        { (repayAmount === '' || BigNumber(cdp.tokenMetadata.allowance).gte(repayAmount)) && (
+        { (repayAmount === '' || BigNumber(borrowAsset.allowance).gte(repayAmount)) && (
           <Button
             fullWidth
             disableElevation
@@ -150,7 +188,7 @@ export default function CDPRepayAndWithdraw({ cdp, borrowAsset }) {
             <Typography variant='h5'>{ loading ? <CircularProgress size={25} /> : 'Repay AND Withdraw' }</Typography>
           </Button>
         )}
-        { (repayAmount !=='' && BigNumber(repayAmount).gt(0) && (!cdp.tokenMetadata.allowance || BigNumber(cdp.tokenMetadata.allowance).eq(0) || BigNumber(cdp.tokenMetadata.allowance).lt(repayAmount))) && (
+        { (repayAmount !=='' && BigNumber(repayAmount).gt(0) && (!borrowAsset.allowance || BigNumber(borrowAsset.allowance).eq(0) || BigNumber(borrowAsset.allowance).lt(repayAmount))) && (
           <React.Fragment>
             <Button
               fullWidth

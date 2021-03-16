@@ -16,6 +16,7 @@ import { vaultParametersABI } from './vaultParametersABI'
 import { ltvMaximizerABI } from './ltvMaximizerABI'
 import { vaultManagerKeep3rSushiSwapMainAssetABI } from './vaultManagerKeep3rSushiSwapMainAssetABI'
 import { vaultManagerKeep3rMainAssetABI } from './vaultManagerKeep3rMainAssetABI'
+import { vaultMangerStandardABI } from './vaultMangerStandardABI'
 
 export const ERC20ABI = erc20ABI
 export const VAULTV1ABI = vaultV1ABI
@@ -35,3 +36,4 @@ export const VAULTPARAMETERSABI = vaultParametersABI
 export const LTVMAXIMIZERABI = ltvMaximizerABI
 export const VAULTMANAGERKEEP3RSUSHIABI = vaultManagerKeep3rSushiSwapMainAssetABI
 export const VAULTMANAGERKEEP3RABI = vaultManagerKeep3rMainAssetABI
+export const VAULTMANAGERSTANDARDABI = vaultMangerStandardABI

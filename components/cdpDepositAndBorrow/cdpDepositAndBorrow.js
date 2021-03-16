@@ -197,7 +197,7 @@ export default function CDPDepositAndBorrow({ cdp, borrowAsset }) {
       <div className={ classes.textField }>
         <div className={ classes.inputTitleContainer }>
           <div className={ classes.inputTitle }>
-            <Typography variant='h5' noWrap>Mint USDP</Typography>
+            <Typography variant='h5' noWrap>Borrow USDP</Typography>
           </div>
         </div>
         <TextField
@@ -241,7 +241,7 @@ export default function CDPDepositAndBorrow({ cdp, borrowAsset }) {
             onClick={ onDeposit }
             disabled={ loading }
             >
-            <Typography variant='h5'>{ loading ? <CircularProgress size={25} /> : (BigNumber(cdp.collateral).gt(0) ? 'Supply And Mint' : 'Open CDP') }</Typography>
+            <Typography variant='h5'>{ loading ? <CircularProgress size={25} /> : (BigNumber(cdp.collateral).gt(0) ? 'Supply And Borrow' : 'Open CDP') }</Typography>
           </Button>
         )}
         { (depositAmount !=='' && BigNumber(depositAmount).gt(0) && (!cdp.tokenMetadata.allowance || BigNumber(cdp.tokenMetadata.allowance).eq(0) || BigNumber(cdp.tokenMetadata.allowance).lt(depositAmount))) && (
