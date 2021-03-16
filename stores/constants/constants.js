@@ -7,7 +7,7 @@ export const GAS_PRICE_API = 'https://gasprice.poa.network/'
 export const ETHERSCAN_URL = 'https://etherscan.io/'
 export const COVER_API = 'https://api.coverprotocol.com/protocol_data/production'
 
-export const LTV_MAXIMIZER_ADDRESS = '0xBc8c635Be656B6c5A109ddC0d4df14746f0158d1'
+export const LTV_MAXIMIZER_ADDRESS = '0x6AE0b2d7DaEbd40ed5333b1C2C72f09287bcCa84'
 export const CREAM_PRICE_ORACLE_ADDRESS = '0x6B96c414ce762578c3E7930da9114CffC88704Cb'
 export const COMPTROLLER_ADDRESS = '0xAB1c342C7bf5Ec5F02ADEA1c2270670bCa144CbB'
 

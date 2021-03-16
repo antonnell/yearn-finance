@@ -115,6 +115,9 @@
 .twitter {
   background-image: url('/socials/twitter.svg');
 }
+.github {
+  background-image: url('/socials/github.svg');
+}
 .discord {
   background-image: url('/socials/discord.svg');
 }

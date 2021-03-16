@@ -118,24 +118,28 @@ function Stats({ changeTheme }) {
           </div>
           <div>
               <div className={ classes.pair }>
-                <Typography>Cream</Typography>
+                <Typography>cream.finance</Typography>
                 <Typography>{assetDetails ? assetDetails.cream : 0} %</Typography>
               </div>
               <div className={ classes.pair }>
-                <Typography>Iron Bank</Typography>
+                <Typography>yearn.fi/lend</Typography>
                 <Typography>{assetDetails ? assetDetails.ironBank : 0} %</Typography>
               </div>
               <div className={ classes.pair }>
-                <Typography>Compound</Typography>
+                <Typography>compound.finance</Typography>
                 <Typography>{assetDetails ? assetDetails.compound : 0} %</Typography>
               </div>
               <div className={ classes.pair }>
-                <Typography>Aave V1</Typography>
+                <Typography>aave.com v1</Typography>
                 <Typography>{assetDetails ? assetDetails.aave1 : 0} %</Typography>
               </div>
               <div className={ classes.pair }>
-                <Typography>Aave V2</Typography>
+                <Typography>aave.com v2</Typography>
                 <Typography>{assetDetails ? assetDetails.aave2 : 0} %</Typography>
+              </div>
+              <div className={ classes.pair }>
+                <Typography>unit.xyz</Typography>
+                <Typography>{assetDetails ? assetDetails.unit : 0} %</Typography>
               </div>
           </div>
         </Paper>
