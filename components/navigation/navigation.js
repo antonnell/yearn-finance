@@ -258,11 +258,11 @@ function Navigation(props) {
   const activePath = router.asPath
   const renderNavs = () => {
     return (<React.Fragment>
-      { renderNav('Invest', 'invest', <InvestIcon className={ classes.icon } color={ darkMode ? 'white' : 'black' } altColor={ darkMode ? 'black' : 'white' } />, <InvestIconSelected className={ classes.iconSelected } color={ darkMode ? 'white' : 'black' } altColor={ darkMode ? 'black' : 'white' } />) }
-      { (account && account.address) && renderNav('Lend', 'lend', <LendIcon className={ classes.icon } color={ darkMode ? 'white' : 'black' } altColor={ darkMode ? 'black' : 'white' } />, <LendIconSelected className={ classes.iconSelected } color={ darkMode ? 'white' : 'black' } altColor={ darkMode ? 'black' : 'white' } />) }
-      { (account && account.address) && renderNav('CDP', 'cdp', <CDPIcon className={ classes.icon } color={ darkMode ? 'white' : 'black' } altColor={ darkMode ? 'black' : 'white' } />, <CDPIconSelected className={ classes.iconHack } color={ darkMode ? 'white' : 'black' } altColor={ darkMode ? 'black' : 'white' } />) }
-      { (account && account.address) && renderNav('LTV', 'ltv', <LTVIcon className={ classes.icon } color={ darkMode ? 'white' : 'black' } altColor={ darkMode ? 'black' : 'white' } />, <LTVIconSelected className={ classes.iconHack } color={ darkMode ? 'white' : 'black' } altColor={ darkMode ? 'black' : 'white' } />) }
-      { renderNav('Stats', 'stats', <StatsIcon className={ classes.icon } color={ darkMode ? 'white' : 'black' } altColor={ darkMode ? 'black' : 'white' } />, <StatsIconSelected className={ classes.iconSelected } color={ darkMode ? 'white' : 'black' } altColor={ darkMode ? 'black' : 'white' } />) }
+      { renderNav('Invest', 'invest', <InvestIcon className={ classes.icon } color={ darkMode ? 'white' : 'rgb(33, 37, 41)' } altColor={ darkMode ? 'rgb(33, 37, 41)' : 'white' } />, <InvestIconSelected className={ classes.iconSelected } color={ darkMode ? 'white' : 'rgb(33, 37, 41)' } altColor={ darkMode ? 'rgb(33, 37, 41)' : 'white' } />) }
+      { (account && account.address) && renderNav('Lend', 'lend', <LendIcon className={ classes.icon } color={ darkMode ? 'white' : 'rgb(33, 37, 41)' } altColor={ darkMode ? 'rgb(33, 37, 41)' : 'white' } />, <LendIconSelected className={ classes.iconSelected } color={ darkMode ? 'white' : 'rgb(33, 37, 41)' } altColor={ darkMode ? 'rgb(33, 37, 41)' : 'white' } />) }
+      { (account && account.address) && renderNav('CDP', 'cdp', <CDPIcon className={ classes.icon } color={ darkMode ? 'white' : 'rgb(33, 37, 41)' } altColor={ darkMode ? 'rgb(33, 37, 41)' : 'white' } />, <CDPIconSelected className={ classes.iconHack } color={ darkMode ? 'white' : 'rgb(33, 37, 41)' } altColor={ darkMode ? 'rgb(33, 37, 41)' : 'white' } />) }
+      { (account && account.address) && renderNav('LTV', 'ltv', <LTVIcon className={ classes.icon } color={ darkMode ? 'white' : 'rgb(33, 37, 41)' } altColor={ darkMode ? 'rgb(33, 37, 41)' : 'white' } />, <LTVIconSelected className={ classes.iconHack } color={ darkMode ? 'white' : 'rgb(33, 37, 41)' } altColor={ darkMode ? 'rgb(33, 37, 41)' : 'white' } />) }
+      { renderNav('Stats', 'stats', <StatsIcon className={ classes.icon } color={ darkMode ? 'white' : 'rgb(33, 37, 41)' } altColor={ darkMode ? 'rgb(33, 37, 41)' : 'white' } />, <StatsIconSelected className={ classes.iconSelected } color={ darkMode ? 'white' : 'rgb(33, 37, 41)' } altColor={ darkMode ? 'rgb(33, 37, 41)' : 'white' } />) }
     </React.Fragment>)
   }
 
@@ -279,7 +279,7 @@ function Navigation(props) {
   return (
     <Paper elevation={ 0 } className={ classes.navigationContainer }>
       <div className={ classes.navigationHeading }>
-        <YearnIcon color={ darkMode ? 'white' : 'black' } altColor={ darkMode ? 'black' : 'white' } width='123px' height='42.3px' className={ classes.yearnLogo } />
+        <YearnIcon color={ darkMode ? 'white' : 'rgb(33, 37, 41)' } altColor={ darkMode ? 'rgb(33, 37, 41)' : 'white' } width='123px' height='42.3px' className={ classes.yearnLogo } />
       </div>
 
       <div className={ classes.navigationContent }>

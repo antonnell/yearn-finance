@@ -100,7 +100,7 @@ function CDP({ changeTheme }) {
       <Paper elevation={ 0 } className={ classes.overviewContainer }>
         <div className={ classes.overviewCard }>
           <Typography variant='h1' className={ classes.fillerContent }>Unit</Typography>
-          <div>
+          <div className={ classes.fillerText }>
             <Typography>Yearn CDP's are powered by Unit Protocol</Typography>
             <a href='https://docs.unit.xyz/' target='_blank'><Typography>Learn more</Typography></a>
           </div>
@@ -108,12 +108,12 @@ function CDP({ changeTheme }) {
         <div className={ classes.separator }></div>
         <div className={ classes.overviewCard }>
           <Typography variant='h1' className={ classes.fillerContent }>About</Typography>
-          <Typography >Unit Protocol is a decentralized protocol that allows you to mint stablecoin $USDP using a variety of tokens as collateral.</Typography>
+          <Typography className={ classes.fillerText }>Unit Protocol is a decentralized protocol that allows you to mint stablecoin $USDP using a variety of tokens as collateral.</Typography>
         </div>
         <div className={ classes.separator }></div>
         <div className={ classes.overviewCard }>
           <Typography variant='h1' className={ classes.fillerContent }>Start</Typography>
-          <Typography>To get started with Yearn CDPs, click on the asset from the table below and open your CDP.</Typography>
+          <Typography className={ classes.fillerText }>To get started with Yearn CDPs, click on the asset from the table below and open your CDP.</Typography>
         </div>
       </Paper>
       <Typography variant='h6' className={ classes.tableHeader }>All CDP Options</Typography>

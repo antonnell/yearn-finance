@@ -59,6 +59,7 @@
 
 .fillerContent {
   margin-right: 24px !important;
+  color: #2F80ED;
 }
 
 @media screen and (max-width: 1600px) {
@@ -92,5 +93,11 @@
   }
   .overviewCard {
     padding-bottom: 12px;
+  }
+  .fillerContent {
+    width: 150px;
+  }
+  .fillerText {
+    flex: 1;
   }
 }

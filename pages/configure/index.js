@@ -29,7 +29,7 @@ function Configure({ theme }) {
 
   return (
     <div className={ classes.configureContainer }>
-      <YearnIcon color={ (theme.palette.type === 'dark' ? true : false) ? 'white' : 'black' } altColor={ (theme.palette.type === 'dark' ? true : false) ? 'black' : 'white' } width='123px' height='42.3px' className={ classes.yearnLogo } />
+      <YearnIcon color={ (theme.palette.type === 'dark' ? true : false) ? 'white' : 'rgb(33, 37, 41)' } altColor={ (theme.palette.type === 'dark' ? true : false) ? 'rgb(33, 37, 41)' : 'white' } width='123px' height='42.3px' className={ classes.yearnLogo } />
       <div className={ theme.palette.type === 'light' ? classes['dot-pulse'] : classes['dot-pulse-dark'] }></div>
     </div>
   )
