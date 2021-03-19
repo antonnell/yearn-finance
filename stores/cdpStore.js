@@ -39,7 +39,8 @@ import {
   VAULTPARAMETERSABI,
   VAULTMANAGERKEEP3RABI,
   VAULTMANAGERKEEP3RSUSHIABI,
-  VAULTMANAGERSTANDARDABI
+  VAULTMANAGERSTANDARDABI,
+  UNISWAPV2PAIRABI
 } from './abis'
 import { bnDec } from '../utils'
 import cdpJSON from './configurations/cdp'
@@ -310,23 +311,28 @@ class Store {
       }
 
       if(this.isKeydonixOracle(asset.defaultOracleType)) {
-
       } else if (this.isKeep3rOracle(asset.defaultOracleType)) {
-
         const keep3rContract = new web3.eth.Contract(KEEP3RV1ORACLEABI, KEEP3R_ORACLE_ADDRESS)
-        const ethPerAsset = await keep3rContract.methods.current(asset.address, sendAmount0, '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2').call({ })
+        let ethPerAsset = 0
+        if (token.poolTokens) {
+          const uniswapPairContract = new web3.eth.Contract(UNISWAPV2PAIRABI, asset.address)
+          const token0Address = await uniswapPairContract.methods.token0().call()
+          const token1Address = await uniswapPairContract.methods.token1().call()
+          const [_reserve0, _reserve1] = await uniswapPairContract.methods.getReserves().call()
 
-        //Somewhere get ETH price
+        } else {
+          ethPerAsset = await keep3rContract.methods.current(asset.address, sendAmount0, '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2').call({ })
+        }
         dolar = BigNumber(ethPerAsset).times(ethPrice).div(10**18).toNumber()
-
       } else if (this.isKeep3rSushiSwapOracle(asset.defaultOracleType)) {
-
         const keep3rContract = new web3.eth.Contract(KEEP3RV1ORACLEABI, KEEP3R_SUSHI_ORACLE_ADDRESS)
-        const ethPerAsset = await keep3rContract.methods.current(asset.address, sendAmount0, '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2').call({ })
+        let ethPerAsset = 0
+        if(token.poolTokens) {
 
-        //Somewhere get ETH price
+        } else {
+          ethPerAsset = await keep3rContract.methods.current(asset.address, sendAmount0, '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2').call({ })
+        }
         dolar = BigNumber(ethPerAsset).times(ethPrice).div(10**18).toNumber()
-
       } else {
         //don't know?
         return 0
@@ -334,7 +340,7 @@ class Store {
 
       return dolar
     } catch (ex) {
-      // console.log(ex)
+      console.log(ex)
       return 0
     }
   }
