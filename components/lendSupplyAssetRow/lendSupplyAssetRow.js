@@ -98,13 +98,13 @@ function LendSupplyAssetDetails({ lendingAsset, account, lendingBorrow, lendingS
   }, [])
 
   const supplyReturned = () => {
-    stores.emitter.removeListener(LENDING_SUPPLY_RETURNED, supplyReturned);
+    stores.emitter.removeListener(DEPOSIT_LEND_RETURNED, supplyReturned);
     setLoading(false)
     setSupplyAmount('')
   };
 
   const withdrawReturned = () => {
-    stores.emitter.removeListener(LENDING_WITHDRAW_RETURNED, withdrawReturned);
+    stores.emitter.removeListener(WITHDRAW_LEND_RETURNED, withdrawReturned);
     setLoading(false)
     setWithdrawAmount('')
   };
@@ -480,6 +480,9 @@ export default function LendSupplyAssetRow({ lendingAsset, account, lendingBorro
         </div>
         <div className={ classes.lendValueCell}>
             <Typography variant='h5'>{ formatCurrency(lendingAsset.supplyAPY) } %</Typography>
+        </div>
+        <div className={ classes.lendValueCell}>
+            <Typography variant='h5'>{ formatCurrency(lendingAsset.liquidity) } { lendingAsset.tokenMetadata.symbol }</Typography>
         </div>
       </AccordionSummary>
       <AccordionDetails>

@@ -115,6 +115,7 @@ function Lend({ changeTheme }) {
         <div className={ classes.lendValueCell}><Typography variant='h5'>Supplied</Typography></div>
         <div className={ classes.lendBalanceCell}><Typography variant='h5'>Balance</Typography></div>
         <div className={ classes.lendValueCell}><Typography variant='h5'>APY</Typography></div>
+        <div className={ classes.lendValueCell}><Typography variant='h5'>Liquidity</Typography></div>
       </div>
     )
   }
@@ -126,6 +127,7 @@ function Lend({ changeTheme }) {
         <div className={ classes.lendValueCell}><Typography variant='h5'>Borrowed</Typography></div>
         <div className={ classes.lendBalanceCell}><Typography variant='h5'>Balance</Typography></div>
         <div className={ classes.lendValueCell}><Typography variant='h5'>APY</Typography></div>
+        <div className={ classes.lendValueCell}><Typography variant='h5'>Liquidity</Typography></div>
       </div>
     )
   }
@@ -137,6 +139,7 @@ function Lend({ changeTheme }) {
         <div className={ classes.lendBalanceCell}><Typography variant='h5'>Balance</Typography></div>
         <div className={ classes.lendValueCell}><Typography variant='h5'>Borrow APY</Typography></div>
         <div className={ classes.lendValueCell}><Typography variant='h5'>Supply APY</Typography></div>
+        <div className={ classes.lendValueCell}><Typography variant='h5'>Liquidity</Typography></div>
       </div>
     )
   }

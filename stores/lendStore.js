@@ -403,7 +403,7 @@ class Store {
         return this.emitter.emit(ERROR, err);
       }
 
-      return this.emitter.emit(APPROVE_VAULT_RETURNED, approveResult)
+      return this.emitter.emit(APPROVE_LEND_RETURNED, approveResult)
     })
   }
 

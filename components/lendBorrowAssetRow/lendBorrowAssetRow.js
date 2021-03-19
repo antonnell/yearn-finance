@@ -438,6 +438,9 @@ export default function LendBorrowAssetRow({ lendingAsset, account, lendingBorro
         <div className={ classes.lendValueCell}>
             <Typography variant='h5'>{ formatCurrency(lendingAsset.borrowAPY) } %</Typography>
         </div>
+        <div className={ classes.lendValueCell}>
+            <Typography variant='h5'>{ formatCurrency(lendingAsset.liquidity) } { lendingAsset.tokenMetadata.symbol }</Typography>
+        </div>
       </AccordionSummary>
       <AccordionDetails>
         <LendBorrowAssetDetails lendingAsset={ lendingAsset } lendingBorrow={ lendingBorrow } lendingSupply={ lendingSupply } lendingBorrowLimit={ lendingBorrowLimit } />
