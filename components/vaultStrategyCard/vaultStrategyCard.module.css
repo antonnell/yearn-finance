@@ -1,7 +1,6 @@
 .strategyContainer {
   border-radius: 10px;
   display: flex;
-  padding-bottom: 24px;
   align-items: flex-end;
   justify-content: space-around;
   width: 100%;
@@ -12,13 +11,13 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: flex-start;
   cursor: pointer;
 }
 
 .strategyNameText {
-  padding-top: 6px;
   min-width: 100px;
+  margin-bottom: 12px !important;
 }
 
 .strategyStats {
@@ -38,6 +37,11 @@
 
 .strategyPercent {
   flex: 1;
+}
+
+.strategyDescription {
+  max-height: 70px;
+  overflow-y: hidden;
 }
 
 @media screen and (max-width: 576px) {

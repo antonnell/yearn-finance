@@ -130,8 +130,6 @@ class Store {
       ethPrice = await keep3rContract.methods.current('0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', sendAmount0, '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48').call({ })
       ethPrice = BigNumber(ethPrice).div(1e6).toNumber()
 
-      console.log("ETH PRICE")
-      console.log(ethPrice)
     } catch(ex) {
       console.log(ex)
       try {
@@ -140,8 +138,6 @@ class Store {
         ethPrice = await keep3rContract.methods.current('0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', sendAmount0, '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48').call({ })
         ethPrice = BigNumber(ethPrice).div(1e6).toNumber()
 
-        console.log("ETH PRICE")
-        console.log(ethPrice)
       } catch(ex) {
         console.log(ex)
         this.emitter.emit(CDP_UPDATED)
@@ -440,8 +436,6 @@ class Store {
       const depositAmountToSend = BigNumber(depositAmount === '' ? 0 : depositAmount).times(10**18).toFixed(0)
       const gasPrice = await stores.accountStore.getGasPrice(gasSpeed)
 
-      console.log(asset.tokenMetadata.address, depositAmountToSend)
-
       this._callContract(web3, cdpContract, 'deposit', [asset.tokenMetadata.address, depositAmountToSend], account, gasPrice, CONFIGURE_CDP, callback)
     } catch(ex) {
       console.log(ex)
@@ -455,8 +449,6 @@ class Store {
       const depositAmountToSend = BigNumber(depositAmount === '' ? 0 : depositAmount).times(bnDec(asset.tokenMetadata.decimals)).toFixed(0)
       const borrowAmountToSend = BigNumber(borrowAmount === '' ? 0 : borrowAmount).times(10**18).toFixed(0)
       const gasPrice = await stores.accountStore.getGasPrice(gasSpeed)
-
-      console.log(asset.tokenMetadata.address, depositAmountToSend, borrowAmountToSend)
 
       let cdpContract = null
       let params = null
@@ -532,8 +524,6 @@ class Store {
       const withdrawAmountToSend = BigNumber(withdrawAmount === '' ? 0 : withdrawAmount).times(bnDec(asset.tokenMetadata.decimals)).toFixed(0)
       const gasPrice = await stores.accountStore.getGasPrice(gasSpeed)
 
-      console.log(asset.tokenMetadata.address, withdrawAmountToSend)
-
       this._callContract(web3, cdpContract, 'repayAllAndWithdraw', [asset.tokenMetadata.address, withdrawAmountToSend], account, gasPrice, CONFIGURE_CDP, callback)
     } catch(ex) {
       console.log(ex)
@@ -547,8 +537,6 @@ class Store {
 
       const repayAmountToSend = BigNumber(repayAmount === '' ? 0 : repayAmount).times(10**18).toFixed(0)
       const gasPrice = await stores.accountStore.getGasPrice(gasSpeed)
-
-      console.log(asset.tokenMetadata.address, repayAmountToSend)
 
       this._callContract(web3, cdpContract, 'repay', [asset.tokenMetadata.address, repayAmountToSend], account, gasPrice, CONFIGURE_CDP, callback)
     } catch(ex) {
@@ -576,8 +564,6 @@ class Store {
         params = [asset.tokenMetadata.address, withdrawAmountToSend, repayAmountToSend]
       }
 
-      console.log(asset.tokenMetadata.address, repayAmountToSend, withdrawAmountToSend)
-
       this._callContract(web3, cdpContract, 'withdrawAndRepay', params, account, gasPrice, CONFIGURE_CDP, callback)
     } catch(ex) {
       console.log(ex)
@@ -586,9 +572,6 @@ class Store {
   }
 
   _callContract = (web3, contract, method, params, account, gasPrice, dispatchEvent, callback) => {
-
-    console.log(method)
-    console.log(params)
 
     const context = this
     contract.methods[method](...params).send({ from: account.address, gasPrice: web3.utils.toWei(gasPrice, 'gwei') })

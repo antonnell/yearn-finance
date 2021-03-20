@@ -39,7 +39,8 @@ const theme = createMuiTheme({
         background: '#000 !important',
         border: '1px solid #fff',
         borderRadius: '8px',
-        color: '#fff'
+        color: '#fff',
+        fontSize: '13px'
       }
     },
   }

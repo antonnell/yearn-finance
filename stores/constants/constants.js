@@ -3,6 +3,7 @@ import BigNumber from 'bignumber.js'
 
 // URLS
 export const YEARN_API = 'https://api.yearn.tools/'
+export const YEARN_VAULTS_API = 'https://vaults.finance/all'
 export const GAS_PRICE_API = 'https://gasprice.poa.network/'
 export const ETHERSCAN_URL = 'https://etherscan.io/'
 export const COVER_API = 'https://api.coverprotocol.com/protocol_data/production'

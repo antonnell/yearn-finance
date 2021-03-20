@@ -227,7 +227,7 @@ function Invest({ changeTheme }) {
               </ToggleButton>
             </ToggleButtonGroup>
           </div>
-          <Grid container spacing={ 2 }>
+          <Grid container spacing={ 3 }>
             {
               layout === 'grid' && filteredVaults && filteredVaults.length > 0 && (
                 filteredVaults.map((vault, index) => {

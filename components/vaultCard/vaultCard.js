@@ -74,7 +74,7 @@ export default function VaultCard({ vault, account }) {
             )
           }
           <div className={ classes.vaultInfoField }>
-            <Typography variant='h2' className={ classes.fontWeightBold }>{ !(vault.apy) ? <Skeleton /> :  ( vault.apy.oneMonthSample ? (BigNumber(vault.apy.oneMonthSample).times(100).toFixed(2) + '%') : 'Unknown') }</Typography>
+            <Typography variant='h2' className={ classes.fontWeightBold }>{ !(vault.apy) ? <Skeleton /> :  ( vault.apy.recommended ? (BigNumber(vault.apy.recommended).times(100).toFixed(2) + '%') : 'Unknown') }</Typography>
             <Typography variant='body1'>Yearly Growth</Typography>
           </div>
         </div>

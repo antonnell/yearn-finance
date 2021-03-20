@@ -2,6 +2,7 @@ import async from 'async';
 import {
   MAX_UINT256,
   YEARN_API,
+  YEARN_VAULTS_API,
   ERROR,
   TX_SUBMITTED,
   STORE_UPDATED,
@@ -121,20 +122,36 @@ class Store {
 
   configure = async (payload) => {
     try {
-      const url = `${YEARN_API}vaults/all`
+      const url = `${YEARN_VAULTS_API}`
 
       const vaultsApiResult = await fetch(url);
       const vaults = await vaultsApiResult.json()
-
 
       //hack
       const earn = this.getStore('earn')
       // for earn vaults, we need to calcualte the APY manually
       const earnWithAPY = await this.getEarnAPYs(earn)
 
-      const lockup = this.getStore('lockup')
+      // const lockup = this.getStore('lockup')
 
-      this.setStore({ vaults: [ ...vaults, ...earnWithAPY, ...lockup ] })
+      let mappedVaults = vaults
+        .filter((vault) => {
+          return vault.endorsed === true
+        })
+        .filter((vault) => {
+          return vault.type !== 'zap'
+        })
+        .map((vault) => {
+          if(vault.address === '0xc5bDdf9843308380375a611c18B50Fb9341f502A') {
+            vault.type = 'Lockup'
+          }
+          vault.tokenMetadata = vault.token
+          return vault
+        })
+
+      //, ...lockup
+
+      this.setStore({ vaults: [ ...mappedVaults, ...earnWithAPY ] })
 
       this.emitter.emit(VAULTS_UPDATED)
       this.emitter.emit(VAULTS_CONFIGURED)
@@ -204,8 +221,8 @@ class Store {
 
         if(!historicPrice || historicPrice.length === 0) {
           apyObj = {
-            oneMonthSample: 0,
-            inceptionSample: 0
+            recommended: 0,
+            type: "Earn",
           }
         } else {
 
@@ -219,8 +236,8 @@ class Store {
           const inceptionAPY = (priceGrowthSinceInception * 2389090 / 1e18) / blocksSinceInception // 2389090 = (60/13.2) * 60 * 24 * 365
 
           apyObj = {
-            oneMonthSample: oneMonthAPY,
-            inceptionSample: inceptionAPY,
+            recommended: oneMonthAPY,
+            type: "Earn",
           }
         }
 
@@ -320,7 +337,7 @@ class Store {
         try { // this throws execution reverted: SafeMath: division by zero for not properly finalised vaults
           let pricePerFullShare = 1
           if(vault.type === 'Lockup') {
-            pricePerFullShare = 1    // GET ASSET PRICE?
+            vault.pricePerFullShare = 1    // GET ASSET PRICE?
           } else if(vault.type === 'v1' || vault.type === 'Earn' ) {
             pricePerFullShare = await vaultContract.methods.getPricePerFullShare().call()
             vault.pricePerFullShare = BigNumber(pricePerFullShare).div(bnDec(18)).toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN)  // TODO: changed 18 decimals to vault decimals for v2
@@ -332,7 +349,11 @@ class Store {
           vault.pricePerFullShare = 0
         }
 
-        vault.balanceInToken = BigNumber(vault.balance).times(vault.pricePerFullShare).toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN)
+        if(vault.type === 'Lockup') {
+          vault.balanceInToken = BigNumber(vault.balance).toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN)
+        } else {
+          vault.balanceInToken = BigNumber(vault.balance).times(vault.pricePerFullShare).toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN)
+        }
 
         const erc20Contract = new web3.eth.Contract(ERC20ABI, vault.tokenMetadata.address)
         const tokenBalanceOf = await erc20Contract.methods.balanceOf(account.address).call()
@@ -357,7 +378,7 @@ class Store {
         }
 
         vault.tokenMetadata.priceUSD = price
-        vault.balanceUSD = BigNumber(vault.balance).times(vault.pricePerFullShare).times(price)
+        vault.balanceUSD = BigNumber(vault.balance).times(vault.pricePerFullShare).times(price).toFixed(vault.decimals, BigNumber.ROUND_DOWN)
 
         if(!vault.strategies || vault.strategies.length === 0) {
           const theVaultInfo = vaultInfo.filter((v) => {
@@ -381,13 +402,17 @@ class Store {
           const index = await vaultContract.methods.index().call()
           const supply_index = await vaultContract.methods.supplyIndex(account.address).call()
 
-          console.log(votingEscrowBalanceOf)
-          console.log(totalSupply)
-
           vault.lockupMetadata = {
             vaultVsSolo: BigNumber(votingEscrowBalanceOf).div(totalSupply).toNumber(),
             claimable: (BigNumber(index).minus(supply_index)).times(vault.balance).div(bnDec(vault.decimals)).toNumber()
           }
+
+          vault.strategies = [
+            {
+              name: 'DAOFeeClaim',
+              address: '0xc5bDdf9843308380375a611c18B50Fb9341f502A'
+            }
+          ]
         }
 
         if(callback) {
@@ -418,11 +443,11 @@ class Store {
       }, 0)
 
       const portfolioGrowth = vaultsBalanced.reduce((accumulator, currentValue) => {
-        if(!currentValue.balance || BigNumber(currentValue.balance).eq(0) || !currentValue.apy.oneMonthSample  || BigNumber(currentValue.apy.oneMonthSample).eq(0)) {
+        if(!currentValue.balance || BigNumber(currentValue.balance).eq(0) || !currentValue.apy.recommended  || BigNumber(currentValue.apy.recommended).eq(0)) {
           return accumulator
         }
 
-        return BigNumber(accumulator).plus(BigNumber(currentValue.balance).times(currentValue.pricePerFullShare).times(currentValue.tokenMetadata.priceUSD).div(portfolioBalanceUSD).times(currentValue.apy.oneMonthSample*100)).toNumber()
+        return BigNumber(accumulator).plus(BigNumber(currentValue.balance).times(currentValue.pricePerFullShare).times(currentValue.tokenMetadata.priceUSD).div(portfolioBalanceUSD).times(currentValue.apy.recommended*100)).toNumber()
       }, 0)
 
       let highestHoldings = vaultsBalanced.reduce((prev, current) => (BigNumber(prev.balanceUSD).gt(current.balanceUSD)) ? prev : current)

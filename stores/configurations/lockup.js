@@ -3,8 +3,8 @@ export default [
   {
     address: "0xc5bDdf9843308380375a611c18B50Fb9341f502A",
     apy: {
-      oneMonthSample: 0,
-      inceptionSample: 0,
+      type: "Lockup",
+      recommended: 0,
     },
     balance: 0,
     balanceInToken: 0,
