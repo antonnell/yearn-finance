@@ -1,3 +1,8 @@
+.investTable {
+  width: 100%;
+  cursor: pointer;
+}
+
 .investContainer {
   height: 100%;
   padding: 0px 48px;
@@ -44,6 +49,15 @@
 .portfolioGrowthContainer {
   display: flex;
   align-items: center;
+}
+
+.tableContainer {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  border: 1px solid rgba(128, 128, 128, 0.25);
+  border-radius: 10px;
+  width: 100%;
 }
 
 .growthOutline {
