@@ -127,12 +127,12 @@ function Vault(props) {
                 </div>
               </div>
               <div className={ classes.vaultTitle }>
-                <div className={ vaultTypeClass }>
-                  <Typography  className={ classes.vaultVersionText }>{ vaultType } Vault</Typography>
-                </div>
                 <Typography variant='h1'>
                   { !vault ? <Skeleton /> : vault.displayName }
                 </Typography>
+                <div className={ vaultTypeClass }>
+                  <Typography  className={ classes.vaultVersionText }>{ vaultType } Vault</Typography>
+                </div>
               </div>
             </div>
           </div>

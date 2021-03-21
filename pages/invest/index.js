@@ -78,7 +78,7 @@ function Invest({ changeTheme }) {
   }
   const getOrderBy = (x) => {
     let y
-    order === "asc"?  y = -x : y =x 
+    order === "asc"?  y = -x : y =x
     return y
   }
   useEffect(function() {
@@ -136,7 +136,7 @@ function Invest({ changeTheme }) {
         } else {
           return 0
         }
-      } 
+      }
     } else if(orderBy.id==='apy'){
       let apyA = 0
       let apyB = 0
@@ -152,7 +152,7 @@ function Invest({ changeTheme }) {
         return getOrderBy(1)
       } else if(a.displayName.toLowerCase()<b.displayName.toLowerCase()){
         return getOrderBy(-1)
-      } 
+      }
     } else if(orderBy.id==='version'){
       let typeA = a.type
       let typeB = b.type
@@ -210,11 +210,11 @@ function Invest({ changeTheme }) {
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
-  
+
   const renderVaultHeaders = (props) => {
   const {  order, orderBy, rowCount, onRequestSort } = props;
 
-    let headers = [{label: "Name", show: true, id: "name"}, {label: "Version", show: true, id: "version"}, 
+    let headers = [{label: "Name", show: true, id: "name"}, {label: "Version", show: true, id: "version"},
    {label: "Invested Balance", numeric: true, show: account && account.address, id: "balance"},
    {label: "Available To Deposit", numeric: true, show: account && account.address, id: "available"},
    {label: "APY", numeric: true, show: true, id: "apy"}
@@ -248,7 +248,7 @@ function Invest({ changeTheme }) {
               </TableSortLabel>
             </TableCell> : null
 
-        ))}    
+        ))}
         </TableRow>
       </TableHead>
     )

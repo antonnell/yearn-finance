@@ -493,7 +493,7 @@ export default function VaultAssetRow({ vault, account }) {
         </TableCell>
       )}
       <TableCell align="right">
-        <Typography variant='h5' className={ classes.fontWeightBold }>{ !(vault.apy) ? <Skeleton stlye={{ minWidth: '100px' }} /> :  ( vault.apy.oneMonthSample ? (BigNumber(vault.apy.oneMonthSample).times(100).toFixed(2) + '%') : 'Unknown') }</Typography>
+        <Typography variant='h5' className={ classes.fontWeightBold }>{ !(vault.apy) ? <Skeleton stlye={{ minWidth: '100px' }} /> :  ( vault.apy.recommended ? (BigNumber(vault.apy.recommended).times(100).toFixed(2) + '%') : 'Unknown') }</Typography>
       </TableCell>
     </TableRow>
   )
