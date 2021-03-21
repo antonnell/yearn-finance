@@ -20,6 +20,7 @@ import VaultGrowthNumbers from '../../../components/vaultGrowthNumbers'
 import VaultPerformanceGraph from '../../../components/vaultPerformanceGraph'
 import VaultTransactions from '../../../components/vaultTransactions'
 import VaultLockupNotice from '../../../components/vaultLockupNotice'
+import VaultStrategyCard from '../../../components/vaultStrategyCard'
 
 import stores from '../../../stores'
 import {
@@ -108,7 +109,7 @@ function Vault(props) {
   }
 
   const onVaultClicked = () => {
-    window.open(`${ETHERSCAN_URL}/address/${vault.address}`)
+    window.open(`${ETHERSCAN_URL}address/${vault.address}`)
   }
 
   return (
@@ -117,23 +118,35 @@ function Vault(props) {
         <title>Invest</title>
       </Head>
       <div className={ classes.vaultContainer }>
-        <div className={ classes.vaultStatsContainer }>
-          <div className={ classes.vaultBalanceContainer } onClick={ onVaultClicked }>
-            <div className={ classes.vaultOutline } >
-              <div className={ classes.vaultLogo }>
-                { !vault ? <Skeleton /> : <img src={ vault.icon ? vault.icon : '/tokens/unknown-logo.png' } className={ classes.vaultIcon } alt='' width={ 50 } height={ 50 } /> }
+        <Paper elevation={ 0 } className={ classes.overviewContainer }>
+          <div className={ classes.vaultStatsContainer }>
+            <div className={ classes.vaultBalanceContainer } onClick={ onVaultClicked }>
+              <div className={ classes.vaultOutline } >
+                <div className={ classes.vaultLogo }>
+                  { !vault ? <Skeleton /> : <img src={ vault.icon ? vault.icon : '/tokens/unknown-logo.png' } className={ classes.vaultIcon } alt='' width={ 50 } height={ 50 } /> }
+                </div>
               </div>
-            </div>
-            <div className={ classes.vaultTitle }>
-              <div className={ vaultTypeClass }>
-                <Typography  className={ classes.vaultVersionText }>{ vaultType } Vault</Typography>
+              <div className={ classes.vaultTitle }>
+                <Typography variant='h1'>
+                  { !vault ? <Skeleton /> : vault.displayName }
+                </Typography>
+                <div className={ vaultTypeClass }>
+                  <Typography  className={ classes.vaultVersionText }>{ vaultType } Vault</Typography>
+                </div>
               </div>
-              <Typography variant='h1'>
-                { !vault ? <Skeleton /> : vault.displayName }
-              </Typography>
             </div>
           </div>
-        </div>
+            {
+              vault.strategies.map((strategy) => {
+                return (<React.Fragment>
+                  <div className={ classes.separator }></div>
+                  <div className={ classes.overviewCard }>
+                    <VaultStrategyCard strategy={ strategy } vault={ vault } />
+                  </div>
+                </React.Fragment>)
+              })
+            }
+        </Paper>
         <div className={ classes.vaultInfo }>
           <div className={ classes.cardSeparation }>
             <VaultActionCard vault={ vault } />

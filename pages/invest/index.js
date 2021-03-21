@@ -28,7 +28,13 @@ import SearchIcon from '@material-ui/icons/Search';
 import PieChartIcon from '@material-ui/icons/PieChart';
 import AppsIcon from '@material-ui/icons/Apps';
 import ListIcon from '@material-ui/icons/List';
-
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import TableSortLabel from '@material-ui/core/TableSortLabel';
 import LendSupplyGraph from '../../components/lendSupplyGraph'
 import LendBorrowGraph from '../../components/lendBorrowGraph'
 
@@ -60,7 +66,9 @@ function Invest({ changeTheme }) {
   const [ versions, setVersions ] = useState(JSON.parse(localStorageversions ? localStorageversions : '[]'))
   const [ coinTypes, setCoinTypes ] = useState(JSON.parse(localStorageCoinTypes ? localStorageCoinTypes : '[]'))
   const [ layout, setLayout ] = useState(localStoragelayout ? localStoragelayout : 'grid')
-
+  const [order, setOrder] = React.useState('asc');
+  const [orderBy, setOrderBy] = React.useState('none');
+  const [selected, setSelected] = React.useState([]);
   const vaultsUpdated = () => {
     setVaults(stores.investStore.getStore('vaults'))
     setPorfolioBalance(stores.investStore.getStore('portfolioBalanceUSD'))
@@ -68,7 +76,11 @@ function Invest({ changeTheme }) {
     setHighestHoldings(stores.investStore.getStore('highestHoldings'))
     forceUpdate()
   }
-
+  const getOrderBy = (x) => {
+    let y
+    order === "asc"?  y = -x : y =x
+    return y
+  }
   useEffect(function() {
 
     stores.emitter.on(VAULTS_UPDATED, vaultsUpdated)
@@ -81,7 +93,6 @@ function Invest({ changeTheme }) {
   const filteredVaults = vaults.filter((vault) => {
 
     let returnValue = true
-
     if(versions && versions.length > 0) {
       if(versions.includes('Active')) {
         const vaultType = (vault.type === 'v2' && !vault.endorsed) ? 'Exp' : vault.type
@@ -106,25 +117,71 @@ function Invest({ changeTheme }) {
 
     return returnValue
   }).sort((a, b) => {
-    if(BigNumber(a.balance).gt(BigNumber(b.balance))) {
-      return -1
-    } else if (BigNumber(a.balance).lt(BigNumber(b.balance))) {
-      return 1
-    } else if(BigNumber(a.tokenMetadata.balance).gt(BigNumber(b.tokenMetadata.balance))) {
-      return -1
-    } else if (BigNumber(a.tokenMetadata.balance).lt(BigNumber(b.tokenMetadata.balance))) {
-      return 1
-    } else {
-      const aType = (a.type === 'v2' && !a.endorsed) ? 'Exp' : a.type
-      const bType = (b.type === 'v2' && !b.endorsed) ? 'Exp' : b.type
-      if(aType > bType) {
+    if(orderBy==="none"){
+      if(BigNumber(a.balance).gt(BigNumber(b.balance))) {
         return -1
-      } else if(bType > aType) {
+      } else if (BigNumber(a.balance).lt(BigNumber(b.balance))) {
+        return 1
+      } else if(BigNumber(a.tokenMetadata.balance).gt(BigNumber(b.tokenMetadata.balance))) {
+        return -1
+      } else if (BigNumber(a.tokenMetadata.balance).lt(BigNumber(b.tokenMetadata.balance))) {
         return 1
       } else {
-        return 0
+        const aType = (a.type === 'v2' && !a.endorsed) ? 'Exp' : a.type
+        const bType = (b.type === 'v2' && !b.endorsed) ? 'Exp' : b.type
+        if(aType > bType) {
+          return -1
+        } else if(bType > aType) {
+          return 1
+        } else {
+          return 0
+        }
       }
-    }
+    } else if(orderBy.id==='apy'){
+      let apyA = 0
+      let apyB = 0
+      a.apy.oneMonthSample === null || a.apy.oneMonthSample === undefined ? apyA = 0 : apyA = a.apy.oneMonthSample
+      b.apy.oneMonthSample === null || b.apy.oneMonthSample === undefined ? apyB = 0 : apyB = b.apy.oneMonthSample
+      if(BigNumber(apyA).gt(BigNumber(apyB))){
+        return getOrderBy(-1)
+      } else if(BigNumber(apyA).lt(BigNumber(apyB))){
+        return getOrderBy(1)
+      }
+    } else if(orderBy.id==='name'){
+      if(a.displayName.toLowerCase() > b.displayName.toLowerCase()){
+        return getOrderBy(1)
+      } else if(a.displayName.toLowerCase()<b.displayName.toLowerCase()){
+        return getOrderBy(-1)
+      }
+    } else if(orderBy.id==='version'){
+      let typeA = a.type
+      let typeB = b.type
+      typeA === 'v2' && !a.endorsed ? typeA = "Exp" : null
+      typeB === 'v2' && !b.endorsed ? typeB = "Exp" : null
+      if(typeA.toLowerCase() > typeB.toLowerCase()){
+        return getOrderBy(1)
+      } else if(typeA.toLowerCase()<typeB.toLowerCase()){
+        return getOrderBy(-1)
+      }
+    }else if(orderBy.id==='balance'){
+    let balanceA = a.balanceInToken
+    let balanceB = b.balanceInToken
+      if(BigNumber(balanceA).gt(BigNumber(balanceB))){
+        return getOrderBy(-1)
+      } else if(BigNumber(balanceA).lt(BigNumber(balanceB))){
+        return getOrderBy(1)
+      }
+} else if(orderBy.id==="available"){
+  let availableA = 0
+  let availableB = 0
+  a.tokenMetadata?.balance ? availableA = a.tokenMetadata?.balance  : availableA = 0
+  b.tokenMetadata?.balance ? availableB = b.tokenMetadata?.balance  : availableB = 0
+      if(BigNumber(availableA).gt(BigNumber(availableB))){
+        return getOrderBy(-1)
+      } else if(BigNumber(availableA).lt(BigNumber(availableB))){
+        return getOrderBy(1)
+      }
+}
   })
 
   const onSearchChanged = (event) => {
@@ -148,15 +205,52 @@ function Invest({ changeTheme }) {
     }
   }
 
-  const renderVaultHeaders = () => {
+  const handleRequestSort = (event, property) => {
+    const isAsc = order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property);
+  };
+
+  const renderVaultHeaders = (props) => {
+  const {  order, orderBy, rowCount, onRequestSort } = props;
+
+    let headers = [{label: "Name", show: true, id: "name"}, {label: "Version", show: true, id: "version"},
+   {label: "Invested Balance", numeric: true, show: account && account.address, id: "balance"},
+   {label: "Available To Deposit", numeric: true, show: account && account.address, id: "available"},
+   {label: "APY", numeric: true, show: true, id: "apy"}
+  ]
+    const createSortHandler = (property) => (event) => {
+    onRequestSort(event, property);
+  };
     return (
-      <div className={ classes.vaultRow} >
-        <div className={ classes.vaultTitleCell}><Typography variant='h5'>Name</Typography></div>
-        <div className={ classes.vaultVersionCell}><Typography variant='h5'>Version</Typography></div>
-        { account && account.address && (<div className={ classes.vaultBalanceCell}><Typography variant='h5'>Invested Balance</Typography></div>) }
-        { account && account.address && (<div className={ classes.vaultAvailableBalanceCell}><Typography variant='h5'>Available To Deposit</Typography></div>) }
-        <div className={ classes.vaultBalanceCell}><Typography variant='h5'>APY</Typography></div>
-      </div>
+      <TableHead>
+        <TableRow>
+              {headers.map((headCell,i)=>(
+              headCell.show? <TableCell
+              key={headCell.id}
+              align={headCell.numeric ? 'right' : 'left'}
+              padding={headCell.disablePadding ? 'none' : 'default'}
+              sortDirection={orderBy === headCell.id ? order : false}
+            >
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : 'asc'}
+                onClick={createSortHandler(headCell)}
+              >
+                <Typography variant='h5' className={ classes.fontWeightBold }>
+                  {headCell.label}
+                </Typography>
+                {orderBy === headCell.id ? (
+                  <span className={classes.visuallyHidden}>
+                    {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                  </span>
+                ) : null}
+              </TableSortLabel>
+            </TableCell> : null
+
+        ))}
+        </TableRow>
+      </TableHead>
     )
   }
 
@@ -227,7 +321,7 @@ function Invest({ changeTheme }) {
               </ToggleButton>
             </ToggleButtonGroup>
           </div>
-          <Grid container spacing={ 2 }>
+          <Grid container spacing={ 3 }>
             {
               layout === 'grid' && filteredVaults && filteredVaults.length > 0 && (
                 filteredVaults.map((vault, index) => {
@@ -237,15 +331,32 @@ function Invest({ changeTheme }) {
             }
             { layout === 'list' &&
               <Grid item xs={12}>
-                <Paper elevation={0} className={ classes.vaultsTable }>
-                  { renderVaultHeaders() }
-                  {
-                    filteredVaults && filteredVaults.length > 0 && (
-                      filteredVaults.map((vault, index) => {
-                        return <VaultAssetRow key={ index } vault={vault} account={ account } />
-                      })
-                    )
-                  }
+                <Paper elevation={ 0 } className={ classes.tableContainer }>
+                  <TableContainer>
+                    <Table
+                      className={classes.investTable}
+                      aria-labelledby="tableTitle"
+                      size='medium'
+                      aria-label="enhanced table"
+                    >
+                      { renderVaultHeaders({
+                        numSelected: selected.length,
+                        order: order,
+                        orderBy: orderBy,
+                        onRequestSort: handleRequestSort,
+                        rowCount: filteredVaults.length
+                      }) }
+                      <TableBody>
+                        {
+                          filteredVaults && filteredVaults.length > 0 && (
+                            filteredVaults.map((vault, index) => {
+                              return <VaultAssetRow key={ index } vault={vault} account={ account } />
+                            })
+                          )
+                        }
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
                 </Paper>
               </Grid>
             }

@@ -365,9 +365,6 @@ class Store {
         return BigNumber(vvvv).plus(val).toNumber()
       }, 0)
 
-      console.log(lendingSupplyAPY)
-      console.log(lendingBorrowAPY)
-
       this.setStore({
         lendingAssets: populatedLendingAssets,
         lendingSupply: lendingSupply,
@@ -403,7 +400,7 @@ class Store {
         return this.emitter.emit(ERROR, err);
       }
 
-      return this.emitter.emit(APPROVE_VAULT_RETURNED, approveResult)
+      return this.emitter.emit(APPROVE_LEND_RETURNED, approveResult)
     })
   }
 
@@ -582,8 +579,6 @@ class Store {
     const comptrollerContract = new web3.eth.Contract(COMPTROLLERABI, COMPTROLLER_ADDRESS)
 
     const gasPrice = await stores.accountStore.getGasPrice(gasSpeed)
-
-    console.log(comptrollerContract, 'enterMarkets', [[lendingAsset.address]], account, gasPrice, GET_LENDING_BALANCES)
 
     this._callContract(web3, comptrollerContract, 'enterMarkets', [[...lendingAsset.address]], account, gasPrice, GET_LENDING_BALANCES, callback)
   }

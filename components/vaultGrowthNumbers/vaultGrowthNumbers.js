@@ -31,7 +31,18 @@ export default function VaultGrowthNumbers({ vault }) {
             </div>
             <div>
               <Typography variant='subtitle1' color='textSecondary'>Yearly Growth</Typography>
-              <Typography variant='h6'>{ !vault ? <Skeleton /> : BigNumber(vault.apy.oneMonthSample).times(100).toFixed(2)+'%' }</Typography>
+              <Typography variant='h6'>{ !vault ? <Skeleton /> : BigNumber(vault.apy.recommended).times(100).toFixed(2)+'%' }</Typography>
+            </div>
+          </div>
+        )}
+        { vault.type !== 'Lockup' && vault.tvl && (
+          <div className={ classes.portfolioGrowthContainer }>
+            <div className={ classes.growthOutline } >
+              <TrendingUpIcon className={ classes.growthIcon } />
+            </div>
+            <div>
+              <Typography variant='subtitle1' color='textSecondary'>Total Locked in Vault</Typography>
+              <Typography variant='h6'>{ !vault ? <Skeleton /> : '$ '+formatCurrency(vault.tvl.value) }</Typography>
             </div>
           </div>
         )}

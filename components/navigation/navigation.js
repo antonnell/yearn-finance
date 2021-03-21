@@ -269,8 +269,8 @@ function Navigation(props) {
   const renderNav = (title, link, icon, iconSelected) => {
     return (
       <div className={ classes.navigationOptionContainer } onClick={ () => { handleNavigate('/'+link) }}>
-        { activePath.includes('/'+link) ? <div className={ darkMode ? classes.navigationOptionSelectedWhite : classes.navigationOptionSelected }></div> : <div className={ classes.navigationOptionNotSelected}></div> }
-        { activePath.includes('/'+link) ? iconSelected : icon }
+        { activePath.includes('/'+link) || (activePath === '/' && link === 'invest') ? <div className={ darkMode ? classes.navigationOptionSelectedWhite : classes.navigationOptionSelected }></div> : <div className={ classes.navigationOptionNotSelected}></div> }
+        { activePath.includes('/'+link) || (activePath === '/' && link === 'invest') ? iconSelected : icon }
         <Typography variant='h2'>{title}</Typography>
       </div>
     )
@@ -379,7 +379,7 @@ function Navigation(props) {
           </svg>
         </a>
       </div>
-      <Typography className={ classes.smallVersion }>Version 1.1.0</Typography>
+      <Typography className={ classes.smallVersion }>Version 1.1.1</Typography>
     </Paper>
   )
 }

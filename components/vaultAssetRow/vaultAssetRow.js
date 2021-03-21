@@ -11,6 +11,8 @@ import {
   Grid,
   InputAdornment
 } from '@material-ui/core'
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
 import { withStyles } from '@material-ui/core/styles';
 import Skeleton from '@material-ui/lab/Skeleton';
 import BigNumber from 'bignumber.js'
@@ -459,8 +461,13 @@ export default function VaultAssetRow({ vault, account }) {
   }
 
   return (
-    <Accordion className={ classes.removePaper } elevation={0} square expanded={ expanded } onChange={ () => { handleExpand() } } onClick={ () => { handleNavigate() }}>
-      <AccordionSummary  elevation={0} className={ classes.vaultRow }>
+    <TableRow
+      hover
+      onClick={ () => { handleNavigate() }}
+      tabIndex={-1}
+      key={vault.symbol}
+    >
+      <TableCell>
         <div className={ classes.vaultTitleCell }>
           <div className={ classes.logo }>
             <img src={ vault.icon ? vault.icon : '/tokens/unknown-logo.png' } alt='' width={ 30 } height={ 30 } />
@@ -469,31 +476,26 @@ export default function VaultAssetRow({ vault, account }) {
             <Typography variant='h5' className={ classes.fontWeightBold }>{ vault.displayName }</Typography>
           </div>
         </div>
-        <div className={ classes.vaultVersionCell }>
-          <div className={ vaultTypeClass }>
-            <Typography  className={ classes.vaultVersionText }>{ (vault.type === 'v2' && !vault.endorsed) ? 'Exp' : vault.type }</Typography>
-          </div>
+      </TableCell>
+      <TableCell component="th" scope="row" padding="none">
+        <div className={ vaultTypeClass }>
+          <Typography  className={ classes.vaultVersionText }>{ (vault.type === 'v2' && !vault.endorsed) ? 'Exp' : vault.type }</Typography>
         </div>
-        { account && account.address && (
-            <div className={ classes.vaultBalanceCell }>
-              <Typography variant='h5' className={ classes.fontWeightBold }>{ !(vault && vault.balance) ? <Skeleton stlye={{ minWidth: '100px' }} /> : ('$ ' + formatCurrency(BigNumber(vault.balance).times(vault.pricePerFullShare).times(vault.tokenMetadata.priceUSD))) }</Typography>
-            </div>
-          )
-        }
-        { account && account.address && (
-            <div className={ classes.vaultAvailableBalanceCell }>
-              <Typography variant='h5' className={ classes.fontWeightBold }>{ !(vault && vault.tokenMetadata && vault.tokenMetadata.balance) ? <Skeleton stlye={{ minWidth: '100px' }} /> : (formatCurrency(vault.tokenMetadata.balance) + ' ' + vault.tokenMetadata.displayName ) }</Typography>
-            </div>
-          )
-        }
-        <div className={ classes.vaultBalanceCell }>
-          <Typography variant='h5' className={ classes.fontWeightBold }>{ !(vault.apy) ? <Skeleton stlye={{ minWidth: '100px' }} /> :  ( vault.apy.oneMonthSample ? (BigNumber(vault.apy.oneMonthSample).times(100).toFixed(2) + '%') : 'Unknown') }</Typography>
-        </div>
-      </AccordionSummary>
-      <AccordionDetails>
-        <div></div>
-      </AccordionDetails>
-    </Accordion>
+      </TableCell>
+      { account && account.address && (
+        <TableCell align="right">
+          <Typography variant='h5' className={ classes.fontWeightBold }>{ !(vault && vault.balance) ? <Skeleton stlye={{ minWidth: '100px' }} /> : ('$ ' + formatCurrency(BigNumber(vault.balance).times(vault.pricePerFullShare).times(vault.tokenMetadata.priceUSD))) }</Typography>
+        </TableCell>
+      )}
+      { account && account.address && (
+        <TableCell align="right">
+          <Typography variant='h5' className={ classes.fontWeightBold }>{ !(vault && vault.tokenMetadata && vault.tokenMetadata.balance) ? <Skeleton stlye={{ minWidth: '100px' }} /> : (formatCurrency(vault.tokenMetadata.balance) + ' ' + vault.tokenMetadata.displayName ) }</Typography>
+        </TableCell>
+      )}
+      <TableCell align="right">
+        <Typography variant='h5' className={ classes.fontWeightBold }>{ !(vault.apy) ? <Skeleton stlye={{ minWidth: '100px' }} /> :  ( vault.apy.recommended ? (BigNumber(vault.apy.recommended).times(100).toFixed(2) + '%') : 'Unknown') }</Typography>
+      </TableCell>
+    </TableRow>
   )
 }
 
