@@ -7,7 +7,7 @@ import {
   Paper,
   TextField,
   InputAdornment,
-  Grid
+  Grid,
 } from "@material-ui/core";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
@@ -81,7 +81,6 @@ function Invest({ changeTheme }) {
   );
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("none");
-  const [selected, setSelected] = React.useState([]);
   const vaultsUpdated = () => {
     setVaults(stores.investStore.getStore("vaults"));
     setPorfolioBalance(stores.investStore.getStore("portfolioBalanceUSD"));
@@ -89,12 +88,12 @@ function Invest({ changeTheme }) {
     setHighestHoldings(stores.investStore.getStore("highestHoldings"));
     forceUpdate();
   };
-  const getOrderBy = x => {
+  const getOrderBy = (x) => {
     let y;
     order === "asc" ? (y = -x) : (y = x);
     return y;
   };
-  useEffect(function() {
+  useEffect(function () {
     stores.emitter.on(VAULTS_UPDATED, vaultsUpdated);
 
     return () => {
@@ -103,7 +102,7 @@ function Invest({ changeTheme }) {
   }, []);
 
   const filteredVaults = vaults
-    .filter(vault => {
+    .filter((vault) => {
       let returnValue = true;
       if (versions && versions.length > 0) {
         if (versions.includes("Active")) {
@@ -226,7 +225,7 @@ function Invest({ changeTheme }) {
       }
     });
 
-  const onSearchChanged = event => {
+  const onSearchChanged = (event) => {
     setSearch(event.target.value);
   };
 
@@ -259,8 +258,8 @@ function Invest({ changeTheme }) {
     setOrderBy(property);
   };
 
-  const renderVaultHeaders = props => {
-    const { order, orderBy, rowCount, onRequestSort } = props;
+  const renderVaultHeaders = (props) => {
+    const { order, orderBy, onRequestSort } = props;
 
     let headers = [
       { label: "Name", show: true, id: "name" },
@@ -269,17 +268,17 @@ function Invest({ changeTheme }) {
         label: "Invested Balance",
         numeric: true,
         show: account && account.address,
-        id: "balance"
+        id: "balance",
       },
       {
         label: "Available To Deposit",
         numeric: true,
         show: account && account.address,
-        id: "available"
+        id: "available",
       },
-      { label: "APY", numeric: true, show: true, id: "apy" }
+      { label: "APY", numeric: true, show: true, id: "apy" },
     ];
-    const createSortHandler = property => event => {
+    const createSortHandler = (property) => (event) => {
       onRequestSort(event, property);
     };
     return (
@@ -359,9 +358,7 @@ function Invest({ changeTheme }) {
                   ) : (
                     "$ " +
                     formatCurrency(
-                      BigNumber(porfolioBalance)
-                        .times(portfolioGrowth)
-                        .div(100)
+                      BigNumber(porfolioBalance).times(portfolioGrowth).div(100)
                     )
                   )}
                 </Typography>
@@ -466,7 +463,7 @@ function Invest({ changeTheme }) {
                   <InputAdornment position="start">
                     <SearchIcon />
                   </InputAdornment>
-                )
+                ),
               }}
             />
             <ToggleButtonGroup
@@ -509,11 +506,9 @@ function Invest({ changeTheme }) {
                       aria-label="enhanced table"
                     >
                       {renderVaultHeaders({
-                        numSelected: selected.length,
                         order: order,
                         orderBy: orderBy,
                         onRequestSort: handleRequestSort,
-                        rowCount: filteredVaults.length
                       })}
                       <TableBody>
                         {filteredVaults &&

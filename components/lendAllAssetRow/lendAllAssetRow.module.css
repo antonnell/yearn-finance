@@ -6,6 +6,10 @@
   padding: 0px 24px;
 }
 
+.lendindAssetTableRow {
+  cursor: pointer;
+}
+
 .lendTitleCell {
   flex: 2;
   display: flex;
@@ -54,7 +58,7 @@
 }
 
 .removePaper {
-  background-color: rgba(0,0,0,0) !important;
+  background-color: rgba(0, 0, 0, 0) !important;
 }
 
 .assetActions {
@@ -72,7 +76,12 @@
   width: 100%;
   flex-wrap: wrap;
   border-bottom: 1px solid rgba(128, 128, 128, 0.32);
-  background: radial-gradient(circle, rgba(63,94,251,0.7) 0%, rgba(47,128,237,0.7) 48%) rgba(63,94,251,0.7) 100%;
+  background: radial-gradient(
+      circle,
+      rgba(63, 94, 251, 0.7) 0%,
+      rgba(47, 128, 237, 0.7) 48%
+    )
+    rgba(63, 94, 251, 0.7) 100%;
 }
 
 .infoField {
@@ -131,7 +140,7 @@
 }
 
 .emptyScale {
-  height: 60px
+  height: 60px;
 }
 
 .separator {
@@ -203,7 +212,7 @@
     width: 100%;
   }
   .emptyScale {
-    height: 12px
+    height: 12px;
   }
   .assetInfo {
     padding: 12px;
