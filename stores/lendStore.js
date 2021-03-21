@@ -579,8 +579,7 @@ class Store {
     const comptrollerContract = new web3.eth.Contract(COMPTROLLERABI, COMPTROLLER_ADDRESS)
 
     const gasPrice = await stores.accountStore.getGasPrice(gasSpeed)
-
-    this._callContract(web3, comptrollerContract, 'enterMarkets', [[...lendingAsset.address]], account, gasPrice, GET_LENDING_BALANCES, callback)
+    this._callContract(web3, comptrollerContract, 'enterMarkets', [[lendingAsset.address]], account, gasPrice, GET_LENDING_BALANCES, callback)
   }
 
   disableCollateralLend = async (payload) => {
