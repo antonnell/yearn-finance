@@ -314,7 +314,20 @@ class Store {
           const uniswapPairContract = new web3.eth.Contract(UNISWAPV2PAIRABI, asset.address)
           const token0Address = await uniswapPairContract.methods.token0().call()
           const token1Address = await uniswapPairContract.methods.token1().call()
-          const [_reserve0, _reserve1] = await uniswapPairContract.methods.getReserves().call()
+          const [reserve0, reserve1] = await uniswapPairContract.methods.getReserves().call()
+
+          let tokenReserve = null
+          let ethReserve = null
+
+          if (token0Addr.toLowerCase() === '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2') {
+            tokenReserve = reserve1
+            ethReserve = reserve0
+          } else if (token1Addr.toLowerCase() === '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2') {
+            tokenReserve = reserve0
+            ethReserve = reserve1
+          }
+
+          
 
         } else {
           ethPerAsset = await keep3rContract.methods.current(asset.address, sendAmount0, '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2').call({ })
