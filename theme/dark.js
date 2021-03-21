@@ -1,5 +1,5 @@
-import { createMuiTheme } from '@material-ui/core/styles';
-import coreTheme from './coreTheme';
+import { createMuiTheme } from "@material-ui/core/styles";
+import coreTheme from "./coreTheme";
 
 // Create a theme instance.
 const theme = createMuiTheme({
@@ -7,42 +7,42 @@ const theme = createMuiTheme({
   palette: {
     ...coreTheme.palette,
     background: {
-      default: '#22252E',
-      paper: '#2A2E3C'
+      default: "#22252E",
+      paper: "#2A2E3C"
     },
     primary: {
-      main: '#2F80ED',
+      main: "#2F80ED"
     },
-    type: 'dark',
+    type: "dark"
   },
   overrides: {
     ...coreTheme.overrides,
     MuiSnackbarContent: {
       root: {
-        color: '#fff',
-        backgroundColor: '#2A2E3C',
-        padding: '0px',
-        minWidth: 'auto',
-        '@media (min-width: 960px)': {
-          minWidth: '500px',
+        color: "#fff",
+        backgroundColor: "#2A2E3C",
+        padding: "0px",
+        minWidth: "auto",
+        "@media (min-width: 960px)": {
+          minWidth: "500px"
         }
       },
       message: {
-        padding: '0px'
+        padding: "0px"
       },
       action: {
-        marginRight: '0px'
+        marginRight: "0px"
       }
     },
     MuiTooltip: {
       tooltip: {
-        background: '#000 !important',
-        border: '1px solid #fff',
-        borderRadius: '8px',
-        color: '#fff',
-        fontSize: '13px'
+        background: "#000 !important",
+        border: "1px solid #fff",
+        borderRadius: "8px",
+        color: "#fff",
+        fontSize: "13px"
       }
-    },
+    }
   }
 });
 
