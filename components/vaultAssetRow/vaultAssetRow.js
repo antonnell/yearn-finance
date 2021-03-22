@@ -9,7 +9,7 @@ import {
   Paper,
   CircularProgress,
   Grid,
-  InputAdornment
+  InputAdornment,
 } from "@material-ui/core";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
@@ -33,7 +33,7 @@ import {
   ENABLE_COLLATERAL_LEND_RETURNED,
   DISABLE_COLLATERAL_LEND,
   DISABLE_COLLATERAL_LEND_RETURNED,
-  CONNECT_WALLET
+  CONNECT_WALLET,
 } from "../../stores/constants";
 
 import classes from "./vaultAssetRow.module.css";
@@ -46,7 +46,7 @@ function VaultAssetDetails({ vault, account }) {
   const [withdrawAmountError, setWithdrawAmountError] = useState(false);
   const [gasSpeed, setGasSpeed] = useState("");
 
-  const setSpeed = speed => {
+  const setSpeed = (speed) => {
     setGasSpeed(speed);
   };
 
@@ -100,7 +100,7 @@ function VaultAssetDetails({ vault, account }) {
       );
       stores.dispatcher.dispatch({
         type: ENABLE_COLLATERAL_LEND,
-        content: { lendingAsset: lendingAsset, gasSpeed: gasSpeed }
+        content: { lendingAsset: lendingAsset, gasSpeed: gasSpeed },
       });
     } else {
       stores.emitter.on(
@@ -109,16 +109,16 @@ function VaultAssetDetails({ vault, account }) {
       );
       stores.dispatcher.dispatch({
         type: DISABLE_COLLATERAL_LEND,
-        content: { lendingAsset: lendingAsset, gasSpeed: gasSpeed }
+        content: { lendingAsset: lendingAsset, gasSpeed: gasSpeed },
       });
     }
   };
 
-  const onSupplyAmountChange = event => {
+  const onSupplyAmountChange = (event) => {
     setSupplyAmount(event.target.value);
   };
 
-  const onWithdrawAmountChanged = event => {
+  const onWithdrawAmountChanged = (event) => {
     setWithdrawAmount(event.target.value);
   };
 
@@ -138,8 +138,8 @@ function VaultAssetDetails({ vault, account }) {
       content: {
         amount: supplyAmount,
         lendingAsset: lendingAsset,
-        gasSpeed: gasSpeed
-      }
+        gasSpeed: gasSpeed,
+      },
     });
   };
 
@@ -159,8 +159,8 @@ function VaultAssetDetails({ vault, account }) {
       content: {
         amount: withdrawAmount,
         lendingAsset: lendingAsset,
-        gasSpeed: gasSpeed
-      }
+        gasSpeed: gasSpeed,
+      },
     });
   };
 
@@ -172,8 +172,8 @@ function VaultAssetDetails({ vault, account }) {
       content: {
         lendingAsset: lendingAsset,
         amount: supplyAmount,
-        gasSpeed: gasSpeed
-      }
+        gasSpeed: gasSpeed,
+      },
     });
   };
 
@@ -182,7 +182,11 @@ function VaultAssetDetails({ vault, account }) {
     stores.emitter.on(APPROVE_LEND_RETURNED, approveReturned);
     stores.dispatcher.dispatch({
       type: APPROVE_LEND,
-      content: { lendingAsset: lendingAsset, amount: "max", gasSpeed: gasSpeed }
+      content: {
+        lendingAsset: lendingAsset,
+        amount: "max",
+        gasSpeed: gasSpeed,
+      },
     });
   };
 
@@ -190,7 +194,7 @@ function VaultAssetDetails({ vault, account }) {
     stores.emitter.emit(CONNECT_WALLET);
   };
 
-  const setSupplyAmountPercent = percent => {
+  const setSupplyAmountPercent = (percent) => {
     if (loading) {
       return;
     }
@@ -203,7 +207,7 @@ function VaultAssetDetails({ vault, account }) {
     setSupplyAmount(amount);
   };
 
-  const setWithdrawAmountPercent = percent => {
+  const setWithdrawAmountPercent = (percent) => {
     if (loading) {
       return;
     }
@@ -335,7 +339,7 @@ function VaultAssetDetails({ vault, account }) {
                     height={30}
                   />
                 </InputAdornment>
-              )
+              ),
             }}
           />
           <div className={classes.scaleContainer}>
@@ -521,7 +525,7 @@ function VaultAssetDetails({ vault, account }) {
                     height={30}
                   />
                 </InputAdornment>
-              )
+              ),
             }}
           />
           <div className={classes.scaleContainer}>
@@ -682,7 +686,7 @@ export default function VaultAssetRow({ vault, account }) {
           </div>
         </div>
       </TableCell>
-      <TableCell component="th" scope="row" padding="none">
+      <TableCell align="right" scope="row" padding="none">
         <div className={vaultTypeClass}>
           <Typography className={classes.vaultVersionText}>
             {vault.type === "v2" && !vault.endorsed ? "Exp" : vault.type}
@@ -723,9 +727,7 @@ export default function VaultAssetRow({ vault, account }) {
           {!vault.apy ? (
             <Skeleton stlye={{ minWidth: "100px" }} />
           ) : vault.apy.recommended ? (
-            BigNumber(vault.apy.recommended)
-              .times(100)
-              .toFixed(2) + "%"
+            BigNumber(vault.apy.recommended).times(100).toFixed(2) + "%"
           ) : (
             "Unknown"
           )}

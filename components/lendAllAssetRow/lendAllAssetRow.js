@@ -10,13 +10,20 @@ import {
   Paper,
   CircularProgress,
   Grid,
-  InputAdornment
+  InputAdornment,
 } from "@material-ui/core";
+import Collapse from "@material-ui/core/Collapse";
+import IconButton from "@material-ui/core/IconButton";
+import Box from "@material-ui/core/Box";
 import { withStyles } from "@material-ui/core/styles";
 import Skeleton from "@material-ui/lab/Skeleton";
 import BigNumber from "bignumber.js";
 import { formatCurrency } from "../../utils";
 import GasSpeed from "../gasSpeed";
+import TableRow from "@material-ui/core/TableRow";
+import TableCell from "@material-ui/core/TableCell";
+import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 
 import stores from "../../stores/index.js";
 import {
@@ -31,17 +38,17 @@ import {
   ENABLE_COLLATERAL_LEND_RETURNED,
   DISABLE_COLLATERAL_LEND,
   DISABLE_COLLATERAL_LEND_RETURNED,
-  CONNECT_WALLET
+  CONNECT_WALLET,
 } from "../../stores/constants";
 
 import classes from "./lendAllAssetRow.module.css";
 
-const AntSwitch = withStyles(theme => ({
+const AntSwitch = withStyles((theme) => ({
   root: {
     width: 28,
     height: 16,
     padding: 0,
-    display: "flex"
+    display: "flex",
   },
   switchBase: {
     padding: 2,
@@ -52,22 +59,22 @@ const AntSwitch = withStyles(theme => ({
       "& + $track": {
         opacity: 1,
         backgroundColor: theme.palette.primary.main,
-        borderColor: theme.palette.primary.main
-      }
-    }
+        borderColor: theme.palette.primary.main,
+      },
+    },
   },
   thumb: {
     width: 12,
     height: 12,
-    boxShadow: "none"
+    boxShadow: "none",
   },
   track: {
     border: `1px solid ${theme.palette.grey[500]}`,
     borderRadius: 16 / 2,
     opacity: 1,
-    backgroundColor: theme.palette.common.white
+    backgroundColor: theme.palette.common.white,
   },
-  checked: {}
+  checked: {},
 }))(Switch);
 
 function LendAllAssetRowDetails({
@@ -75,7 +82,7 @@ function LendAllAssetRowDetails({
   account,
   lendingBorrow,
   lendingSupply,
-  lendingBorrowLimit
+  lendingBorrowLimit,
 }) {
   const [loading, setLoading] = useState(false);
   const [supplyAmount, setSupplyAmount] = useState("");
@@ -84,7 +91,7 @@ function LendAllAssetRowDetails({
   const [borrowAmountError, setBorrowAmountError] = useState(false);
   const [gasSpeed, setGasSpeed] = useState("");
 
-  const setSpeed = speed => {
+  const setSpeed = (speed) => {
     setGasSpeed(speed);
   };
 
@@ -138,7 +145,7 @@ function LendAllAssetRowDetails({
       );
       stores.dispatcher.dispatch({
         type: ENABLE_COLLATERAL_LEND,
-        content: { lendingAsset: lendingAsset, gasSpeed: gasSpeed }
+        content: { lendingAsset: lendingAsset, gasSpeed: gasSpeed },
       });
     } else {
       stores.emitter.on(
@@ -147,16 +154,16 @@ function LendAllAssetRowDetails({
       );
       stores.dispatcher.dispatch({
         type: DISABLE_COLLATERAL_LEND,
-        content: { lendingAsset: lendingAsset, gasSpeed: gasSpeed }
+        content: { lendingAsset: lendingAsset, gasSpeed: gasSpeed },
       });
     }
   };
 
-  const onSupplyAmountChange = event => {
+  const onSupplyAmountChange = (event) => {
     setSupplyAmount(event.target.value);
   };
 
-  const onBorrowAmountChanged = event => {
+  const onBorrowAmountChanged = (event) => {
     setBorrowAmount(event.target.value);
   };
 
@@ -176,8 +183,8 @@ function LendAllAssetRowDetails({
       content: {
         amount: supplyAmount,
         lendingAsset: lendingAsset,
-        gasSpeed: gasSpeed
-      }
+        gasSpeed: gasSpeed,
+      },
     });
   };
 
@@ -197,8 +204,8 @@ function LendAllAssetRowDetails({
       content: {
         amount: borrowAmount,
         lendingAsset: lendingAsset,
-        gasSpeed: gasSpeed
-      }
+        gasSpeed: gasSpeed,
+      },
     });
   };
 
@@ -210,8 +217,8 @@ function LendAllAssetRowDetails({
       content: {
         lendingAsset: lendingAsset,
         amount: supplyAmount,
-        gasSpeed: gasSpeed
-      }
+        gasSpeed: gasSpeed,
+      },
     });
   };
 
@@ -220,7 +227,11 @@ function LendAllAssetRowDetails({
     stores.emitter.on(APPROVE_LEND_RETURNED, approveReturned);
     stores.dispatcher.dispatch({
       type: APPROVE_LEND,
-      content: { lendingAsset: lendingAsset, amount: "max", gasSpeed: gasSpeed }
+      content: {
+        lendingAsset: lendingAsset,
+        amount: "max",
+        gasSpeed: gasSpeed,
+      },
     });
   };
 
@@ -228,7 +239,7 @@ function LendAllAssetRowDetails({
     stores.emitter.emit(CONNECT_WALLET);
   };
 
-  const setSupplyAmountPercent = percent => {
+  const setSupplyAmountPercent = (percent) => {
     if (loading) {
       return;
     }
@@ -241,7 +252,7 @@ function LendAllAssetRowDetails({
     setSupplyAmount(amount);
   };
 
-  const setBorrowAmountPercent = percent => {
+  const setBorrowAmountPercent = (percent) => {
     if (loading) {
       return;
     }
@@ -366,7 +377,7 @@ function LendAllAssetRowDetails({
                     height={30}
                   />
                 </InputAdornment>
-              )
+              ),
             }}
           />
           <div className={classes.scaleContainer}>
@@ -548,7 +559,7 @@ function LendAllAssetRowDetails({
                     height={30}
                   />
                 </InputAdornment>
-              )
+              ),
             }}
           />
           <div className={classes.scaleContainer}>
@@ -596,75 +607,91 @@ export default function LendAllAssetRow({
   account,
   lendingBorrow,
   lendingSupply,
-  lendingBorrowLimit
+  lendingBorrowLimit,
 }) {
   const [expanded, setExpanded] = useState(false);
 
   const handleExpand = () => {
     setExpanded(!expanded);
   };
+  const [open, setOpen] = React.useState(false);
 
   return (
-    <Accordion
-      className={classes.removePaper}
-      elevation={0}
-      square
-      expanded={expanded}
-      onChange={() => {
-        handleExpand();
-      }}
-    >
-      <AccordionSummary elevation={0} className={classes.lendingRow}>
-        <div className={classes.lendTitleCell}>
-          <div className={classes.logo}>
-            <img
-              src={
-                lendingAsset.tokenMetadata.icon
-                  ? lendingAsset.tokenMetadata.icon
-                  : "/tokens/unknown-logo.png"
-              }
-              alt=""
-              width={30}
-              height={30}
-            />
+    <>
+      <TableRow
+        hover
+        tabIndex={-1}
+        key={lendingAsset.symbol}
+        onClick={() => setOpen(!open)}
+        class={classes.lendindAssetTableRow}
+      >
+        <TableCell>
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            onClick={() => setOpen(!open)}
+          >
+            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
+        <TableCell>
+          <div className={classes.lendTitleCell}>
+            <div className={classes.logo}>
+              <img
+                src={
+                  lendingAsset.tokenMetadata.icon
+                    ? lendingAsset.tokenMetadata.icon
+                    : "/tokens/unknown-logo.png"
+                }
+                alt=""
+                width={30}
+                height={30}
+              />
+            </div>
+            <div className={classes.name}>
+              <Typography variant="h5" className={classes.fontWeightBold}>
+                {lendingAsset.tokenMetadata.displayName}
+              </Typography>
+            </div>
           </div>
-          <div className={classes.name}>
-            <Typography variant="h5" className={classes.fontWeightBold}>
-              {lendingAsset.tokenMetadata.displayName}
-            </Typography>
-          </div>
-        </div>
-        <div className={classes.lendBalanceCell}>
-          <Typography variant="h5" className={classes.balance} noWrap>
+        </TableCell>
+        <TableCell scope="row" padding="none" align="right">
+          <Typography className={classes.vaultVersionText}>
             {formatCurrency(lendingAsset.tokenMetadata.balance)}{" "}
             {lendingAsset.tokenMetadata.symbol}
           </Typography>
-        </div>
-        <div className={classes.lendValueCell}>
-          <Typography variant="h5">
+        </TableCell>
+        <TableCell scope="row" padding="none" align="right">
+          <Typography className={classes.vaultVersionText}>
             {formatCurrency(lendingAsset.borrowAPY)} %
           </Typography>
-        </div>
-        <div className={classes.lendValueCell}>
-          <Typography variant="h5">
+        </TableCell>
+        <TableCell scope="row" padding="none" align="right">
+          <Typography className={classes.vaultVersionText}>
             {formatCurrency(lendingAsset.supplyAPY)} %
           </Typography>
-        </div>
-        <div className={classes.lendValueCell}>
-          <Typography variant="h5">
+        </TableCell>
+        <TableCell scope="row" align="right">
+          <Typography className={classes.vaultVersionText}>
             {formatCurrency(lendingAsset.liquidity)}{" "}
             {lendingAsset.tokenMetadata.symbol}
           </Typography>
-        </div>
-      </AccordionSummary>
-      <AccordionDetails>
-        <LendAllAssetRowDetails
-          lendingAsset={lendingAsset}
-          lendingBorrow={lendingBorrow}
-          lendingSupply={lendingSupply}
-          lendingBorrowLimit={lendingBorrowLimit}
-        />
-      </AccordionDetails>
-    </Accordion>
+        </TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            <Box margin={1}>
+              <LendAllAssetRowDetails
+                lendingAsset={lendingAsset}
+                lendingBorrow={lendingBorrow}
+                lendingSupply={lendingSupply}
+                lendingBorrowLimit={lendingBorrowLimit}
+              />
+            </Box>
+          </Collapse>
+        </TableCell>
+      </TableRow>
+    </>
   );
 }
