@@ -1,4 +1,4 @@
-import BigNumber from 'bignumber.js'
+import BigNumber from "bignumber.js";
 
 // todo: get navigator declared somehow? probably an issue with using nextjs
 // function getLang() {
@@ -8,32 +8,37 @@ import BigNumber from 'bignumber.js'
 //   return window.navigator.language;
 // }
 
-export function formatCurrency(amount, decimals=2) {
-  if(!isNaN(amount)) {
+export function formatCurrency(amount, decimals = 2) {
+  if (!isNaN(amount)) {
     const formatter = new Intl.NumberFormat(undefined, {
       minimumFractionDigits: decimals,
-      maximumFractionDigits: decimals,
+      maximumFractionDigits: decimals
     });
 
-    return formatter.format(amount)
+    return formatter.format(amount);
   } else {
-    return 0
+    return 0;
   }
 }
 
-export function formatAddress(address, length='short') {
-  if (address && length==='short') {
-    address = address.substring(0,6)+'...'+address.substring(address.length-4,address.length)
-    return address
-  } else if (address && length==='long') {
-    address = address.substring(0,12)+'...'+address.substring(address.length-8,address.length)
-    return address
+export function formatAddress(address, length = "short") {
+  if (address && length === "short") {
+    address =
+      address.substring(0, 6) +
+      "..." +
+      address.substring(address.length - 4, address.length);
+    return address;
+  } else if (address && length === "long") {
+    address =
+      address.substring(0, 12) +
+      "..." +
+      address.substring(address.length - 8, address.length);
+    return address;
   } else {
-    return null
+    return null;
   }
 }
 
 export function bnDec(decimals) {
-  return new BigNumber(10)
-          .pow(parseInt(decimals))
+  return new BigNumber(10).pow(parseInt(decimals));
 }
