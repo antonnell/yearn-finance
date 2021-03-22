@@ -169,6 +169,9 @@ class Store {
 
   getEarnAPYs = async earn => {
     try {
+
+      const web3 = await stores.accountStore.getWeb3Provider();
+
       const provider = process.env.NEXT_PUBLIC_PROVIDER;
       const etherscanApiKey = process.env.NEXT_PUBLIC_ETHERSCAN_KEY;
 
@@ -251,11 +254,13 @@ class Store {
         }
 
         earn[i].apy = apyObj;
+
       }
 
       return earn;
     } catch (ex) {
       console.log(ex);
+      return null
     }
   };
 
@@ -269,16 +274,6 @@ class Store {
     } catch (ex) {
       console.log(ex);
       vaultInfo = [];
-    }
-
-    let tvlInfo = null;
-    try {
-      const url = `${YEARN_API}tvl`;
-
-      const tvlAPIResult = await fetch(url);
-      tvlInfo = await tvlAPIResult.json();
-    } catch (ex) {
-      console.log(ex);
     }
 
     const vaults = this.getStore("vaults");
@@ -304,8 +299,7 @@ class Store {
       });
 
       this.setStore({
-        vaults: vaultPopulated,
-        tvlInfo: tvlInfo
+        vaults: vaultPopulated
       });
 
       this.emitter.emit(VAULTS_UPDATED);
@@ -434,6 +428,19 @@ class Store {
             }
           }
 
+          if(vault.type === "Earn") {
+            const totalSupply = await vaultContract.methods.totalSupply().call()
+            vault.tvl = {
+              totalAssets: totalSupply,
+              price: price,
+              value: BigNumber(totalSupply)
+                .times(price)
+                .times(vault.pricePerFullShare)
+                .div(10**vault.decimals)
+                .toFixed(6)
+            };
+          }
+
           if (vault.type === "Lockup") {
             const votingEscrowContract = new web3.eth.Contract(
               VOTINGESCROWABI,
@@ -537,6 +544,27 @@ class Store {
         );
         if (BigNumber(highestHoldings.balanceUSD).eq(0)) {
           highestHoldings = "None";
+        }
+
+        const tvlInfo = {
+          tvlUSD: vaultsBalanced.reduce((acc, current) => {
+            return BigNumber(acc).plus(current.tvl ? current.tvl.value : 0)
+          }, 0),
+          totalVaultHoldingsUSD: vaultsBalanced
+            .filter((vault) => {
+              return vault.type !== 'Earn'
+            })
+            .reduce((acc, current) => {
+              return BigNumber(acc).plus(current.tvl ? current.tvl.value : 0)
+            }, 0),
+          totalEarnHoldingsUSD: vaultsBalanced
+            .filter((vault) => {
+              return vault.type === 'Earn'
+            })
+            .reduce((acc, current) => {
+              return BigNumber(acc).plus(current.tvl ? current.tvl.value : 0)
+            }, 0),
+          ironBankTvl: '0'
         }
 
         this.setStore({

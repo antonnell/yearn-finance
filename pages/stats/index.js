@@ -36,12 +36,12 @@ const StatsHeader = (props) => {
       label: "Strategies",
       id: "strategies",
     },
+    { label: "Total Value Locked", numeric: true, id: "tvl" },
     {
-      label: "Last 30 days APY",
+      label: "APY",
       numeric: true,
       id: "apy30Days",
     },
-    { label: "APY since Inception", numeric: true, id: "apyInception" },
   ];
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -93,8 +93,8 @@ function StatsData({ vault }) {
           <div className={classes.vaultLogo}>
             <img
               src={
-                vault.tokenMetadata.icon
-                  ? vault.tokenMetadata.icon
+                vault.icon
+                  ? vault.icon
                   : "/tokens/unknown-logo.png"
               }
               alt=""
@@ -114,13 +114,13 @@ function StatsData({ vault }) {
           </div>
         </div>
       </TableCell>
-      <TableCell scope="row" padding="none" align="left">
+      <TableCell scope="row" align="left">
         <Typography variant="h5">
           {vault.type === "v2" && !vault.endorsed ? "Experimental" : vault.type}{" "}
           Vault
         </Typography>
       </TableCell>
-      <TableCell scope="row" padding="none" align="left">
+      <TableCell scope="row" align="left">
         {vault &&
           vault.strategies &&
           vault.strategies.map((strategy) => {
@@ -138,16 +138,15 @@ function StatsData({ vault }) {
             );
           })}
       </TableCell>
-      <TableCell scope="row" padding="none" align="right">
+      <TableCell scope="row" align="right">
         <Typography
           variant="h5"
           align="right"
           className={classes.fontWeightBold}
         >
-          {vault.apy.oneMonthSample
-            ? formatCurrency(BigNumber(vault.apy.oneMonthSample).times(100))
+          $ { vault.tvl && vault.tvl.value
+            ? formatCurrency(vault.tvl.value)
             : "0.00"}
-          %
         </Typography>
       </TableCell>
       <TableCell scope="row" align="right">
@@ -156,8 +155,8 @@ function StatsData({ vault }) {
           align="right"
           className={classes.fontWeightBold}
         >
-          {vault.apy.inceptionSample
-            ? formatCurrency(BigNumber(vault.apy.inceptionSample).times(100))
+          {vault.apy.recommended
+            ? formatCurrency(BigNumber(vault.apy.recommended).times(100))
             : "0.00"}
           %
         </Typography>
@@ -274,12 +273,12 @@ function Stats({ changeTheme }) {
         } else if (BigNumber(oneMonthA).lt(BigNumber(oneMonthB))) {
           return getOrderBy(1);
         }
-      } else if (orderBy.id === "apyInception") {
-        let inceptionA = a.apy?.inceptionSample;
-        let inceptionB = b.apy?.inceptionSample;
-        if (BigNumber(inceptionA).gt(BigNumber(inceptionB))) {
+      } else if (orderBy.id === "tvl") {
+        let tvlA = a.tvl?.value;
+        let tvlB = b.tvl?.value;
+        if (BigNumber(tvlA).gt(BigNumber(tvlB))) {
           return getOrderBy(-1);
-        } else if (BigNumber(inceptionA).lt(BigNumber(inceptionB))) {
+        } else if (BigNumber(tvlA).lt(BigNumber(tvlB))) {
           return getOrderBy(1);
         }
       }
@@ -312,7 +311,7 @@ function Stats({ changeTheme }) {
               {!tvl ? (
                 <Skeleton style={{ minWidth: "200px " }} />
               ) : (
-                `$ ${formatCurrency(tvl.TvlUSD)}`
+                `$ ${formatCurrency(tvl.tvlUSD)}`
               )}
             </Typography>
           </div>
