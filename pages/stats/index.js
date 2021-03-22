@@ -266,8 +266,8 @@ function Stats({ changeTheme }) {
           return getOrderBy(-1);
         }
       } else if (orderBy.id === "apy30Days") {
-        let oneMonthA = a.apy?.oneMonthSample;
-        let oneMonthB = b.apy?.oneMonthSample;
+        let oneMonthA = a.apy?.recommended;
+        let oneMonthB = b.apy?.recommended;
         if (BigNumber(oneMonthA).gt(BigNumber(oneMonthB))) {
           return getOrderBy(-1);
         } else if (BigNumber(oneMonthA).lt(BigNumber(oneMonthB))) {
