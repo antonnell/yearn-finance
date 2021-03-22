@@ -1,12 +1,12 @@
-import AccountStore from "./accountStore";
-import InvestStore from "./investStore";
-import CoverStore from "./coverStore";
-import LendStore from "./lendStore";
-import CDPStore from "./cdpStore";
-import LTVStore from "./ltvStore";
+import AccountStore from './accountStore';
+import InvestStore from './investStore';
+import CoverStore from './coverStore';
+import LendStore from './lendStore';
+import CDPStore from './cdpStore';
+import LTVStore from './ltvStore';
 
-const Dispatcher = require("flux").Dispatcher;
-const Emitter = require("events").EventEmitter;
+const Dispatcher = require('flux').Dispatcher;
+const Emitter = require('events').EventEmitter;
 
 const dispatcher = new Dispatcher();
 const emitter = new Emitter();
@@ -26,5 +26,5 @@ export default {
   lendStore: lendStore,
   cdpStore: cdpStore,
   dispatcher: dispatcher,
-  emitter: emitter
+  emitter: emitter,
 };

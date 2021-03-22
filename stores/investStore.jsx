@@ -1,4 +1,4 @@
-import async from "async";
+import async from 'async';
 import {
   MAX_UINT256,
   YEARN_API,
@@ -22,12 +22,12 @@ import {
   GET_VAULT_TRANSACTIONS,
   VAULT_TRANSACTIONS_RETURNED,
   CLAIM_VAULT,
-  CLAIM_VAULT_RETURNED
-} from "./constants";
+  CLAIM_VAULT_RETURNED,
+} from './constants';
 
-import stores from "./";
-import earnJSON from "./configurations/earn";
-import lockupJSON from "./configurations/lockup";
+import stores from './';
+import earnJSON from './configurations/earn';
+import lockupJSON from './configurations/lockup';
 
 import {
   ERC20ABI,
@@ -35,15 +35,15 @@ import {
   VAULTV2ABI,
   EARNABI,
   LOCKUPABI,
-  VOTINGESCROWABI
-} from "./abis";
-import { bnDec } from "../utils";
+  VOTINGESCROWABI,
+} from './abis';
+import { bnDec } from '../utils';
 
-import BatchCall from "web3-batch-call";
-import BigNumber from "bignumber.js";
-const fetch = require("node-fetch");
+import BatchCall from 'web3-batch-call';
+import BigNumber from 'bignumber.js';
+const fetch = require('node-fetch');
 
-const CoinGecko = require("coingecko-api");
+const CoinGecko = require('coingecko-api');
 const CoinGeckoClient = new CoinGecko();
 
 class Store {
@@ -58,7 +58,7 @@ class Store {
       vaults: [],
       tvlInfo: null,
       earn: earnJSON, //These values don't really ever change anymore, but still, should get them dynamically. For now, this will save on some calls for alchemy. (symbols, decimals, underlying tokens, their symbols and decimals etc)
-      lockup: lockupJSON // same
+      lockup: lockupJSON, // same
     };
 
     dispatcher.register(
@@ -91,7 +91,7 @@ class Store {
           default: {
           }
         }
-      }.bind(this)
+      }.bind(this),
     );
   }
 
@@ -134,10 +134,9 @@ class Store {
       const vaults = await vaultsApiResult.json();
 
       //hack
-      const earn = this.getStore("earn");
+      const earn = this.getStore('earn');
       // for earn vaults, we need to calcualte the APY manually
       const earnWithAPY = await this.getEarnAPYs(earn);
-
       // const lockup = this.getStore('lockup')
 
       let mappedVaults = vaults
@@ -145,11 +144,11 @@ class Store {
           return vault.endorsed === true;
         })
         .filter(vault => {
-          return vault.type !== "zap";
+          return vault.type !== 'zap';
         })
         .map(vault => {
-          if (vault.address === "0xc5bDdf9843308380375a611c18B50Fb9341f502A") {
-            vault.type = "Lockup";
+          if (vault.address === '0xc5bDdf9843308380375a611c18B50Fb9341f502A') {
+            vault.type = 'Lockup';
           }
           vault.tokenMetadata = vault.token;
           return vault;
@@ -179,18 +178,18 @@ class Store {
         provider,
         etherscan: {
           apiKey: etherscanApiKey, // Only required if not providing abi in contract request configuration
-          delayTime: 300 // delay time between etherscan ABI reqests. default is 300 ms
-        }
+          delayTime: 300, // delay time between etherscan ABI reqests. default is 300 ms
+        },
       };
 
       let callOptions = {
         blockHeight: 272 * 24 * 30 + 1,
-        blockResolution: 272 * 24 * 30
+        blockResolution: 272 * 24 * 30,
       };
 
       const contracts = [
         {
-          namespace: "earn",
+          namespace: 'earn',
           abi: EARNABI,
           addresses: earn.map(e => {
             return e.address;
@@ -200,11 +199,11 @@ class Store {
           logging: false,
           readMethods: [
             {
-              name: "getPricePerFullShare",
-              args: []
-            }
-          ]
-        }
+              name: 'getPricePerFullShare',
+              args: [],
+            },
+          ],
+        },
       ];
 
       const batchCall = new BatchCall(options);
@@ -216,7 +215,7 @@ class Store {
           priceLastMonth: res.getPricePerFullShare[0].values[0].value,
           priceNow: res.getPricePerFullShare[0].values[1].value,
           blockLastMonth: res.getPricePerFullShare[0].values[0].blockNumber,
-          blockNow: res.getPricePerFullShare[0].values[1].blockNumber
+          blockNow: res.getPricePerFullShare[0].values[1].blockNumber,
         };
       });
 
@@ -230,7 +229,7 @@ class Store {
         if (!historicPrice || historicPrice.length === 0) {
           apyObj = {
             recommended: 0,
-            type: "Earn"
+            type: 'Earn',
           };
         } else {
           const priceGrowthSinceLastMonth =
@@ -249,7 +248,7 @@ class Store {
 
           apyObj = {
             recommended: oneMonthAPY,
-            type: "Earn"
+            type: 'Earn',
           };
         }
 
@@ -278,7 +277,7 @@ class Store {
 
     const vaults = this.getStore("vaults");
 
-    const account = stores.accountStore.getStore("account");
+    const account = stores.accountStore.getStore('account');
     if (!account || !account.address) {
       const vaultPopulated = vaults.map(vault => {
         if (!vault.strategies || vault.strategies.length === 0) {
@@ -290,8 +289,8 @@ class Store {
             vault.strategies = [
               {
                 name: theVaultInfo[0].strategyName,
-                address: theVaultInfo[0].strategyAddress
-              }
+                address: theVaultInfo[0].strategyAddress,
+              },
             ];
           }
         }
@@ -307,7 +306,10 @@ class Store {
     }
 
     const web3 = await stores.accountStore.getWeb3Provider();
-
+    const zapperfiBalanceResults = await fetch(
+      `https://api.zapper.fi/v1/balances/yearn?api_key=96e0cc51-a62e-42ca-acee-910ea7d2a241&addresses[]=${account.address}`,
+    );
+    const zapperfiBalance = await zapperfiBalanceResults.json();
     async.map(
       vaults,
       async (vault, callback) => {
@@ -315,16 +317,16 @@ class Store {
           let abi = null;
 
           switch (vault.type) {
-            case "v1":
+            case 'v1':
               abi = VAULTV1ABI;
               break;
-            case "v2":
+            case 'v2':
               abi = VAULTV2ABI;
               break;
-            case "Earn":
+            case 'Earn':
               abi = EARNABI;
               break;
-            case "Lockup":
+            case 'Lockup':
               abi = LOCKUPABI;
               break;
             default:
@@ -342,9 +344,9 @@ class Store {
           try {
             // this throws execution reverted: SafeMath: division by zero for not properly finalised vaults
             let pricePerFullShare = 1;
-            if (vault.type === "Lockup") {
+            if (vault.type === 'Lockup') {
               vault.pricePerFullShare = 1; // GET ASSET PRICE?
-            } else if (vault.type === "v1" || vault.type === "Earn") {
+            } else if (vault.type === 'v1' || vault.type === 'Earn') {
               pricePerFullShare = await vaultContract.methods
                 .getPricePerFullShare()
                 .call();
@@ -363,10 +365,10 @@ class Store {
             vault.pricePerFullShare = 0;
           }
 
-          if (vault.type === "Lockup") {
+          if (vault.type === 'Lockup') {
             vault.balanceInToken = BigNumber(vault.balance).toFixed(
               vault.tokenMetadata.decimals,
-              BigNumber.ROUND_DOWN
+              BigNumber.ROUND_DOWN,
             );
           } else {
             vault.balanceInToken = BigNumber(vault.balance)
@@ -376,7 +378,7 @@ class Store {
 
           const erc20Contract = new web3.eth.Contract(
             ERC20ABI,
-            vault.tokenMetadata.address
+            vault.tokenMetadata.address,
           );
           const tokenBalanceOf = await erc20Contract.methods
             .balanceOf(account.address)
@@ -394,7 +396,7 @@ class Store {
 
           const data = await CoinGeckoClient.simple.fetchTokenPrice({
             contract_addresses: vault.tokenMetadata.address,
-            vs_currencies: "usd"
+            vs_currencies: 'usd',
           });
 
           // just do a pricePerShare * 1. Hope it is a USD-pegged based coin for anything that we don't find a price in coingecko.
@@ -404,9 +406,10 @@ class Store {
 
             if (keys.length > 0) {
               price = data.data[keys[0]].usd;
+            } else {
+              vault.balanceUSDNotFound = true;
             }
           }
-
           vault.tokenMetadata.priceUSD = price;
           vault.balanceUSD = BigNumber(vault.balance)
             .times(vault.pricePerFullShare)
@@ -422,8 +425,8 @@ class Store {
               vault.strategies = [
                 {
                   name: theVaultInfo[0].strategyName,
-                  address: theVaultInfo[0].strategyAddress
-                }
+                  address: theVaultInfo[0].strategyAddress,
+                },
               ];
             }
           }
@@ -441,17 +444,17 @@ class Store {
             };
           }
 
-          if (vault.type === "Lockup") {
+          if (vault.type === 'Lockup') {
             const votingEscrowContract = new web3.eth.Contract(
               VOTINGESCROWABI,
-              "0x5f3b5DfEb7B28CDbD7FAba78963EE202a494e2A2"
+              '0x5f3b5DfEb7B28CDbD7FAba78963EE202a494e2A2',
             );
 
             const totalSupply = await vaultContract.methods
               .totalSupply()
               .call();
             const votingEscrowBalanceOf = await votingEscrowContract.methods
-              .balanceOf("0xF147b8125d2ef93FB6965Db97D6746952a133934")
+              .balanceOf('0xF147b8125d2ef93FB6965Db97D6746952a133934')
               .call();
 
             const index = await vaultContract.methods.index().call();
@@ -467,14 +470,14 @@ class Store {
                 .minus(supply_index)
                 .times(vault.balance)
                 .div(bnDec(vault.decimals))
-                .toNumber()
+                .toNumber(),
             };
 
             vault.strategies = [
               {
-                name: "DAOFeeClaim",
-                address: "0xc5bDdf9843308380375a611c18B50Fb9341f502A"
-              }
+                name: 'DAOFeeClaim',
+                address: '0xc5bDdf9843308380375a611c18B50Fb9341f502A',
+              },
             ];
           }
 
@@ -497,6 +500,25 @@ class Store {
         }
       },
       (err, vaultsBalanced) => {
+        vaultsBalanced.map((v, i) => {
+          zapperfiBalance[account.address].map(balance => {
+            if (balance.address.toLowerCase() === v.address.toLowerCase()) {
+              vaultsBalanced[i] = {
+                ...vaultsBalanced[i],
+                ...{
+                  balance: balance.balance,
+                  pricePerFullShare: balance.pricePerShare,
+                  balanceUSD: balance.balanceUSD,
+                },
+              };
+              vaultsBalanced[i].tokenMetadata = {
+                ...vaultsBalanced[i].tokenMetadata,
+                ...{ priceUSD: balance.pricePerToken },
+              };
+            }
+          });
+        });
+
         if (err) {
           console.log(err);
           return this.emitter.emit(ERROR, err);
@@ -504,19 +526,34 @@ class Store {
 
         const portfolioBalanceUSD = vaultsBalanced.reduce(
           (accumulator, currentValue) => {
+            let cbalance = currentValue.balance;
+            let pricePerFullShare = currentValue.pricePerFullShare;
+            let priceUSD = currentValue.tokenMetadata.priceUSD;
+            let fullBalance = BigNumber(cbalance)
+              .times(pricePerFullShare)
+              .times(priceUSD);
+
+            if (currentValue.balance > 0)
+              console.log('VAULTY', accumulator, currentValue);
+            console.log(
+              'zapper2',
+              zapperfiBalance[account.address],
+              currentValue.address,
+            );
+
             return BigNumber(accumulator)
-              .plus(
-                BigNumber(currentValue.balance)
-                  .times(currentValue.pricePerFullShare)
-                  .times(currentValue.tokenMetadata.priceUSD)
-              )
+              .plus(fullBalance)
               .toNumber();
           },
-          0
+          0,
         );
 
         const portfolioGrowth = vaultsBalanced.reduce(
           (accumulator, currentValue) => {
+            let cbalance = currentValue.balance;
+            let pricePerFullShare = currentValue.pricePerFullShare;
+            let priceUSD = currentValue.tokenMetadata.priceUSD;
+
             if (
               !currentValue.balance ||
               BigNumber(currentValue.balance).eq(0) ||
@@ -532,18 +569,18 @@ class Store {
                   .times(currentValue.pricePerFullShare)
                   .times(currentValue.tokenMetadata.priceUSD)
                   .div(portfolioBalanceUSD)
-                  .times(currentValue.apy.recommended * 100)
+                  .times(currentValue.apy.recommended * 100),
               )
               .toNumber();
           },
-          0
+          0,
         );
 
         let highestHoldings = vaultsBalanced.reduce((prev, current) =>
-          BigNumber(prev.balanceUSD).gt(current.balanceUSD) ? prev : current
+          BigNumber(prev.balanceUSD).gt(current.balanceUSD) ? prev : current,
         );
         if (BigNumber(highestHoldings.balanceUSD).eq(0)) {
-          highestHoldings = "None";
+          highestHoldings = 'None';
         }
 
         const tvlInfo = {
@@ -572,11 +609,11 @@ class Store {
           portfolioBalanceUSD: portfolioBalanceUSD,
           portfolioGrowth: portfolioGrowth ? portfolioGrowth : 0,
           highestHoldings: highestHoldings,
-          tvlInfo: tvlInfo
+          tvlInfo: tvlInfo,
         });
 
         this.emitter.emit(VAULTS_UPDATED);
-      }
+      },
     );
   };
 
@@ -585,7 +622,7 @@ class Store {
 
     //maybe do this on initial configuration load.
 
-    const account = stores.accountStore.getStore("account");
+    const account = stores.accountStore.getStore('account');
     if (!account) {
       //maybe throw an error
     }
@@ -601,35 +638,35 @@ class Store {
       provider,
       etherscan: {
         apiKey: etherscanApiKey, // Only required if not providing abi in contract request configuration
-        delayTime: 300 // delay time between etherscan ABI reqests. default is 300 ms
-      }
+        delayTime: 300, // delay time between etherscan ABI reqests. default is 300 ms
+      },
     };
 
     let callOptions = {};
 
     switch (duration) {
-      case "Week":
+      case 'Week':
         callOptions = {
           blockHeight: 272 * 24 * 7, // Historical blocks to read (60 * (60/15) = 240)... Enter 240 for one hours worth of data - 272 = 13.2 seconds per block
-          blockResolution: 272 * 24 // 7 data points
+          blockResolution: 272 * 24, // 7 data points
         };
         break;
-      case "Month":
+      case 'Month':
         callOptions = {
           blockHeight: 272 * 24 * 30, // Historical blocks to read (60 * (60/15) = 240)... Enter 240 for one hours worth of data - 272 = 13.2 seconds per block
-          blockResolution: 272 * 24 // 30 data points
+          blockResolution: 272 * 24, // 30 data points
         };
         break;
-      case "Year":
+      case 'Year':
         callOptions = {
           blockHeight: 272 * 24 * 365, // Historical blocks to read (60 * (60/15) = 240)... Enter 240 for one hours worth of data - 272 = 13.2 seconds per block
-          blockResolution: 272 * 24 * 18 // 20 data points
+          blockResolution: 272 * 24 * 18, // 20 data points
         };
         break;
       default:
         callOptions = {
           blockHeight: 272 * 24 * 30, // Historical blocks to read (60 * (60/15) = 240)... Enter 240 for one hours worth of data - 272 = 13.2 seconds per block
-          blockResolution: 272 * 24 // 30 data points
+          blockResolution: 272 * 24, // 30 data points
         };
     }
 
@@ -638,19 +675,19 @@ class Store {
     if (!account || !account.address) {
       contracts = [
         {
-          namespace: "vaults",
+          namespace: 'vaults',
           store: localStorage,
           addresses: [address],
           allReadMethods: true,
           groupByNamespace: false,
           logging: false,
-          readMethods: []
-        }
+          readMethods: [],
+        },
       ];
     } else {
       contracts = [
         {
-          namespace: "vaults",
+          namespace: 'vaults',
           store: localStorage,
           addresses: [address],
           allReadMethods: true,
@@ -658,11 +695,11 @@ class Store {
           logging: false,
           readMethods: [
             {
-              name: "balanceOf",
-              args: [account.address]
-            }
-          ]
-        }
+              name: 'balanceOf',
+              args: [account.address],
+            },
+          ],
+        },
       ];
     }
 
@@ -675,14 +712,14 @@ class Store {
 
     this.setVault({
       address: payload.content.address,
-      vault: vault
+      vault: vault,
     });
 
     this.emitter.emit(VAULT_PERFORMANCE_RETURNED);
   };
 
   depositVault = async payload => {
-    const account = stores.accountStore.getStore("account");
+    const account = stores.accountStore.getStore('account');
     if (!account) {
       return false;
       //maybe throw an error
@@ -708,7 +745,7 @@ class Store {
         }
 
         return this.emitter.emit(DEPOSIT_VAULT_RETURNED, depositResult);
-      }
+      },
     );
   };
 
@@ -718,22 +755,22 @@ class Store {
     account,
     amount,
     gasSpeed,
-    callback
+    callback,
   ) => {
     let abi = null;
 
     switch (vault.type) {
-      case "v1":
+      case 'v1':
         abi = VAULTV1ABI;
         break;
-      case "v2":
+      case 'v2':
         abi = VAULTV2ABI;
         break;
-      case "Earn":
+      case 'Earn':
         abi = EARNABI;
         break;
       default:
-        abi = "UNKNOWN";
+        abi = 'UNKNOWN';
     }
 
     const vaultContract = new web3.eth.Contract(abi, vault.address);
@@ -747,17 +784,17 @@ class Store {
     this._callContract(
       web3,
       vaultContract,
-      "deposit",
+      'deposit',
       [amountToSend],
       account,
       gasPrice,
       GET_VAULT_BALANCES,
-      callback
+      callback,
     );
   };
 
   withdrawVault = async payload => {
-    const account = stores.accountStore.getStore("account");
+    const account = stores.accountStore.getStore('account');
     if (!account) {
       return false;
       //maybe throw an error
@@ -783,7 +820,7 @@ class Store {
         }
 
         return this.emitter.emit(WITHDRAW_VAULT_RETURNED, withdrawResult);
-      }
+      },
     );
   };
 
@@ -793,19 +830,19 @@ class Store {
     account,
     amount,
     gasSpeed,
-    callback
+    callback,
   ) => {
     let abi = null;
 
     switch (vault.type) {
-      case "v1":
+      case 'v1':
         abi = VAULTV1ABI;
         break;
-      case "v2":
+      case 'v2':
         abi = VAULTV2ABI;
         break;
       default:
-        abi = "UNKNOWN";
+        abi = 'UNKNOWN';
     }
 
     const vaultContract = new web3.eth.Contract(abi, vault.address);
@@ -819,12 +856,12 @@ class Store {
     this._callContract(
       web3,
       vaultContract,
-      "withdraw",
+      'withdraw',
       [amountToSend],
       account,
       gasPrice,
       GET_VAULT_BALANCES,
-      callback
+      callback,
     );
   };
 
@@ -836,7 +873,7 @@ class Store {
     account,
     gasPrice,
     dispatchEvent,
-    callback
+    callback,
   ) => {
     //todo: rewrite the callback unfctionality.
 
@@ -844,19 +881,19 @@ class Store {
     contract.methods[method](...params)
       .send({
         from: account.address,
-        gasPrice: web3.utils.toWei(gasPrice, "gwei")
+        gasPrice: web3.utils.toWei(gasPrice, 'gwei'),
       })
-      .on("transactionHash", function(hash) {
+      .on('transactionHash', function(hash) {
         context.emitter.emit(TX_SUBMITTED, hash);
         callback(null, hash);
       })
-      .on("confirmation", function(confirmationNumber, receipt) {
+      .on('confirmation', function(confirmationNumber, receipt) {
         if (dispatchEvent && confirmationNumber === 1) {
           context.dispatcher.dispatch({ type: dispatchEvent });
         }
       })
-      .on("error", function(error) {
-        if (!error.toString().includes("-32601")) {
+      .on('error', function(error) {
+        if (!error.toString().includes('-32601')) {
           if (error.message) {
             return callback(error.message);
           }
@@ -864,7 +901,7 @@ class Store {
         }
       })
       .catch(error => {
-        if (!error.toString().includes("-32601")) {
+        if (!error.toString().includes('-32601')) {
           if (error.message) {
             return callback(error.message);
           }
@@ -874,7 +911,7 @@ class Store {
   };
 
   approveVault = async payload => {
-    const account = stores.accountStore.getStore("account");
+    const account = stores.accountStore.getStore('account');
     if (!account) {
       return false;
       //maybe throw an error
@@ -900,7 +937,7 @@ class Store {
         }
 
         return this.emitter.emit(APPROVE_VAULT_RETURNED, approveResult);
-      }
+      },
     );
   };
 
@@ -910,15 +947,15 @@ class Store {
     account,
     amount,
     gasSpeed,
-    callback
+    callback,
   ) => {
     const tokenContract = new web3.eth.Contract(
       ERC20ABI,
-      vault.tokenMetadata.address
+      vault.tokenMetadata.address,
     );
 
-    let amountToSend = "0";
-    if (amount === "max") {
+    let amountToSend = '0';
+    if (amount === 'max') {
       amountToSend = MAX_UINT256;
     } else {
       amountToSend = BigNumber(amount)
@@ -931,19 +968,19 @@ class Store {
     this._callContract(
       web3,
       tokenContract,
-      "approve",
+      'approve',
       [vault.address, amountToSend],
       account,
       gasPrice,
       GET_VAULT_BALANCES,
-      callback
+      callback,
     );
   };
 
   getVaultTransactions = async payload => {
     const { address } = payload.content;
 
-    const account = stores.accountStore.getStore("account");
+    const account = stores.accountStore.getStore('account');
     if (!account || !account.address) {
       //maybe throw an error
       return false;
@@ -955,7 +992,7 @@ class Store {
       const vaultsApiResult = await fetch(url);
       const transactions = await vaultsApiResult.json();
 
-      const vaults = this.getStore("vaults");
+      const vaults = this.getStore('vaults');
 
       const vaultsPopulated = vaults.map(vault => {
         const txs = transactions.filter(tx => {
@@ -966,27 +1003,27 @@ class Store {
           const array = [];
           array.push(
             ...txs[0].deposits.map(tx => {
-              tx.description = "Deposit into vault";
+              tx.description = 'Deposit into vault';
               return tx;
-            })
+            }),
           );
           array.push(
             ...txs[0].withdrawals.map(tx => {
-              tx.description = "Withdraw from vault";
+              tx.description = 'Withdraw from vault';
               return tx;
-            })
+            }),
           );
           array.push(
             ...txs[0].transfersIn.map(tx => {
-              tx.description = "Transfer into vault";
+              tx.description = 'Transfer into vault';
               return tx;
-            })
+            }),
           );
           array.push(
             ...txs[0].transfersOut.map(tx => {
-              tx.description = "Transfer out of vault";
+              tx.description = 'Transfer out of vault';
               return tx;
-            })
+            }),
           );
 
           vault.transactions = array.sort((a, b) => {
@@ -1009,7 +1046,7 @@ class Store {
   };
 
   claimVault = async payload => {
-    const account = stores.accountStore.getStore("account");
+    const account = stores.accountStore.getStore('account');
     if (!account) {
       return false;
       //maybe throw an error
@@ -1040,12 +1077,12 @@ class Store {
     this._callContract(
       web3,
       vaultContract,
-      "claim",
+      'claim',
       [],
       account,
       gasPrice,
       GET_VAULT_BALANCES,
-      callback
+      callback,
     );
   };
 }
