@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
 
-import { Typography, Paper } from "@material-ui/core";
+import {
+  Typography,
+  Paper,
+  TextField,
+  InputAdornment,
+} from "@material-ui/core";
 import Skeleton from "@material-ui/lab/Skeleton";
+import SearchIcon from "@material-ui/icons/Search";
 import BigNumber from "bignumber.js";
 
 import Head from "next/head";
@@ -18,13 +24,17 @@ import { CDP_UPDATED } from "../../stores/constants";
 import { formatCurrency } from "../../utils";
 
 function CDP({ changeTheme }) {
-  const [cdpAssets, setCDPAssets] = useState(null);
+  const [cdpAssets, setCDPAssets] = useState([]);
   const [cdps, setCDPs] = useState(null);
   const [cdpSupplied, setCDPSuppled] = useState(null);
   const [cdpMinted, setCDPMinted] = useState(null);
   const [borrowAsset, setBorrowAsset] = useState(null);
+  const [search, setSearch] = useState("");
+  const onSearchChanged = (event) => {
+    setSearch(event.target.value);
+  };
 
-  useEffect(function() {
+  useEffect(function () {
     const cdpUpdated = () => {
       setCDPAssets(stores.cdpStore.getStore("cdpAssets"));
       setCDPs(stores.cdpStore.getStore("cdpActive"));
@@ -48,8 +58,8 @@ function CDP({ changeTheme }) {
     };
   }, []);
 
-  const getStatus = cdps => {
-    const cdpStatuses = cdps.map(cdp => {
+  const getStatus = (cdps) => {
+    const cdpStatuses = cdps.map((cdp) => {
       return cdp.status;
     });
     return cdpStatuses.includes("Liquidatable")
@@ -113,11 +123,28 @@ function CDP({ changeTheme }) {
         <Paper elevation={0} className={classes.tableContainer}>
           <CDPActiveTable cdps={cdps} borrowAsset={borrowAsset} />
         </Paper>
+        <div className={classes.cdpFilters}>
+          <TextField
+            className={classes.searchContainer}
+            variant="outlined"
+            fullWidth
+            placeholder="ETH, CRV, ..."
+            value={search}
+            onChange={onSearchChanged}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </div>
         <Typography variant="h6" className={classes.tableHeader}>
           All CDP Options
         </Typography>
         <Paper elevation={0} className={classes.tableContainer}>
-          <CDPAllTable cdps={cdpAssets} borrowAsset={borrowAsset} />
+          <CDPAllTable cdps={filteredCDPAssets} borrowAsset={borrowAsset} />
         </Paper>
       </div>
     );
@@ -159,15 +186,45 @@ function CDP({ changeTheme }) {
             </Typography>
           </div>
         </Paper>
+        <div>
+          <div className={classes.cdpFilters}>
+            <TextField
+              className={classes.searchContainer}
+              variant="outlined"
+              fullWidth
+              placeholder="ETH, CRV, ..."
+              value={search}
+              onChange={onSearchChanged}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </div>
+        </div>
         <Typography variant="h6" className={classes.tableHeader}>
           All CDP Options
         </Typography>
         <Paper elevation={0} className={classes.tableContainer}>
-          <CDPAllTable cdps={cdpAssets} borrowAsset={borrowAsset} />
+          <CDPAllTable cdps={filteredCDPAssets} borrowAsset={borrowAsset} />
         </Paper>
       </div>
     );
   };
+  const filteredCDPAssets = cdpAssets.filter((asset) => {
+    let returnValue = true;
+    if (search && search !== "") {
+      returnValue =
+        asset.symbol?.toLowerCase().includes(search.toLowerCase()) ||
+        asset.tokenMetadata?.address
+          ?.toLowerCase()
+          .includes(search.toLowerCase());
+    }
+    return returnValue;
+  });
 
   return (
     <Layout changeTheme={changeTheme}>
@@ -175,8 +232,8 @@ function CDP({ changeTheme }) {
         <title>CDP</title>
       </Head>
       <div className={classes.cdpContainer}>
-        {(cdps && cdps.length) === 0 ? renderNoCDPs() : ""}
-        {(cdps && cdps.length) > 0 ? renderCDPs() : ""}
+        {cdps?.length === 0 ? renderNoCDPs() : ""}
+        {cdps?.length > 0 ? renderCDPs() : ""}
       </div>
     </Layout>
   );

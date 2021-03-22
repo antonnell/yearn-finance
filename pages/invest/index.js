@@ -171,14 +171,8 @@ function Invest({ changeTheme }) {
           }
         }
       } else if (orderBy.id === "apy") {
-        let apyA = 0;
-        let apyB = 0;
-        a.apy.oneMonthSample === null || a.apy.oneMonthSample === undefined
-          ? (apyA = 0)
-          : (apyA = a.apy.oneMonthSample);
-        b.apy.oneMonthSample === null || b.apy.oneMonthSample === undefined
-          ? (apyB = 0)
-          : (apyB = b.apy.oneMonthSample);
+        let apyA = a.apy?.recommended || 0;
+        let apyB = b.apy?.recommended || 0;
         if (BigNumber(apyA).gt(BigNumber(apyB))) {
           return getOrderBy(-1);
         } else if (BigNumber(apyA).lt(BigNumber(apyB))) {
