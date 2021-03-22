@@ -258,8 +258,15 @@ function Lend({ changeTheme }) {
     const { order, orderBy, onRequestSort } = props;
 
     let headers = [
-      { label: "Name", id: "name" },
-      { label: "Balance", id: "balance", numeric: true },
+      {
+        label: "Name",
+        id: "name",
+      },
+      {
+        label: "Balance",
+        id: "balance",
+        numeric: true,
+      },
       {
         label: "Borrow APY",
         numeric: true,
@@ -282,7 +289,6 @@ function Lend({ changeTheme }) {
     return (
       <TableHead>
         <TableRow>
-          <TableCell />
           {headers.map((headCell, i) => (
             <TableCell
               key={headCell.id}
@@ -308,6 +314,7 @@ function Lend({ changeTheme }) {
               </TableSortLabel>
             </TableCell>
           ))}
+          <TableCell />
         </TableRow>
       </TableHead>
     );

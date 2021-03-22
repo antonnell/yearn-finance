@@ -178,6 +178,10 @@
   background: #dc3545;
 }
 
+.removePadding {
+  padding: 0px 24px !important;
+}
+
 @media screen and (max-width: 1000px) {
   .lendingRow {
     padding: 0px 6px;

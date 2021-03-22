@@ -617,7 +617,7 @@ export default function LendAllAssetRow({
   const [open, setOpen] = React.useState(false);
 
   return (
-    <>
+    <React.Fragment>
       <TableRow
         hover
         tabIndex={-1}
@@ -625,16 +625,7 @@ export default function LendAllAssetRow({
         onClick={() => setOpen(!open)}
         class={classes.lendindAssetTableRow}
       >
-        <TableCell>
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={() => setOpen(!open)}
-          >
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
-        </TableCell>
-        <TableCell>
+        <TableCell  className={ classes.removePadding }>
           <div className={classes.lendTitleCell}>
             <div className={classes.logo}>
               <img
@@ -655,43 +646,50 @@ export default function LendAllAssetRow({
             </div>
           </div>
         </TableCell>
-        <TableCell scope="row" padding="none" align="right">
-          <Typography className={classes.vaultVersionText}>
+        <TableCell scope="row" align="right" className={ classes.removePadding }>
+          <Typography variant="h5" className={classes.vaultVersionText}>
             {formatCurrency(lendingAsset.tokenMetadata.balance)}{" "}
             {lendingAsset.tokenMetadata.symbol}
           </Typography>
         </TableCell>
-        <TableCell scope="row" padding="none" align="right">
-          <Typography className={classes.vaultVersionText}>
+        <TableCell scope="row" align="right" className={ classes.removePadding }>
+          <Typography variant="h5" className={classes.vaultVersionText}>
             {formatCurrency(lendingAsset.borrowAPY)} %
           </Typography>
         </TableCell>
-        <TableCell scope="row" padding="none" align="right">
-          <Typography className={classes.vaultVersionText}>
+        <TableCell scope="row" align="right" className={ classes.removePadding }>
+          <Typography variant="h5" className={classes.vaultVersionText}>
             {formatCurrency(lendingAsset.supplyAPY)} %
           </Typography>
         </TableCell>
-        <TableCell scope="row" align="right">
-          <Typography className={classes.vaultVersionText}>
+        <TableCell scope="row" align="right" className={ classes.removePadding }>
+          <Typography variant="h5" className={classes.vaultVersionText}>
             {formatCurrency(lendingAsset.liquidity)}{" "}
             {lendingAsset.tokenMetadata.symbol}
           </Typography>
         </TableCell>
+        <TableCell  className={ classes.removePadding }>
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            onClick={() => setOpen(!open)}
+          >
+            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6} padding="none">
           <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box margin={1}>
-              <LendAllAssetRowDetails
-                lendingAsset={lendingAsset}
-                lendingBorrow={lendingBorrow}
-                lendingSupply={lendingSupply}
-                lendingBorrowLimit={lendingBorrowLimit}
-              />
-            </Box>
+            <LendAllAssetRowDetails
+              lendingAsset={lendingAsset}
+              lendingBorrow={lendingBorrow}
+              lendingSupply={lendingSupply}
+              lendingBorrowLimit={lendingBorrowLimit}
+            />
           </Collapse>
         </TableCell>
       </TableRow>
-    </>
+    </React.Fragment>
   );
 }
