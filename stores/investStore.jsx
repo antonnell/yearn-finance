@@ -43,9 +43,6 @@ import BatchCall from 'web3-batch-call';
 import BigNumber from 'bignumber.js';
 const fetch = require('node-fetch');
 
-const CoinGecko = require('coingecko-api');
-const CoinGeckoClient = new CoinGecko();
-
 class Store {
   constructor(dispatcher, emitter) {
     this.dispatcher = dispatcher;
@@ -168,7 +165,6 @@ class Store {
 
   getEarnAPYs = async earn => {
     try {
-
       const web3 = await stores.accountStore.getWeb3Provider();
 
       const provider = process.env.NEXT_PUBLIC_PROVIDER;
@@ -253,13 +249,12 @@ class Store {
         }
 
         earn[i].apy = apyObj;
-
       }
 
       return earn;
     } catch (ex) {
       console.log(ex);
-      return null
+      return null;
     }
   };
 
@@ -275,7 +270,7 @@ class Store {
       vaultInfo = [];
     }
 
-    const vaults = this.getStore("vaults");
+    const vaults = this.getStore('vaults');
 
     const account = stores.accountStore.getStore('account');
     if (!account || !account.address) {
@@ -298,7 +293,7 @@ class Store {
       });
 
       this.setStore({
-        vaults: vaultPopulated
+        vaults: vaultPopulated,
       });
 
       this.emitter.emit(VAULTS_UPDATED);
@@ -394,22 +389,10 @@ class Store {
             .div(bnDec(vault.tokenMetadata.decimals))
             .toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN);
 
-          const data = await CoinGeckoClient.simple.fetchTokenPrice({
-            contract_addresses: vault.tokenMetadata.address,
-            vs_currencies: 'usd',
-          });
-
+          const data = {};
           // just do a pricePerShare * 1. Hope it is a USD-pegged based coin for anything that we don't find a price in coingecko.
           let price = 1;
-          if (data.success) {
-            const keys = Object.keys(data.data);
-
-            if (keys.length > 0) {
-              price = data.data[keys[0]].usd;
-            } else {
-              vault.balanceUSDNotFound = true;
-            }
-          }
+          vault.balanceUSDNotFound = true;
           vault.tokenMetadata.priceUSD = price;
           vault.balanceUSD = BigNumber(vault.balance)
             .times(vault.pricePerFullShare)
@@ -431,16 +414,18 @@ class Store {
             }
           }
 
-          if(vault.type === "Earn") {
-            const totalSupply = await vaultContract.methods.totalSupply().call()
+          if (vault.type === 'Earn') {
+            const totalSupply = await vaultContract.methods
+              .totalSupply()
+              .call();
             vault.tvl = {
               totalAssets: totalSupply,
               price: price,
               value: BigNumber(totalSupply)
                 .times(price)
                 .times(vault.pricePerFullShare)
-                .div(10**vault.decimals)
-                .toFixed(6)
+                .div(10 ** vault.decimals)
+                .toFixed(6),
             };
           }
 
@@ -533,14 +518,6 @@ class Store {
               .times(pricePerFullShare)
               .times(priceUSD);
 
-            if (currentValue.balance > 0)
-              console.log('VAULTY', accumulator, currentValue);
-            console.log(
-              'zapper2',
-              zapperfiBalance[account.address],
-              currentValue.address,
-            );
-
             return BigNumber(accumulator)
               .plus(fullBalance)
               .toNumber();
@@ -585,24 +562,24 @@ class Store {
 
         const tvlInfo = {
           tvlUSD: vaultsBalanced.reduce((acc, current) => {
-            return BigNumber(acc).plus(current.tvl ? current.tvl.value : 0)
+            return BigNumber(acc).plus(current.tvl ? current.tvl.value : 0);
           }, 0),
           totalVaultHoldingsUSD: vaultsBalanced
-            .filter((vault) => {
-              return vault.type !== 'Earn'
+            .filter(vault => {
+              return vault.type !== 'Earn';
             })
             .reduce((acc, current) => {
-              return BigNumber(acc).plus(current.tvl ? current.tvl.value : 0)
+              return BigNumber(acc).plus(current.tvl ? current.tvl.value : 0);
             }, 0),
           totalEarnHoldingsUSD: vaultsBalanced
-            .filter((vault) => {
-              return vault.type === 'Earn'
+            .filter(vault => {
+              return vault.type === 'Earn';
             })
             .reduce((acc, current) => {
-              return BigNumber(acc).plus(current.tvl ? current.tvl.value : 0)
+              return BigNumber(acc).plus(current.tvl ? current.tvl.value : 0);
             }, 0),
-          ironBankTvl: '0'
-        }
+          ironBankTvl: '0',
+        };
 
         this.setStore({
           vaults: vaultsBalanced,
