@@ -138,7 +138,7 @@ function LTV({ changeTheme }) {
                 <Typography>{assetDetails ? assetDetails.aave2 : 0} %</Typography>
               </div>
               <div className={ classes.pair }>
-                <Typography>unit.xyz</Typography>
+                <Typography>yearn.fi/cdp</Typography>
                 <Typography>{assetDetails ? assetDetails.unit : 0} %</Typography>
               </div>
           </div>
