@@ -1,11 +1,7 @@
 import React, { Component } from "react";
-import {
-  DialogContent,
-  Dialog,
-  Slide
-} from '@material-ui/core';
+import { DialogContent, Dialog, Slide } from "@material-ui/core";
 
-import Unlock from './unlock.js';
+import Unlock from "./unlock.js";
 
 function Transition(props) {
   return <Slide direction="up" {...props} />;
@@ -18,13 +14,20 @@ class UnlockModal extends Component {
     const fullScreen = window.innerWidth < 576;
 
     return (
-      <Dialog open={ modalOpen } onClose={ closeModal } fullWidth={ true } maxWidth={ 'sm' } TransitionComponent={ Transition } fullScreen={ fullScreen }>
+      <Dialog
+        open={modalOpen}
+        onClose={closeModal}
+        fullWidth={true}
+        maxWidth={"sm"}
+        TransitionComponent={Transition}
+        fullScreen={fullScreen}
+      >
         <DialogContent>
-          <Unlock closeModal={ closeModal } />
+          <Unlock closeModal={closeModal} />
         </DialogContent>
       </Dialog>
-    )
-  };
+    );
+  }
 }
 
 export default UnlockModal;

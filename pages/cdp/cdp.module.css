@@ -12,6 +12,15 @@
   margin-left: 24px !important;
 }
 
+.cdpFilters {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  margin: 48px 0px 24px 0px;
+}
+
 .tableContainer {
   display: flex;
   flex-direction: column;
@@ -50,7 +59,7 @@
 }
 
 .statusWarning {
-  color: #FF9029;
+  color: #ff9029;
 }
 
 .statusSafe {
@@ -59,7 +68,7 @@
 
 .fillerContent {
   margin-right: 24px !important;
-  color: #2F80ED;
+  color: #2f80ed;
 }
 
 @media screen and (max-width: 1600px) {

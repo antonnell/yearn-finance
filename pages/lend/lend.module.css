@@ -4,6 +4,16 @@
   display: flex;
   flex-direction: column;
   padding: 0px 48px;
+  padding-bottom: 48px;
+}
+
+.lendingFilters {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  margin: 48px 0px 0px 0px;
 }
 
 .lendingTable {
@@ -112,7 +122,6 @@
   margin-right: 24px;
 }
 
-
 @media screen and (max-width: 1600px) {
   .lendingContainer {
     padding: 0px 24px;
@@ -142,7 +151,7 @@
     margin: 12px 0px 12px 0px;
     height: 0px;
   }
-  .overviewCard  {
+  .overviewCard {
     padding-bottom: 12px;
   }
   .tableHeader {

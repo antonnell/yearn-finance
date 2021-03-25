@@ -6,13 +6,53 @@
   flex-wrap: wrap;
 }
 
-.tvlCardContainer  {
+.tvlCardContainer {
   width: 420px;
   border-radius: 10px;
   padding: 48px 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.statsTable {
+  width: 100%;
+  cursor: pointer;
+}
+
+.statsFilters {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  margin: 48px 0px 24px 0px;
+}
+
+.tableContainer {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  border: 1px solid rgba(128, 128, 128, 0.25);
+  border-radius: 10px;
+  width: 100%;
+}
+
+.statsTableRow {
+  cursor: pointer;
+}
+
+.statsTable {
+  width: 100%;
+  cursor: pointer;
+}
+
+.vaultTitleCell {
+  flex: 2;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 18px 6px;
 }
 
 .statsContainer {
@@ -118,10 +158,10 @@
   .statsContainer {
     padding: 12px;
   }
-  .statsTVLContainer{
+  .statsTVLContainer {
     padding: 12px;
   }
-  .tvlCardContainer  {
+  .tvlCardContainer {
     width: 100%;
     padding: 24px 24px;
     margin-bottom: 12px;
@@ -132,5 +172,4 @@
   .subTitle {
     display: none;
   }
-
 }
