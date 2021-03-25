@@ -83,7 +83,14 @@ export default function MyApp({ Component, pageProps }) {
       );
       stores.emitter.removeListener(CDP_CONFIGURED, cdpConfigureReturned);
     };
+
   }, []);
+
+
+  console.log(vaultConfigured)
+  console.log(accountConfigured)
+  console.log(lendingConfigured)
+  console.log(cdpConfigured)
 
   return (
     <React.Fragment>

@@ -108,55 +108,39 @@ class Store {
     // set borrow details
     let borrowAsset = this.getStore("borrowAsset");
 
-    const borrowAssetContract = new web3.eth.Contract(
-      ERC20ABI,
-      borrowAsset.address
-    );
-    const borrowBalanceOf = await borrowAssetContract.methods
-      .balanceOf(account.address)
-      .call();
-    borrowAsset.balance = BigNumber(borrowBalanceOf)
-      .div(bnDec(borrowAsset.decimals))
-      .toFixed(borrowAsset.decimals, BigNumber.ROUND_DOWN);
-    const allowanceOf = await borrowAssetContract.methods
-      .allowance(account.address, CDP_VAULT_ADDRESS)
-      .call();
-    borrowAsset.allowance = BigNumber(allowanceOf)
-      .div(bnDec(borrowAsset.decimals))
-      .toFixed(borrowAsset.decimals, BigNumber.ROUND_DOWN);
-
-    this.setStore({ borrowAsset: borrowAsset });
-
-    //get all supported assets
-    const allAssets = await this._getAssets();
-
-    // get open CDPS
-    const vaultContract = new web3.eth.Contract(CDPVAULTABI, CDP_VAULT_ADDRESS);
-
-    let ethPrice = null;
     try {
-      const sendAmount0 = (1e18).toFixed(0);
-      const keep3rContract = new web3.eth.Contract(
-        KEEP3RV1ORACLEABI,
-        KEEP3R_SUSHI_ORACLE_ADDRESS
+
+      const borrowAssetContract = new web3.eth.Contract(
+        ERC20ABI,
+        borrowAsset.address
       );
-      ethPrice = await keep3rContract.methods
-        .current(
-          "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
-          sendAmount0,
-          "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
-        )
-        .call({});
-      ethPrice = BigNumber(ethPrice)
-        .div(1e6)
-        .toNumber();
-    } catch (ex) {
-      console.log(ex);
+      const borrowBalanceOf = await borrowAssetContract.methods
+        .balanceOf(account.address)
+        .call();
+      borrowAsset.balance = BigNumber(borrowBalanceOf)
+        .div(bnDec(borrowAsset.decimals))
+        .toFixed(borrowAsset.decimals, BigNumber.ROUND_DOWN);
+      const allowanceOf = await borrowAssetContract.methods
+        .allowance(account.address, CDP_VAULT_ADDRESS)
+        .call();
+      borrowAsset.allowance = BigNumber(allowanceOf)
+        .div(bnDec(borrowAsset.decimals))
+        .toFixed(borrowAsset.decimals, BigNumber.ROUND_DOWN);
+
+      this.setStore({ borrowAsset: borrowAsset });
+
+      //get all supported assets
+      const allAssets = await this._getAssets();
+
+      // get open CDPS
+      const vaultContract = new web3.eth.Contract(CDPVAULTABI, CDP_VAULT_ADDRESS);
+
+      let ethPrice = null;
       try {
         const sendAmount0 = (1e18).toFixed(0);
         const keep3rContract = new web3.eth.Contract(
           KEEP3RV1ORACLEABI,
-          KEEP3R_ORACLE_ADDRESS
+          KEEP3R_SUSHI_ORACLE_ADDRESS
         );
         ethPrice = await keep3rContract.methods
           .current(
@@ -170,254 +154,278 @@ class Store {
           .toNumber();
       } catch (ex) {
         console.log(ex);
-        this.emitter.emit(CDP_UPDATED);
-        this.emitter.emit(CDP_CONFIGURED);
+        try {
+          const sendAmount0 = (1e18).toFixed(0);
+          const keep3rContract = new web3.eth.Contract(
+            KEEP3RV1ORACLEABI,
+            KEEP3R_ORACLE_ADDRESS
+          );
+          ethPrice = await keep3rContract.methods
+            .current(
+              "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+              sendAmount0,
+              "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+            )
+            .call({});
+          ethPrice = BigNumber(ethPrice)
+            .div(1e6)
+            .toNumber();
+        } catch (ex) {
+          console.log(ex);
+          this.emitter.emit(CDP_UPDATED);
+          this.emitter.emit(CDP_CONFIGURED);
 
-        this.emitter.emit(ERROR, ex);
-        return null;
-      }
-    }
-
-    const vaultManagerParamsContract = new web3.eth.Contract(
-      VAULTMANAGERPARAMSABI,
-      VAULT_MANAGER_PARAMETERS_ADDRESS
-    );
-    const vaultParametersContract = new web3.eth.Contract(
-      VAULTPARAMETERSABI,
-      VAULT_PARAMETERS_ADDRESS
-    );
-
-    async.map(
-      allAssets,
-      async (asset, callback) => {
-        if (!asset || !asset.address) {
-          callback(null, null);
+          this.emitter.emit(ERROR, ex);
           return null;
         }
+      }
 
-        const collateral = await vaultContract.methods
-          .collaterals(asset.address, account.address)
-          .call();
-        const debt = await vaultContract.methods
-          .debts(asset.address, account.address)
-          .call();
+      const vaultManagerParamsContract = new web3.eth.Contract(
+        VAULTMANAGERPARAMSABI,
+        VAULT_MANAGER_PARAMETERS_ADDRESS
+      );
+      const vaultParametersContract = new web3.eth.Contract(
+        VAULTPARAMETERSABI,
+        VAULT_PARAMETERS_ADDRESS
+      );
 
-        const stabilityFee = await vaultParametersContract.methods
-          .stabilityFee(asset.address)
-          .call();
-        const tokenDebts = await vaultContract.methods
-          .tokenDebts(asset.address)
-          .call();
-        const liquidationFee = await vaultParametersContract.methods
-          .liquidationFee(asset.address)
-          .call();
-        const tokenDebtLimit = await vaultParametersContract.methods
-          .tokenDebtLimit(asset.address)
-          .call();
-
-        const initialCollateralRatio = await vaultManagerParamsContract.methods
-          .initialCollateralRatio(asset.address)
-          .call();
-        const liquidationRatio = await vaultManagerParamsContract.methods
-          .liquidationRatio(asset.address)
-          .call();
-        const maxColPercent = await vaultManagerParamsContract.methods
-          .maxColPercent(asset.address)
-          .call();
-        const minColPercent = await vaultManagerParamsContract.methods
-          .minColPercent(asset.address)
-          .call();
-
-        const erc20Contract = new web3.eth.Contract(ERC20ABI, asset.address);
-        const balanceOf = await erc20Contract.methods
-          .balanceOf(account.address)
-          .call();
-        const allowance = await erc20Contract.methods
-          .allowance(account.address, CDP_VAULT_ADDRESS)
-          .call();
-
-        let addy = asset.address;
-        if (asset.symbol.includes("UNISWAP")) {
-          addy = "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984";
-        } else if (asset.symbol.includes("SUSHISWAP")) {
-          addy = "0x6b3595068778dd592e39a122f4f5a5cf09c90fe2";
-        }
-
-        // get dolar price
-        const dolarPrice = await this._getDolarPrice(asset, ethPrice);
-
-        let utilizationRatio = 0;
-        let maxUSDPAvailable = 0;
-        let liquidationPrice = 0;
-        let status = "Unknown";
-
-        if (BigNumber(collateral).gt(0)) {
-          let theDebt = BigNumber(debt).div(bnDec(borrowAsset.decimals));
-          let theCollateral = BigNumber(collateral).div(bnDec(asset.decimals));
-
-          utilizationRatio = BigNumber(theDebt)
-            .times(10000)
-            .div(
-              BigNumber(theCollateral)
-                .times(liquidationRatio)
-                .times(dolarPrice)
-                .toNumber()
-            )
-            .toNumber();
-          maxUSDPAvailable = BigNumber(collateral)
-            .div(bnDec(asset.decimals))
-            .times(liquidationRatio)
-            .div(100)
-            .times(dolarPrice)
-            .toNumber();
-          liquidationPrice = BigNumber(dolarPrice)
-            .times(utilizationRatio)
-            .div(100)
-            .toNumber();
-          if (BigNumber(utilizationRatio).gt(90)) {
-            status = "Liquidatable";
-          } else if (BigNumber(utilizationRatio).gt(90)) {
-            status = "Dangerous";
-          } else if (BigNumber(utilizationRatio).gt(75)) {
-            status = "Moderate";
-          } else {
-            status = "Safe";
+      async.map(
+        allAssets,
+        async (asset, callback) => {
+          if (!asset || !asset.address) {
+            callback(null, null);
+            return null;
           }
-        }
 
-        const returnAsset = {
-          defaultOracleType: asset.defaultOracleType,
-          collateral: BigNumber(
-            BigNumber(collateral)
+          const collateral = await vaultContract.methods
+            .collaterals(asset.address, account.address)
+            .call();
+          const debt = await vaultContract.methods
+            .debts(asset.address, account.address)
+            .call();
+
+          const stabilityFee = await vaultParametersContract.methods
+            .stabilityFee(asset.address)
+            .call();
+          const tokenDebts = await vaultContract.methods
+            .tokenDebts(asset.address)
+            .call();
+          const liquidationFee = await vaultParametersContract.methods
+            .liquidationFee(asset.address)
+            .call();
+          const tokenDebtLimit = await vaultParametersContract.methods
+            .tokenDebtLimit(asset.address)
+            .call();
+
+          const initialCollateralRatio = await vaultManagerParamsContract.methods
+            .initialCollateralRatio(asset.address)
+            .call();
+          const liquidationRatio = await vaultManagerParamsContract.methods
+            .liquidationRatio(asset.address)
+            .call();
+          const maxColPercent = await vaultManagerParamsContract.methods
+            .maxColPercent(asset.address)
+            .call();
+          const minColPercent = await vaultManagerParamsContract.methods
+            .minColPercent(asset.address)
+            .call();
+
+          const erc20Contract = new web3.eth.Contract(ERC20ABI, asset.address);
+          const balanceOf = await erc20Contract.methods
+            .balanceOf(account.address)
+            .call();
+          const allowance = await erc20Contract.methods
+            .allowance(account.address, CDP_VAULT_ADDRESS)
+            .call();
+
+          let addy = asset.address;
+          if (asset.symbol.includes("UNISWAP")) {
+            addy = "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984";
+          } else if (asset.symbol.includes("SUSHISWAP")) {
+            addy = "0x6b3595068778dd592e39a122f4f5a5cf09c90fe2";
+          }
+
+          // get dolar price
+          const dolarPrice = await this._getDolarPrice(asset, ethPrice);
+
+          let utilizationRatio = 0;
+          let maxUSDPAvailable = 0;
+          let liquidationPrice = 0;
+          let status = "Unknown";
+
+          if (BigNumber(collateral).gt(0)) {
+            let theDebt = BigNumber(debt).div(bnDec(borrowAsset.decimals));
+            let theCollateral = BigNumber(collateral).div(bnDec(asset.decimals));
+
+            utilizationRatio = BigNumber(theDebt)
+              .times(10000)
+              .div(
+                BigNumber(theCollateral)
+                  .times(liquidationRatio)
+                  .times(dolarPrice)
+                  .toNumber()
+              )
+              .toNumber();
+            maxUSDPAvailable = BigNumber(collateral)
               .div(bnDec(asset.decimals))
-              .toFixed(asset.decimals, BigNumber.ROUND_DOWN)
-          ).toNumber(),
-          collateralDolar: BigNumber(
-            BigNumber(collateral)
+              .times(liquidationRatio)
+              .div(100)
               .times(dolarPrice)
-              .div(bnDec(asset.decimals))
-              .toFixed(asset.decimals, BigNumber.ROUND_DOWN)
-          ).toNumber(),
-          debt: BigNumber(
-            BigNumber(debt)
-              .div(bnDec(borrowAsset.decimals))
-              .toFixed(borrowAsset.decimals, BigNumber.ROUND_DOWN)
-          ).toNumber(),
-          stabilityFee: BigNumber(
-            BigNumber(stabilityFee)
-              .div(1000)
-              .toFixed(asset.decimals, BigNumber.ROUND_DOWN)
-          ).toNumber(),
-          liquidationFee: BigNumber(
-            BigNumber(liquidationFee).toFixed(
-              asset.decimals,
-              BigNumber.ROUND_DOWN
-            )
-          ).toNumber(),
-          symbol: asset.symbol,
-          balance: BigNumber(
-            BigNumber(balanceOf)
-              .div(bnDec(asset.decimals))
-              .toFixed(asset.decimals, BigNumber.ROUND_DOWN)
-          ).toNumber(),
-          dolarPrice: dolarPrice,
-          utilizationRatio: utilizationRatio,
-          liquidationPrice: liquidationPrice,
-          initialCollateralRatio: initialCollateralRatio,
-          liquidationRatio: liquidationRatio,
-          maxColPercent: maxColPercent,
-          minColPercent: minColPercent,
-          maxUSDPAvailable: maxUSDPAvailable,
-          tokenDebts: BigNumber(
-            BigNumber(tokenDebts)
-              .div(10 ** 18)
-              .toFixed(asset.decimals, BigNumber.ROUND_DOWN)
-          ).toNumber(),
-          tokenDebtLimit: BigNumber(
-            BigNumber(tokenDebtLimit)
-              .div(10 ** 18)
-              .toFixed(asset.decimals, BigNumber.ROUND_DOWN)
-          ).toNumber(),
-          tokenDebtAvailable: BigNumber(
-            BigNumber(tokenDebtLimit - tokenDebts)
-              .div(10 ** 18)
-              .toFixed(asset.decimals, BigNumber.ROUND_DOWN)
-          ).toNumber(),
-          status: status,
-          tokenMetadata: {
-            address: web3.utils.toChecksumAddress(asset.address),
+              .toNumber();
+            liquidationPrice = BigNumber(dolarPrice)
+              .times(utilizationRatio)
+              .div(100)
+              .toNumber();
+            if (BigNumber(utilizationRatio).gt(90)) {
+              status = "Liquidatable";
+            } else if (BigNumber(utilizationRatio).gt(90)) {
+              status = "Dangerous";
+            } else if (BigNumber(utilizationRatio).gt(75)) {
+              status = "Moderate";
+            } else {
+              status = "Safe";
+            }
+          }
+
+          const returnAsset = {
+            defaultOracleType: asset.defaultOracleType,
+            collateral: BigNumber(
+              BigNumber(collateral)
+                .div(bnDec(asset.decimals))
+                .toFixed(asset.decimals, BigNumber.ROUND_DOWN)
+            ).toNumber(),
+            collateralDolar: BigNumber(
+              BigNumber(collateral)
+                .times(dolarPrice)
+                .div(bnDec(asset.decimals))
+                .toFixed(asset.decimals, BigNumber.ROUND_DOWN)
+            ).toNumber(),
+            debt: BigNumber(
+              BigNumber(debt)
+                .div(bnDec(borrowAsset.decimals))
+                .toFixed(borrowAsset.decimals, BigNumber.ROUND_DOWN)
+            ).toNumber(),
+            stabilityFee: BigNumber(
+              BigNumber(stabilityFee)
+                .div(1000)
+                .toFixed(asset.decimals, BigNumber.ROUND_DOWN)
+            ).toNumber(),
+            liquidationFee: BigNumber(
+              BigNumber(liquidationFee).toFixed(
+                asset.decimals,
+                BigNumber.ROUND_DOWN
+              )
+            ).toNumber(),
             symbol: asset.symbol,
-            decimals: asset.decimals,
             balance: BigNumber(
               BigNumber(balanceOf)
                 .div(bnDec(asset.decimals))
                 .toFixed(asset.decimals, BigNumber.ROUND_DOWN)
             ).toNumber(),
-            balanceDolar: BigNumber(
-              BigNumber(balanceOf)
-                .times(dolarPrice)
-                .div(bnDec(asset.decimals))
+            dolarPrice: dolarPrice,
+            utilizationRatio: utilizationRatio,
+            liquidationPrice: liquidationPrice,
+            initialCollateralRatio: initialCollateralRatio,
+            liquidationRatio: liquidationRatio,
+            maxColPercent: maxColPercent,
+            minColPercent: minColPercent,
+            maxUSDPAvailable: maxUSDPAvailable,
+            tokenDebts: BigNumber(
+              BigNumber(tokenDebts)
+                .div(10 ** 18)
                 .toFixed(asset.decimals, BigNumber.ROUND_DOWN)
             ).toNumber(),
-            allowance: BigNumber(
-              BigNumber(allowance)
-                .div(bnDec(asset.decimals))
-                .toFixed(asset.decimals)
+            tokenDebtLimit: BigNumber(
+              BigNumber(tokenDebtLimit)
+                .div(10 ** 18)
+                .toFixed(asset.decimals, BigNumber.ROUND_DOWN)
             ).toNumber(),
-            icon: `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${web3.utils.toChecksumAddress(
-              addy
-            )}/logo.png`
-          }
-        };
-
-        if (callback) {
-          callback(null, returnAsset);
-        } else {
-          return returnAsset;
-        }
-      },
-      (err, allAssetsPopulated) => {
-        if (err) {
-          return this.emitter.emit(ERROR);
-        }
-
-        const cdpSupplied = allAssetsPopulated.reduce((val, asset) => {
-          if (!asset) {
-            return val;
-          }
-          return BigNumber(val)
-            .plus(asset.collateralDolar)
-            .toNumber();
-        }, 0);
-
-        const cdpMinted = allAssetsPopulated.reduce((val, asset) => {
-          if (!asset) {
-            return val;
-          }
-          return BigNumber(val)
-            .plus(asset.debt)
-            .toNumber();
-        }, 0);
-
-        this.setStore({
-          cdpActive: allAssetsPopulated.filter(asset => {
-            if (!asset) {
-              return false;
+            tokenDebtAvailable: BigNumber(
+              BigNumber(tokenDebtLimit - tokenDebts)
+                .div(10 ** 18)
+                .toFixed(asset.decimals, BigNumber.ROUND_DOWN)
+            ).toNumber(),
+            status: status,
+            tokenMetadata: {
+              address: web3.utils.toChecksumAddress(asset.address),
+              symbol: asset.symbol,
+              decimals: asset.decimals,
+              balance: BigNumber(
+                BigNumber(balanceOf)
+                  .div(bnDec(asset.decimals))
+                  .toFixed(asset.decimals, BigNumber.ROUND_DOWN)
+              ).toNumber(),
+              balanceDolar: BigNumber(
+                BigNumber(balanceOf)
+                  .times(dolarPrice)
+                  .div(bnDec(asset.decimals))
+                  .toFixed(asset.decimals, BigNumber.ROUND_DOWN)
+              ).toNumber(),
+              allowance: BigNumber(
+                BigNumber(allowance)
+                  .div(bnDec(asset.decimals))
+                  .toFixed(asset.decimals)
+              ).toNumber(),
+              icon: `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${web3.utils.toChecksumAddress(
+                addy
+              )}/logo.png`
             }
-            return (
-              BigNumber(asset.collateral).gt(0) || BigNumber(asset.debt).gt(0)
-            );
-          }),
-          cdpAssets: allAssetsPopulated,
-          cdpSupplied: cdpSupplied,
-          cdpMinted: cdpMinted
-        });
+          };
 
-        this.emitter.emit(CDP_UPDATED);
-        this.emitter.emit(CDP_CONFIGURED);
-        this.dispatcher.dispatch({ type: GET_CDP_BALANCES });
-      }
-    );
+          if (callback) {
+            callback(null, returnAsset);
+          } else {
+            return returnAsset;
+          }
+        },
+        (err, allAssetsPopulated) => {
+          if (err) {
+            return this.emitter.emit(ERROR);
+          }
+
+          const cdpSupplied = allAssetsPopulated.reduce((val, asset) => {
+            if (!asset) {
+              return val;
+            }
+            return BigNumber(val)
+              .plus(asset.collateralDolar)
+              .toNumber();
+          }, 0);
+
+          const cdpMinted = allAssetsPopulated.reduce((val, asset) => {
+            if (!asset) {
+              return val;
+            }
+            return BigNumber(val)
+              .plus(asset.debt)
+              .toNumber();
+          }, 0);
+
+          this.setStore({
+            cdpActive: allAssetsPopulated.filter(asset => {
+              if (!asset) {
+                return false;
+              }
+              return (
+                BigNumber(asset.collateral).gt(0) || BigNumber(asset.debt).gt(0)
+              );
+            }),
+            cdpAssets: allAssetsPopulated,
+            cdpSupplied: cdpSupplied,
+            cdpMinted: cdpMinted
+          });
+
+          this.emitter.emit(CDP_UPDATED);
+          this.emitter.emit(CDP_CONFIGURED);
+          this.dispatcher.dispatch({ type: GET_CDP_BALANCES });
+        }
+      );
+
+    } catch(ex) {
+      console.log(ex)
+      this.emitter.emit(CDP_CONFIGURED);
+      this.etmiter.emit(ERROR, ex)
+    }
   };
 
   isKeydonixOracle = oracleType => {

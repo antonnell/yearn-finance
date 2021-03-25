@@ -435,8 +435,6 @@ class Store {
           } else {
             return vault;
           }
-
-          return vault;
         }
       },
       (err, vaultsBalanced) => {
