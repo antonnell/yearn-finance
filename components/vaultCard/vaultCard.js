@@ -1,37 +1,37 @@
-import { Typography, Paper, Grid } from "@material-ui/core";
-import Skeleton from "@material-ui/lab/Skeleton";
-import BigNumber from "bignumber.js";
-import { useRouter } from "next/router";
-import { formatCurrency } from "../../utils";
+import { Typography, Paper, Grid } from '@material-ui/core';
+import Skeleton from '@material-ui/lab/Skeleton';
+import BigNumber from 'bignumber.js';
+import { useRouter } from 'next/router';
+import { formatCurrency } from '../../utils';
 
-import classes from "./vaultCard.module.css";
+import classes from './vaultCard.module.css';
 
 export default function VaultCard({ vault, account }) {
   const router = useRouter();
 
   function handleNavigate() {
-    router.push("/invest/" + vault.address);
+    router.push('/invest/' + vault.address);
   }
 
   const activeVault = BigNumber(vault.balance).gt(0);
 
-  const vaultType = vault.type === "v2" && !vault.endorsed ? "Exp" : vault.type;
+  const vaultType = vault.type === 'v2' && !vault.endorsed ? 'Exp' : vault.type;
 
   let vaultTypeClass = null;
   switch (vaultType) {
-    case "v1":
+    case 'v1':
       vaultTypeClass = classes.vaultV1VersionContainer;
       break;
-    case "v2":
+    case 'v2':
       vaultTypeClass = classes.vaultV2VersionContainer;
       break;
-    case "Exp":
+    case 'Exp':
       vaultTypeClass = classes.vaultExpVersionContainer;
       break;
-    case "Earn":
+    case 'Earn':
       vaultTypeClass = classes.vaultEarnVersionContainer;
       break;
-    case "Lockup":
+    case 'Lockup':
       vaultTypeClass = classes.vaultLockupVersionContainer;
       break;
     default:
@@ -41,21 +41,10 @@ export default function VaultCard({ vault, account }) {
 
   return (
     <Grid item xs={12} sm={6} md={4} lg={3}>
-      <Paper
-        elevation={0}
-        className={
-          activeVault ? classes.vaultContainerActive : classes.vaultContainer
-        }
-        onClick={handleNavigate}
-      >
+      <Paper elevation={0} className={activeVault ? classes.vaultContainerActive : classes.vaultContainer} onClick={handleNavigate}>
         <div className={classes.vaultTitle}>
           <div className={classes.vaultLogo}>
-            <img
-              src={vault.icon ? vault.icon : "/tokens/unknown-logo.png"}
-              alt=""
-              width={50}
-              height={50}
-            />
+            <img src={vault.icon ? vault.icon : '/tokens/unknown-logo.png'} alt="" width={50} height={50} />
           </div>
           <div className={classes.vaultName}>
             <Typography variant="h2" className={classes.fontWeightBold}>
@@ -64,9 +53,7 @@ export default function VaultCard({ vault, account }) {
           </div>
           <div>
             <div className={vaultTypeClass}>
-              <Typography className={classes.vaultVersionText}>
-                {vault.type === "v2" && !vault.endorsed ? "Exp" : vault.type}
-              </Typography>
+              <Typography className={classes.vaultVersionText}>{vault.type === 'v2' && !vault.endorsed ? 'Exp' : vault.type}</Typography>
             </div>
           </div>
         </div>
@@ -75,16 +62,9 @@ export default function VaultCard({ vault, account }) {
           {activeVault && (
             <div className={classes.vaultInfoField}>
               <Typography variant="h2" className={classes.fontWeightBold}>
-                {!(vault && vault.balance) ? (
-                  <Skeleton />
-                ) : (
-                  "$ " +
-                  formatCurrency(
-                    BigNumber(vault.balance)
-                      .times(vault.pricePerFullShare)
-                      .times(vault.tokenMetadata.priceUSD)
-                  )
-                )}
+                { !(vault && vault.balance) && <Skeleton /> }
+                { (vault && vault.balance && vault.type === 'Lockup') && formatCurrency(vault.balance) + ' ' + vault.symbol }
+                { (vault && vault.balanceUSD && vault.type !== 'Lockup') && '$ ' + formatCurrency(vault.balanceUSD) }
               </Typography>
               <Typography variant="body1">Balance</Typography>
             </div>
@@ -92,16 +72,10 @@ export default function VaultCard({ vault, account }) {
           {!activeVault && account && account.address && (
             <div className={classes.vaultInfoField}>
               <Typography variant="h2" className={classes.fontWeightBold}>
-                {!(
-                  vault &&
-                  vault.tokenMetadata &&
-                  vault.tokenMetadata.balance
-                ) ? (
+                {!(vault && vault.tokenMetadata && vault.tokenMetadata.balance) ? (
                   <Skeleton />
                 ) : (
-                  formatCurrency(vault.tokenMetadata.balance) +
-                  " " +
-                  vault.tokenMetadata.displayName
+                  formatCurrency(vault.tokenMetadata.balance) + ' ' + vault.tokenMetadata.displayName
                 )}
               </Typography>
               <Typography variant="body1">Available to deposit</Typography>
@@ -109,15 +83,7 @@ export default function VaultCard({ vault, account }) {
           )}
           <div className={classes.vaultInfoField}>
             <Typography variant="h2" className={classes.fontWeightBold}>
-              {!vault.apy ? (
-                <Skeleton />
-              ) : vault.apy.recommended ? (
-                BigNumber(vault.apy.recommended)
-                  .times(100)
-                  .toFixed(2) + "%"
-              ) : (
-                "Unknown"
-              )}
+              {!vault.apy ? <Skeleton /> : vault.apy.recommended ? BigNumber(vault.apy.recommended).times(100).toFixed(2) + '%' : 'Unknown'}
             </Typography>
             <Typography variant="body1">Yearly Growth</Typography>
           </div>

@@ -1,16 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Typography,
-  Button,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  TextField,
-  Paper,
-  CircularProgress,
-  Grid,
-  InputAdornment,
-} from '@material-ui/core';
+import { Typography, Button, Accordion, AccordionSummary, AccordionDetails, TextField, Paper, CircularProgress, Grid, InputAdornment } from '@material-ui/core';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import { withStyles } from '@material-ui/core/styles';
@@ -80,33 +69,21 @@ function VaultAssetDetails({ vault, account }) {
   };
 
   const changeCollateralReturned = () => {
-    stores.emitter.removeListener(
-      ENABLE_COLLATERAL_LEND_RETURNED,
-      changeCollateralReturned,
-    );
-    stores.emitter.removeListener(
-      DISABLE_COLLATERAL_LEND_RETURNED,
-      changeCollateralReturned,
-    );
+    stores.emitter.removeListener(ENABLE_COLLATERAL_LEND_RETURNED, changeCollateralReturned);
+    stores.emitter.removeListener(DISABLE_COLLATERAL_LEND_RETURNED, changeCollateralReturned);
     setLoading(false);
   };
 
   const handleCollateralChange = (event, newValue) => {
     setLoading(true);
     if (newValue === true) {
-      stores.emitter.on(
-        ENABLE_COLLATERAL_LEND_RETURNED,
-        changeCollateralReturned,
-      );
+      stores.emitter.on(ENABLE_COLLATERAL_LEND_RETURNED, changeCollateralReturned);
       stores.dispatcher.dispatch({
         type: ENABLE_COLLATERAL_LEND,
         content: { lendingAsset: lendingAsset, gasSpeed: gasSpeed },
       });
     } else {
-      stores.emitter.on(
-        DISABLE_COLLATERAL_LEND_RETURNED,
-        changeCollateralReturned,
-      );
+      stores.emitter.on(DISABLE_COLLATERAL_LEND_RETURNED, changeCollateralReturned);
       stores.dispatcher.dispatch({
         type: DISABLE_COLLATERAL_LEND,
         content: { lendingAsset: lendingAsset, gasSpeed: gasSpeed },
@@ -199,10 +176,7 @@ function VaultAssetDetails({ vault, account }) {
       return;
     }
 
-    const amount = BigNumber(lendingAsset.tokenMetadata.balance)
-      .times(percent)
-      .div(100)
-      .toFixed(lendingAsset.tokenMetadata.decimals);
+    const amount = BigNumber(lendingAsset.tokenMetadata.balance).times(percent).div(100).toFixed(lendingAsset.tokenMetadata.decimals);
 
     setSupplyAmount(amount);
   };
@@ -212,10 +186,7 @@ function VaultAssetDetails({ vault, account }) {
       return;
     }
 
-    const amount = BigNumber(lendingAsset.supplyBalance)
-      .times(percent)
-      .div(100)
-      .toFixed(lendingAsset.tokenMetadata.decimals);
+    const amount = BigNumber(lendingAsset.supplyBalance).times(percent).div(100).toFixed(lendingAsset.tokenMetadata.decimals);
 
     setWithdrawAmount(amount);
   };
@@ -224,16 +195,10 @@ function VaultAssetDetails({ vault, account }) {
 
   if (lendingAsset.collateralEnabled) {
     if (supplyAmount && supplyAmount !== '' && lendingBorrowLimit !== 0) {
-      theLimitUsed =
-        (lendingBorrow * 100) /
-        (lendingBorrowLimit +
-          (supplyAmount * lendingAsset.price * lendingAsset.collateralPercent) /
-            100);
+      theLimitUsed = (lendingBorrow * 100) / (lendingBorrowLimit + (supplyAmount * lendingAsset.price * lendingAsset.collateralPercent) / 100);
     }
     if (withdrawAmount && withdrawAmount !== '') {
-      const wa =
-        (withdrawAmount * lendingAsset.price * lendingAsset.collateralPercent) /
-        100;
+      const wa = (withdrawAmount * lendingAsset.price * lendingAsset.collateralPercent) / 100;
       if (BigNumber(wa).gt(lendingBorrowLimit)) {
         theLimitUsed = 'infinite';
       } else {
@@ -244,13 +209,7 @@ function VaultAssetDetails({ vault, account }) {
 
   return (
     <Paper elevation={0} square className={classes.assetActions}>
-      <div
-        className={
-          theLimitUsed === 'infinite' || BigNumber(theLimitUsed).gt(100)
-            ? classes.assetInfoError
-            : classes.assetInfo
-        }
-      >
+      <div className={theLimitUsed === 'infinite' || BigNumber(theLimitUsed).gt(100) ? classes.assetInfoError : classes.assetInfo}>
         <div className={classes.infoField}>
           <Typography variant={'h5'} color="textSecondary">
             Borrow limit:
@@ -267,9 +226,7 @@ function VaultAssetDetails({ vault, account }) {
           </Typography>
           <div className={classes.flexy}>
             <Typography variant={'h6'} noWrap>
-              {theLimitUsed !== 'infinite'
-                ? `${formatCurrency(theLimitUsed)} %`
-                : theLimitUsed}
+              {theLimitUsed !== 'infinite' ? `${formatCurrency(theLimitUsed)} %` : theLimitUsed}
             </Typography>
           </div>
         </div>
@@ -281,10 +238,7 @@ function VaultAssetDetails({ vault, account }) {
             <Grid component="label" container alignItems="center" spacing={1}>
               <Grid item>Off</Grid>
               <Grid item>
-                <AntSwitch
-                  checked={lendingAsset.collateralEnabled}
-                  onChange={handleCollateralChange}
-                />
+                <AntSwitch checked={lendingAsset.collateralEnabled} onChange={handleCollateralChange} />
               </Grid>
               <Grid item>On</Grid>
             </Grid>
@@ -308,9 +262,7 @@ function VaultAssetDetails({ vault, account }) {
                 className={classes.value}
                 noWrap
               >
-                {'Wallet: ' +
-                  formatCurrency(lendingAsset.tokenMetadata.balance)}{' '}
-                {lendingAsset.tokenMetadata.symbol}
+                {'Wallet: ' + formatCurrency(lendingAsset.tokenMetadata.balance)} {lendingAsset.tokenMetadata.symbol}
               </Typography>
             </div>
           </div>
@@ -325,19 +277,10 @@ function VaultAssetDetails({ vault, account }) {
             placeholder="0.00"
             variant="outlined"
             InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  {lendingAsset.tokenMetadata.displayName}
-                </InputAdornment>
-              ),
+              endAdornment: <InputAdornment position="end">{lendingAsset.tokenMetadata.displayName}</InputAdornment>,
               startAdornment: (
                 <InputAdornment position="start">
-                  <img
-                    src={lendingAsset.tokenMetadata.icon}
-                    alt=""
-                    width={30}
-                    height={30}
-                  />
+                  <img src={lendingAsset.tokenMetadata.icon} alt="" width={30} height={30} />
                 </InputAdornment>
               ),
             }}
@@ -396,9 +339,7 @@ function VaultAssetDetails({ vault, account }) {
               BigNumber(supplyAmount).gt(0) &&
               (!lendingAsset.tokenMetadata.allowance ||
                 BigNumber(lendingAsset.tokenMetadata.allowance).eq(0) ||
-                BigNumber(lendingAsset.tokenMetadata.allowance).lt(
-                  supplyAmount,
-                )) && (
+                BigNumber(lendingAsset.tokenMetadata.allowance).lt(supplyAmount)) && (
                 <React.Fragment>
                   <Button
                     fullWidth
@@ -410,13 +351,7 @@ function VaultAssetDetails({ vault, account }) {
                     disabled={loading}
                     className={classes.marginRight}
                   >
-                    <Typography variant="h5">
-                      {loading ? (
-                        <CircularProgress size={25} />
-                      ) : (
-                        'Approve Exact'
-                      )}
-                    </Typography>
+                    <Typography variant="h5">{loading ? <CircularProgress size={25} /> : 'Approve Exact'}</Typography>
                   </Button>
                   <Button
                     fullWidth
@@ -428,16 +363,11 @@ function VaultAssetDetails({ vault, account }) {
                     disabled={loading}
                     className={classes.marginLeft}
                   >
-                    <Typography variant="h5">
-                      {loading ? <CircularProgress size={25} /> : 'Approve Max'}
-                    </Typography>
+                    <Typography variant="h5">{loading ? <CircularProgress size={25} /> : 'Approve Max'}</Typography>
                   </Button>
                 </React.Fragment>
               )}
-            {(supplyAmount === '' ||
-              BigNumber(lendingAsset.tokenMetadata.allowance).gte(
-                supplyAmount,
-              )) && (
+            {(supplyAmount === '' || BigNumber(lendingAsset.tokenMetadata.allowance).gte(supplyAmount)) && (
               <Button
                 fullWidth
                 disableElevation
@@ -449,28 +379,20 @@ function VaultAssetDetails({ vault, account }) {
                   !supplyAmount ||
                   isNaN(supplyAmount) ||
                   BigNumber(lendingAsset.tokenMetadata.balance).eq(0) ||
-                  BigNumber(supplyAmount).gt(
-                    BigNumber(lendingAsset.tokenMetadata.balance),
-                  )
+                  BigNumber(supplyAmount).gt(BigNumber(lendingAsset.tokenMetadata.balance))
                 }
                 onClick={onSupply}
               >
                 {loading && <CircularProgress size={20} />}
                 {!loading && (
                   <Typography className={classes.buttonText} variant={'h5'}>
-                    {BigNumber(lendingAsset.tokenMetadata.balance).eq(0) &&
-                      'No Balance to Supply'}
+                    {BigNumber(lendingAsset.tokenMetadata.balance).eq(0) && 'No Balance to Supply'}
                     {BigNumber(lendingAsset.tokenMetadata.balance).gt(0) &&
                       supplyAmount &&
-                      BigNumber(supplyAmount).gt(
-                        BigNumber(lendingAsset.tokenMetadata.balance),
-                      ) &&
+                      BigNumber(supplyAmount).gt(BigNumber(lendingAsset.tokenMetadata.balance)) &&
                       'Insufficient Balance'}
                     {BigNumber(lendingAsset.tokenMetadata.balance).gt(0) &&
-                      (!supplyAmount ||
-                        BigNumber(supplyAmount).lte(
-                          BigNumber(lendingAsset.tokenMetadata.balance),
-                        )) &&
+                      (!supplyAmount || BigNumber(supplyAmount).lte(BigNumber(lendingAsset.tokenMetadata.balance))) &&
                       'Supply'}
                   </Typography>
                 )}
@@ -495,8 +417,7 @@ function VaultAssetDetails({ vault, account }) {
                 className={classes.value}
                 noWrap
               >
-                {'Protocol: ' + formatCurrency(lendingAsset.supplyBalance)}{' '}
-                {lendingAsset.tokenMetadata.symbol}
+                {'Protocol: ' + formatCurrency(lendingAsset.supplyBalance)} {lendingAsset.tokenMetadata.symbol}
               </Typography>
             </div>
           </div>
@@ -511,19 +432,10 @@ function VaultAssetDetails({ vault, account }) {
             placeholder="0.00"
             variant="outlined"
             InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  {lendingAsset.tokenMetadata.displayName}
-                </InputAdornment>
-              ),
+              endAdornment: <InputAdornment position="end">{lendingAsset.tokenMetadata.displayName}</InputAdornment>,
               startAdornment: (
                 <InputAdornment position="start">
-                  <img
-                    src={lendingAsset.tokenMetadata.icon}
-                    alt=""
-                    width={30}
-                    height={30}
-                  />
+                  <img src={lendingAsset.tokenMetadata.icon} alt="" width={30} height={30} />
                 </InputAdornment>
               ),
             }}
@@ -597,19 +509,10 @@ function VaultAssetDetails({ vault, account }) {
               {loading && <CircularProgress size={20} />}
               {!loading && (
                 <Typography className={classes.buttonText} variant={'h5'}>
-                  {BigNumber(lendingAsset.supplyBalance).eq(0) ||
-                    (BigNumber(withdrawAmount).eq(0) &&
-                      'No Balance to Withdraw')}
+                  {BigNumber(lendingAsset.supplyBalance).eq(0) || (BigNumber(withdrawAmount).eq(0) && 'No Balance to Withdraw')}
+                  {BigNumber(lendingAsset.supplyBalance).gt(0) && BigNumber(withdrawAmount).gt(BigNumber(lendingAsset.supplyBalance)) && 'Insufficient Balance'}
                   {BigNumber(lendingAsset.supplyBalance).gt(0) &&
-                    BigNumber(withdrawAmount).gt(
-                      BigNumber(lendingAsset.supplyBalance),
-                    ) &&
-                    'Insufficient Balance'}
-                  {BigNumber(lendingAsset.supplyBalance).gt(0) &&
-                    (!withdrawAmount ||
-                      BigNumber(withdrawAmount).lte(
-                        BigNumber(lendingAsset.supplyBalance),
-                      )) &&
+                    (!withdrawAmount || BigNumber(withdrawAmount).lte(BigNumber(lendingAsset.supplyBalance))) &&
                     'Withdraw'}
                 </Typography>
               )}
@@ -672,12 +575,7 @@ export default function VaultAssetRow({ vault, account }) {
       <TableCell>
         <div className={classes.vaultTitleCell}>
           <div className={classes.logo}>
-            <img
-              src={vault.icon ? vault.icon : '/tokens/unknown-logo.png'}
-              alt=""
-              width={30}
-              height={30}
-            />
+            <img src={vault.icon ? vault.icon : '/tokens/unknown-logo.png'} alt="" width={30} height={30} />
           </div>
           <div className={classes.name}>
             <Typography variant="h5" className={classes.fontWeightBold}>
@@ -686,26 +584,17 @@ export default function VaultAssetRow({ vault, account }) {
           </div>
         </div>
       </TableCell>
-      <TableCell align="right" scope="row" padding="none">
+      <TableCell align="right" scope="row">
         <div className={vaultTypeClass}>
-          <Typography className={classes.vaultVersionText}>
-            {vault.type === 'v2' && !vault.endorsed ? 'Exp' : vault.type}
-          </Typography>
+          <Typography className={classes.vaultVersionText}>{vault.type === 'v2' && !vault.endorsed ? 'Exp' : vault.type}</Typography>
         </div>
       </TableCell>
       {account && account.address && (
         <TableCell align="right">
           <Typography variant="h5" className={classes.fontWeightBold}>
-            {!(vault && vault.balance) ? (
-              <Skeleton stlye={{ minWidth: '100px' }} />
-            ) : (
-              '$ ' +
-              formatCurrency(
-                BigNumber(vault.balance)
-                  .times(vault.pricePerFullShare)
-                  .times(vault.tokenMetadata.priceUSD),
-              )
-            )}
+            { !(vault && vault.balance) && <Skeleton stlye={{ minWidth: '100px' }} /> }
+            { (vault && vault.balance && vault.type === 'Lockup') && formatCurrency(vault.balance) + ' ' + vault.symbol }
+            { (vault && vault.balanceUSD && vault.type !== 'Lockup') && '$ ' + formatCurrency(vault.balanceUSD) }
           </Typography>
         </TableCell>
       )}
@@ -715,9 +604,7 @@ export default function VaultAssetRow({ vault, account }) {
             {!(vault && vault.tokenMetadata && vault.tokenMetadata.balance) ? (
               <Skeleton stlye={{ minWidth: '100px' }} />
             ) : (
-              formatCurrency(vault.tokenMetadata.balance) +
-              ' ' +
-              vault.tokenMetadata.displayName
+              formatCurrency(vault.tokenMetadata.balance) + ' ' + vault.tokenMetadata.displayName
             )}
           </Typography>
         </TableCell>

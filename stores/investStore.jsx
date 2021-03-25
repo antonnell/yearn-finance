@@ -29,14 +29,7 @@ import stores from './';
 import earnJSON from './configurations/earn';
 import lockupJSON from './configurations/lockup';
 
-import {
-  ERC20ABI,
-  VAULTV1ABI,
-  VAULTV2ABI,
-  EARNABI,
-  LOCKUPABI,
-  VOTINGESCROWABI,
-} from './abis';
+import { ERC20ABI, VAULTV1ABI, VAULTV2ABI, EARNABI, LOCKUPABI, VOTINGESCROWABI } from './abis';
 import { bnDec } from '../utils';
 
 import BatchCall from 'web3-batch-call';
@@ -59,7 +52,7 @@ class Store {
     };
 
     dispatcher.register(
-      function(payload) {
+      function (payload) {
         switch (payload.type) {
           case CONFIGURE_VAULTS:
             this.configure(payload);
@@ -92,18 +85,18 @@ class Store {
     );
   }
 
-  getStore = index => {
+  getStore = (index) => {
     return this.store[index];
   };
 
-  setStore = obj => {
+  setStore = (obj) => {
     this.store = { ...this.store, ...obj };
     console.log(this.store);
     return this.emitter.emit(STORE_UPDATED);
   };
 
-  getVault = address => {
-    const vault = this.store.vaults.filter(v => {
+  getVault = (address) => {
+    const vault = this.store.vaults.filter((v) => {
       return v.address === address;
     });
 
@@ -115,7 +108,7 @@ class Store {
   };
 
   setVault = (address, newVault) => {
-    const vaults = this.store.vaults.map(v => {
+    const vaults = this.store.vaults.map((v) => {
       if (v.address === address) {
         v = newVault;
       }
@@ -123,7 +116,7 @@ class Store {
     });
   };
 
-  configure = async payload => {
+  configure = async (payload) => {
     try {
       const url = `${YEARN_VAULTS_API}`;
 
@@ -137,13 +130,13 @@ class Store {
       // const lockup = this.getStore('lockup')
 
       let mappedVaults = vaults
-        .filter(vault => {
+        .filter((vault) => {
           return vault.endorsed === true;
         })
-        .filter(vault => {
+        .filter((vault) => {
           return vault.type !== 'zap';
         })
-        .map(vault => {
+        .map((vault) => {
           if (vault.address === '0xc5bDdf9843308380375a611c18B50Fb9341f502A') {
             vault.type = 'Lockup';
           }
@@ -163,7 +156,7 @@ class Store {
     }
   };
 
-  getEarnAPYs = async earn => {
+  getEarnAPYs = async (earn) => {
     try {
       const web3 = await stores.accountStore.getWeb3Provider();
 
@@ -187,7 +180,7 @@ class Store {
         {
           namespace: 'earn',
           abi: EARNABI,
-          addresses: earn.map(e => {
+          addresses: earn.map((e) => {
             return e.address;
           }),
           allReadMethods: false,
@@ -205,7 +198,7 @@ class Store {
       const batchCall = new BatchCall(options);
       const result = await batchCall.execute(contracts, callOptions);
 
-      const priceHistoric = result.map(res => {
+      const priceHistoric = result.map((res) => {
         return {
           address: res.address,
           priceLastMonth: res.getPricePerFullShare[0].values[0].value,
@@ -218,7 +211,7 @@ class Store {
       for (let i = 0; i < earn.length; i++) {
         let apyObj = null;
 
-        const historicPrice = priceHistoric.filter(pr => {
+        const historicPrice = priceHistoric.filter((pr) => {
           return pr.address === earn[i].address;
         });
 
@@ -228,19 +221,14 @@ class Store {
             type: 'Earn',
           };
         } else {
-          const priceGrowthSinceLastMonth =
-            historicPrice[0].priceNow - historicPrice[0].priceLastMonth;
+          const priceGrowthSinceLastMonth = historicPrice[0].priceNow - historicPrice[0].priceLastMonth;
           const priceGrowthSinceInception = historicPrice[0].priceNow - 1e18;
 
-          const blocksSinceLastMonth =
-            historicPrice[0].blockNow - historicPrice[0].blockLastMonth;
-          const blocksSinceInception =
-            historicPrice[0].blockNow - earn[i].created;
+          const blocksSinceLastMonth = historicPrice[0].blockNow - historicPrice[0].blockLastMonth;
+          const blocksSinceInception = historicPrice[0].blockNow - earn[i].created;
 
-          const oneMonthAPY =
-            (priceGrowthSinceLastMonth * 2389090) / 1e18 / blocksSinceLastMonth; // 2389090 = (60/13.2) * 60 * 24 * 365
-          const inceptionAPY =
-            (priceGrowthSinceInception * 2389090) / 1e18 / blocksSinceInception; // 2389090 = (60/13.2) * 60 * 24 * 365
+          const oneMonthAPY = (priceGrowthSinceLastMonth * 2389090) / 1e18 / blocksSinceLastMonth; // 2389090 = (60/13.2) * 60 * 24 * 365
+          const inceptionAPY = (priceGrowthSinceInception * 2389090) / 1e18 / blocksSinceInception; // 2389090 = (60/13.2) * 60 * 24 * 365
 
           apyObj = {
             recommended: oneMonthAPY,
@@ -274,9 +262,9 @@ class Store {
 
     const account = stores.accountStore.getStore('account');
     if (!account || !account.address) {
-      const vaultPopulated = vaults.map(vault => {
+      const vaultPopulated = vaults.map((vault) => {
         if (!vault.strategies || vault.strategies.length === 0) {
-          const theVaultInfo = vaultInfo.filter(v => {
+          const theVaultInfo = vaultInfo.filter((v) => {
             return v.address === vault.address;
           });
 
@@ -305,6 +293,9 @@ class Store {
       `https://api.zapper.fi/v1/balances/yearn?api_key=96e0cc51-a62e-42ca-acee-910ea7d2a241&addresses[]=${account.address}`,
     );
     const zapperfiBalance = await zapperfiBalanceResults.json();
+
+    console.log(zapperfiBalance)
+
     async.map(
       vaults,
       async (vault, callback) => {
@@ -329,12 +320,8 @@ class Store {
           }
 
           const vaultContract = new web3.eth.Contract(abi, vault.address);
-          const balanceOf = await vaultContract.methods
-            .balanceOf(account.address)
-            .call();
-          vault.balance = BigNumber(balanceOf)
-            .div(bnDec(vault.decimals))
-            .toFixed(vault.decimals, BigNumber.ROUND_DOWN);
+          const balanceOf = await vaultContract.methods.balanceOf(account.address).call();
+          vault.balance = BigNumber(balanceOf).div(bnDec(vault.decimals)).toFixed(vault.decimals, BigNumber.ROUND_DOWN);
 
           try {
             // this throws execution reverted: SafeMath: division by zero for not properly finalised vaults
@@ -342,82 +329,47 @@ class Store {
             if (vault.type === 'Lockup') {
               vault.pricePerFullShare = 1; // GET ASSET PRICE?
             } else if (vault.type === 'v1' || vault.type === 'Earn') {
-              pricePerFullShare = await vaultContract.methods
-                .getPricePerFullShare()
-                .call();
-              vault.pricePerFullShare = BigNumber(pricePerFullShare)
-                .div(bnDec(18))
-                .toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN); // TODO: changed 18 decimals to vault decimals for v2
+              pricePerFullShare = await vaultContract.methods.getPricePerFullShare().call();
+              vault.pricePerFullShare = BigNumber(pricePerFullShare).div(bnDec(18)).toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN); // TODO: changed 18 decimals to vault decimals for v2
             } else {
-              pricePerFullShare = await vaultContract.methods
-                .pricePerShare()
-                .call();
-              vault.pricePerFullShare = BigNumber(pricePerFullShare)
-                .div(bnDec(vault.decimals))
-                .toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN); // TODO: changed 18 decimals to vault decimals for v2
+              pricePerFullShare = await vaultContract.methods.pricePerShare().call();
+              vault.pricePerFullShare = BigNumber(pricePerFullShare).div(bnDec(vault.decimals)).toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN); // TODO: changed 18 decimals to vault decimals for v2
             }
           } catch (ex) {
             vault.pricePerFullShare = 0;
           }
 
-          if (vault.type === 'Lockup') {
-            vault.balanceInToken = BigNumber(vault.balance).toFixed(
-              vault.tokenMetadata.decimals,
-              BigNumber.ROUND_DOWN,
-            );
-          } else {
-            vault.balanceInToken = BigNumber(vault.balance)
-              .times(vault.pricePerFullShare)
-              .toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN);
-          }
+          vault.balanceInToken = BigNumber(vault.balance).times(vault.pricePerFullShare).toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN);
 
-          const erc20Contract = new web3.eth.Contract(
-            ERC20ABI,
-            vault.tokenMetadata.address,
-          );
-          const tokenBalanceOf = await erc20Contract.methods
-            .balanceOf(account.address)
-            .call();
+          const erc20Contract = new web3.eth.Contract(ERC20ABI, vault.tokenMetadata.address);
+          const tokenBalanceOf = await erc20Contract.methods.balanceOf(account.address).call();
           vault.tokenMetadata.balance = BigNumber(tokenBalanceOf)
             .div(bnDec(vault.tokenMetadata.decimals))
             .toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN);
 
-          const allowance = await erc20Contract.methods
-            .allowance(account.address, vault.address)
-            .call();
+          const allowance = await erc20Contract.methods.allowance(account.address, vault.address).call();
           vault.tokenMetadata.allowance = BigNumber(allowance)
             .div(bnDec(vault.tokenMetadata.decimals))
             .toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN);
 
-          const data = {};
-          // just do a pricePerShare * 1. Hope it is a USD-pegged based coin for anything that we don't find a price in coingecko.
-          let price = 1;
-          vault.balanceUSDNotFound = true;
-          vault.tokenMetadata.priceUSD = price;
-          vault.balanceUSD = BigNumber(vault.balance)
-            .times(vault.pricePerFullShare)
-            .times(price)
-            .toFixed(vault.decimals, BigNumber.ROUND_DOWN);
-
-          if (!vault.strategies || vault.strategies.length === 0) {
-            const theVaultInfo = vaultInfo.filter(v => {
-              return v.address === vault.address;
-            });
-
-            if (theVaultInfo && theVaultInfo.length > 0) {
-              vault.strategies = [
-                {
-                  name: theVaultInfo[0].strategyName,
-                  address: theVaultInfo[0].strategyAddress,
-                },
-              ];
+          if(BigNumber(vault.balance).gt(0)) {
+            let foundZapperVault = zapperfiBalance[account.address].filter((v) => {
+              return vault.address.toLowerCase() === v.address.toLowerCase()
+            })
+            if(foundZapperVault && foundZapperVault.length > 0) {
+              vault.balanceUSD = foundZapperVault[0].balanceUSD
+            } else {
+              // if we don't find a balance from zapper (new vault that they don't support yet for example)
+              vault.balanceUSD = BigNumber(vault.balance).times(vault.pricePerFullShare).toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN)
             }
+          } else {
+            vault.balanceUSD = 0
           }
 
+          // Specific Earn info
           if (vault.type === 'Earn') {
-            const totalSupply = await vaultContract.methods
-              .totalSupply()
-              .call();
+            let price = 1;   // this is not accurate for WBTC - used to get this from coingecko
+            const totalSupply = await vaultContract.methods.totalSupply().call();
             vault.tvl = {
               totalAssets: totalSupply,
               price: price,
@@ -429,33 +381,19 @@ class Store {
             };
           }
 
+          // Specific Lockup info
           if (vault.type === 'Lockup') {
-            const votingEscrowContract = new web3.eth.Contract(
-              VOTINGESCROWABI,
-              '0x5f3b5DfEb7B28CDbD7FAba78963EE202a494e2A2',
-            );
+            const votingEscrowContract = new web3.eth.Contract(VOTINGESCROWABI, '0x5f3b5DfEb7B28CDbD7FAba78963EE202a494e2A2');
 
-            const totalSupply = await vaultContract.methods
-              .totalSupply()
-              .call();
-            const votingEscrowBalanceOf = await votingEscrowContract.methods
-              .balanceOf('0xF147b8125d2ef93FB6965Db97D6746952a133934')
-              .call();
+            const totalSupply = await vaultContract.methods.totalSupply().call();
+            const votingEscrowBalanceOf = await votingEscrowContract.methods.balanceOf('0xF147b8125d2ef93FB6965Db97D6746952a133934').call();
 
             const index = await vaultContract.methods.index().call();
-            const supply_index = await vaultContract.methods
-              .supplyIndex(account.address)
-              .call();
+            const supply_index = await vaultContract.methods.supplyIndex(account.address).call();
 
             vault.lockupMetadata = {
-              vaultVsSolo: BigNumber(votingEscrowBalanceOf)
-                .div(totalSupply)
-                .toNumber(),
-              claimable: BigNumber(index)
-                .minus(supply_index)
-                .times(vault.balance)
-                .div(bnDec(vault.decimals))
-                .toNumber(),
+              vaultVsSolo: BigNumber(votingEscrowBalanceOf).div(totalSupply).toNumber(),
+              claimable: BigNumber(index).minus(supply_index).times(vault.balance).div(bnDec(vault.decimals)).toNumber(),
             };
 
             vault.strategies = [
@@ -464,6 +402,23 @@ class Store {
                 address: '0xc5bDdf9843308380375a611c18B50Fb9341f502A',
               },
             ];
+          }
+
+
+          // set strategies where not set
+          if (!vault.strategies || vault.strategies.length === 0) {
+            const theVaultInfo = vaultInfo.filter((v) => {
+              return v.address === vault.address;
+            });
+
+            if (theVaultInfo && theVaultInfo.length > 0) {
+              vault.strategies = [
+                {
+                  name: theVaultInfo[0].strategyName,
+                  address: theVaultInfo[0].strategyAddress,
+                },
+              ];
+            }
           }
 
           if (callback) {
@@ -485,77 +440,36 @@ class Store {
         }
       },
       (err, vaultsBalanced) => {
-        vaultsBalanced.map((v, i) => {
-          zapperfiBalance[account.address].map(balance => {
-            if (balance.address.toLowerCase() === v.address.toLowerCase()) {
-              vaultsBalanced[i] = {
-                ...vaultsBalanced[i],
-                ...{
-                  balance: balance.balance,
-                  pricePerFullShare: balance.pricePerShare,
-                  balanceUSD: balance.balanceUSD,
-                },
-              };
-              vaultsBalanced[i].tokenMetadata = {
-                ...vaultsBalanced[i].tokenMetadata,
-                ...{ priceUSD: balance.pricePerToken },
-              };
-            }
-          });
-        });
-
         if (err) {
           console.log(err);
           return this.emitter.emit(ERROR, err);
         }
 
-        const portfolioBalanceUSD = vaultsBalanced.reduce(
-          (accumulator, currentValue) => {
-            let cbalance = currentValue.balance;
-            let pricePerFullShare = currentValue.pricePerFullShare;
-            let priceUSD = currentValue.tokenMetadata.priceUSD;
-            let fullBalance = BigNumber(cbalance)
-              .times(pricePerFullShare)
-              .times(priceUSD);
+        const portfolioBalanceUSD = vaultsBalanced.reduce((accumulator, currentValue) => {
+          let balanceUSD = currentValue.balanceUSD;
+          return BigNumber(accumulator).plus(balanceUSD).toNumber();
+        }, 0);
 
-            return BigNumber(accumulator)
-              .plus(fullBalance)
-              .toNumber();
-          },
-          0,
-        );
+        const portfolioGrowth = vaultsBalanced.reduce((accumulator, currentValue) => {
+          if (
+            !currentValue.balanceUSD ||
+            BigNumber(currentValue.balanceUSD).eq(0) ||
+            !currentValue.apy.recommended ||
+            BigNumber(currentValue.apy.recommended).eq(0)
+          ) {
+            return accumulator;
+          }
 
-        const portfolioGrowth = vaultsBalanced.reduce(
-          (accumulator, currentValue) => {
-            let cbalance = currentValue.balance;
-            let pricePerFullShare = currentValue.pricePerFullShare;
-            let priceUSD = currentValue.tokenMetadata.priceUSD;
+          return BigNumber(accumulator)
+            .plus(
+              BigNumber(currentValue.balanceUSD)
+                .div(portfolioBalanceUSD)
+                .times(currentValue.apy.recommended * 100),
+            )
+            .toNumber();
+        }, 0);
 
-            if (
-              !currentValue.balance ||
-              BigNumber(currentValue.balance).eq(0) ||
-              !currentValue.apy.recommended ||
-              BigNumber(currentValue.apy.recommended).eq(0)
-            ) {
-              return accumulator;
-            }
-
-            return BigNumber(accumulator)
-              .plus(
-                BigNumber(currentValue.balance)
-                  .times(currentValue.pricePerFullShare)
-                  .times(currentValue.tokenMetadata.priceUSD)
-                  .div(portfolioBalanceUSD)
-                  .times(currentValue.apy.recommended * 100),
-              )
-              .toNumber();
-          },
-          0,
-        );
-
-        let highestHoldings = vaultsBalanced.reduce((prev, current) =>
-          BigNumber(prev.balanceUSD).gt(current.balanceUSD) ? prev : current,
-        );
+        let highestHoldings = vaultsBalanced.reduce((prev, current) => (BigNumber(prev.balanceUSD).gt(current.balanceUSD) ? prev : current));
         if (BigNumber(highestHoldings.balanceUSD).eq(0)) {
           highestHoldings = 'None';
         }
@@ -565,14 +479,14 @@ class Store {
             return BigNumber(acc).plus(current.tvl ? current.tvl.value : 0);
           }, 0),
           totalVaultHoldingsUSD: vaultsBalanced
-            .filter(vault => {
+            .filter((vault) => {
               return vault.type !== 'Earn';
             })
             .reduce((acc, current) => {
               return BigNumber(acc).plus(current.tvl ? current.tvl.value : 0);
             }, 0),
           totalEarnHoldingsUSD: vaultsBalanced
-            .filter(vault => {
+            .filter((vault) => {
               return vault.type === 'Earn';
             })
             .reduce((acc, current) => {
@@ -594,7 +508,7 @@ class Store {
     );
   };
 
-  getVaultPerformance = async payload => {
+  getVaultPerformance = async (payload) => {
     const { address, duration } = payload.content;
 
     //maybe do this on initial configuration load.
@@ -695,7 +609,7 @@ class Store {
     this.emitter.emit(VAULT_PERFORMANCE_RETURNED);
   };
 
-  depositVault = async payload => {
+  depositVault = async (payload) => {
     const account = stores.accountStore.getStore('account');
     if (!account) {
       return false;
@@ -710,30 +624,16 @@ class Store {
 
     const { vault, amount, gasSpeed } = payload.content;
 
-    this._callDepositVault(
-      web3,
-      vault,
-      account,
-      amount,
-      gasSpeed,
-      (err, depositResult) => {
-        if (err) {
-          return this.emitter.emit(ERROR, err);
-        }
+    this._callDepositVault(web3, vault, account, amount, gasSpeed, (err, depositResult) => {
+      if (err) {
+        return this.emitter.emit(ERROR, err);
+      }
 
-        return this.emitter.emit(DEPOSIT_VAULT_RETURNED, depositResult);
-      },
-    );
+      return this.emitter.emit(DEPOSIT_VAULT_RETURNED, depositResult);
+    });
   };
 
-  _callDepositVault = async (
-    web3,
-    vault,
-    account,
-    amount,
-    gasSpeed,
-    callback,
-  ) => {
+  _callDepositVault = async (web3, vault, account, amount, gasSpeed, callback) => {
     let abi = null;
 
     switch (vault.type) {
@@ -758,19 +658,10 @@ class Store {
 
     const gasPrice = await stores.accountStore.getGasPrice(gasSpeed);
 
-    this._callContract(
-      web3,
-      vaultContract,
-      'deposit',
-      [amountToSend],
-      account,
-      gasPrice,
-      GET_VAULT_BALANCES,
-      callback,
-    );
+    this._callContract(web3, vaultContract, 'deposit', [amountToSend], account, gasPrice, GET_VAULT_BALANCES, callback);
   };
 
-  withdrawVault = async payload => {
+  withdrawVault = async (payload) => {
     const account = stores.accountStore.getStore('account');
     if (!account) {
       return false;
@@ -785,33 +676,22 @@ class Store {
 
     const { vault, amount, gasSpeed } = payload.content;
 
-    this._callWithdrawVault(
-      web3,
-      vault,
-      account,
-      amount,
-      gasSpeed,
-      (err, withdrawResult) => {
-        if (err) {
-          return this.emitter.emit(ERROR, err);
-        }
+    this._callWithdrawVault(web3, vault, account, amount, gasSpeed, (err, withdrawResult) => {
+      if (err) {
+        return this.emitter.emit(ERROR, err);
+      }
 
-        return this.emitter.emit(WITHDRAW_VAULT_RETURNED, withdrawResult);
-      },
-    );
+      return this.emitter.emit(WITHDRAW_VAULT_RETURNED, withdrawResult);
+    });
   };
 
-  _callWithdrawVault = async (
-    web3,
-    vault,
-    account,
-    amount,
-    gasSpeed,
-    callback,
-  ) => {
+  _callWithdrawVault = async (web3, vault, account, amount, gasSpeed, callback) => {
     let abi = null;
 
     switch (vault.type) {
+      case 'Earn':
+        abi = EARNABI;
+        break;
       case 'v1':
         abi = VAULTV1ABI;
         break;
@@ -830,28 +710,10 @@ class Store {
 
     const gasPrice = await stores.accountStore.getGasPrice(gasSpeed);
 
-    this._callContract(
-      web3,
-      vaultContract,
-      'withdraw',
-      [amountToSend],
-      account,
-      gasPrice,
-      GET_VAULT_BALANCES,
-      callback,
-    );
+    this._callContract(web3, vaultContract, 'withdraw', [amountToSend], account, gasPrice, GET_VAULT_BALANCES, callback);
   };
 
-  _callContract = (
-    web3,
-    contract,
-    method,
-    params,
-    account,
-    gasPrice,
-    dispatchEvent,
-    callback,
-  ) => {
+  _callContract = (web3, contract, method, params, account, gasPrice, dispatchEvent, callback) => {
     //todo: rewrite the callback unfctionality.
 
     const context = this;
@@ -860,16 +722,16 @@ class Store {
         from: account.address,
         gasPrice: web3.utils.toWei(gasPrice, 'gwei'),
       })
-      .on('transactionHash', function(hash) {
+      .on('transactionHash', function (hash) {
         context.emitter.emit(TX_SUBMITTED, hash);
         callback(null, hash);
       })
-      .on('confirmation', function(confirmationNumber, receipt) {
+      .on('confirmation', function (confirmationNumber, receipt) {
         if (dispatchEvent && confirmationNumber === 1) {
           context.dispatcher.dispatch({ type: dispatchEvent });
         }
       })
-      .on('error', function(error) {
+      .on('error', function (error) {
         if (!error.toString().includes('-32601')) {
           if (error.message) {
             return callback(error.message);
@@ -877,7 +739,7 @@ class Store {
           callback(error);
         }
       })
-      .catch(error => {
+      .catch((error) => {
         if (!error.toString().includes('-32601')) {
           if (error.message) {
             return callback(error.message);
@@ -887,7 +749,7 @@ class Store {
       });
   };
 
-  approveVault = async payload => {
+  approveVault = async (payload) => {
     const account = stores.accountStore.getStore('account');
     if (!account) {
       return false;
@@ -902,34 +764,17 @@ class Store {
 
     const { vault, amount, gasSpeed } = payload.content;
 
-    this._callApproveVault(
-      web3,
-      vault,
-      account,
-      amount,
-      gasSpeed,
-      (err, approveResult) => {
-        if (err) {
-          return this.emitter.emit(ERROR, err);
-        }
+    this._callApproveVault(web3, vault, account, amount, gasSpeed, (err, approveResult) => {
+      if (err) {
+        return this.emitter.emit(ERROR, err);
+      }
 
-        return this.emitter.emit(APPROVE_VAULT_RETURNED, approveResult);
-      },
-    );
+      return this.emitter.emit(APPROVE_VAULT_RETURNED, approveResult);
+    });
   };
 
-  _callApproveVault = async (
-    web3,
-    vault,
-    account,
-    amount,
-    gasSpeed,
-    callback,
-  ) => {
-    const tokenContract = new web3.eth.Contract(
-      ERC20ABI,
-      vault.tokenMetadata.address,
-    );
+  _callApproveVault = async (web3, vault, account, amount, gasSpeed, callback) => {
+    const tokenContract = new web3.eth.Contract(ERC20ABI, vault.tokenMetadata.address);
 
     let amountToSend = '0';
     if (amount === 'max') {
@@ -942,19 +787,10 @@ class Store {
 
     const gasPrice = await stores.accountStore.getGasPrice(gasSpeed);
 
-    this._callContract(
-      web3,
-      tokenContract,
-      'approve',
-      [vault.address, amountToSend],
-      account,
-      gasPrice,
-      GET_VAULT_BALANCES,
-      callback,
-    );
+    this._callContract(web3, tokenContract, 'approve', [vault.address, amountToSend], account, gasPrice, GET_VAULT_BALANCES, callback);
   };
 
-  getVaultTransactions = async payload => {
+  getVaultTransactions = async (payload) => {
     const { address } = payload.content;
 
     const account = stores.accountStore.getStore('account');
@@ -971,33 +807,33 @@ class Store {
 
       const vaults = this.getStore('vaults');
 
-      const vaultsPopulated = vaults.map(vault => {
-        const txs = transactions.filter(tx => {
+      const vaultsPopulated = vaults.map((vault) => {
+        const txs = transactions.filter((tx) => {
           return tx.vaultAddress === vault.address;
         });
 
         if (txs && txs.length > 0) {
           const array = [];
           array.push(
-            ...txs[0].deposits.map(tx => {
+            ...txs[0].deposits.map((tx) => {
               tx.description = 'Deposit into vault';
               return tx;
             }),
           );
           array.push(
-            ...txs[0].withdrawals.map(tx => {
+            ...txs[0].withdrawals.map((tx) => {
               tx.description = 'Withdraw from vault';
               return tx;
             }),
           );
           array.push(
-            ...txs[0].transfersIn.map(tx => {
+            ...txs[0].transfersIn.map((tx) => {
               tx.description = 'Transfer into vault';
               return tx;
             }),
           );
           array.push(
-            ...txs[0].transfersOut.map(tx => {
+            ...txs[0].transfersOut.map((tx) => {
               tx.description = 'Transfer out of vault';
               return tx;
             }),
@@ -1022,7 +858,7 @@ class Store {
     }
   };
 
-  claimVault = async payload => {
+  claimVault = async (payload) => {
     const account = stores.accountStore.getStore('account');
     if (!account) {
       return false;
@@ -1051,16 +887,7 @@ class Store {
 
     const gasPrice = await stores.accountStore.getGasPrice(gasSpeed);
 
-    this._callContract(
-      web3,
-      vaultContract,
-      'claim',
-      [],
-      account,
-      gasPrice,
-      GET_VAULT_BALANCES,
-      callback,
-    );
+    this._callContract(web3, vaultContract, 'claim', [], account, gasPrice, GET_VAULT_BALANCES, callback);
   };
 }
 

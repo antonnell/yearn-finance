@@ -2,13 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import Head from 'next/head';
 import Layout from '../../components/layout/layout.js';
-import {
-  Typography,
-  Paper,
-  TextField,
-  InputAdornment,
-  Grid,
-} from '@material-ui/core';
+import { Typography, Paper, TextField, InputAdornment, Grid } from '@material-ui/core';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import Skeleton from '@material-ui/lab/Skeleton';
@@ -48,37 +42,23 @@ function Invest({ changeTheme }) {
   const forceUpdate = React.useCallback(() => updateState({}), []);
 
   const storeVaults = stores.investStore.getStore('vaults');
-  const storePortfolioBalance = stores.investStore.getStore(
-    'portfolioBalanceUSD',
-  );
+  const storePortfolioBalance = stores.investStore.getStore('portfolioBalanceUSD');
   const storePortfolioGrowth = stores.investStore.getStore('portfolioGrowth');
   const storeHighestHoldings = stores.investStore.getStore('highestHoldings');
   const account = stores.accountStore.getStore('account');
 
-  const localStorageCoinTypes = localStorage.getItem(
-    'yearn.finance-invest-coin-types',
-  );
-  const localStoragelayout = localStorage.getItem(
-    'yearn.finance-invest-layout',
-  );
-  const localStorageversions = localStorage.getItem(
-    'yearn.finance-invest-versions',
-  );
+  const localStorageCoinTypes = localStorage.getItem('yearn.finance-invest-coin-types');
+  const localStoragelayout = localStorage.getItem('yearn.finance-invest-layout');
+  const localStorageversions = localStorage.getItem('yearn.finance-invest-versions');
 
   const [vaults, setVaults] = useState(storeVaults);
   const [porfolioBalance, setPorfolioBalance] = useState(storePortfolioBalance);
   const [portfolioGrowth, setPortfolioGrowth] = useState(storePortfolioGrowth);
   const [highestHoldings, setHighestHoldings] = useState(storeHighestHoldings);
   const [search, setSearch] = useState('');
-  const [versions, setVersions] = useState(
-    JSON.parse(localStorageversions ? localStorageversions : '[]'),
-  );
-  const [coinTypes, setCoinTypes] = useState(
-    JSON.parse(localStorageCoinTypes ? localStorageCoinTypes : '[]'),
-  );
-  const [layout, setLayout] = useState(
-    localStoragelayout ? localStoragelayout : 'grid',
-  );
+  const [versions, setVersions] = useState(JSON.parse(localStorageversions ? localStorageversions : '[]'));
+  const [coinTypes, setCoinTypes] = useState(JSON.parse(localStorageCoinTypes ? localStorageCoinTypes : '[]'));
+  const [layout, setLayout] = useState(localStoragelayout ? localStoragelayout : 'grid');
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('none');
   const vaultsUpdated = () => {
@@ -106,15 +86,11 @@ function Invest({ changeTheme }) {
       let returnValue = true;
       if (versions && versions.length > 0) {
         if (versions.includes('Active')) {
-          const vaultType =
-            vault.type === 'v2' && !vault.endorsed ? 'Exp' : vault.type;
+          const vaultType = vault.type === 'v2' && !vault.endorsed ? 'Exp' : vault.type;
 
-          returnValue =
-            BigNumber(vault.balance).gt(0) &&
-            (versions.length > 1 ? versions.includes(vaultType) : true);
+          returnValue = BigNumber(vault.balance).gt(0) && (versions.length > 1 ? versions.includes(vaultType) : true);
         } else {
-          const vaultType =
-            vault.type === 'v2' && !vault.endorsed ? 'Exp' : vault.type;
+          const vaultType = vault.type === 'v2' && !vault.endorsed ? 'Exp' : vault.type;
           returnValue = versions.includes(vaultType);
         }
       }
@@ -125,39 +101,23 @@ function Invest({ changeTheme }) {
           vault.name.toLowerCase().includes(search.toLowerCase()) ||
           vault.symbol.toLowerCase().includes(search.toLowerCase()) ||
           vault.address.toLowerCase().includes(search.toLowerCase()) ||
-          vault.tokenMetadata.displayName
-            .toLowerCase()
-            .includes(search.toLowerCase()) ||
-          vault.tokenMetadata.name
-            .toLowerCase()
-            .includes(search.toLowerCase()) ||
-          vault.tokenMetadata.symbol
-            .toLowerCase()
-            .includes(search.toLowerCase()) ||
-          vault.tokenMetadata.address
-            .toLowerCase()
-            .includes(search.toLowerCase());
+          vault.tokenMetadata.displayName.toLowerCase().includes(search.toLowerCase()) ||
+          vault.tokenMetadata.name.toLowerCase().includes(search.toLowerCase()) ||
+          vault.tokenMetadata.symbol.toLowerCase().includes(search.toLowerCase()) ||
+          vault.tokenMetadata.address.toLowerCase().includes(search.toLowerCase());
       }
 
       return returnValue;
     })
     .sort((a, b) => {
       if (orderBy === 'none') {
-        if (BigNumber(a.balance).gt(BigNumber(b.balance))) {
+        if (BigNumber(a.balanceUSD).gt(BigNumber(b.balanceUSD))) {
           return -1;
-        } else if (BigNumber(a.balance).lt(BigNumber(b.balance))) {
+        } else if (BigNumber(a.balanceUSD).lt(BigNumber(b.balanceUSD))) {
           return 1;
-        } else if (
-          BigNumber(a.tokenMetadata.balance).gt(
-            BigNumber(b.tokenMetadata.balance),
-          )
-        ) {
+        } else if (BigNumber(a.tokenMetadata.balance).gt(BigNumber(b.tokenMetadata.balance))) {
           return -1;
-        } else if (
-          BigNumber(a.tokenMetadata.balance).lt(
-            BigNumber(b.tokenMetadata.balance),
-          )
-        ) {
+        } else if (BigNumber(a.tokenMetadata.balance).lt(BigNumber(b.tokenMetadata.balance))) {
           return 1;
         } else {
           const aType = a.type === 'v2' && !a.endorsed ? 'Exp' : a.type;
@@ -208,12 +168,8 @@ function Invest({ changeTheme }) {
       } else if (orderBy.id === 'available') {
         let availableA = 0;
         let availableB = 0;
-        a.tokenMetadata?.balance
-          ? (availableA = a.tokenMetadata?.balance)
-          : (availableA = 0);
-        b.tokenMetadata?.balance
-          ? (availableB = b.tokenMetadata?.balance)
-          : (availableB = 0);
+        a.tokenMetadata?.balance ? (availableA = a.tokenMetadata?.balance) : (availableA = 0);
+        b.tokenMetadata?.balance ? (availableB = b.tokenMetadata?.balance) : (availableB = 0);
         if (BigNumber(availableA).gt(BigNumber(availableB))) {
           return getOrderBy(-1);
         } else if (BigNumber(availableA).lt(BigNumber(availableB))) {
@@ -228,18 +184,12 @@ function Invest({ changeTheme }) {
 
   const handleVersionsChanged = (event, newVals) => {
     setVersions(newVals);
-    localStorage.setItem(
-      'yearn.finance-invest-versions',
-      newVals && newVals.length ? JSON.stringify(newVals) : '',
-    );
+    localStorage.setItem('yearn.finance-invest-versions', newVals && newVals.length ? JSON.stringify(newVals) : '');
   };
 
   const handeCoinTypesChanged = (event, newVals) => {
     setCoinTypes(newVals);
-    localStorage.setItem(
-      'yearn.finance-invest-coin-types',
-      newVals && newVals.length ? JSON.stringify(newVals) : '',
-    );
+    localStorage.setItem('yearn.finance-invest-coin-types', newVals && newVals.length ? JSON.stringify(newVals) : '');
   };
 
   const handleLayoutChanged = (event, newVal) => {
@@ -273,7 +223,7 @@ function Invest({ changeTheme }) {
         show: account && account.address,
         id: 'available',
       },
-      { label: 'APY', numeric: true, show: true, id: 'apy' },
+      { label: 'Yearly Growth', numeric: true, show: true, id: 'apy' },
     ];
     const createSortHandler = (property) => (event) => {
       onRequestSort(event, property);
@@ -289,20 +239,12 @@ function Invest({ changeTheme }) {
                 padding={headCell.disablePadding ? 'none' : 'default'}
                 sortDirection={orderBy === headCell.id ? order : false}
               >
-                <TableSortLabel
-                  active={orderBy === headCell.id}
-                  direction={orderBy === headCell.id ? order : 'asc'}
-                  onClick={createSortHandler(headCell)}
-                >
+                <TableSortLabel active={orderBy === headCell.id} direction={orderBy === headCell.id ? order : 'asc'} onClick={createSortHandler(headCell)}>
                   <Typography variant="h5" className={classes.fontWeightBold}>
                     {headCell.label}
                   </Typography>
                   {orderBy === headCell.id ? (
-                    <span className={classes.visuallyHidden}>
-                      {order === 'desc'
-                        ? 'sorted descending'
-                        : 'sorted ascending'}
-                    </span>
+                    <span className={classes.visuallyHidden}>{order === 'desc' ? 'sorted descending' : 'sorted ascending'}</span>
                   ) : null}
                 </TableSortLabel>
               </TableCell>
@@ -322,19 +264,11 @@ function Invest({ changeTheme }) {
         {account && account.address && (
           <Paper elevation={0} className={classes.overviewContainer}>
             <div className={classes.overviewCard}>
-              {porfolioBalance !== null ? (
-                <VaultSplitGraph vaults={vaults} />
-              ) : (
-                <Skeleton variant="circle" width={80} height={80} />
-              )}
+              {porfolioBalance !== null ? <VaultSplitGraph vaults={vaults} /> : <Skeleton variant="circle" width={80} height={80} />}
               <div>
                 <Typography variant="h2">Portfolio Balance</Typography>
                 <Typography variant="h1" className={classes.headAmount}>
-                  {porfolioBalance === null ? (
-                    <Skeleton style={{ minWidth: '200px ' }} />
-                  ) : (
-                    '$ ' + formatCurrency(porfolioBalance)
-                  )}
+                  {porfolioBalance === null ? <Skeleton style={{ minWidth: '200px ' }} /> : '$ ' + formatCurrency(porfolioBalance)}
                 </Typography>
               </div>
             </div>
@@ -353,12 +287,7 @@ function Invest({ changeTheme }) {
                   {porfolioBalance === null ? (
                     <Skeleton style={{ minWidth: '200px ' }} />
                   ) : (
-                    '$ ' +
-                    formatCurrency(
-                      BigNumber(porfolioBalance)
-                        .times(portfolioGrowth)
-                        .div(100),
-                    )
+                    '$ ' + formatCurrency(BigNumber(porfolioBalance).times(portfolioGrowth).div(100))
                   )}
                 </Typography>
               </div>
@@ -390,63 +319,23 @@ function Invest({ changeTheme }) {
         )}
         <div className={classes.vaultsContainer}>
           <div className={classes.vaultFilters}>
-            <ToggleButtonGroup
-              className={classes.vaultTypeButtons}
-              value={versions}
-              onChange={handleVersionsChanged}
-            >
-              <ToggleButton
-                className={`${classes.vaultTypeButton} ${
-                  versions.includes('Lockup')
-                    ? classes.lockupSelected
-                    : classes.lockup
-                }`}
-                value="Lockup"
-              >
+            <ToggleButtonGroup className={classes.vaultTypeButtons} value={versions} onChange={handleVersionsChanged}>
+              <ToggleButton className={`${classes.vaultTypeButton} ${versions.includes('Lockup') ? classes.lockupSelected : classes.lockup}`} value="Lockup">
                 <Typography variant="body1">Lockup</Typography>
               </ToggleButton>
-              <ToggleButton
-                className={`${classes.vaultTypeButton} ${
-                  versions.includes('v2') ? classes.v2Selected : classes.v2
-                }`}
-                value="v2"
-              >
+              <ToggleButton className={`${classes.vaultTypeButton} ${versions.includes('v2') ? classes.v2Selected : classes.v2}`} value="v2">
                 <Typography variant="body1">V2</Typography>
               </ToggleButton>
-              <ToggleButton
-                className={`${classes.vaultTypeButton} ${
-                  versions.includes('v1') ? classes.v1Selected : classes.v1
-                }`}
-                value="v1"
-              >
+              <ToggleButton className={`${classes.vaultTypeButton} ${versions.includes('v1') ? classes.v1Selected : classes.v1}`} value="v1">
                 <Typography variant="body1">V1</Typography>
               </ToggleButton>
-              <ToggleButton
-                className={`${classes.vaultTypeButton} ${
-                  versions.includes('Exp') ? classes.expSelected : classes.exp
-                }`}
-                value="Exp"
-              >
+              <ToggleButton className={`${classes.vaultTypeButton} ${versions.includes('Exp') ? classes.expSelected : classes.exp}`} value="Exp">
                 <Typography variant="body1">Exp</Typography>
               </ToggleButton>
-              <ToggleButton
-                className={`${classes.vaultTypeButton} ${
-                  versions.includes('Earn')
-                    ? classes.earnSelected
-                    : classes.earn
-                }`}
-                value="Earn"
-              >
+              <ToggleButton className={`${classes.vaultTypeButton} ${versions.includes('Earn') ? classes.earnSelected : classes.earn}`} value="Earn">
                 <Typography variant="body1">Earn</Typography>
               </ToggleButton>
-              <ToggleButton
-                className={`${classes.vaultTypeButton} ${
-                  versions.includes('Active')
-                    ? classes.activeSelected
-                    : classes.active
-                }`}
-                value="Active"
-              >
+              <ToggleButton className={`${classes.vaultTypeButton} ${versions.includes('Active') ? classes.activeSelected : classes.active}`} value="Active">
                 <Typography variant="body1">Active</Typography>
               </ToggleButton>
             </ToggleButtonGroup>
@@ -465,22 +354,11 @@ function Invest({ changeTheme }) {
                 ),
               }}
             />
-            <ToggleButtonGroup
-              className={classes.layoutToggleButtons}
-              value={layout}
-              onChange={handleLayoutChanged}
-              exclusive
-            >
-              <ToggleButton
-                className={classes.layoutToggleButton}
-                value={'grid'}
-              >
+            <ToggleButtonGroup className={classes.layoutToggleButtons} value={layout} onChange={handleLayoutChanged} exclusive>
+              <ToggleButton className={classes.layoutToggleButton} value={'grid'}>
                 <AppsIcon />
               </ToggleButton>
-              <ToggleButton
-                className={classes.layoutToggleButton}
-                value={'list'}
-              >
+              <ToggleButton className={classes.layoutToggleButton} value={'list'}>
                 <ListIcon />
               </ToggleButton>
             </ToggleButtonGroup>
@@ -490,20 +368,13 @@ function Invest({ changeTheme }) {
               filteredVaults &&
               filteredVaults.length > 0 &&
               filteredVaults.map((vault, index) => {
-                return (
-                  <VaultCard key={index} vault={vault} account={account} />
-                );
+                return <VaultCard key={index} vault={vault} account={account} />;
               })}
             {layout === 'list' && (
               <Grid item xs={12}>
                 <Paper elevation={0} className={classes.tableContainer}>
                   <TableContainer>
-                    <Table
-                      className={classes.investTable}
-                      aria-labelledby="tableTitle"
-                      size="medium"
-                      aria-label="enhanced table"
-                    >
+                    <Table className={classes.investTable} aria-labelledby="tableTitle" size="medium" aria-label="enhanced table">
                       {renderVaultHeaders({
                         order: order,
                         orderBy: orderBy,
@@ -513,13 +384,7 @@ function Invest({ changeTheme }) {
                         {filteredVaults &&
                           filteredVaults.length > 0 &&
                           filteredVaults.map((vault, index) => {
-                            return (
-                              <VaultAssetRow
-                                key={index}
-                                vault={vault}
-                                account={account}
-                              />
-                            );
+                            return <VaultAssetRow key={index} vault={vault} account={account} />;
                           })}
                       </TableBody>
                     </Table>
