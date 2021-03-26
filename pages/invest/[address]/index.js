@@ -105,7 +105,6 @@ function Vault(props) {
   const onVaultClicked = () => {
     window.open(`${ETHERSCAN_URL}address/${vault.address}`);
   };
-
   return (
     <Layout changeTheme={props.changeTheme} backClicked={backClicked}>
       <Head>
