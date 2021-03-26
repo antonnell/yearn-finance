@@ -131,14 +131,3 @@ export default function Simulation({ amount, vault }) {
     )
   );
 }
-
-/*
-
-<TextField
-  variant="outlined"
-  placeholder="custom"
-  value={ customSpeed }
-  onChange={ customSpeedChanged }
-/>
-
-*/
