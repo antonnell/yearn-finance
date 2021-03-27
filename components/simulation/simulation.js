@@ -70,13 +70,13 @@ export default function Simulation({ amount, vault }) {
             <div className={classes.simulationSubTitles}>
               <Typography color="textSecondary">interests won:</Typography>
               <Typography variant="body2" component="p">
-                {vault.displayName} {BigNumber(actualIntersts.toFixed(2)).valueOf()} (${formatCurrency(interestsUSD)})
+                {vault.displayName} {formatCurrency(BigNumber(actualIntersts.toFixed(2)))} (${formatCurrency(interestsUSD)})
               </Typography>
             </div>
             <div className={classes.simulationSubTitles}>
               <Typography color="textSecondary">cashed out amount:</Typography>
               <Typography variant="body2" component="p">
-                {vault.displayName} {BigNumber(actualResults.toFixed(2)).valueOf()} (${formatCurrency(resultsUSD)})
+                {vault.displayName} {formatCurrency(BigNumber(actualResults.toFixed(2)))} (${formatCurrency(resultsUSD)})
               </Typography>
             </div>
             {showSimulationForm && (
