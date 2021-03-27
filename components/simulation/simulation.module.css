@@ -1,0 +1,27 @@
+.simulationContainer {
+  margin-bottom: 20px;
+  margin-top: -40px;
+}
+
+.simulationCard {
+}
+.simulationCardButtons {
+}
+
+.simulationSubTitles {
+  margin-top: 20px;
+}
+.simulationForm {
+  margin-top: 10px;
+}
+
+.smallText {
+  font-size: 0.7rem !important;
+  font-weight: bold !important;
+  padding-top: 6px;
+}
+
+.title {
+  padding-left: 12px;
+  padding-bottom: 12px;
+}
