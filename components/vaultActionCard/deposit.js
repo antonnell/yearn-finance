@@ -1,50 +1,31 @@
-import React, { useState, useEffect } from "react";
-import {
-  TextField,
-  Typography,
-  InputAdornment,
-  Button,
-  CircularProgress,
-  Tooltip
-} from "@material-ui/core";
-import BigNumber from "bignumber.js";
-import Skeleton from "@material-ui/lab/Skeleton";
-import { formatCurrency } from "../../utils";
-import GasSpeed from "../gasSpeed";
+import React, { useState, useEffect } from 'react';
+import { TextField, Typography, InputAdornment, Button, CircularProgress, Tooltip } from '@material-ui/core';
+import BigNumber from 'bignumber.js';
+import Skeleton from '@material-ui/lab/Skeleton';
+import { formatCurrency } from '../../utils';
+import GasSpeed from '../gasSpeed';
+import classes from './vaultActionCard.module.css';
 
-import classes from "./vaultActionCard.module.css";
-
-import stores from "../../stores";
-import {
-  ERROR,
-  DEPOSIT_VAULT,
-  DEPOSIT_VAULT_RETURNED,
-  APPROVE_VAULT,
-  APPROVE_VAULT_RETURNED,
-  CONNECT_WALLET
-} from "../../stores/constants";
+import stores from '../../stores';
+import { ERROR, DEPOSIT_VAULT, DEPOSIT_VAULT_RETURNED, APPROVE_VAULT, APPROVE_VAULT_RETURNED, CONNECT_WALLET } from '../../stores/constants';
+import Simulation from '../simulation/simulation';
 
 export default function Deposit({ vault }) {
-  const storeAccount = stores.accountStore.getStore("account");
+  const storeAccount = stores.accountStore.getStore('account');
 
   const [account, setAccount] = useState(storeAccount);
   const [loading, setLoading] = useState(false);
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState('');
   const [amountError, setAmountError] = useState(false);
-  const [gasSpeed, setGasSpeed] = useState("");
+  const [gasSpeed, setGasSpeed] = useState('');
 
-  const setAmountPercent = percent => {
+  const setAmountPercent = (percent) => {
     setAmountError(false);
 
-    setAmount(
-      BigNumber(vault.tokenMetadata.balance)
-        .times(percent)
-        .div(100)
-        .toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN)
-    );
+    setAmount(BigNumber(vault.tokenMetadata.balance).times(percent).div(100).toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN));
   };
 
-  const onAmountChanged = event => {
+  const onAmountChanged = (event) => {
     setAmountError(false);
 
     setAmount(event.target.value);
@@ -52,12 +33,7 @@ export default function Deposit({ vault }) {
 
   const onDeposit = () => {
     setAmountError(false);
-    if (
-      !amount ||
-      isNaN(amount) ||
-      amount <= 0 ||
-      BigNumber(amount).gt(vault.tokenMetadata.balance)
-    ) {
+    if (!amount || isNaN(amount) || amount <= 0 || BigNumber(amount).gt(vault.tokenMetadata.balance)) {
       setAmountError(true);
       return false;
     }
@@ -65,17 +41,12 @@ export default function Deposit({ vault }) {
     setLoading(true);
     stores.dispatcher.dispatch({
       type: DEPOSIT_VAULT,
-      content: { vault: vault, amount: amount, gasSpeed: gasSpeed }
+      content: { vault: vault, amount: amount, gasSpeed: gasSpeed },
     });
   };
 
   const onApprove = () => {
-    if (
-      !amount ||
-      isNaN(amount) ||
-      amount <= 0 ||
-      BigNumber(amount).gt(vault.tokenMetadata.balance)
-    ) {
+    if (!amount || isNaN(amount) || amount <= 0 || BigNumber(amount).gt(vault.tokenMetadata.balance)) {
       setAmountError(true);
       return false;
     }
@@ -83,17 +54,12 @@ export default function Deposit({ vault }) {
     setLoading(true);
     stores.dispatcher.dispatch({
       type: APPROVE_VAULT,
-      content: { vault: vault, amount: amount, gasSpeed: gasSpeed }
+      content: { vault: vault, amount: amount, gasSpeed: gasSpeed },
     });
   };
 
   const onApproveMax = () => {
-    if (
-      !amount ||
-      isNaN(amount) ||
-      amount <= 0 ||
-      BigNumber(amount).gt(vault.tokenMetadata.balance)
-    ) {
+    if (!amount || isNaN(amount) || amount <= 0 || BigNumber(amount).gt(vault.tokenMetadata.balance)) {
       setAmountError(true);
       return false;
     }
@@ -101,7 +67,7 @@ export default function Deposit({ vault }) {
     setLoading(true);
     stores.dispatcher.dispatch({
       type: APPROVE_VAULT,
-      content: { vault: vault, amount: "max", gasSpeed: gasSpeed }
+      content: { vault: vault, amount: 'max', gasSpeed: gasSpeed },
     });
   };
 
@@ -109,7 +75,7 @@ export default function Deposit({ vault }) {
     stores.emitter.emit(CONNECT_WALLET);
   };
 
-  const setSpeed = speed => {
+  const setSpeed = (speed) => {
     setGasSpeed(speed);
   };
 
@@ -155,12 +121,7 @@ export default function Deposit({ vault }) {
               className={classes.value}
               noWrap
             >
-              Balance:{" "}
-              {!vault.tokenMetadata.balance ? (
-                <Skeleton />
-              ) : (
-                formatCurrency(vault.tokenMetadata.balance)
-              )}
+              Balance: {!vault.tokenMetadata.balance ? <Skeleton /> : formatCurrency(vault.tokenMetadata.balance)}
             </Typography>
           </div>
         </div>
@@ -172,21 +133,12 @@ export default function Deposit({ vault }) {
           error={amountError}
           onChange={onAmountChanged}
           InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                {vault.tokenMetadata.displayName}
-              </InputAdornment>
-            ),
+            endAdornment: <InputAdornment position="end">{vault.tokenMetadata.displayName}</InputAdornment>,
             startAdornment: (
               <InputAdornment position="start">
-                <img
-                  src={vault.tokenMetadata.icon}
-                  alt=""
-                  width={30}
-                  height={30}
-                />
+                <img src={vault.tokenMetadata.icon} alt="" width={30} height={30} />
               </InputAdornment>
-            )
+            ),
           }}
         />
       </div>
@@ -200,7 +152,7 @@ export default function Deposit({ vault }) {
               setAmountPercent(25);
             }}
           >
-            <Typography variant={"h5"}>25%</Typography>
+            <Typography variant={'h5'}>25%</Typography>
           </Button>
         </Tooltip>
         <Tooltip title="50% of your wallet balance">
@@ -212,7 +164,7 @@ export default function Deposit({ vault }) {
               setAmountPercent(50);
             }}
           >
-            <Typography variant={"h5"}>50%</Typography>
+            <Typography variant={'h5'}>50%</Typography>
           </Button>
         </Tooltip>
         <Tooltip title="75% of your wallet balance">
@@ -224,7 +176,7 @@ export default function Deposit({ vault }) {
               setAmountPercent(75);
             }}
           >
-            <Typography variant={"h5"}>75%</Typography>
+            <Typography variant={'h5'}>75%</Typography>
           </Button>
         </Tooltip>
         <Tooltip title="100% of your wallet balance">
@@ -236,52 +188,32 @@ export default function Deposit({ vault }) {
               setAmountPercent(100);
             }}
           >
-            <Typography variant={"h5"}>100%</Typography>
+            <Typography variant={'h5'}>100%</Typography>
           </Button>
         </Tooltip>
       </div>
       <div>
+        {amount && amount > 0 && <Simulation amount={amount} vault={vault} />}
         <GasSpeed setParentSpeed={setSpeed} />
       </div>
 
       {(!account || !account.address) && (
         <div className={classes.actionButton}>
-          <Button
-            fullWidth
-            disableElevation
-            variant="contained"
-            color="primary"
-            size="large"
-            onClick={onConnectWallet}
-            disabled={loading}
-          >
+          <Button fullWidth disableElevation variant="contained" color="primary" size="large" onClick={onConnectWallet} disabled={loading}>
             <Typography variant="h5">Connect Wallet</Typography>
           </Button>
         </div>
       )}
       {account && account.address && (
         <div className={classes.actionButton}>
-          {(amount === "" ||
-            BigNumber(vault.tokenMetadata.allowance).gte(amount)) && (
-            <Button
-              fullWidth
-              disableElevation
-              variant="contained"
-              color="primary"
-              size="large"
-              onClick={onDeposit}
-              disabled={loading}
-            >
-              <Typography variant="h5">
-                {loading ? <CircularProgress size={25} /> : "Deposit"}
-              </Typography>
+          {(amount === '' || BigNumber(vault.tokenMetadata.allowance).gte(amount)) && (
+            <Button fullWidth disableElevation variant="contained" color="primary" size="large" onClick={onDeposit} disabled={loading}>
+              <Typography variant="h5">{loading ? <CircularProgress size={25} /> : 'Deposit'}</Typography>
             </Button>
           )}
-          {amount !== "" &&
+          {amount !== '' &&
             BigNumber(amount).gt(0) &&
-            (!vault.tokenMetadata.allowance ||
-              BigNumber(vault.tokenMetadata.allowance).eq(0) ||
-              BigNumber(vault.tokenMetadata.allowance).lt(amount)) && (
+            (!vault.tokenMetadata.allowance || BigNumber(vault.tokenMetadata.allowance).eq(0) || BigNumber(vault.tokenMetadata.allowance).lt(amount)) && (
               <React.Fragment>
                 <Button
                   fullWidth
@@ -293,9 +225,7 @@ export default function Deposit({ vault }) {
                   disabled={loading}
                   className={classes.marginRight}
                 >
-                  <Typography variant="h5">
-                    {loading ? <CircularProgress size={25} /> : "Approve Exact"}
-                  </Typography>
+                  <Typography variant="h5">{loading ? <CircularProgress size={25} /> : 'Approve Exact'}</Typography>
                 </Button>
                 <Button
                   fullWidth
@@ -307,9 +237,7 @@ export default function Deposit({ vault }) {
                   disabled={loading}
                   className={classes.marginLeft}
                 >
-                  <Typography variant="h5">
-                    {loading ? <CircularProgress size={25} /> : "Approve Max"}
-                  </Typography>
+                  <Typography variant="h5">{loading ? <CircularProgress size={25} /> : 'Approve Max'}</Typography>
                 </Button>
               </React.Fragment>
             )}
