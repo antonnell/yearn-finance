@@ -231,13 +231,25 @@ class Store {
 
   _getCollateralPercent = (vaultSymbol) => {
     switch (vaultSymbol) {
+      case "cyWBTC":
+        return 80;
       case "cyWETH":
         return 85;
+      case "cDAI":
+      case "cUSDT":
+      case "cUSDC":
       case "cyDAI":
       case "cyY3CRV":
+      case "cyUSDT":
+      case "cyUSDC":
+      case "cyMUSD":
+      case "cyDUSD":
+      case "cySEUR":
+      case "cyBUSD":
+      case "cyGUSD":
         return 90;
       default:
-        return 90;
+        return 0;
     }
   };
 
@@ -382,7 +394,7 @@ class Store {
 
           asset.liquidity = cash;
           asset.collateralPercent = this._getCollateralPercent(
-            asset.vaultSymbol
+            asset.symbol
           );
           asset.supplyAPY = supplyRatePerYear;
           asset.borrowAPY = borrowRatePerYear;
