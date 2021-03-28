@@ -67,7 +67,8 @@ const NewbiePrimer = () => {
         <a href="https://metamask.io/" target="_blank">
           Metamask
         </a>{' '}
-        and withdraw the crypto currency you bought to your Metamask address. If you are new, we recommend you to buy either Dai or Ethereum to get started.
+        and withdraw the crypto currency you bought to your Metamask address. If you are new, we recommend you to buy either Ethereum or Dai or another stable
+        coin such as USDC. A minimum amount of Ethereum is mandatory to pay for your deposit (0.1 ethereum at least to be safe).
       </Typography>
     </>
   );
