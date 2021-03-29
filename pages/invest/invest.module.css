@@ -131,43 +131,57 @@
 }
 
 .active {
-  border: 1px solid rgba(63,94,251,1) !important;
-  color: rgba(63,94,251,1) !important;
+  border: 1px solid rgba(63, 94, 251, 1) !important;
+  color: rgba(63, 94, 251, 1) !important;
 }
 
 .lockup {
-  border: 1px solid rgba(244,220,10,1) !important;
-  color: rgba(244,220,10,1) !important;
+  border: 1px solid rgba(244, 220, 10, 1) !important;
+  color: rgba(244, 220, 10, 1) !important;
 }
 
-.v1Selected{
+.stableCoins,
+.ethbtc,
+.others {
+  border: 1px solid rgba(221, 82, 2, 0.911) !important;
+  color: rgba(221, 82, 2, 0.911) !important;
+}
+
+.v1Selected {
   background: rgba(229, 107, 115, 1) !important;
-  color: #FFF !important;
+  color: #fff !important;
 }
 
 .v2Selected {
   background: rgba(25, 101, 233, 1) !important;
-  color: #FFF !important;
+  color: #fff !important;
 }
 
 .expSelected {
   background: rgba(255, 179, 71, 1) !important;
-  color: #FFF !important;
+  color: #fff !important;
 }
 
 .earnSelected {
   background: rgba(220, 107, 229, 1) !important;
-  color: #FFF !important;
+  color: #fff !important;
 }
 
 .activeSelected {
-  background: radial-gradient(circle, rgba(63,94,251,0.7) 0%, rgba(47,128,237,0.7) 48%) rgba(63,94,251,0.7) 100% !important;
-  color: #FFF !important;
+  background: radial-gradient(circle, rgba(63, 94, 251, 0.7) 0%, rgba(47, 128, 237, 0.7) 48%) rgba(63, 94, 251, 0.7) 100% !important;
+  color: #fff !important;
 }
 
 .lockupSelected {
   background: rgba(244, 220, 10, 0.8) !important;
-  color: #22252E !important;
+  color: #22252e !important;
+}
+
+.stableCoinsSelected,
+.ethBTCSelected,
+.othersSelected {
+  background: rgba(221, 82, 2, 0.911) !important;
+  color: #fff !important;
 }
 
 .vaultFilters {
@@ -186,13 +200,12 @@
 
 .typeSelected {
   background: rgba(125, 125, 125, 1) !important;
-  color: #FFF !important;
+  color: #fff !important;
 }
 
 .layoutToggleButton {
   max-width: 50px;
-  padding: 16px  !important;
-
+  padding: 16px !important;
 }
 
 .layoutToggleButtons {
@@ -244,9 +257,6 @@
   justify-content: flex-end;
 }
 
-
-
-
 .overviewContainer {
   padding: 32px 48px;
   display: flex;
@@ -255,6 +265,10 @@
   flex-wrap: wrap;
   border: 1px solid rgba(128, 128, 128, 0.25);
   border-radius: 10px;
+}
+
+.overviewTopPerformersContainer {
+  margin-top: 20px;
 }
 
 .separator {
@@ -383,4 +397,10 @@
   .vaultAvailableBalanceCell {
     display: none;
   }
+}
+
+.topVaultPerformersLink {
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: bold;
 }

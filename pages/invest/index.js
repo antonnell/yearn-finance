@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 import Head from 'next/head';
 import Layout from '../../components/layout/layout.js';
@@ -13,12 +14,16 @@ import VaultGrowthNumbers from '../../components/vaultGrowthNumbers';
 import VaultSplitGraph from '../../components/vaultSplitGraph';
 
 import BigNumber from 'bignumber.js';
+import Popover from '@material-ui/core/Popover';
+import HelpIcon from '@material-ui/icons/Help';
 
 import AccountBalanceWalletOutlinedIcon from '@material-ui/icons/AccountBalanceWalletOutlined';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import TrendingUpIcon from '@material-ui/icons/TrendingUp';
+import StarIcon from '@material-ui/icons/Star';
 import SearchIcon from '@material-ui/icons/Search';
+import ListAltIcon from '@material-ui/icons/ListAlt';
 import PieChartIcon from '@material-ui/icons/PieChart';
 import AppsIcon from '@material-ui/icons/Apps';
 import ListIcon from '@material-ui/icons/List';
@@ -36,8 +41,21 @@ import { formatCurrency } from '../../utils';
 
 import stores from '../../stores/index.js';
 import { VAULTS_UPDATED } from '../../stores/constants';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
+  popover: {
+    padding: theme.spacing(2),
+  },
+}));
 
 function Invest({ changeTheme }) {
+  const localClasses = useStyles();
+  const router = useRouter();
+
+  function handleNavigate(vault) {
+    router.push('/invest/' + vault.nonLowerCaseAddress);
+  }
   const [, updateState] = React.useState();
   const forceUpdate = React.useCallback(() => updateState({}), []);
 
@@ -51,6 +69,7 @@ function Invest({ changeTheme }) {
   const localStoragelayout = localStorage.getItem('yearn.finance-invest-layout');
   const localStorageversions = localStorage.getItem('yearn.finance-invest-versions');
 
+  const [topVaultPerformers, setTopVaultPerformers] = useState({ stableCoinVaults: [], ethBTCVaults: [], otherVaults: [] });
   const [vaults, setVaults] = useState(storeVaults);
   const [porfolioBalance, setPorfolioBalance] = useState(storePortfolioBalance);
   const [portfolioGrowth, setPortfolioGrowth] = useState(storePortfolioGrowth);
@@ -61,6 +80,23 @@ function Invest({ changeTheme }) {
   const [layout, setLayout] = useState(localStoragelayout ? localStoragelayout : 'grid');
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('none');
+  const [zapperVaults, setZapperVaults] = useState([]);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [investPopoverText, setInvestPopoverText] = useState('');
+  const handlePopoverOpen = (event, vault, isStableCoin) => {
+    let popoverText = `invest $1,000 and get $${formatCurrency(1000 * (1 + vault.apy))} in a year at current rate. Note that rates are not fixed.`;
+    if (!isStableCoin) {
+      let symbol = vault.symbol.split(' Vault')[0];
+      popoverText = `invest 1 ${symbol} and get ${formatCurrency(1 * (1 + vault.apy))} ${symbol} in a year at current rate. Note that rates are not fixed.`;
+    }
+    setInvestPopoverText(popoverText);
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = (event) => {
+    setAnchorEl(null);
+  };
+  const open = Boolean(anchorEl);
   const vaultsUpdated = () => {
     setVaults(stores.investStore.getStore('vaults'));
     setPorfolioBalance(stores.investStore.getStore('portfolioBalanceUSD'));
@@ -80,7 +116,64 @@ function Invest({ changeTheme }) {
       stores.emitter.removeListener(VAULTS_UPDATED, vaultsUpdated);
     };
   }, []);
-
+  const setTopPerformers = (zapperVaults) => {
+    let stableCoinVaults = [];
+    let ethBTCVaults = [];
+    let otherVaults = [];
+    zapperVaults.map((v) => {
+      vaults.map((vault) => {
+        if (v.address.toLowerCase() === vault.address.toLowerCase()) {
+          v.apy = vault.apy?.recommended;
+          v.nonLowerCaseAddress = vault.address;
+        }
+      });
+      if (v.pricePerToken < 1.4 && v.pricePerToken >= 0.9) {
+        stableCoinVaults.push(v);
+      } else if (v.symbol.indexOf('BTC') > -1 || v.symbol.indexOf('ETH') > -1) {
+        ethBTCVaults.push(v);
+      } else {
+        otherVaults.push(v);
+      }
+    });
+    stableCoinVaults.sort((a, b) => {
+      if (orderBy === 'none') {
+        if (BigNumber(a.apy).gt(BigNumber(b.apy))) {
+          return -1;
+        } else if (BigNumber(a.apy).lt(BigNumber(b.apy))) {
+          return 1;
+        }
+      }
+    });
+    ethBTCVaults.sort((a, b) => {
+      if (orderBy === 'none') {
+        if (BigNumber(a.apy).gt(BigNumber(b.apy))) {
+          return -1;
+        } else if (BigNumber(a.apy).lt(BigNumber(b.apy))) {
+          return 1;
+        }
+      }
+    });
+    otherVaults.sort((a, b) => {
+      if (orderBy === 'none') {
+        if (BigNumber(a.apy).gt(BigNumber(b.apy))) {
+          return -1;
+        } else if (BigNumber(a.apy).lt(BigNumber(b.apy))) {
+          return 1;
+        }
+      }
+    });
+    setTopVaultPerformers({ stableCoinVaults: stableCoinVaults, ethBTCVaults: ethBTCVaults, otherVaults: otherVaults });
+  };
+  React.useEffect(() => {
+    async function fetchVaultsFromZapper() {
+      const response = await fetch('https://api.zapper.fi/v1/vault-stats/yearn?api_key=96e0cc51-a62e-42ca-acee-910ea7d2a241');
+      if (response.status === 200) {
+        const zapperVaultsJSON = await response.json();
+        setTopPerformers(zapperVaultsJSON);
+      }
+    }
+    fetchVaultsFromZapper();
+  }, []);
   const filteredVaults = vaults
     .filter((vault) => {
       let returnValue = true;
@@ -95,7 +188,7 @@ function Invest({ changeTheme }) {
         }
       }
 
-      if (returnValue === true && search && search !== '') {
+      if (returnValue === true && search && search !== '' && search !== '_stablecoins_' && search !== '_ethbtc_' && search !== '_others_') {
         returnValue =
           vault.displayName.toLowerCase().includes(search.toLowerCase()) ||
           vault.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -106,11 +199,34 @@ function Invest({ changeTheme }) {
           vault.tokenMetadata.symbol.toLowerCase().includes(search.toLowerCase()) ||
           vault.tokenMetadata.address.toLowerCase().includes(search.toLowerCase());
       }
+      let found = false;
+      if (search === '_stablecoins_') {
+        topVaultPerformers.stableCoinVaults.map((v) => {
+          if (v.address.toLowerCase() === vault.address.toLowerCase()) {
+            found = true && returnValue;
+          }
+        });
+        returnValue = found;
+      } else if (search === '_ethbtc_') {
+        topVaultPerformers.ethBTCVaults.map((v) => {
+          if (v.address.toLowerCase() === vault.address.toLowerCase()) {
+            found = true && returnValue;
+          }
+        });
+        returnValue = found;
+      } else if (search === '_others_') {
+        topVaultPerformers.otherVaults.map((v) => {
+          if (v.address.toLowerCase() === vault.address.toLowerCase()) {
+            found = true && returnValue;
+          }
+        });
+        returnValue = found;
+      }
 
       return returnValue;
     })
     .sort((a, b) => {
-      if (orderBy === 'none') {
+      if (orderBy === 'none' && search !== '_stablecoins_' && search !== '_ethbtc_' && search !== '_others_') {
         if (BigNumber(a.balanceUSD).gt(BigNumber(b.balanceUSD))) {
           return -1;
         } else if (BigNumber(a.balanceUSD).lt(BigNumber(b.balanceUSD))) {
@@ -155,8 +271,6 @@ function Invest({ changeTheme }) {
           return getOrderBy(-1);
         }
       } else if (orderBy.id === 'balance') {
-        console.log('aaaaaaaaaaaaa', a);
-        console.log('bbbbbbbbbbbbb', b);
         let balanceA = a.balanceUSD;
         let balanceB = b.balanceUSD;
 
@@ -317,6 +431,172 @@ function Invest({ changeTheme }) {
             </div>
           </Paper>
         )}
+        {((account && account.address && highestHoldings === 'None') || !account) && (
+          <div className={account ? classes.overviewTopPerformersContainer : null}>
+            <Paper elevation={0} className={classes.overviewContainer}>
+              <div className={classes.overviewCard}>
+                <div className={classes.portfolioOutline}>
+                  <AttachMoneyIcon className={classes.portfolioIcon} />
+                </div>
+                <div>
+                  <Popover
+                    open={open}
+                    anchorOrigin={{
+                      vertical: 'center',
+                      horizontal: 'right',
+                    }}
+                    transformOrigin={{
+                      vertical: 'center',
+                      horizontal: 'left',
+                    }}
+                    anchorPosition={anchorEl}
+                    anchorEl={anchorEl}
+                    onClose={handlePopoverClose}
+                    disableRestoreFocus
+                  >
+                    <Typography className={localClasses.popover}>{investPopoverText}</Typography>
+                  </Popover>
+                  <ToggleButton
+                    className={`${classes.vaultTypeButton} ${search === '_stablecoins_' ? classes.stableCoinsSelected : classes.stableCoins}`}
+                    value="Lockup"
+                  >
+                    <Typography
+                      variant="h2"
+                      onClick={() => {
+                        setSearch(search === '_stablecoins_' ? '' : '_stablecoins_');
+                      }}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      Top Stablecoin Performers APYs
+                    </Typography>
+                  </ToggleButton>
+                  <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
+                    {topVaultPerformers.stableCoinVaults.length > 4 &&
+                      topVaultPerformers.stableCoinVaults.slice(0, 3).map((vault, i) => (
+                        <li>
+                          <span style={{ fontSize: '25px' }}>
+                            {i === 0 ? '🥇' : null}
+                            {i === 1 ? '🥈' : null}
+                            {i === 2 ? '🥉' : null}
+                          </span>
+                          <span
+                            href={`/vaults/${vault.nonLowerCaseAddress}`}
+                            onClick={() => {
+                              handleNavigate(vault);
+                            }}
+                            className={classes.topVaultPerformersLink}
+                          >
+                            {vault.symbol.split(' Vault')[0]} {(vault.apy * 100).toFixed(2)}%{' '}
+                          </span>
+                          <HelpIcon
+                            style={{ cursor: 'pointer' }}
+                            onClick={(event) => {
+                              handlePopoverOpen(event, vault, true);
+                            }}
+                          />
+                        </li>
+                      ))}
+                  </ul>
+                </div>
+              </div>
+              <div className={classes.separator}></div>
+              <div className={classes.overviewCard}>
+                <div className={classes.portfolioOutline}>
+                  <StarIcon className={classes.portfolioIcon} />
+                </div>
+                <div>
+                  <ToggleButton className={`${classes.vaultTypeButton} ${search === '_ethbtc_' ? classes.ethBTCSelected : classes.ethbtc}`} value="Lockup">
+                    <Typography
+                      variant="h2"
+                      onClick={() => {
+                        setSearch(search === '_ethbtc_' ? '' : '_ethbtc_');
+                      }}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      Top BTC and ETH Performers APYs
+                    </Typography>
+                  </ToggleButton>
+                  <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
+                    {topVaultPerformers.ethBTCVaults.length > 4 &&
+                      topVaultPerformers.ethBTCVaults.slice(0, 3).map((vault, i) => (
+                        <li>
+                          <span style={{ fontSize: '25px' }}>
+                            {i === 0 ? '🥇' : null}
+                            {i === 1 ? '🥈' : null}
+                            {i === 2 ? '🥉' : null}
+                          </span>
+                          <span
+                            href={`/vaults/${vault.nonLowerCaseAddress}`}
+                            onClick={() => {
+                              handleNavigate(vault);
+                            }}
+                            className={classes.topVaultPerformersLink}
+                          >
+                            {vault.symbol.split(' Vault')[0]} {(vault.apy * 100).toFixed(2)}%{' '}
+                          </span>
+                          <HelpIcon
+                            style={{ cursor: 'pointer' }}
+                            onClick={(event) => {
+                              handlePopoverOpen(event, vault), false;
+                            }}
+                          />
+                        </li>
+                      ))}
+                  </ul>
+                </div>
+              </div>
+              <div className={classes.separator}></div>
+              <div className={classes.overviewCard}>
+                <div className={classes.portfolioOutline}>
+                  <ListAltIcon className={classes.portfolioIcon} />
+                </div>
+                <div>
+                  <ToggleButton className={`${classes.vaultTypeButton} ${search === '_others_' ? classes.othersSelected : classes.others}`} value="Lockup">
+                    <Typography
+                      variant="h2"
+                      onClick={() => {
+                        setSearch(search === '_others_' ? '' : '_others_');
+                      }}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      All Other Assets Top Performers APYs
+                    </Typography>
+                  </ToggleButton>
+                  <Typography variant="h2" className={classes.headAmount}>
+                    <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
+                      {topVaultPerformers.otherVaults.length > 4 &&
+                        topVaultPerformers.otherVaults.slice(0, 3).map((vault, i) => (
+                          <li>
+                            <span style={{ fontSize: '25px' }}>
+                              {i === 0 ? '🥇' : null}
+                              {i === 1 ? '🥈' : null}
+                              {i === 2 ? '🥉' : null}
+                            </span>
+                            <span
+                              href={`/vaults/${vault.nonLowerCaseAddress}`}
+                              onClick={() => {
+                                handleNavigate(vault);
+                              }}
+                              className={classes.topVaultPerformersLink}
+                            >
+                              {vault.symbol.split(' Vault')[0]} {(vault.apy * 100).toFixed(2)}%{' '}
+                            </span>
+                            <HelpIcon
+                              style={{ cursor: 'pointer' }}
+                              onClick={(event) => {
+                                handlePopoverOpen(event, vault, false);
+                              }}
+                            />
+                          </li>
+                        ))}
+                    </ul>
+                  </Typography>
+                </div>
+              </div>
+            </Paper>
+          </div>
+        )}
+
         <div className={classes.vaultsContainer}>
           <div className={classes.vaultFilters}>
             <ToggleButtonGroup className={classes.vaultTypeButtons} value={versions} onChange={handleVersionsChanged}>
