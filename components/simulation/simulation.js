@@ -32,7 +32,7 @@ export default function Simulation({ amount, vault }) {
     }
   };
 
-  const actualResults = yearn(amount, (years && years > 0 && years <= 200 ? years : 1) - 1, apy);
+  const actualResults = yearn(amount, (years && years >= 1 && years <= 200 ? years : 1) - 1, apy);
   const actualIntersts = actualResults.minus(amount);
   const interestsUSD = BigNumber(actualIntersts).times(pricePerToken);
   const resultsUSD = BigNumber(actualResults).times(pricePerToken);
@@ -64,7 +64,7 @@ export default function Simulation({ amount, vault }) {
               Gains Simulation
             </Typography>
             <Typography variant="h5" component="h2">
-              For {years && years != 0 && years <= 200 ? years : 1} year{years > 1 ? 's' : ''} @ ${formatCurrency(pricePerToken)} &amp;{' '}
+              For {years && years != 0 && years >= 1 && years <= 200 ? years : 1} year{years > 1 ? 's' : ''} @ ${formatCurrency(pricePerToken)} &amp;{' '}
               {BigNumber(apy).times(100).toFixed(2) + '%'} APY
             </Typography>
             <div className={classes.simulationSubTitles}>
@@ -87,7 +87,8 @@ export default function Simulation({ amount, vault }) {
                   min="1"
                   max="100"
                   onChange={(event) => {
-                    setYears(event.target.value);
+                    const years = parseInt(BigNumber(event.target.value).integerValue().valueOf());
+                    setYears(years);
                   }}
                   id="standard-secondary"
                   label="Years"
