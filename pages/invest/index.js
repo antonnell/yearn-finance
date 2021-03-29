@@ -462,11 +462,13 @@ function Invest({ changeTheme }) {
                     value="Lockup"
                     onClick={() => {
                       setSearch(search === '_stablecoins_' ? '' : '_stablecoins_');
+                      setOrderBy({ id: 'apy' });
+                      setOrder('desc');
                     }}
                     style={{ cursor: 'pointer' }}
                   >
                     <FilterListIcon />
-                    <Typography variant="h2">Top Stablecoin Performers APYs</Typography>
+                    <Typography variant="h2">Top Stablecoins APYs</Typography>
                   </ToggleButton>
                   <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
                     {topVaultPerformers.stableCoinVaults.length > 4 &&
@@ -512,7 +514,7 @@ function Invest({ changeTheme }) {
                     value="Lockup"
                   >
                     <FilterListIcon />
-                    <Typography variant="h2">Top BTC and ETH Performers APYs</Typography>
+                    <Typography variant="h2">Top BTC and ETH APYs</Typography>
                   </ToggleButton>
                   <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
                     {topVaultPerformers.ethBTCVaults.length > 4 &&
@@ -558,7 +560,7 @@ function Invest({ changeTheme }) {
                     value="Lockup"
                   >
                     <FilterListIcon />
-                    <Typography variant="h2">Other Top Performers APYs</Typography>
+                    <Typography variant="h2">Other Top APYs</Typography>
                   </ToggleButton>
                   <Typography variant="h2" className={classes.headAmount}>
                     <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
