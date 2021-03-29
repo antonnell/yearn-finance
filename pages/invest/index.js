@@ -12,6 +12,7 @@ import VaultAssetRow from '../../components/vaultAssetRow';
 import VaultCard from '../../components/vaultCard';
 import VaultGrowthNumbers from '../../components/vaultGrowthNumbers';
 import VaultSplitGraph from '../../components/vaultSplitGraph';
+import FilterListIcon from '@material-ui/icons/FilterList';
 
 import BigNumber from 'bignumber.js';
 import Popover from '@material-ui/core/Popover';
@@ -459,16 +460,13 @@ function Invest({ changeTheme }) {
                   <ToggleButton
                     className={`${classes.vaultTypeButton} ${search === '_stablecoins_' ? classes.stableCoinsSelected : classes.stableCoins}`}
                     value="Lockup"
+                    onClick={() => {
+                      setSearch(search === '_stablecoins_' ? '' : '_stablecoins_');
+                    }}
+                    style={{ cursor: 'pointer' }}
                   >
-                    <Typography
-                      variant="h2"
-                      onClick={() => {
-                        setSearch(search === '_stablecoins_' ? '' : '_stablecoins_');
-                      }}
-                      style={{ cursor: 'pointer' }}
-                    >
-                      Top Stablecoin Performers APYs
-                    </Typography>
+                    <FilterListIcon />
+                    <Typography variant="h2">Top Stablecoin Performers APYs</Typography>
                   </ToggleButton>
                   <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
                     {topVaultPerformers.stableCoinVaults.length > 4 &&
@@ -505,16 +503,16 @@ function Invest({ changeTheme }) {
                   <StarIcon className={classes.portfolioIcon} />
                 </div>
                 <div>
-                  <ToggleButton className={`${classes.vaultTypeButton} ${search === '_ethbtc_' ? classes.ethBTCSelected : classes.ethbtc}`} value="Lockup">
-                    <Typography
-                      variant="h2"
-                      onClick={() => {
-                        setSearch(search === '_ethbtc_' ? '' : '_ethbtc_');
-                      }}
-                      style={{ cursor: 'pointer' }}
-                    >
-                      Top BTC and ETH Performers APYs
-                    </Typography>
+                  <ToggleButton
+                    onClick={() => {
+                      setSearch(search === '_ethbtc_' ? '' : '_ethbtc_');
+                    }}
+                    style={{ cursor: 'pointer' }}
+                    className={`${classes.vaultTypeButton} ${search === '_ethbtc_' ? classes.ethBTCSelected : classes.ethbtc}`}
+                    value="Lockup"
+                  >
+                    <FilterListIcon />
+                    <Typography variant="h2">Top BTC and ETH Performers APYs</Typography>
                   </ToggleButton>
                   <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
                     {topVaultPerformers.ethBTCVaults.length > 4 &&
@@ -551,16 +549,16 @@ function Invest({ changeTheme }) {
                   <ListAltIcon className={classes.portfolioIcon} />
                 </div>
                 <div>
-                  <ToggleButton className={`${classes.vaultTypeButton} ${search === '_others_' ? classes.othersSelected : classes.others}`} value="Lockup">
-                    <Typography
-                      variant="h2"
-                      onClick={() => {
-                        setSearch(search === '_others_' ? '' : '_others_');
-                      }}
-                      style={{ cursor: 'pointer' }}
-                    >
-                      All Other Assets Top Performers APYs
-                    </Typography>
+                  <ToggleButton
+                    onClick={() => {
+                      setSearch(search === '_others_' ? '' : '_others_');
+                    }}
+                    style={{ cursor: 'pointer' }}
+                    className={`${classes.vaultTypeButton} ${search === '_others_' ? classes.othersSelected : classes.others}`}
+                    value="Lockup"
+                  >
+                    <FilterListIcon />
+                    <Typography variant="h2">Other Top Performers APYs</Typography>
                   </ToggleButton>
                   <Typography variant="h2" className={classes.headAmount}>
                     <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
