@@ -1,27 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
-import {
-  Typography,
-  Paper,
-  TextField,
-  InputAdornment,
-} from "@material-ui/core";
-import Skeleton from "@material-ui/lab/Skeleton";
-import SearchIcon from "@material-ui/icons/Search";
-import BigNumber from "bignumber.js";
+import { Typography, Paper, TextField, InputAdornment } from '@material-ui/core';
+import Skeleton from '@material-ui/lab/Skeleton';
+import SearchIcon from '@material-ui/icons/Search';
+import BigNumber from 'bignumber.js';
 
-import Head from "next/head";
-import Layout from "../../components/layout/layout.js";
-import CDPAllTable from "../../components/cdpAllTable";
-import CDPActiveTable from "../../components/cdpActiveTable";
-import CDPSuppliedGraph from "../../components/cdpSuppliedGraph";
-import CDPMintedGraph from "../../components/cdpMintedGraph";
+import Head from 'next/head';
+import Layout from '../../components/layout/layout.js';
+import CDPAllTable from '../../components/cdpAllTable';
+import CDPActiveTable from '../../components/cdpActiveTable';
+import CDPSuppliedGraph from '../../components/cdpSuppliedGraph';
+import CDPMintedGraph from '../../components/cdpMintedGraph';
 
-import classes from "./cdp.module.css";
+import classes from './cdp.module.css';
 
-import stores from "../../stores/index.js";
-import { CDP_UPDATED } from "../../stores/constants";
-import { formatCurrency } from "../../utils";
+import stores from '../../stores/index.js';
+import { CDP_UPDATED } from '../../stores/constants';
+import { formatCurrency } from '../../utils';
 
 function CDP({ changeTheme }) {
   const [cdpAssets, setCDPAssets] = useState([]);
@@ -29,26 +24,26 @@ function CDP({ changeTheme }) {
   const [cdpSupplied, setCDPSuppled] = useState(null);
   const [cdpMinted, setCDPMinted] = useState(null);
   const [borrowAsset, setBorrowAsset] = useState(null);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const onSearchChanged = (event) => {
     setSearch(event.target.value);
   };
 
   useEffect(function () {
     const cdpUpdated = () => {
-      setCDPAssets(stores.cdpStore.getStore("cdpAssets"));
-      setCDPs(stores.cdpStore.getStore("cdpActive"));
-      setCDPSuppled(stores.cdpStore.getStore("cdpSupplied"));
-      setCDPMinted(stores.cdpStore.getStore("cdpMinted"));
-      setBorrowAsset(stores.cdpStore.getStore("borrowAsset"));
+      setCDPAssets(stores.cdpStore.getStore('cdpAssets'));
+      setCDPs(stores.cdpStore.getStore('cdpActive'));
+      setCDPSuppled(stores.cdpStore.getStore('cdpSupplied'));
+      setCDPMinted(stores.cdpStore.getStore('cdpMinted'));
+      setBorrowAsset(stores.cdpStore.getStore('borrowAsset'));
     };
 
     //set default assets
-    setCDPAssets(stores.cdpStore.getStore("cdpAssets"));
-    setCDPs(stores.cdpStore.getStore("cdpActive"));
-    setCDPSuppled(stores.cdpStore.getStore("cdpSupplied"));
-    setCDPMinted(stores.cdpStore.getStore("cdpMinted"));
-    setBorrowAsset(stores.cdpStore.getStore("borrowAsset"));
+    setCDPAssets(stores.cdpStore.getStore('cdpAssets'));
+    setCDPs(stores.cdpStore.getStore('cdpActive'));
+    setCDPSuppled(stores.cdpStore.getStore('cdpSupplied'));
+    setCDPMinted(stores.cdpStore.getStore('cdpMinted'));
+    setBorrowAsset(stores.cdpStore.getStore('borrowAsset'));
 
     //register emitters
     stores.emitter.on(CDP_UPDATED, cdpUpdated);
@@ -62,13 +57,13 @@ function CDP({ changeTheme }) {
     const cdpStatuses = cdps.map((cdp) => {
       return cdp.status;
     });
-    return cdpStatuses.includes("Liquidatable")
-      ? "Liquidatable"
-      : cdpStatuses.includes("Dangerous")
-      ? "Dangerous"
-      : cdpStatuses.includes("Moderate")
-      ? "Moderate"
-      : "Safe";
+    return cdpStatuses.includes('Liquidatable')
+      ? 'Liquidatable'
+      : cdpStatuses.includes('Dangerous')
+      ? 'Dangerous'
+      : cdpStatuses.includes('Moderate')
+      ? 'Moderate'
+      : 'Safe';
   };
 
   const renderCDPs = () => {
@@ -80,10 +75,7 @@ function CDP({ changeTheme }) {
             <CDPSuppliedGraph assets={cdps} />
             <div>
               <Typography variant="h2">Total Supplied</Typography>
-              <Typography
-                variant="h1"
-                className={classes.headAmount}
-              >{`$ ${formatCurrency(cdpSupplied)}`}</Typography>
+              <Typography variant="h1" className={classes.headAmount}>{`$ ${formatCurrency(cdpSupplied)}`}</Typography>
             </div>
           </div>
           <div className={classes.separator}></div>
@@ -91,10 +83,7 @@ function CDP({ changeTheme }) {
             <CDPMintedGraph assets={cdps} />
             <div>
               <Typography variant="h2">Total Borrowed</Typography>
-              <Typography
-                variant="h1"
-                className={classes.headAmount}
-              >{`$ ${formatCurrency(cdpMinted)}`}</Typography>
+              <Typography variant="h1" className={classes.headAmount}>{`$ ${formatCurrency(cdpMinted)}`}</Typography>
             </div>
           </div>
           <div className={classes.separator}></div>
@@ -104,11 +93,7 @@ function CDP({ changeTheme }) {
               <Typography
                 variant="h1"
                 className={
-                  status === "Liquidatable"
-                    ? classes.statusLiquid
-                    : ["Dangerous", "Moderate"].includes(status)
-                    ? classes.statusWarning
-                    : classes.statusSafe
+                  status === 'Liquidatable' ? classes.statusLiquid : ['Dangerous', 'Moderate'].includes(status) ? classes.statusWarning : classes.statusSafe
                 }
               >
                 {status}
@@ -171,8 +156,7 @@ function CDP({ changeTheme }) {
               About
             </Typography>
             <Typography className={classes.fillerText}>
-              Unit Protocol is a decentralized protocol that allows you to mint
-              stablecoin $USDP using a variety of tokens as collateral.
+              Unit Protocol is a decentralized protocol that allows you to mint stablecoin $USDP using a variety of tokens as collateral.
             </Typography>
           </div>
           <div className={classes.separator}></div>
@@ -180,10 +164,7 @@ function CDP({ changeTheme }) {
             <Typography variant="h1" className={classes.fillerContent}>
               Start
             </Typography>
-            <Typography className={classes.fillerText}>
-              To get started with Yearn CDPs, click on the asset from the table
-              below and open your CDP.
-            </Typography>
+            <Typography className={classes.fillerText}>To get started with Yearn CDPs, click on the asset from the table below and open your CDP.</Typography>
           </div>
         </Paper>
         <div>
@@ -216,12 +197,8 @@ function CDP({ changeTheme }) {
   };
   const filteredCDPAssets = cdpAssets.filter((asset) => {
     let returnValue = true;
-    if (search && search !== "") {
-      returnValue =
-        asset.symbol?.toLowerCase().includes(search.toLowerCase()) ||
-        asset.tokenMetadata?.address
-          ?.toLowerCase()
-          .includes(search.toLowerCase());
+    if (search && search !== '') {
+      returnValue = asset.symbol?.toLowerCase().includes(search.toLowerCase()) || asset.tokenMetadata?.address?.toLowerCase().includes(search.toLowerCase());
     }
     return returnValue;
   });
@@ -232,8 +209,8 @@ function CDP({ changeTheme }) {
         <title>CDP</title>
       </Head>
       <div className={classes.cdpContainer}>
-        {cdps?.length === 0 ? renderNoCDPs() : ""}
-        {cdps?.length > 0 ? renderCDPs() : ""}
+        {cdps?.length === 0 ? renderNoCDPs() : ''}
+        {cdps?.length > 0 ? renderCDPs() : ''}
       </div>
     </Layout>
   );

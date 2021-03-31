@@ -86,12 +86,6 @@ export default function MyApp({ Component, pageProps }) {
 
   }, []);
 
-
-  console.log(vaultConfigured)
-  console.log(accountConfigured)
-  console.log(lendingConfigured)
-  console.log(cdpConfigured)
-
   return (
     <React.Fragment>
       <Head>
