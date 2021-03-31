@@ -42,8 +42,9 @@ import {
   VAULTMANAGERKEEP3RSUSHIABI,
   VAULTMANAGERSTANDARDABI,
   COLLATERALREGISTRYABI,
+  UNISWAPPAIRABI
 } from './abis';
-import { bnDec } from '../utils';
+import { bnDec, sqrt } from '../utils';
 import cdpJSON from './configurations/cdp';
 
 import BigNumber from 'bignumber.js';
@@ -184,8 +185,22 @@ class Store {
             let symbol = ''
             // MAKER returns a web3 error for .decimals. logic
             if(asset.address !== '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2') {
+              if(oracleType === 4 || oracleType === 8) {
+                const uniswapPairContract = new web3.eth.Contract(UNISWAPPAIRABI, asset.address)
+                const token0 = await uniswapPairContract.methods.token0().call()
+                const token1 = await uniswapPairContract.methods.token1().call()
+
+                const prepend = oracleType === 4 ? 'UNI' : 'SUSHI'
+                const erc20Contract0 = new web3.eth.Contract(ERC20ABI, token0)
+                const erc20Contract1 = new web3.eth.Contract(ERC20ABI, token1)
+                const symbol0 = await erc20Contract0.methods.symbol().call()
+                const symbol1 = await erc20Contract1.methods.symbol().call()
+
+                symbol = `${prepend}-${symbol0}/${symbol1}`
+              } else {
+                symbol = await erc20Contract.methods.symbol().call();
+              }
               decimals = BigNumber(await erc20Contract.methods.decimals().call()).toNumber();
-              symbol = await erc20Contract.methods.symbol().call();
             } else {
               decimals = 18
               symbol = 'MKR'
@@ -195,9 +210,9 @@ class Store {
 
 
             let addy = asset.address;
-            if (symbol.includes('UNISWAP')) {
+            if (symbol.includes('UNI-')) {
               addy = '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984';
-            } else if (symbol.includes('SUSHISWAP')) {
+            } else if (symbol.includes('SUSHI-')) {
               addy = '0x6b3595068778dd592e39a122f4f5a5cf09c90fe2';
             }
 
@@ -375,6 +390,7 @@ class Store {
   };
 
   _getDolarPrice = async (asset, ethPrice) => {
+    const Q112 = BigNumber('0x10000000000000000000000000000').toNumber()
     try {
       const web3 = await stores.accountStore.getWeb3Provider();
 
@@ -390,24 +406,130 @@ class Store {
       if (this.isKeydonixOracle(asset.defaultOracleType)) {
       } else if (this.isKeep3rOracle(asset.defaultOracleType)) {
         const keep3rContract = new web3.eth.Contract(KEEP3RV1ORACLEABI, KEEP3R_ORACLE_ADDRESS);
-        const ethPerAsset = await keep3rContract.methods.current(asset.address, sendAmount0, '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2').call({});
-        if(asset.address === '0x4E15361FD6b4BB609Fa63C81A2be19d873717870') {
-          console.log(ethPerAsset)
+
+        if(asset.defaultOracleType === 3) {
+          const ethPerAsset = await keep3rContract.methods.current(asset.address, sendAmount0, '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2').call({});
+
+          dolar = BigNumber(ethPerAsset)
+            .times(ethPrice)
+            .div(10 ** 18)
+            .toNumber();
+        } else {
+          // pool asset
+          const uniswapPairContract = new web3.eth.Contract(UNISWAPPAIRABI, asset.address)
+          const token0 = await uniswapPairContract.methods.token0().call()
+          const token1 = await uniswapPairContract.methods.token1().call()
+
+          const totalSupply = await uniswapPairContract.methods.totalSupply().call()
+          const obj = await uniswapPairContract.methods.getReserves().call()
+          let reserve0 = obj[0]
+          let reserve1 = obj[1]
+
+          let token0Price = 0
+          let token1Price = 0
+
+          if(token0.toLowerCase() === '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'.toLowerCase()) {
+            token0Price = ethPrice
+          } else {
+            let erc20Contract = new web3.eth.Contract(ERC20ABI, token0)
+            let decimalsToken0 = parseInt(await erc20Contract.methods.decimals().call())
+            let sendAmountToken0 = (10 ** decimalsToken0).toFixed(0);
+            let token0EthPrice = await keep3rContract.methods.current(token0, sendAmountToken0, '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2').call({});
+
+            token0Price = BigNumber(token0EthPrice)
+              .times(ethPrice)
+              .div(10 ** decimalsToken0)
+              .toNumber();
+          }
+
+          if(token1.toLowerCase() === '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'.toLowerCase()) {
+            token1Price = ethPrice
+          } else {
+            let erc20Contract = new web3.eth.Contract(ERC20ABI, token1)
+            let decimalsToken1 = parseInt(await erc20Contract.methods.decimals().call())
+            let sendAmountToken1 = (10 ** decimalsToken1).toFixed(0);
+            let token1EthPrice = await keep3rContract.methods.current(token1, sendAmountToken1, '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2').call({});
+
+            token1Price = BigNumber(token1EthPrice)
+              .times(ethPrice)
+              .div(10 ** decimalsToken1)
+              .toNumber();
+            //still need to multiply by ethPrice ???
+          }
+
+          if(asset.address === '0xBb2b8038a1640196FbE3e38816F3e67Cba72D940') {
+            console.log(token0Price)
+            console.log(token1Price)
+            console.log(reserve0)
+            console.log(reserve1)
+          }
+
+          let pricePerShare0 = BigNumber(token0Price).times(reserve0)
+          let pricePerShare1 = BigNumber(token1Price).times(reserve1)
+
+          dolar = BigNumber(BigNumber(pricePerShare0).plus(pricePerShare1)).div(totalSupply).toNumber()
         }
-        //Somewhere get ETH price
-        dolar = BigNumber(ethPerAsset)
-          .times(ethPrice)
-          .div(10 ** 18)
-          .toNumber();
+
       } else if (this.isKeep3rSushiSwapOracle(asset.defaultOracleType)) {
         const keep3rContract = new web3.eth.Contract(KEEP3RV1ORACLEABI, KEEP3R_SUSHI_ORACLE_ADDRESS);
-        const ethPerAsset = await keep3rContract.methods.current(asset.address, sendAmount0, '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2').call({});
 
-        //Somewhere get ETH price
-        dolar = BigNumber(ethPerAsset)
-          .times(ethPrice)
-          .div(10 ** 18)
-          .toNumber();
+
+        if(asset.defaultOracleType === 7) {
+          const ethPerAsset = await keep3rContract.methods.current(asset.address, sendAmount0, '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2').call({});
+          dolar = BigNumber(ethPerAsset)
+            .times(ethPrice)
+            .div(10 ** 18)
+            .toNumber();
+        } else {
+          // pool asset
+          const uniswapPairContract = new web3.eth.Contract(UNISWAPPAIRABI, asset.address)
+          const token0 = await uniswapPairContract.methods.token0().call()
+          const token1 = await uniswapPairContract.methods.token1().call()
+
+          const totalSupply = await uniswapPairContract.methods.totalSupply().call()
+          const obj = await uniswapPairContract.methods.getReserves().call()
+          let reserve0 = obj[0]
+          let reserve1 = obj[1]
+
+
+          let token0Price = 0
+          let token1Price = 0
+
+          if(token0.toLowerCase() === '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'.toLowerCase()) {
+            token0Price = ethPrice
+          } else {
+            let erc20Contract = new web3.eth.Contract(ERC20ABI, token0)
+            let decimalsToken0 = parseInt(await erc20Contract.methods.decimals().call())
+            let sendAmountToken0 = (10 ** decimalsToken0).toFixed(0);
+            let token0EthPrice = await keep3rContract.methods.current(token0, sendAmountToken0, '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2').call({});
+
+            token0Price = BigNumber(token0EthPrice)
+              .times(ethPrice)
+              .div(10 ** 18)
+              .toNumber();
+          }
+
+          if(token1.toLowerCase() === '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'.toLowerCase()) {
+            token1Price = ethPrice
+          } else {
+            let erc20Contract = new web3.eth.Contract(ERC20ABI, token1)
+            let decimalsToken1 = parseInt(await erc20Contract.methods.decimals().call())
+            let sendAmountToken1 = (10 ** decimalsToken1).toFixed(0);
+            let token1EthPrice = await keep3rContract.methods.current(token1, sendAmountToken1, '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2').call({});
+
+            token1Price = BigNumber(token1EthPrice)
+              .times(ethPrice)
+              .div(10 ** 18)
+              .toNumber();
+            //still need to multiply by ethPrice ???
+          }
+
+          let pricePerShare0 = BigNumber(token0Price).times(reserve0)
+          let pricePerShare1 = BigNumber(token1Price).times(reserve1)
+
+          dolar = BigNumber(BigNumber(pricePerShare0).plus(pricePerShare1)).div(totalSupply).toNumber()
+        }
+
       } else {
         //don't know?
         return 0;
@@ -415,7 +537,7 @@ class Store {
 
       return dolar;
     } catch (ex) {
-      if(asset.address === '0x4E15361FD6b4BB609Fa63C81A2be19d873717870') {
+      if(asset.address === '0xBb2b8038a1640196FbE3e38816F3e67Cba72D940') {
         console.log(ex)
       }
       return 0;
@@ -428,8 +550,6 @@ class Store {
     const cdpRegistryContract = new web3.eth.Contract(COLLATERALREGISTRYABI, COLLATERAL_REGISTRY_ADDRESS);
     const collaterals = await cdpRegistryContract.methods.collaterals().call();
 
-
-    console.log(collaterals)
     let collateralArr = collaterals.map((c) => {
       return {
         address: c,
