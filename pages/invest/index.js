@@ -35,8 +35,6 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
-import LendSupplyGraph from '../../components/lendSupplyGraph';
-import LendBorrowGraph from '../../components/lendBorrowGraph';
 
 import { formatCurrency } from '../../utils';
 
@@ -376,7 +374,7 @@ function Invest({ changeTheme }) {
         <title>Invest</title>
       </Head>
       <div className={classes.investContainer}>
-        {account && account.address && (
+        {account && account.address && highestHoldings !== 'None' && (
           <Paper elevation={0} className={classes.overviewContainer}>
             <div className={classes.overviewCard}>
               {porfolioBalance !== null ? <VaultSplitGraph vaults={vaults} /> : <Skeleton variant="circle" width={80} height={80} />}
