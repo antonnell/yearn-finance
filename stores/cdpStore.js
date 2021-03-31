@@ -334,7 +334,7 @@ class Store {
     } catch (ex) {
       console.log(ex);
       this.emitter.emit(CDP_CONFIGURED);
-      this.etmiter.emit(ERROR, ex);
+      this.emitter.emit(ERROR, ex)
     }
   };
 

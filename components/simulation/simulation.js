@@ -32,7 +32,7 @@ export default function Simulation({ amount, vault }) {
     }
   };
 
-  const actualResults = yearn(amount, (years && years > 0 && years <= 200 ? years : 1) - 1, apy);
+  const actualResults = yearn(amount, (years && years >= 1 && years <= 200 ? years : 1) - 1, apy);
   const actualIntersts = actualResults.minus(amount);
   const interestsUSD = BigNumber(actualIntersts).times(pricePerToken);
   const resultsUSD = BigNumber(actualResults).times(pricePerToken);
@@ -64,19 +64,19 @@ export default function Simulation({ amount, vault }) {
               Gains Simulation
             </Typography>
             <Typography variant="h5" component="h2">
-              For {years && years != 0 && years <= 200 ? years : 1} year{years > 1 ? 's' : ''} @ ${formatCurrency(pricePerToken)} &amp;{' '}
+              For {years && years != 0 && years >= 1 && years <= 200 ? years : 1} year{years > 1 ? 's' : ''} @ ${formatCurrency(pricePerToken)} &amp;{' '}
               {BigNumber(apy).times(100).toFixed(2) + '%'} APY
             </Typography>
             <div className={classes.simulationSubTitles}>
               <Typography color="textSecondary">interests won:</Typography>
               <Typography variant="body2" component="p">
-                {vault.displayName} {BigNumber(actualIntersts.toFixed(2)).valueOf()} (${formatCurrency(interestsUSD)})
+                {vault.displayName} {formatCurrency(BigNumber(actualIntersts.toFixed(2)))} (${formatCurrency(interestsUSD)})
               </Typography>
             </div>
             <div className={classes.simulationSubTitles}>
               <Typography color="textSecondary">cashed out amount:</Typography>
               <Typography variant="body2" component="p">
-                {vault.displayName} {BigNumber(actualResults.toFixed(2)).valueOf()} (${formatCurrency(resultsUSD)})
+                {vault.displayName} {formatCurrency(BigNumber(actualResults.toFixed(2)))} (${formatCurrency(resultsUSD)})
               </Typography>
             </div>
             {showSimulationForm && (
@@ -87,7 +87,8 @@ export default function Simulation({ amount, vault }) {
                   min="1"
                   max="100"
                   onChange={(event) => {
-                    setYears(event.target.value);
+                    const years = parseInt(BigNumber(event.target.value).integerValue().valueOf());
+                    setYears(years);
                   }}
                   id="standard-secondary"
                   label="Years"
