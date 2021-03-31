@@ -85,12 +85,6 @@ const headCells = [
     disablePadding: false,
     label: "Liquidation Fee"
   },
-  {
-    id: "price",
-    numeric: true,
-    disablePadding: false,
-    label: "Price"
-  },
   { id: "", numeric: false, disablePadding: false, label: "" }
 ];
 
@@ -318,15 +312,6 @@ export default function EnhancedTable({ cdps, borrowAsset }) {
     setOrderBy(property);
   };
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = event => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
   if (!cdps) {
     return (
       <div className={classes.root}>
@@ -454,11 +439,6 @@ export default function EnhancedTable({ cdps, borrowAsset }) {
                     <TableCell className={classes.cell} align="right">
                       <Typography variant="h5" className={classes.textSpaced}>
                         {formatCurrency(row.liquidationFee)} %
-                      </Typography>
-                    </TableCell>
-                    <TableCell className={classes.cell} align="right">
-                      <Typography variant="h5" className={classes.textSpaced}>
-                        ${formatCurrency(row.dolarPrice)}
                       </Typography>
                     </TableCell>
                   </ExpandableTableRow>
