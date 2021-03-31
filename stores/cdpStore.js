@@ -457,13 +457,6 @@ class Store {
             //still need to multiply by ethPrice ???
           }
 
-          if(asset.address === '0xBb2b8038a1640196FbE3e38816F3e67Cba72D940') {
-            console.log(token0Price)
-            console.log(token1Price)
-            console.log(reserve0)
-            console.log(reserve1)
-          }
-
           let pricePerShare0 = BigNumber(token0Price).times(reserve0)
           let pricePerShare1 = BigNumber(token1Price).times(reserve1)
 
@@ -491,7 +484,6 @@ class Store {
           let reserve0 = obj[0]
           let reserve1 = obj[1]
 
-
           let token0Price = 0
           let token1Price = 0
 
@@ -505,7 +497,7 @@ class Store {
 
             token0Price = BigNumber(token0EthPrice)
               .times(ethPrice)
-              .div(10 ** 18)
+              .div(10 ** decimalsToken0)
               .toNumber();
           }
 
@@ -519,7 +511,7 @@ class Store {
 
             token1Price = BigNumber(token1EthPrice)
               .times(ethPrice)
-              .div(10 ** 18)
+              .div(10 ** decimalsToken1)
               .toNumber();
             //still need to multiply by ethPrice ???
           }
