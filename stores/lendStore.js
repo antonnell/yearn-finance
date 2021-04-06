@@ -1,4 +1,4 @@
-import async from "async";
+import async from 'async';
 import {
   MAX_UINT256,
   COMPTROLLER_ADDRESS,
@@ -25,25 +25,20 @@ import {
   ENABLE_COLLATERAL_LEND_RETURNED,
   DISABLE_COLLATERAL_LEND,
   DISABLE_COLLATERAL_LEND_RETURNED,
-} from "./constants";
+} from './constants';
 
-import * as moment from "moment";
+import * as moment from 'moment';
 
-import stores from "./";
-import lendJSON from "./configurations/lend";
-import {
-  ERC20ABI,
-  COMPTROLLERABI,
-  CERC20DELEGATORABI,
-  CREAMPRICEORACLEABI,
-} from "./abis";
-import { bnDec } from "../utils";
+import stores from './';
+import lendJSON from './configurations/lend';
+import { ERC20ABI, COMPTROLLERABI, CERC20DELEGATORABI, CREAMPRICEORACLEABI } from './abis';
+import { bnDec } from '../utils';
 
-import BatchCall from "web3-batch-call";
-import BigNumber from "bignumber.js";
-const fetch = require("node-fetch");
+import BatchCall from 'web3-batch-call';
+import BigNumber from 'bignumber.js';
+const fetch = require('node-fetch');
 
-const CoinGecko = require("coingecko-api");
+const CoinGecko = require('coingecko-api');
 const CoinGeckoClient = new CoinGecko();
 
 class Store {
@@ -58,6 +53,7 @@ class Store {
       lendingBorrow: null,
       lendingSupplyAPY: null,
       lendingBorrowAPY: null,
+      ironBankTVL: 0,
     };
 
     dispatcher.register(
@@ -93,7 +89,7 @@ class Store {
           default: {
           }
         }
-      }.bind(this)
+      }.bind(this),
     );
   }
 
@@ -118,19 +114,13 @@ class Store {
     const blocksPeryear = 2425846;
     const defaultValues = lendJSON;
 
-    const creamPriceOracleContract = new web3.eth.Contract(
-      CREAMPRICEORACLEABI,
-      CREAM_PRICE_ORACLE_ADDRESS
-    );
+    const creamPriceOracleContract = new web3.eth.Contract(CREAMPRICEORACLEABI, CREAM_PRICE_ORACLE_ADDRESS);
 
     async.map(
       allMarkets,
       async (market, callback) => {
         try {
-          const marketContract = new web3.eth.Contract(
-            CERC20DELEGATORABI,
-            market
-          );
+          const marketContract = new web3.eth.Contract(CERC20DELEGATORABI, market);
 
           //set static values to avoid doing tons more calls.
           let defaultMarket = defaultValues.filter((val) => {
@@ -144,15 +134,15 @@ class Store {
           }
 
           let erc20Contract = null;
-          let vaultSymbol = "";
+          let vaultSymbol = '';
           let vaultDecimals = 0;
-          let vaultName = "";
-          let vaultIcon = "";
-          let erc20address = "";
-          let symbol = "";
+          let vaultName = '';
+          let vaultIcon = '';
+          let erc20address = '';
+          let symbol = '';
           let decimals = 0;
-          let name = "";
-          let icon = "";
+          let name = '';
+          let icon = '';
 
           if (defaultMarket !== null) {
             vaultSymbol = defaultMarket.symbol;
@@ -225,28 +215,28 @@ class Store {
         this.emitter.emit(LENDING_CONFIGURED);
 
         this.dispatcher.dispatch({ type: GET_LENDING_BALANCES });
-      }
+      },
     );
   };
 
   _getCollateralPercent = (vaultSymbol) => {
     switch (vaultSymbol) {
-      case "cyWBTC":
+      case 'cyWBTC':
         return 80;
-      case "cyWETH":
+      case 'cyWETH':
         return 85;
-      case "cDAI":
-      case "cUSDT":
-      case "cUSDC":
-      case "cyDAI":
-      case "cyY3CRV":
-      case "cyUSDT":
-      case "cyUSDC":
-      case "cyMUSD":
-      case "cyDUSD":
-      case "cySEUR":
-      case "cyBUSD":
-      case "cyGUSD":
+      case 'cDAI':
+      case 'cUSDT':
+      case 'cUSDC':
+      case 'cyDAI':
+      case 'cyY3CRV':
+      case 'cyUSDT':
+      case 'cyUSDC':
+      case 'cyMUSD':
+      case 'cyDUSD':
+      case 'cySEUR':
+      case 'cyBUSD':
+      case 'cyGUSD':
         return 90;
       default:
         return 0;
@@ -255,14 +245,12 @@ class Store {
 
   _getAllMarkets = async (web3) => {
     try {
-      const comptrollerContract = new web3.eth.Contract(
-        COMPTROLLERABI,
-        COMPTROLLER_ADDRESS
-      );
-      const allMarkets = await comptrollerContract.methods
-        .getAllMarkets()
-        .call();
-      return allMarkets;
+      const comptrollerContract = new web3.eth.Contract(COMPTROLLERABI, COMPTROLLER_ADDRESS);
+      let allMarkets = await comptrollerContract.methods.getAllMarkets().call();
+      let newMarkets = allMarkets.filter((market) => {
+        return market !== '0x4e3a36A633f63aee0aB57b5054EC78867CB3C0b8'
+      })
+      return newMarkets;
     } catch (ex) {
       console.log(ex);
       return null;
@@ -271,13 +259,8 @@ class Store {
 
   _getAssetsIn = async (web3, account) => {
     try {
-      const comptrollerContract = new web3.eth.Contract(
-        COMPTROLLERABI,
-        COMPTROLLER_ADDRESS
-      );
-      const assetsIn = await comptrollerContract.methods
-        .getAssetsIn(account.address)
-        .call();
+      const comptrollerContract = new web3.eth.Contract(COMPTROLLERABI, COMPTROLLER_ADDRESS);
+      const assetsIn = await comptrollerContract.methods.getAssetsIn(account.address).call();
       return assetsIn;
     } catch (ex) {
       console.log(ex);
@@ -286,12 +269,12 @@ class Store {
   };
 
   getLendingBalances = async (payload) => {
-    const lendingAssets = this.getStore("lendingAssets");
+    const lendingAssets = this.getStore('lendingAssets');
     if (!lendingAssets) {
       return null;
     }
 
-    const account = stores.accountStore.getStore("account");
+    const account = stores.accountStore.getStore('account');
 
     const web3 = await stores.accountStore.getWeb3Provider();
     if (!web3) {
@@ -304,78 +287,45 @@ class Store {
     }
     const blocksPeryear = 2425846;
 
-    const creamPriceOracleContract = new web3.eth.Contract(
-      CREAMPRICEORACLEABI,
-      CREAM_PRICE_ORACLE_ADDRESS
-    );
+    const creamPriceOracleContract = new web3.eth.Contract(CREAMPRICEORACLEABI, CREAM_PRICE_ORACLE_ADDRESS);
 
     async.map(
       lendingAssets,
       async (asset, callback) => {
+        console.log(asset)
         try {
-          const marketContract = new web3.eth.Contract(
-            CERC20DELEGATORABI,
-            asset.address
-          );
+          const marketContract = new web3.eth.Contract(CERC20DELEGATORABI, asset.address);
 
-          const exchangeRate = await marketContract.methods
-            .exchangeRateStored()
-            .call();
-          const exchangeRateReal = BigNumber(exchangeRate)
-            .div(bnDec(asset.tokenMetadata.decimals))
-            .toFixed(asset.tokenMetadata.decimals, BigNumber.ROUND_DOWN);
+          const exchangeRate = await marketContract.methods.exchangeRateStored().call();
+          const exchangeRateReal = BigNumber(exchangeRate).div(bnDec(asset.tokenMetadata.decimals)).toFixed(asset.tokenMetadata.decimals, BigNumber.ROUND_DOWN);
 
           let cash = await marketContract.methods.getCash().call();
-          cash = new BigNumber(cash)
-            .div(bnDec(asset.tokenMetadata.decimals))
-            .toFixed(asset.tokenMetadata.decimals, BigNumber.ROUND_DOWN);
+          cash = new BigNumber(cash).div(bnDec(asset.tokenMetadata.decimals)).toFixed(asset.tokenMetadata.decimals, BigNumber.ROUND_DOWN);
 
-          const borrowRatePerBlock = await marketContract.methods
-            .borrowRatePerBlock()
-            .call();
-          const supplyRatePerBlock = await marketContract.methods
-            .supplyRatePerBlock()
-            .call();
+          const borrowRatePerBlock = await marketContract.methods.borrowRatePerBlock().call();
+          const supplyRatePerBlock = await marketContract.methods.supplyRatePerBlock().call();
 
           const borrowRatePerYear = (borrowRatePerBlock * blocksPeryear) / 1e16;
           const supplyRatePerYear = (supplyRatePerBlock * blocksPeryear) / 1e16;
 
+          let totalBorrows = await marketContract.methods.totalBorrows().call();
+          totalBorrows = new BigNumber(totalBorrows).div(bnDec(asset.tokenMetadata.decimals)).toFixed(asset.tokenMetadata.decimals, BigNumber.ROUND_DOWN);
+
           if (account && account.address) {
-            const erc20Contract = new web3.eth.Contract(
-              ERC20ABI,
-              asset.tokenMetadata.address
-            );
-            let balance = await erc20Contract.methods
-              .balanceOf(account.address)
-              .call();
-            balance = new BigNumber(balance)
-              .div(bnDec(asset.tokenMetadata.decimals))
-              .toFixed(asset.tokenMetadata.decimals, BigNumber.ROUND_DOWN);
+            const erc20Contract = new web3.eth.Contract(ERC20ABI, asset.tokenMetadata.address);
+            let balance = await erc20Contract.methods.balanceOf(account.address).call();
+            balance = new BigNumber(balance).div(bnDec(asset.tokenMetadata.decimals)).toFixed(asset.tokenMetadata.decimals, BigNumber.ROUND_DOWN);
 
-            const allowance = await erc20Contract.methods
-              .allowance(account.address, asset.address)
-              .call();
+            const allowance = await erc20Contract.methods.allowance(account.address, asset.address).call();
 
-            let supplyBalance = await marketContract.methods
-              .balanceOf(account.address)
-              .call();
-            supplyBalance = new BigNumber(supplyBalance)
-              .times(exchangeRateReal)
-              .div(bnDec(18))
-              .toFixed(asset.tokenMetadata.decimals, BigNumber.ROUND_DOWN);
+            let supplyBalance = await marketContract.methods.balanceOf(account.address).call();
+            supplyBalance = new BigNumber(supplyBalance).times(exchangeRateReal).div(bnDec(18)).toFixed(asset.tokenMetadata.decimals, BigNumber.ROUND_DOWN);
 
-            let borrowBalance = await marketContract.methods
-              .borrowBalanceStored(account.address)
-              .call();
-            borrowBalance = new BigNumber(borrowBalance)
-              .div(bnDec(asset.tokenMetadata.decimals))
-              .toFixed(asset.tokenMetadata.decimals, BigNumber.ROUND_DOWN);
+            let borrowBalance = await marketContract.methods.borrowBalanceStored(account.address).call();
+            borrowBalance = new BigNumber(borrowBalance).div(bnDec(asset.tokenMetadata.decimals)).toFixed(asset.tokenMetadata.decimals, BigNumber.ROUND_DOWN);
 
-            const dollarPerAsset = await creamPriceOracleContract.methods
-              .getUnderlyingPrice(asset.address)
-              .call();
-            const dollarPerAssetReal =
-              dollarPerAsset / 10 ** (36 - asset.tokenMetadata.decimals);
+            const dollarPerAsset = await creamPriceOracleContract.methods.getUnderlyingPrice(asset.address).call();
+            const dollarPerAssetReal = dollarPerAsset / 10 ** (36 - asset.tokenMetadata.decimals);
 
             asset.tokenMetadata.allowance = BigNumber(allowance)
               .div(bnDec(asset.tokenMetadata.decimals))
@@ -392,10 +342,10 @@ class Store {
             asset.collateralEnabled = assetsIn.includes(asset.address);
           }
 
+          asset.totalBorrows = totalBorrows
+
           asset.liquidity = cash;
-          asset.collateralPercent = this._getCollateralPercent(
-            asset.symbol
-          );
+          asset.collateralPercent = this._getCollateralPercent(asset.symbol);
           asset.supplyAPY = supplyRatePerYear;
           asset.borrowAPY = borrowRatePerYear;
           asset.exchangeRate = exchangeRate;
@@ -426,46 +376,30 @@ class Store {
           return BigNumber(val).plus(market.supplyBalanceDolar).toNumber();
         }, 0);
 
-        const lendingSupplyAPY = populatedLendingAssets.reduce(
-          (val, market) => {
-            const vvvv = BigNumber(market.supplyBalanceDolar)
-              .div(lendingSupply)
-              .times(market.supplyAPY)
-              .toNumber();
-            return BigNumber(vvvv).plus(val).toNumber();
-          },
-          0
-        );
+        const lendingSupplyAPY = populatedLendingAssets.reduce((val, market) => {
+          const vvvv = BigNumber(market.supplyBalanceDolar).div(lendingSupply).times(market.supplyAPY).toNumber();
+          return BigNumber(vvvv).plus(val).toNumber();
+        }, 0);
 
-        const lendingBorrowLimit = populatedLendingAssets.reduce(
-          (val, market) => {
-            return BigNumber(val)
-              .plus(
-                market.collateralEnabled
-                  ? BigNumber(market.supplyBalanceDolar)
-                      .times(market.collateralPercent)
-                      .div(100)
-                  : 0
-              )
-              .toNumber();
-          },
-          0
-        );
+        const lendingBorrowLimit = populatedLendingAssets.reduce((val, market) => {
+          return BigNumber(val)
+            .plus(market.collateralEnabled ? BigNumber(market.supplyBalanceDolar).times(market.collateralPercent).div(100) : 0)
+            .toNumber();
+        }, 0);
 
         const lendingBorrow = populatedLendingAssets.reduce((val, market) => {
           return BigNumber(val).plus(market.borrowBalanceDolar).toNumber();
         }, 0);
 
-        const lendingBorrowAPY = populatedLendingAssets.reduce(
-          (val, market) => {
-            const vvvv = BigNumber(market.borrowBalanceDolar)
-              .div(lendingBorrow)
-              .times(market.borrowAPY)
-              .toNumber();
-            return BigNumber(vvvv).plus(val).toNumber();
-          },
-          0
-        );
+        const lendingBorrowAPY = populatedLendingAssets.reduce((val, market) => {
+          const vvvv = BigNumber(market.borrowBalanceDolar).div(lendingBorrow).times(market.borrowAPY).toNumber();
+          return BigNumber(vvvv).plus(val).toNumber();
+        }, 0);
+
+        const ironBankTVL = populatedLendingAssets.reduce((val, market) => {
+          const vvvv = BigNumber(BigNumber(market.liquidity).plus(market.totalBorrows)).times(market.price).toNumber();
+          return BigNumber(vvvv).plus(val).toNumber();
+        }, 0)
 
         this.setStore({
           lendingAssets: populatedLendingAssets,
@@ -474,16 +408,17 @@ class Store {
           lendingBorrowLimit: lendingBorrowLimit,
           lendingBorrow: lendingBorrow,
           lendingBorrowAPY: lendingBorrowAPY,
+          ironBankTVL: ironBankTVL
         });
 
         this.emitter.emit(LEND_UPDATED);
         return this.emitter.emit(LENDING_BALANCES_RETURNED);
-      }
+      },
     );
   };
 
   approveLend = async (payload) => {
-    const account = stores.accountStore.getStore("account");
+    const account = stores.accountStore.getStore('account');
     if (!account) {
       return false;
       //maybe throw an error
@@ -497,37 +432,20 @@ class Store {
 
     const { lendingAsset, amount, gasSpeed } = payload.content;
 
-    this._callApproveLend(
-      web3,
-      lendingAsset,
-      account,
-      amount,
-      gasSpeed,
-      (err, approveResult) => {
-        if (err) {
-          return this.emitter.emit(ERROR, err);
-        }
-
-        return this.emitter.emit(APPROVE_LEND_RETURNED, approveResult);
+    this._callApproveLend(web3, lendingAsset, account, amount, gasSpeed, (err, approveResult) => {
+      if (err) {
+        return this.emitter.emit(ERROR, err);
       }
-    );
+
+      return this.emitter.emit(APPROVE_LEND_RETURNED, approveResult);
+    });
   };
 
-  _callApproveLend = async (
-    web3,
-    lendingAsset,
-    account,
-    amount,
-    gasSpeed,
-    callback
-  ) => {
-    const tokenContract = new web3.eth.Contract(
-      ERC20ABI,
-      lendingAsset.tokenMetadata.address
-    );
+  _callApproveLend = async (web3, lendingAsset, account, amount, gasSpeed, callback) => {
+    const tokenContract = new web3.eth.Contract(ERC20ABI, lendingAsset.tokenMetadata.address);
 
-    let amountToSend = "0";
-    if (amount === "max") {
+    let amountToSend = '0';
+    if (amount === 'max') {
       amountToSend = MAX_UINT256;
     } else {
       amountToSend = BigNumber(amount)
@@ -537,20 +455,11 @@ class Store {
 
     const gasPrice = await stores.accountStore.getGasPrice(gasSpeed);
 
-    this._callContract(
-      web3,
-      tokenContract,
-      "approve",
-      [lendingAsset.address, amountToSend],
-      account,
-      gasPrice,
-      GET_LENDING_BALANCES,
-      callback
-    );
+    this._callContract(web3, tokenContract, 'approve', [lendingAsset.address, amountToSend], account, gasPrice, GET_LENDING_BALANCES, callback);
   };
 
   depositLend = async (payload) => {
-    const account = stores.accountStore.getStore("account");
+    const account = stores.accountStore.getStore('account');
     if (!account) {
       return false;
       //maybe throw an error
@@ -564,54 +473,26 @@ class Store {
 
     const { lendingAsset, amount, gasSpeed } = payload.content;
 
-    this._callDepositLend(
-      web3,
-      lendingAsset,
-      account,
-      amount,
-      gasSpeed,
-      (err, depositResult) => {
-        if (err) {
-          return this.emitter.emit(ERROR, err);
-        }
-
-        return this.emitter.emit(DEPOSIT_LEND_RETURNED, depositResult);
+    this._callDepositLend(web3, lendingAsset, account, amount, gasSpeed, (err, depositResult) => {
+      if (err) {
+        return this.emitter.emit(ERROR, err);
       }
-    );
+
+      return this.emitter.emit(DEPOSIT_LEND_RETURNED, depositResult);
+    });
   };
 
-  _callDepositLend = async (
-    web3,
-    lendingAsset,
-    account,
-    amount,
-    gasSpeed,
-    callback
-  ) => {
-    const lendingContract = new web3.eth.Contract(
-      CERC20DELEGATORABI,
-      lendingAsset.address
-    );
+  _callDepositLend = async (web3, lendingAsset, account, amount, gasSpeed, callback) => {
+    const lendingContract = new web3.eth.Contract(CERC20DELEGATORABI, lendingAsset.address);
 
-    const amountToSend = BigNumber(amount)
-      .times(bnDec(lendingAsset.tokenMetadata.decimals))
-      .toFixed(0);
+    const amountToSend = BigNumber(amount).times(bnDec(lendingAsset.tokenMetadata.decimals)).toFixed(0);
     const gasPrice = await stores.accountStore.getGasPrice(gasSpeed);
 
-    this._callContract(
-      web3,
-      lendingContract,
-      "mint",
-      [amountToSend],
-      account,
-      gasPrice,
-      GET_LENDING_BALANCES,
-      callback
-    );
+    this._callContract(web3, lendingContract, 'mint', [amountToSend], account, gasPrice, GET_LENDING_BALANCES, callback);
   };
 
   withdrawLend = async (payload) => {
-    const account = stores.accountStore.getStore("account");
+    const account = stores.accountStore.getStore('account');
     if (!account) {
       return false;
       //maybe throw an error
@@ -625,54 +506,26 @@ class Store {
 
     const { lendingAsset, amount, gasSpeed } = payload.content;
 
-    this._callWithdrawLend(
-      web3,
-      lendingAsset,
-      account,
-      amount,
-      gasSpeed,
-      (err, depositResult) => {
-        if (err) {
-          return this.emitter.emit(ERROR, err);
-        }
-
-        return this.emitter.emit(WITHDRAW_LEND_RETURNED, depositResult);
+    this._callWithdrawLend(web3, lendingAsset, account, amount, gasSpeed, (err, depositResult) => {
+      if (err) {
+        return this.emitter.emit(ERROR, err);
       }
-    );
+
+      return this.emitter.emit(WITHDRAW_LEND_RETURNED, depositResult);
+    });
   };
 
-  _callWithdrawLend = async (
-    web3,
-    lendingAsset,
-    account,
-    amount,
-    gasSpeed,
-    callback
-  ) => {
-    const lendingContract = new web3.eth.Contract(
-      CERC20DELEGATORABI,
-      lendingAsset.address
-    );
+  _callWithdrawLend = async (web3, lendingAsset, account, amount, gasSpeed, callback) => {
+    const lendingContract = new web3.eth.Contract(CERC20DELEGATORABI, lendingAsset.address);
 
-    const amountToSend = BigNumber(amount)
-      .times(bnDec(lendingAsset.tokenMetadata.decimals))
-      .toFixed(0);
+    const amountToSend = BigNumber(amount).times(bnDec(lendingAsset.tokenMetadata.decimals)).toFixed(0);
     const gasPrice = await stores.accountStore.getGasPrice(gasSpeed);
 
-    this._callContract(
-      web3,
-      lendingContract,
-      "redeemUnderlying",
-      [amountToSend],
-      account,
-      gasPrice,
-      GET_LENDING_BALANCES,
-      callback
-    );
+    this._callContract(web3, lendingContract, 'redeemUnderlying', [amountToSend], account, gasPrice, GET_LENDING_BALANCES, callback);
   };
 
   borrowLend = async (payload) => {
-    const account = stores.accountStore.getStore("account");
+    const account = stores.accountStore.getStore('account');
     if (!account) {
       return false;
       //maybe throw an error
@@ -686,54 +539,26 @@ class Store {
 
     const { lendingAsset, amount, gasSpeed } = payload.content;
 
-    this._callBorrowLend(
-      web3,
-      lendingAsset,
-      account,
-      amount,
-      gasSpeed,
-      (err, depositResult) => {
-        if (err) {
-          return this.emitter.emit(ERROR, err);
-        }
-
-        return this.emitter.emit(BORROW_LEND_RETURNED, depositResult);
+    this._callBorrowLend(web3, lendingAsset, account, amount, gasSpeed, (err, depositResult) => {
+      if (err) {
+        return this.emitter.emit(ERROR, err);
       }
-    );
+
+      return this.emitter.emit(BORROW_LEND_RETURNED, depositResult);
+    });
   };
 
-  _callBorrowLend = async (
-    web3,
-    lendingAsset,
-    account,
-    amount,
-    gasSpeed,
-    callback
-  ) => {
-    const lendingContract = new web3.eth.Contract(
-      CERC20DELEGATORABI,
-      lendingAsset.address
-    );
+  _callBorrowLend = async (web3, lendingAsset, account, amount, gasSpeed, callback) => {
+    const lendingContract = new web3.eth.Contract(CERC20DELEGATORABI, lendingAsset.address);
 
-    const amountToSend = BigNumber(amount)
-      .times(bnDec(lendingAsset.tokenMetadata.decimals))
-      .toFixed(0);
+    const amountToSend = BigNumber(amount).times(bnDec(lendingAsset.tokenMetadata.decimals)).toFixed(0);
     const gasPrice = await stores.accountStore.getGasPrice(gasSpeed);
 
-    this._callContract(
-      web3,
-      lendingContract,
-      "borrow",
-      [amountToSend],
-      account,
-      gasPrice,
-      GET_LENDING_BALANCES,
-      callback
-    );
+    this._callContract(web3, lendingContract, 'borrow', [amountToSend], account, gasPrice, GET_LENDING_BALANCES, callback);
   };
 
   repayLend = async (payload) => {
-    const account = stores.accountStore.getStore("account");
+    const account = stores.accountStore.getStore('account');
     if (!account) {
       return false;
       //maybe throw an error
@@ -747,54 +572,26 @@ class Store {
 
     const { lendingAsset, amount, gasSpeed } = payload.content;
 
-    this._callRepayLend(
-      web3,
-      lendingAsset,
-      account,
-      amount,
-      gasSpeed,
-      (err, depositResult) => {
-        if (err) {
-          return this.emitter.emit(ERROR, err);
-        }
-
-        return this.emitter.emit(REPAY_LEND_RETURNED, depositResult);
+    this._callRepayLend(web3, lendingAsset, account, amount, gasSpeed, (err, depositResult) => {
+      if (err) {
+        return this.emitter.emit(ERROR, err);
       }
-    );
+
+      return this.emitter.emit(REPAY_LEND_RETURNED, depositResult);
+    });
   };
 
-  _callRepayLend = async (
-    web3,
-    lendingAsset,
-    account,
-    amount,
-    gasSpeed,
-    callback
-  ) => {
-    const lendingContract = new web3.eth.Contract(
-      CERC20DELEGATORABI,
-      lendingAsset.address
-    );
+  _callRepayLend = async (web3, lendingAsset, account, amount, gasSpeed, callback) => {
+    const lendingContract = new web3.eth.Contract(CERC20DELEGATORABI, lendingAsset.address);
 
-    const amountToSend = BigNumber(amount)
-      .times(bnDec(lendingAsset.tokenMetadata.decimals))
-      .toFixed(0);
+    const amountToSend = BigNumber(amount).times(bnDec(lendingAsset.tokenMetadata.decimals)).toFixed(0);
     const gasPrice = await stores.accountStore.getGasPrice(gasSpeed);
 
-    this._callContract(
-      web3,
-      lendingContract,
-      "repayBorrow",
-      [amountToSend],
-      account,
-      gasPrice,
-      GET_LENDING_BALANCES,
-      callback
-    );
+    this._callContract(web3, lendingContract, 'repayBorrow', [amountToSend], account, gasPrice, GET_LENDING_BALANCES, callback);
   };
 
   enableCollateralLend = async (payload) => {
-    const account = stores.accountStore.getStore("account");
+    const account = stores.accountStore.getStore('account');
     if (!account) {
       return false;
       //maybe throw an error
@@ -808,51 +605,24 @@ class Store {
 
     const { lendingAsset, gasSpeed } = payload.content;
 
-    this._callEnableCollateral(
-      web3,
-      lendingAsset,
-      account,
-      gasSpeed,
-      (err, depositResult) => {
-        if (err) {
-          return this.emitter.emit(ERROR, err);
-        }
-
-        return this.emitter.emit(
-          ENABLE_COLLATERAL_LEND_RETURNED,
-          depositResult
-        );
+    this._callEnableCollateral(web3, lendingAsset, account, gasSpeed, (err, depositResult) => {
+      if (err) {
+        return this.emitter.emit(ERROR, err);
       }
-    );
+
+      return this.emitter.emit(ENABLE_COLLATERAL_LEND_RETURNED, depositResult);
+    });
   };
 
-  _callEnableCollateral = async (
-    web3,
-    lendingAsset,
-    account,
-    gasSpeed,
-    callback
-  ) => {
-    const comptrollerContract = new web3.eth.Contract(
-      COMPTROLLERABI,
-      COMPTROLLER_ADDRESS
-    );
+  _callEnableCollateral = async (web3, lendingAsset, account, gasSpeed, callback) => {
+    const comptrollerContract = new web3.eth.Contract(COMPTROLLERABI, COMPTROLLER_ADDRESS);
 
     const gasPrice = await stores.accountStore.getGasPrice(gasSpeed);
-    this._callContract(
-      web3,
-      comptrollerContract,
-      "enterMarkets",
-      [[lendingAsset.address]],
-      account,
-      gasPrice,
-      GET_LENDING_BALANCES,
-      callback
-    );
+    this._callContract(web3, comptrollerContract, 'enterMarkets', [[lendingAsset.address]], account, gasPrice, GET_LENDING_BALANCES, callback);
   };
 
   disableCollateralLend = async (payload) => {
-    const account = stores.accountStore.getStore("account");
+    const account = stores.accountStore.getStore('account');
     if (!account) {
       return false;
       //maybe throw an error
@@ -866,77 +636,41 @@ class Store {
 
     const { lendingAsset, gasSpeed } = payload.content;
 
-    this._callDIsableCollateral(
-      web3,
-      lendingAsset,
-      account,
-      gasSpeed,
-      (err, depositResult) => {
-        if (err) {
-          return this.emitter.emit(ERROR, err);
-        }
-
-        return this.emitter.emit(
-          DISABLE_COLLATERAL_LEND_RETURNED,
-          depositResult
-        );
+    this._callDIsableCollateral(web3, lendingAsset, account, gasSpeed, (err, depositResult) => {
+      if (err) {
+        return this.emitter.emit(ERROR, err);
       }
-    );
+
+      return this.emitter.emit(DISABLE_COLLATERAL_LEND_RETURNED, depositResult);
+    });
   };
 
-  _callDIsableCollateral = async (
-    web3,
-    lendingAsset,
-    account,
-    gasSpeed,
-    callback
-  ) => {
-    const comptrollerContract = new web3.eth.Contract(
-      COMPTROLLERABI,
-      COMPTROLLER_ADDRESS
-    );
+  _callDIsableCollateral = async (web3, lendingAsset, account, gasSpeed, callback) => {
+    const comptrollerContract = new web3.eth.Contract(COMPTROLLERABI, COMPTROLLER_ADDRESS);
 
     const gasPrice = await stores.accountStore.getGasPrice(gasSpeed);
 
-    this._callContract(
-      web3,
-      comptrollerContract,
-      "exitMarket",
-      [lendingAsset.address],
-      account,
-      gasPrice,
-      GET_LENDING_BALANCES,
-      callback
-    );
+    this._callContract(web3, comptrollerContract, 'exitMarket', [lendingAsset.address], account, gasPrice, GET_LENDING_BALANCES, callback);
   };
 
-  _callContract = (
-    web3,
-    contract,
-    method,
-    params,
-    account,
-    gasPrice,
-    dispatchEvent,
-    callback
-  ) => {
+  _callContract = (web3, contract, method, params, account, gasPrice, dispatchEvent, callback) => {
     const context = this;
     contract.methods[method](...params)
       .send({
         from: account.address,
-        gasPrice: web3.utils.toWei(gasPrice, "gwei"),
+        gasPrice: web3.utils.toWei(gasPrice, 'gwei'),
       })
-      .on("transactionHash", function (hash) {
+      .on('transactionHash', function (hash) {
         context.emitter.emit(TX_SUBMITTED, hash);
         callback(null, hash);
       })
-      .on("confirmation", function (confirmationNumber, receipt) {
+      .on('confirmation', function (confirmationNumber, receipt) {
         if (dispatchEvent && confirmationNumber === 1) {
           context.dispatcher.dispatch({ type: dispatchEvent });
         }
       })
-      .on("error", function (error) {
-        if (!error.toString().includes("-32601")) {
+      .on('error', function (error) {
+        if (!error.toString().includes('-32601')) {
           if (error.message) {
             return callback(error.message);
           }
@@ -944,7 +678,7 @@ class Store {
         }
       })
       .catch((error) => {
-        if (!error.toString().includes("-32601")) {
+        if (!error.toString().includes('-32601')) {
           if (error.message) {
             return callback(error.message);
           }

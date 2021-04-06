@@ -122,7 +122,6 @@ class Store {
 
       //get all supported assets
       const allAssets = await this._getAssets(web3);
-      console.log(allAssets)
       // get open CDPS
       const vaultContract = new web3.eth.Contract(CDPVAULTABI, CDP_VAULT_ADDRESS);
 

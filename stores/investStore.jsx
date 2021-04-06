@@ -474,6 +474,12 @@ class Store {
 
         const tvlInfo = {
           tvlUSD: vaultsBalanced.reduce((acc, current) => {
+
+            console.log(`${current.type} -> ${current.symbol}`)
+            console.log(current.tvl?.value)
+            console.log('-------------')
+
+
             return BigNumber(acc).plus(current.tvl ? current.tvl.value : 0);
           }, 0),
           totalVaultHoldingsUSD: vaultsBalanced
@@ -490,7 +496,6 @@ class Store {
             .reduce((acc, current) => {
               return BigNumber(acc).plus(current.tvl ? current.tvl.value : 0);
             }, 0),
-          ironBankTvl: '0',
         };
 
         this.setStore({

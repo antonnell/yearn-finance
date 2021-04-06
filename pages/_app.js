@@ -74,8 +74,6 @@ export default function MyApp({ Component, pageProps }) {
   }, []);
 
   const validateConfigured = () => {
-    console.log(router.pathname);
-
     switch (router.pathname) {
       case '/':
         return vaultConfigured && accountConfigured;
