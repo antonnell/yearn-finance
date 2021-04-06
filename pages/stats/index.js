@@ -155,7 +155,7 @@ function StatsData({ vault }) {
           align="right"
           className={classes.fontWeightBold}
         >
-          {vault.apy.recommended
+          {vault.apy?.recommended
             ? formatCurrency(BigNumber(vault.apy.recommended).times(100))
             : "0.00"}
           %
