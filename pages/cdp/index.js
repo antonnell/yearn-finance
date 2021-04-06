@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { Typography, Paper, TextField, InputAdornment } from '@material-ui/core';
+import { Typography, Paper, TextField, InputAdornment, Tooltip } from '@material-ui/core';
 import Skeleton from '@material-ui/lab/Skeleton';
 import SearchIcon from '@material-ui/icons/Search';
 import BigNumber from 'bignumber.js';
@@ -63,8 +63,28 @@ function CDP({ changeTheme }) {
       ? 'Dangerous'
       : cdpStatuses.includes('Moderate')
       ? 'Moderate'
+      : cdpStatuses.includes('Unknown')
+      ? 'Unknown'
       : 'Safe';
   };
+
+  const renderTooltipText = (status) => {
+    let tooltipText = ''
+
+    if(status === 'Safe') {
+      tooltipText = 'Utilization Ratio under 75% is considered safe. It is unlikely that suddent market shifts will put your position at risk'
+    } else if(status === 'Moderate') {
+      tooltipText = 'Utilization Ratio above 75% under 90% is considered moderately safe. It is unlikely that suddent market shifts will put your position at risk'
+    } else if(status === 'Dangerous') {
+      tooltipText = 'Utilization Ratio above 90% is considered dangerous. It is possible that suddent market shifts will put your position at risk'
+    } else if (status === 'Liquidatable') {
+      tooltipText = 'Utilization Ratio above 100%. Your position is liquidatable, which means that people can sell your capital amount in order to recoup losses from the protocol.'
+    } else if (status === 'Unknown') {
+      tooltipText = 'Utilization Ratio is Unknown. This is most likely to occur when price oracles are out of date. Please manually ensure that your position is not comprimised.'
+    }
+
+    return tooltipText
+  }
 
   const renderCDPs = () => {
     const status = getStatus(cdps);
@@ -73,10 +93,12 @@ function CDP({ changeTheme }) {
         <Paper elevation={0} className={classes.overviewContainer}>
           <div className={classes.overviewCard}>
             <CDPSuppliedGraph assets={cdps} />
-            <div>
-              <Typography variant="h2">Total Supplied</Typography>
-              <Typography variant="h1" className={classes.headAmount}>{`$ ${formatCurrency(cdpSupplied)}`}</Typography>
-            </div>
+            <Tooltip title={ cdpSupplied === 'Unknown' ? 'Unable to calculate the supplied amount. This is most likely because the price oracle is out of date.' : 'Dolar value of the assets that you have supplied to the protocol' }>
+              <div>
+                <Typography variant="h2">Total Supplied</Typography>
+                <Typography variant="h1" className={` ${classes.headAmount} ${cdpSupplied === 'Unknown' ? classes.statusWarning : null} `}>{ cdpSupplied === 'Unknown' ? 'Unknown' :  `$ ${formatCurrency(cdpSupplied)}`}</Typography>
+              </div>
+            </Tooltip>
           </div>
           <div className={classes.separator}></div>
           <div className={classes.overviewCard}>
@@ -90,14 +112,20 @@ function CDP({ changeTheme }) {
           <div className={classes.overviewCard}>
             <div>
               <Typography variant="h2">Health</Typography>
-              <Typography
-                variant="h1"
-                className={
-                  status === 'Liquidatable' ? classes.statusLiquid : ['Dangerous', 'Moderate'].includes(status) ? classes.statusWarning : classes.statusSafe
-                }
-              >
-                {status}
-              </Typography>
+              <Tooltip title={ renderTooltipText(status) }>
+                <Typography
+                  variant="h1"
+                  className={
+                    status === 'Liquidatable'
+                      ? classes.statusLiquid
+                      : ['Dangerous', 'Moderate', 'Unknown'].includes(status)
+                      ? classes.statusWarning
+                      : classes.statusSafe
+                  }
+                >
+                  {status}
+                </Typography>
+              </Tooltip>
             </div>
           </div>
         </Paper>

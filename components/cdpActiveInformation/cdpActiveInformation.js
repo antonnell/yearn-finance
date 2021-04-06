@@ -37,8 +37,8 @@ function CDPInformation({ cdp, theme }) {
             Supplied <InfoIcon className={classes.infoIcon} />
           </Typography>
         </Tooltip>
-        <Typography variant="h5" className={classes.valueLineHeight}>
-          $ {formatCurrency(cdp.collateralDolar, 2)}
+        <Typography variant="h5" className={`${classes.valueLineHeight} ${cdp.collateralDolar === 'Unknown' ? classes.statusWarning : null} `}>
+          { cdp.collateralDolar === 'Unknown' ? 'Unknown' : `$ ${formatCurrency(cdp.collateralDolar, 2)}`}
         </Typography>
       </div>
       <div className={classes.cdpInformationContainer}>
@@ -57,8 +57,8 @@ function CDPInformation({ cdp, theme }) {
             Oracle Price <InfoIcon className={classes.infoIcon} />
           </Typography>
         </Tooltip>
-        <Typography variant="h5" className={classes.valueLineHeight}>
-          $ {formatCurrency(cdp.dolarPrice, 4)}
+        <Typography variant="h5" className={ `${classes.valueLineHeight} ${cdp.dolarPrice === 'Stale price' ? classes.statusWarning : null} ` }>
+          { cdp.dolarPrice === 'Stale price' ? 'Stale price' : `$ ${formatCurrency(cdp.dolarPrice, 4)}`}
         </Typography>
       </div>
       <div className={classes.cdpInformationContainer}>
@@ -67,8 +67,8 @@ function CDPInformation({ cdp, theme }) {
             Liquidation Price <InfoIcon className={classes.infoIcon} />
           </Typography>
         </Tooltip>
-        <Typography variant="h5" className={classes.valueLineHeight}>
-          $ {formatCurrency(cdp.liquidationPrice, 4)}
+        <Typography variant="h5" className={`${classes.valueLineHeight} ${cdp.liquidationPrice === 'Unknown' ? classes.statusWarning : null} `}>
+          { cdp.liquidationPrice === 'Unknown' ? 'Unknown' : `$ ${formatCurrency(cdp.liquidationPrice, 4)}`}
         </Typography>
       </div>
       <div className={classes.cdpInformationContainer}>
@@ -82,12 +82,12 @@ function CDPInformation({ cdp, theme }) {
           className={`${classes.valueLineHeight} ${
             cdp.status === "Liquidatable"
               ? classes.statusLiquid
-              : ["Dangerous", "Moderate"].includes(cdp.status)
+              : ["Dangerous", "Moderate", "Unknown"].includes(cdp.status)
               ? classes.statusWarning
               : classes.statusSafe
           }`}
         >
-          {formatCurrency(cdp.utilizationRatio)}%
+          { cdp.utilizationRatio === 'Unknown' ? 'Unknown' : `${formatCurrency(cdp.utilizationRatio)} %`}
         </Typography>
       </div>
     </Paper>

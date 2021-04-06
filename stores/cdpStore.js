@@ -122,7 +122,7 @@ class Store {
 
       //get all supported assets
       const allAssets = await this._getAssets(web3);
-
+      console.log(allAssets)
       // get open CDPS
       const vaultContract = new web3.eth.Contract(CDPVAULTABI, CDP_VAULT_ADDRESS);
 
@@ -145,11 +145,11 @@ class Store {
           ethPrice = BigNumber(ethPrice).div(1e6).toNumber();
         } catch (ex) {
           console.log(ex);
-          this.emitter.emit(CDP_UPDATED);
-          this.emitter.emit(CDP_CONFIGURED);
+          // this.emitter.emit(CDP_UPDATED);
+          // this.emitter.emit(CDP_CONFIGURED);
 
           this.emitter.emit(ERROR, ex);
-          return null;
+          ethPrice = 'Stale price';
         }
       }
 
@@ -232,10 +232,19 @@ class Store {
               let theDebt = BigNumber(debt).div(bnDec(borrowAsset.decimals));
               let theCollateral = BigNumber(collateral).div(bnDec(decimals));
 
-              utilizationRatio = BigNumber(theDebt).times(10000).div(BigNumber(theCollateral).times(liquidationRatio).times(dolarPrice).toNumber()).toNumber();
-              maxUSDPAvailable = BigNumber(collateral).div(bnDec(decimals)).times(liquidationRatio).div(100).times(dolarPrice).toNumber();
-              liquidationPrice = BigNumber(dolarPrice).times(utilizationRatio).div(100).toNumber();
-              if (BigNumber(utilizationRatio).gt(90)) {
+              if(dolarPrice === 'Stale price') {
+                utilizationRatio = 'Unknown'
+                maxUSDPAvailable = 'Unknown'
+                liquidationPrice = 'Unknown'
+              } else {
+                utilizationRatio = BigNumber(theDebt).times(10000).div(BigNumber(theCollateral).times(liquidationRatio).times(dolarPrice).toNumber()).toNumber();
+                maxUSDPAvailable = BigNumber(collateral).div(bnDec(decimals)).times(liquidationRatio).div(100).times(dolarPrice).toNumber();
+                liquidationPrice = BigNumber(dolarPrice).times(utilizationRatio).div(100).toNumber();
+              }
+
+              if (utilizationRatio === 'Unknown') {
+                status = 'Unknown';
+              } else if (BigNumber(utilizationRatio).gt(90)) {
                 status = 'Liquidatable';
               } else if (BigNumber(utilizationRatio).gt(90)) {
                 status = 'Dangerous';
@@ -249,7 +258,7 @@ class Store {
             const returnAsset = {
               defaultOracleType: oracleType,
               collateral: BigNumber(BigNumber(collateral).div(bnDec(decimals)).toFixed(decimals, BigNumber.ROUND_DOWN)).toNumber(),
-              collateralDolar: BigNumber(
+              collateralDolar: dolarPrice === 'Stale price' ? 'Unknown' : BigNumber(
                 BigNumber(collateral).times(dolarPrice).div(bnDec(decimals)).toFixed(decimals, BigNumber.ROUND_DOWN),
               ).toNumber(),
               debt: BigNumber(BigNumber(debt).div(bnDec(borrowAsset.decimals)).toFixed(borrowAsset.decimals, BigNumber.ROUND_DOWN)).toNumber(),
@@ -286,7 +295,7 @@ class Store {
                 symbol: symbol,
                 decimals: decimals,
                 balance: BigNumber(BigNumber(balanceOf).div(bnDec(decimals)).toFixed(decimals, BigNumber.ROUND_DOWN)).toNumber(),
-                balanceDolar: BigNumber(
+                balanceDolar: dolarPrice === 'Stale price' ? 'Unknown' : BigNumber(
                   BigNumber(balanceOf).times(dolarPrice).div(bnDec(decimals)).toFixed(decimals, BigNumber.ROUND_DOWN),
                 ).toNumber(),
                 allowance: BigNumber(BigNumber(allowance).div(bnDec(decimals)).toFixed(decimals)).toNumber(),
@@ -318,6 +327,12 @@ class Store {
           const cdpSupplied = allAssetsPopulated.reduce((val, asset) => {
             if (!asset) {
               return val;
+            }
+            if(val === 'Unknown') {
+              return 'Unknown'
+            }
+            if (asset.collateralDolar === 'Unknown') {
+              return 'Unknown'
             }
             return BigNumber(val).plus(asset.collateralDolar).toNumber();
           }, 0);
@@ -390,7 +405,6 @@ class Store {
   };
 
   _getDolarPrice = async (asset, ethPrice) => {
-    const Q112 = BigNumber('0x10000000000000000000000000000').toNumber()
     try {
       const web3 = await stores.accountStore.getWeb3Provider();
 
@@ -529,8 +543,9 @@ class Store {
 
       return dolar;
     } catch (ex) {
-      if(asset.address === '0xBb2b8038a1640196FbE3e38816F3e67Cba72D940') {
-        console.log(ex)
+      console.log(ex)
+      if(ex.message?.includes('stale prices')) {
+        return 'Stale price'
       }
       return 0;
     }
