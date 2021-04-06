@@ -1,28 +1,19 @@
-import React, { Component } from "react";
-import {
-  Snackbar,
-  IconButton,
-  Button,
-  Typography,
-  SvgIcon
-} from "@material-ui/core";
+import React, { Component } from 'react';
+import { Snackbar, IconButton, Button, Typography, SvgIcon } from '@material-ui/core';
 
-import { colors } from "../../theme/coreTheme";
+import { colors } from '../../theme/coreTheme';
 
 const iconStyle = {
-  fontSize: "22px",
-  marginRight: "10px",
-  verticalAlign: "middle"
+  fontSize: '22px',
+  marginRight: '10px',
+  verticalAlign: 'middle',
 };
 
 function CloseIcon(props) {
   const { color } = props;
   return (
-    <SvgIcon style={{ fontSize: "22px" }}>
-      <path
-        fill={color}
-        d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
-      />
+    <SvgIcon style={{ fontSize: '22px' }}>
+      <path fill={color} d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
     </SvgIcon>
   );
 }
@@ -31,10 +22,7 @@ function SuccessIcon(props) {
   const { color } = props;
   return (
     <SvgIcon style={iconStyle}>
-      <path
-        fill={color}
-        d="M12,0A12,12,0,1,0,24,12,12,12,0,0,0,12,0ZM10.75,16.518,6.25,12.2l1.4-1.435L10.724,13.7l6.105-6.218L18.25,8.892Z"
-      />
+      <path fill={color} d="M12,0A12,12,0,1,0,24,12,12,12,0,0,0,12,0ZM10.75,16.518,6.25,12.2l1.4-1.435L10.724,13.7l6.105-6.218L18.25,8.892Z" />
     </SvgIcon>
   );
 }
@@ -77,7 +65,7 @@ function InfoIcon(props) {
 
 class MySnackbar extends Component {
   state = {
-    open: this.props.open
+    open: this.props.open,
   };
 
   handleClick = () => {
@@ -85,7 +73,7 @@ class MySnackbar extends Component {
   };
 
   handleClose = (event, reason) => {
-    if (reason === "clickaway") {
+    if (reason === 'clickaway') {
       return;
     }
 
@@ -97,65 +85,61 @@ class MySnackbar extends Component {
 
     let icon = <SuccessIcon color={colors.blue} />;
     let color = colors.blue;
-    let messageType = "";
+    let messageType = '';
     let actions = [
       <IconButton key="close" aria-label="Close" onClick={this.handleClose}>
         <CloseIcon />
-      </IconButton>
+      </IconButton>,
     ];
 
     switch (type) {
-      case "Error":
+      case 'Error':
         icon = <ErrorIcon color={colors.red} />;
         color = colors.red;
-        messageType = "Error";
+        messageType = 'Error';
         break;
-      case "Success":
+      case 'Success':
         icon = <SuccessIcon color={colors.blue} />;
         color = colors.blue;
-        messageType = "Success";
+        messageType = 'Success';
         break;
-      case "Warning":
+      case 'Warning':
         icon = <WarningIcon color={colors.orange} />;
         color = colors.orange;
-        messageType = "Warning";
+        messageType = 'Warning';
         break;
-      case "Info":
+      case 'Info':
         icon = <InfoIcon color={colors.blue} />;
         color = colors.blue;
-        messageType = "Info";
+        messageType = 'Info';
         break;
-      case "Hash":
+      case 'Hash':
         icon = <SuccessIcon color={colors.blue} />;
         color = colors.blue;
-        messageType = "Hash";
+        messageType = 'Hash';
 
-        let snackbarMessage = "https://etherscan.io/tx/" + message;
+        let snackbarMessage = 'https://etherscan.io/tx/' + message;
         actions = [
-          <Button
-            variant="text"
-            size="small"
-            onClick={() => window.open(snackbarMessage, "_blank")}
-          >
+          <Button variant="text" size="small" onClick={() => window.open(snackbarMessage, '_blank')}>
             View
           </Button>,
           <IconButton key="close" aria-label="Close" onClick={this.handleClose}>
             <CloseIcon />
-          </IconButton>
+          </IconButton>,
         ];
         break;
       default:
         icon = <SuccessIcon color={colors.blue} />;
         color = colors.blue;
-        messageType = "Success";
+        messageType = 'Success';
         break;
     }
 
     return (
       <Snackbar
         anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left"
+          vertical: 'bottom',
+          horizontal: 'left',
         }}
         open={this.state.open}
         autoHideDuration={6000}
@@ -163,26 +147,24 @@ class MySnackbar extends Component {
         message={
           <div
             style={{
-              padding: "12px",
-              borderLeft: "5px solid " + color,
-              borderRadius: "4px"
+              padding: '12px',
+              borderLeft: '5px solid ' + color,
+              borderRadius: '4px',
             }}
           >
             {icon}
             <div
               style={{
-                display: "inline-block",
-                verticalAlign: "middle",
-                maxWidth: "400px"
+                display: 'inline-block',
+                verticalAlign: 'middle',
+                maxWidth: '400px',
+                overflowX: 'hidden'
               }}
             >
-              <Typography
-                variant="body1"
-                style={{ fontSize: "12px", color: color }}
-              >
+              <Typography variant="body1" style={{ fontSize: '12px', color: color }}>
                 {messageType}
               </Typography>
-              <Typography variant="body1" style={{ fontSize: "10px" }}>
+              <Typography variant="body1" style={{ fontSize: '10px' }}>
                 {message}
               </Typography>
             </div>
