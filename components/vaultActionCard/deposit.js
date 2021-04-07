@@ -424,7 +424,7 @@ export default function Deposit({ vault }) {
             <a href={`https://curve.fi/${vault.tokenMetadata.displayName.replace('crv', '').replace('3Crv', '3pool').toLowerCase()}/deposit`}>
               curve.fi/{vault.tokenMetadata.displayName.replace('crv', '').replace('3Crv', '3pool').toLowerCase()}/deposit
             </a>{' '}
-            and do a deposit there. You will then receive ${vault.tokenMetadata.displayName} you will be able to deposit here.
+            and do a deposit there. You will then receive {vault.tokenMetadata.displayName} you will be able to deposit here.
           </p>
         </>
       ) : (
