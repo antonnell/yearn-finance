@@ -462,6 +462,7 @@ class Store {
           if (
             !currentValue.balanceUSD ||
             BigNumber(currentValue.balanceUSD).eq(0) ||
+            !currentValue.apy ||
             !currentValue.apy.recommended ||
             BigNumber(currentValue.apy.recommended).eq(0)
           ) {
