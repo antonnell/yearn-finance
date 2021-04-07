@@ -10,16 +10,15 @@ import Button from '@material-ui/core/Button';
 import classes from './simulation.module.css';
 import EditAttributesIcon from '@material-ui/icons/SettingsApplications';
 
-export default function Simulation({ amount, vault }) {
+export default function Simulation({ tokenAmount, vault, currentToken, zapperVaults }) {
   const [apy, setAPY] = useState(vault.apy.recommended);
   const interests = BigNumber(amount).times(apy);
   const results = BigNumber(amount).plus(interests);
   const priceUSD = 1000;
   const [pricePerToken, setPricePerToken] = useState(1);
 
-  const [zapperVaults, setZapperVaults] = useState([]);
   const [years, setYears] = useState(1);
-
+  const [amount, setAmount] = useState(tokenAmount);
   //a simple recursive function to compute compound interests
   const yearn = (amount, i, percentage) => {
     while (i > 0) {
@@ -32,27 +31,29 @@ export default function Simulation({ amount, vault }) {
     }
   };
 
+  console.log('currentPricePertoken', tokenAmount, vault, currentToken, zapperVaults);
   const actualResults = yearn(amount, (years && years >= 1 && years <= 200 ? years : 1) - 1, apy);
   const actualIntersts = actualResults.minus(amount);
   const interestsUSD = BigNumber(actualIntersts).times(pricePerToken);
   const resultsUSD = BigNumber(actualResults).times(pricePerToken);
   const [showSimulationForm, setShowSimulationForm] = useState(false);
   React.useEffect(() => {
-    async function fetchVaultsFromZapper() {
-      const response = await fetch('https://api.zapper.fi/v1/vault-stats/yearn?api_key=96e0cc51-a62e-42ca-acee-910ea7d2a241');
-      if (response.status === 200) {
-        const zapperVaultsJSON = await response.json();
-        setZapperVaults(zapperVaultsJSON);
-        zapperVaultsJSON?.length > 0 &&
-          zapperVaultsJSON.map((zvault) => {
-            if (zvault.address.toLowerCase() === vault.address.toLowerCase()) {
-              setPricePerToken(zvault.pricePerToken);
+    function setPriceFromZapper() {
+      let currentTokenPrice = 0;
+      zapperVaults?.length > 0 &&
+        zapperVaults.map((zvault) => {
+          if (zvault.address.toLowerCase() === vault.address.toLowerCase()) {
+            setPricePerToken(zvault.pricePerToken);
+            if (currentToken.address?.toLowerCase() !== vault.tokenMetadata?.address?.toLowerCase()) {
+              setAmount((tokenAmount * currentToken.price) / zvault.pricePerToken);
+            } else {
+              setAmount(tokenAmount);
             }
-          });
-      }
+          }
+        });
     }
-    fetchVaultsFromZapper();
-  }, []);
+    setPriceFromZapper();
+  }, null);
 
   return (
     amount &&

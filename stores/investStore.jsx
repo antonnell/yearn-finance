@@ -1,4 +1,5 @@
 import async from 'async';
+import qs from 'query-string';
 import {
   MAX_UINT256,
   YEARN_API,
@@ -14,6 +15,7 @@ import {
   GET_VAULT_PERFORMANCE,
   VAULT_PERFORMANCE_RETURNED,
   DEPOSIT_VAULT,
+  DEPOSIT_VAULT_ZAPPER,
   DEPOSIT_VAULT_RETURNED,
   WITHDRAW_VAULT,
   WITHDRAW_VAULT_RETURNED,
@@ -23,6 +25,10 @@ import {
   VAULT_TRANSACTIONS_RETURNED,
   CLAIM_VAULT,
   CLAIM_VAULT_RETURNED,
+  ZAPPER_API_URL,
+  ZAPPER_API_KEY,
+  ZAPPER_SLIPPAGE_PERCENTAGE,
+  UPDATE_DEPOSIT_STATUS,
 } from './constants';
 
 import stores from './';
@@ -65,6 +71,9 @@ class Store {
             break;
           case DEPOSIT_VAULT:
             this.depositVault(payload);
+            break;
+          case DEPOSIT_VAULT_ZAPPER:
+            this.depositVaultZapper(payload);
             break;
           case WITHDRAW_VAULT:
             this.withdrawVault(payload);
@@ -294,7 +303,7 @@ class Store {
     );
     const zapperfiBalance = await zapperfiBalanceResults.json();
 
-    console.log(zapperfiBalance)
+    console.log(zapperfiBalance);
 
     async.map(
       vaults,
@@ -352,23 +361,25 @@ class Store {
             .div(bnDec(vault.tokenMetadata.decimals))
             .toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN);
 
-          if(BigNumber(vault.balance).gt(0)) {
+          if (vault.displayName.includes('YFI')) console.log('vvvvvvvvvvvv', vault);
+          if (BigNumber(vault.balance).gt(0)) {
             let foundZapperVault = zapperfiBalance[account.address].filter((v) => {
-              return vault.address.toLowerCase() === v.address.toLowerCase()
-            })
-            if(foundZapperVault && foundZapperVault.length > 0) {
-              vault.balanceUSD = foundZapperVault[0].balanceUSD
+              return vault.address.toLowerCase() === v.address.toLowerCase();
+            });
+            if (foundZapperVault && foundZapperVault.length > 0) {
+              vault.balanceUSD = foundZapperVault[0].balanceUSD;
             } else {
               // if we don't find a balance from zapper (new vault that they don't support yet for example)
-              vault.balanceUSD = BigNumber(vault.balance).times(vault.pricePerFullShare).toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN)
+              vault.balanceUSD = BigNumber(vault.balance).times(vault.pricePerFullShare).toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN);
+              vault.tokenFoundInWalletButNotZapper = true;
             }
           } else {
-            vault.balanceUSD = 0
+            vault.balanceUSD = 0;
           }
 
           // Specific Earn info
           if (vault.type === 'Earn') {
-            let price = 1;   // this is not accurate for WBTC - used to get this from coingecko
+            let price = 1; // this is not accurate for WBTC - used to get this from coingecko
             const totalSupply = await vaultContract.methods.totalSupply().call();
             vault.tvl = {
               totalAssets: totalSupply,
@@ -403,7 +414,6 @@ class Store {
               },
             ];
           }
-
 
           // set strategies where not set
           if (!vault.strategies || vault.strategies.length === 0) {
@@ -662,6 +672,173 @@ class Store {
     const gasPrice = await stores.accountStore.getGasPrice(gasSpeed);
 
     this._callContract(web3, vaultContract, 'deposit', [amountToSend], account, gasPrice, GET_VAULT_BALANCES, callback);
+  };
+
+  depositVaultZapper = async (payload) => {
+    const account = stores.accountStore.getStore('account');
+    if (!account) {
+      return false;
+      //maybe throw an error
+    }
+
+    const web3 = await stores.accountStore.getWeb3Provider();
+    if (!web3) {
+      return false;
+      //maybe throw an error
+    }
+
+    const { vault, amount, currentToken } = payload.content;
+    let fullAmount = new BigNumber(amount).times(10 ** vault.tokenMetadata.decimals);
+    this._callDepositVaultZapper(web3, vault, account, fullAmount, currentToken);
+  };
+
+  _setZapperAPI = (path, search) => {
+    const uri = ZAPPER_API_URL + `${path}?api_key=${ZAPPER_API_KEY}&` + qs.stringify(search);
+    return uri;
+  };
+
+  _callDepositVaultZapper = async (web3, vault, account, amount, currentToken) => {
+    //todo: rewrite the callback unfctionality.
+    const zapperfiGasURI = this._setZapperAPI('/gas-price', {
+      sellTokenAddress: currentToken.address,
+      ownerAddress: account.address,
+    });
+    let alreadyApproved = currentToken.displayName === 'ETH' || currentToken.address === '0x0000000000000000000000000000000000000000';
+    let zapperfiGas = {};
+    try {
+      this.emitter.emit(UPDATE_DEPOSIT_STATUS, 'Getting gas prices from zapper...');
+      const response = await fetch(zapperfiGasURI);
+      if (response.status === 200) {
+        const zapperfiGasPrices = await response.json();
+
+        const zapperfiGasPrice = new BigNumber(zapperfiGasPrices.fast).times(10 ** 9);
+        const zapperfiApprovalURI = this._setZapperAPI('/zap-in/yearn/approval-state', {
+          sellTokenAddress: currentToken.address,
+          ownerAddress: account.address,
+        });
+        this.emitter.emit(UPDATE_DEPOSIT_STATUS, 'Checking token approval...');
+        let responseApproval = { status: 200 };
+        let zapperfiApproval = {};
+        if (!alreadyApproved) {
+          responseApproval = await fetch(zapperfiApprovalURI);
+          zapperfiApproval = await responseApproval.json();
+        }
+        if (responseApproval.status === 200) {
+          console.log('zapperfiApproval0', zapperfiApproval);
+
+          console.log('zapperfiApproval1', zapperfiApproval);
+          if (zapperfiApprovalURI) {
+            const zapperfiApprovalTransactionURI = this._setZapperAPI('/zap-in/yearn/approval-transaction', {
+              sellTokenAddress: currentToken.address,
+              ownerAddress: account.address,
+              gasPrice: zapperfiGasPrice,
+            });
+            this.emitter.emit(UPDATE_DEPOSIT_STATUS, 'Getting approval transaction...');
+            let responseApprovalTransaction = { status: 200 };
+            let zapperfiApprovalTransaction = {};
+            if (!alreadyApproved) {
+              responseApprovalTransaction = await fetch(zapperfiApprovalTransactionURI);
+              zapperfiApprovalTransaction = await responseApprovalTransaction.json();
+            }
+
+            this.emitter.emit(UPDATE_DEPOSIT_STATUS, 'Waiting for your approval...');
+            if (responseApprovalTransaction.status === 200) {
+              alreadyApproved = (zapperfiApproval?.isApproved && zapperfiApproval.allowance > 0) || alreadyApproved;
+              this._callZapperContract(web3, zapperfiApprovalTransaction, alreadyApproved, async (err, approveResult) => {
+                if (err) {
+                  return this.emitter.emit(ERROR, err);
+                } else {
+                  if (!alreadyApproved) {
+                    this.emitter.emit(APPROVE_VAULT_RETURNED, approveResult);
+                  }
+                  const zapperfiSendTransactionURI = this._setZapperAPI('/zap-in/yearn/transaction', {
+                    sellTokenAddress: currentToken.address,
+                    ownerAddress: account.address,
+                    gasPrice: zapperfiGasPrice,
+                    slippagePercentage: ZAPPER_SLIPPAGE_PERCENTAGE,
+                    poolAddress: vault.address.toLowerCase(),
+                    sellAmount: amount,
+                  });
+                  const responseSendTransaction = await fetch(zapperfiSendTransactionURI);
+                  let zapperfiSendTransaction = await responseSendTransaction.json();
+                  this.emitter.emit(UPDATE_DEPOSIT_STATUS, 'Getting deposit transaction...');
+                  if (responseSendTransaction.status === 200) {
+                    this._callZapperContract(web3, zapperfiSendTransaction, false, (err, depositResult) => {
+                      if (err) {
+                        return this.emitter.emit(ERROR, err);
+                      } else {
+                        this.emitter.emit(DEPOSIT_VAULT_RETURNED, depositResult);
+                      }
+                    });
+                  } else {
+                    if (zapperfiSendTransaction?.message) {
+                      return this.emitter.emit(
+                        ERROR,
+                        zapperfiSendTransaction.message
+                          ? zapperfiSendTransaction.message
+                          : 'Sorry, we could not process your request, no funds have been touched.',
+                      );
+                    }
+                  }
+                }
+              });
+            } else {
+              return this.emitter.emit(
+                ERROR,
+                zapperfiApprovalTransaction?.message
+                  ? zapperfiApprovalTransaction.message
+                  : 'Sorry, we could not process your request, no funds have been touched.',
+              );
+            }
+          }
+        } else {
+          return this.emitter.emit(
+            ERROR,
+            zapperfiApproval?.message ? zapperfiApproval.message : 'Sorry, we could not process your request, no funds have been touched.',
+          );
+        }
+      }
+    } catch (error) {
+      console.log('Zap Failed', error);
+      console.log({ message: `Zap Failed. ${error.message}`, poolAddress: 'poolAddress' });
+      return this.emitter.emit(ERROR, error.message ? error.message : 'Sorry, we could not process your request, no funds have been touched.');
+    }
+  };
+
+  _callZapperContract = async (web3, transaction, skip, callback) => {
+    if (skip) {
+      callback(null);
+      return true;
+    } else {
+      const context = this;
+      web3.eth
+        .sendTransaction(transaction)
+        .on('transactionHash', function (hash) {
+          context.emitter.emit(TX_SUBMITTED, hash);
+          callback(null, hash);
+        })
+        .on('confirmation', function (confirmationNumber, receipt) {
+          if (dispatchEvent && confirmationNumber === 1) {
+            context.dispatcher.dispatch({ type: dispatchEvent });
+          }
+        })
+        .on('error', function (error) {
+          if (!error.toString().includes('-32601')) {
+            if (error.message) {
+              return callback(error.message);
+            }
+            callback(error);
+          }
+        })
+        .catch((error) => {
+          if (!error.toString().includes('-32601')) {
+            if (error.message) {
+              return callback(error.message);
+            }
+            callback(error);
+          }
+        });
+    }
   };
 
   withdrawVault = async (payload) => {

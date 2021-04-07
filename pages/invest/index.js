@@ -430,47 +430,139 @@ function Invest({ changeTheme }) {
             </div>
           </Paper>
         )}
-        {((account && account.address && highestHoldings === 'None') || !account) && (
-          <div className={account ? classes.overviewTopPerformersContainer : null}>
-            <Paper elevation={0} className={classes.overviewContainer}>
-              <div className={classes.overviewCard}>
-                <div className={classes.portfolioOutline}>
-                  <AttachMoneyIcon className={classes.portfolioIcon} />
-                </div>
-                <div>
-                  <Popover
-                    open={open}
-                    anchorOrigin={{
-                      vertical: 'center',
-                      horizontal: 'right',
-                    }}
-                    transformOrigin={{
-                      vertical: 'center',
-                      horizontal: 'left',
-                    }}
-                    anchorPosition={anchorEl}
-                    anchorEl={anchorEl}
-                    onClose={handlePopoverClose}
-                    disableRestoreFocus
-                  >
-                    <Typography className={localClasses.popover}>{investPopoverText}</Typography>
-                  </Popover>
-                  <ToggleButton
-                    className={`${classes.vaultTypeButton} ${search === '_stablecoins_' ? classes.stableCoinsSelected : classes.stableCoins}`}
-                    value="Lockup"
-                    onClick={() => {
-                      setSearch(search === '_stablecoins_' ? '' : '_stablecoins_');
-                      setOrderBy({ id: 'apy' });
-                      setOrder('desc');
-                    }}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <FilterListIcon />
-                    <Typography variant="h2">Top Stablecoins APYs</Typography>
-                  </ToggleButton>
+        <div className={account ? classes.overviewTopPerformersContainer : null}>
+          <Paper elevation={0} className={classes.overviewContainer}>
+            <div className={classes.overviewCard}>
+              <div className={classes.portfolioOutline}>
+                <AttachMoneyIcon className={classes.portfolioIcon} />
+              </div>
+              <div>
+                <Popover
+                  open={open}
+                  anchorOrigin={{
+                    vertical: 'center',
+                    horizontal: 'right',
+                  }}
+                  transformOrigin={{
+                    vertical: 'center',
+                    horizontal: 'left',
+                  }}
+                  anchorPosition={anchorEl}
+                  anchorEl={anchorEl}
+                  onClose={handlePopoverClose}
+                  disableRestoreFocus
+                >
+                  <Typography className={localClasses.popover}>{investPopoverText}</Typography>
+                </Popover>
+                <ToggleButton
+                  className={`${classes.vaultTypeButton} ${search === '_stablecoins_' ? classes.stableCoinsSelected : classes.stableCoins}`}
+                  value="Lockup"
+                  onClick={() => {
+                    setSearch(search === '_stablecoins_' ? '' : '_stablecoins_');
+                    setOrderBy({ id: 'apy' });
+                    setOrder('desc');
+                  }}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <FilterListIcon />
+                  <Typography variant="h2">Top Stablecoins APYs</Typography>
+                </ToggleButton>
+                <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
+                  {topVaultPerformers.stableCoinVaults.length > 4 &&
+                    topVaultPerformers.stableCoinVaults.slice(0, 3).map((vault, i) => (
+                      <li>
+                        <span style={{ fontSize: '25px' }}>
+                          {i === 0 ? '🥇' : null}
+                          {i === 1 ? '🥈' : null}
+                          {i === 2 ? '🥉' : null}
+                        </span>
+                        <span
+                          href={`/vaults/${vault.nonLowerCaseAddress}`}
+                          onClick={() => {
+                            handleNavigate(vault);
+                          }}
+                          className={classes.topVaultPerformersLink}
+                        >
+                          {vault.symbol.split(' Vault')[0]} {(vault.apy * 100).toFixed(2)}%{' '}
+                        </span>
+                        <HelpIcon
+                          style={{ cursor: 'pointer' }}
+                          onClick={(event) => {
+                            handlePopoverOpen(event, vault, true);
+                          }}
+                        />
+                      </li>
+                    ))}
+                </ul>
+              </div>
+            </div>
+            <div className={classes.separator}></div>
+            <div className={classes.overviewCard}>
+              <div className={classes.portfolioOutline}>
+                <StarIcon className={classes.portfolioIcon} />
+              </div>
+              <div>
+                <ToggleButton
+                  onClick={() => {
+                    setSearch(search === '_ethbtc_' ? '' : '_ethbtc_');
+                  }}
+                  style={{ cursor: 'pointer' }}
+                  className={`${classes.vaultTypeButton} ${search === '_ethbtc_' ? classes.ethBTCSelected : classes.ethbtc}`}
+                  value="Lockup"
+                >
+                  <FilterListIcon />
+                  <Typography variant="h2">Top BTC and ETH APYs</Typography>
+                </ToggleButton>
+                <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
+                  {topVaultPerformers.ethBTCVaults.length > 4 &&
+                    topVaultPerformers.ethBTCVaults.slice(0, 3).map((vault, i) => (
+                      <li>
+                        <span style={{ fontSize: '25px' }}>
+                          {i === 0 ? '🥇' : null}
+                          {i === 1 ? '🥈' : null}
+                          {i === 2 ? '🥉' : null}
+                        </span>
+                        <span
+                          href={`/vaults/${vault.nonLowerCaseAddress}`}
+                          onClick={() => {
+                            handleNavigate(vault);
+                          }}
+                          className={classes.topVaultPerformersLink}
+                        >
+                          {vault.symbol.split(' Vault')[0]} {(vault.apy * 100).toFixed(2)}%{' '}
+                        </span>
+                        <HelpIcon
+                          style={{ cursor: 'pointer' }}
+                          onClick={(event) => {
+                            handlePopoverOpen(event, vault), false;
+                          }}
+                        />
+                      </li>
+                    ))}
+                </ul>
+              </div>
+            </div>
+            <div className={classes.separator}></div>
+            <div className={classes.overviewCard}>
+              <div className={classes.portfolioOutline}>
+                <ListAltIcon className={classes.portfolioIcon} />
+              </div>
+              <div>
+                <ToggleButton
+                  onClick={() => {
+                    setSearch(search === '_others_' ? '' : '_others_');
+                  }}
+                  style={{ cursor: 'pointer' }}
+                  className={`${classes.vaultTypeButton} ${search === '_others_' ? classes.othersSelected : classes.others}`}
+                  value="Lockup"
+                >
+                  <FilterListIcon />
+                  <Typography variant="h2">Other Top APYs</Typography>
+                </ToggleButton>
+                <Typography variant="h2" className={classes.headAmount}>
                   <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
-                    {topVaultPerformers.stableCoinVaults.length > 4 &&
-                      topVaultPerformers.stableCoinVaults.slice(0, 3).map((vault, i) => (
+                    {topVaultPerformers.otherVaults.length > 4 &&
+                      topVaultPerformers.otherVaults.slice(0, 3).map((vault, i) => (
                         <li>
                           <span style={{ fontSize: '25px' }}>
                             {i === 0 ? '🥇' : null}
@@ -489,111 +581,17 @@ function Invest({ changeTheme }) {
                           <HelpIcon
                             style={{ cursor: 'pointer' }}
                             onClick={(event) => {
-                              handlePopoverOpen(event, vault, true);
+                              handlePopoverOpen(event, vault, false);
                             }}
                           />
                         </li>
                       ))}
                   </ul>
-                </div>
+                </Typography>
               </div>
-              <div className={classes.separator}></div>
-              <div className={classes.overviewCard}>
-                <div className={classes.portfolioOutline}>
-                  <StarIcon className={classes.portfolioIcon} />
-                </div>
-                <div>
-                  <ToggleButton
-                    onClick={() => {
-                      setSearch(search === '_ethbtc_' ? '' : '_ethbtc_');
-                    }}
-                    style={{ cursor: 'pointer' }}
-                    className={`${classes.vaultTypeButton} ${search === '_ethbtc_' ? classes.ethBTCSelected : classes.ethbtc}`}
-                    value="Lockup"
-                  >
-                    <FilterListIcon />
-                    <Typography variant="h2">Top BTC and ETH APYs</Typography>
-                  </ToggleButton>
-                  <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
-                    {topVaultPerformers.ethBTCVaults.length > 4 &&
-                      topVaultPerformers.ethBTCVaults.slice(0, 3).map((vault, i) => (
-                        <li>
-                          <span style={{ fontSize: '25px' }}>
-                            {i === 0 ? '🥇' : null}
-                            {i === 1 ? '🥈' : null}
-                            {i === 2 ? '🥉' : null}
-                          </span>
-                          <span
-                            href={`/vaults/${vault.nonLowerCaseAddress}`}
-                            onClick={() => {
-                              handleNavigate(vault);
-                            }}
-                            className={classes.topVaultPerformersLink}
-                          >
-                            {vault.symbol.split(' Vault')[0]} {(vault.apy * 100).toFixed(2)}%{' '}
-                          </span>
-                          <HelpIcon
-                            style={{ cursor: 'pointer' }}
-                            onClick={(event) => {
-                              handlePopoverOpen(event, vault), false;
-                            }}
-                          />
-                        </li>
-                      ))}
-                  </ul>
-                </div>
-              </div>
-              <div className={classes.separator}></div>
-              <div className={classes.overviewCard}>
-                <div className={classes.portfolioOutline}>
-                  <ListAltIcon className={classes.portfolioIcon} />
-                </div>
-                <div>
-                  <ToggleButton
-                    onClick={() => {
-                      setSearch(search === '_others_' ? '' : '_others_');
-                    }}
-                    style={{ cursor: 'pointer' }}
-                    className={`${classes.vaultTypeButton} ${search === '_others_' ? classes.othersSelected : classes.others}`}
-                    value="Lockup"
-                  >
-                    <FilterListIcon />
-                    <Typography variant="h2">Other Top APYs</Typography>
-                  </ToggleButton>
-                  <Typography variant="h2" className={classes.headAmount}>
-                    <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
-                      {topVaultPerformers.otherVaults.length > 4 &&
-                        topVaultPerformers.otherVaults.slice(0, 3).map((vault, i) => (
-                          <li>
-                            <span style={{ fontSize: '25px' }}>
-                              {i === 0 ? '🥇' : null}
-                              {i === 1 ? '🥈' : null}
-                              {i === 2 ? '🥉' : null}
-                            </span>
-                            <span
-                              href={`/vaults/${vault.nonLowerCaseAddress}`}
-                              onClick={() => {
-                                handleNavigate(vault);
-                              }}
-                              className={classes.topVaultPerformersLink}
-                            >
-                              {vault.symbol.split(' Vault')[0]} {(vault.apy * 100).toFixed(2)}%{' '}
-                            </span>
-                            <HelpIcon
-                              style={{ cursor: 'pointer' }}
-                              onClick={(event) => {
-                                handlePopoverOpen(event, vault, false);
-                              }}
-                            />
-                          </li>
-                        ))}
-                    </ul>
-                  </Typography>
-                </div>
-              </div>
-            </Paper>
-          </div>
-        )}
+            </div>
+          </Paper>
+        </div>
 
         <div className={classes.vaultsContainer}>
           <div className={classes.vaultFilters}>
