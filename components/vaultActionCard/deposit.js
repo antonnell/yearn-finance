@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Typography, InputAdornment, Button, CircularProgress, Tooltip } from '@material-ui/core';
+import { TextField, Typography, InputAdornment, Button, CircularProgress, Tooltip, FormGroup } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import BigNumber from 'bignumber.js';
 import Skeleton from '@material-ui/lab/Skeleton';
 import { formatCurrency } from '../../utils';
@@ -22,6 +24,7 @@ import {
 import Simulation from '../simulation/simulation';
 
 export default function Deposit({ vault }) {
+  const [zapperSlippage, setZapperSlippage] = useState(0.01);
   const [depositStatus, setDepositStatus] = useState('');
   const storeAccount = stores.accountStore.getStore('account');
   const [selectedZapBalanceToken, setSelectedZapBalanceToken] = useState();
@@ -35,6 +38,11 @@ export default function Deposit({ vault }) {
   const [currentToken, setCurrentToken] = useState();
   const [hasVaultToken, setHasVaultToken] = useState(true);
   const [zapperBalanceUpdated, setZapperBalanceUpdated] = useState(false);
+
+  const handleZapperSlippage = (event, slippage) => {
+    if (slippage === 0.01 || slippage === 0.02 || slippage === 0.03) setZapperSlippage(slippage);
+  };
+
   const setAmountPercent = (percent) => {
     setAmountError(false);
 
@@ -67,7 +75,7 @@ export default function Deposit({ vault }) {
     } else {
       stores.dispatcher.dispatch({
         type: DEPOSIT_VAULT_ZAPPER,
-        content: { vault: vault, amount: amount, gasSpeed: gasSpeed, currentToken: currentToken },
+        content: { vault: vault, amount: amount, gasSpeed: gasSpeed, currentToken: currentToken, zapperSlippage: zapperSlippage },
       });
     }
   };
@@ -380,7 +388,41 @@ export default function Deposit({ vault }) {
         ) : null}
         <GasSpeed setParentSpeed={setSpeed} />
       </div>
-
+      {currentToken.address.toLowerCase() === vault.tokenMetadata.address.toLowerCase() ? null : (
+        <div className={classes.zapperSlippageContainer}>
+          <Typography variant="h5" className={classes.title}>
+            Slippage
+          </Typography>{' '}
+          <div className={classes.zapperSlippageForm}>
+            <FormGroup style={{ width: '100%' }}>
+              <ToggleButtonGroup value={zapperSlippage} exclusive onChange={handleZapperSlippage} aria-label="text alignment">
+                <ToggleButton value={0.01} aria-label="0.1%">
+                  1%
+                </ToggleButton>
+                <ToggleButton value={0.02} aria-label="0.2%">
+                  2%
+                </ToggleButton>
+                <ToggleButton value={0.03} aria-label="0.3%">
+                  3%
+                </ToggleButton>
+              </ToggleButtonGroup>
+            </FormGroup>
+            <FormGroup>
+              <TextField
+                className="slippageText"
+                placeholder={0.5}
+                InputProps={{ endAdornment: <InputAdornment position="end">%</InputAdornment> }}
+                fullWidth={false}
+                value={zapperSlippage * 100}
+                style={{ width: '25%', marginTop: '-7px', marginLeft: '10px' }}
+                onChange={(event) => {
+                  setZapperSlippage(event.currentTarget.value / 100);
+                }}
+              />
+            </FormGroup>
+          </div>
+        </div>
+      )}
       {(!account || !account.address) && (
         <div className={classes.actionButton}>
           <Button fullWidth disableElevation variant="contained" color="primary" size="large" onClick={onConnectWallet} disabled={loading}>

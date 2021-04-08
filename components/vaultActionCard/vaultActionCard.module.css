@@ -44,7 +44,6 @@
   margin-left: 12px;
 }
 
-
 .balances {
   display: flex;
   justify-content: flex-end;
@@ -80,7 +79,6 @@
   }
 }
 
-
 @media screen and (max-width: 1000px) {
   .vaultActionContainer {
     margin-bottom: 24px;
@@ -106,4 +104,33 @@
   .scaleContainer {
     margin: 24px 0px;
   }
+}
+
+.zapperSlippageContainer {
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.zapperSlippageForm {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.toggleButtonText {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 0px;
+}
+
+.title {
+  padding-left: 12px;
+  padding-bottom: 12px;
+}
+
+.slippageText {
+  width: 40px;
 }
