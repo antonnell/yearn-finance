@@ -690,7 +690,7 @@ class Store {
 
     const { vault, amount, currentToken } = payload.content;
     let fullAmount = new BigNumber(amount).times(10 ** currentToken.decimals).toFixed(0);
-    this._callDepositVaultZapper(web3, vault, account, fullAmount, currentToken);
+    this._callDepositVaultZapper(web3, vault, account, fullAmount, currentToken, zapperSlippage);
   };
 
   _setZapperAPI = (path, search) => {
@@ -698,7 +698,7 @@ class Store {
     return uri;
   };
 
-  _callDepositVaultZapper = async (web3, vault, account, amount, currentToken) => {
+  _callDepositVaultZapper = async (web3, vault, account, amount, currentToken, zapperSlippage) => {
     //todo: rewrite the callback unfctionality.
     const zapperfiGasURI = this._setZapperAPI('/gas-price', {
       sellTokenAddress: currentToken.address,
@@ -749,11 +749,15 @@ class Store {
                   if (!alreadyApproved) {
                     this.emitter.emit(APPROVE_VAULT_RETURNED, approveResult);
                   }
+                  let slippage = zapperSlippage;
+                  if (!slippage || slippage === 0 || Number.isNaN(slippage)) {
+                    slippage = ZAPPER_SLIPPAGE_PERCENTAGE;
+                  }
                   const zapperfiSendTransactionURI = this._setZapperAPI('/zap-in/yearn/transaction', {
                     sellTokenAddress: currentToken.address,
                     ownerAddress: account.address,
                     gasPrice: zapperfiGasPrice,
-                    slippagePercentage: ZAPPER_SLIPPAGE_PERCENTAGE,
+                    slippagePercentage: slippage,
                     poolAddress: vault.address.toLowerCase(),
                     sellAmount: amount,
                   });
@@ -812,12 +816,12 @@ class Store {
         .sendTransaction(transaction)
         .on('transactionHash', function (hash) {
           context.emitter.emit(TX_SUBMITTED, hash);
-          if(returnImediately) {
+          if (returnImediately) {
             callback(null, hash);
           }
         })
         .on('confirmation', function (confirmationNumber, receipt) {
-          if(!returnImediately && confirmationNumber === 1) {
+          if (!returnImediately && confirmationNumber === 1) {
             callback(null, receipt.transactionHash);
           }
           if (dispatchEvent && confirmationNumber === 1) {
@@ -856,9 +860,9 @@ class Store {
       //maybe throw an error
     }
 
-    const { vault, amount, gasSpeed, currentToken } = payload.content;
+    const { vault, amount, gasSpeed, currentToken, zapperSlippage } = payload.content;
 
-    this._callWithdrawVaultZapper(web3, vault, account, amount, currentToken, (err, withdrawResult) => {
+    this._callWithdrawVaultZapper(web3, vault, account, amount, currentToken, zapperSlippage, (err, withdrawResult) => {
       if (err) {
         return this.emitter.emit(ERROR, err);
       }
@@ -867,7 +871,7 @@ class Store {
     });
   };
 
-  _callWithdrawVaultZapper = async (web3, vault, account, amount, currentToken, callback) => {
+  _callWithdrawVaultZapper = async (web3, vault, account, amount, currentToken, zapperSlippage, callback) => {
     const zapperfiGasURI = this._setZapperAPI('/gas-price', {
       sellTokenAddress: vault.address,
       ownerAddress: account.address,
@@ -916,12 +920,15 @@ class Store {
                   if (!alreadyApproved) {
                     this.emitter.emit(WITHDRAW_VAULT_RETURNED, approveResult);
                   }
-
+                  let slippage = zapperSlippage;
+                  if (!slippage || slippage === 0 || Number.isNaN(slippage)) {
+                    slippage = ZAPPER_SLIPPAGE_PERCENTAGE;
+                  }
                   const sellAmount = new BigNumber(amount).times(10 ** vault.decimals);
                   const zapperfiSendTransactionURI = this._setZapperAPI('/zap-out/yearn/transaction', {
                     ownerAddress: account.address,
                     gasPrice: zapperfiGasPrice,
-                    slippagePercentage: ZAPPER_SLIPPAGE_PERCENTAGE,
+                    slippagePercentage: slippage,
                     poolAddress: vault.address.toLowerCase(),
                     sellAmount: sellAmount,
                     toTokenAddress: currentToken.address,

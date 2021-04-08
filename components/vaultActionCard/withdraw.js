@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Typography, InputAdornment, Button, CircularProgress, Tooltip } from '@material-ui/core';
+import { TextField, Typography, InputAdornment, Button, CircularProgress, Tooltip, FormGroup } from '@material-ui/core';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import BigNumber from 'bignumber.js';
 import Skeleton from '@material-ui/lab/Skeleton';
@@ -12,6 +14,7 @@ import stores from '../../stores';
 import { ERROR, WITHDRAW_VAULT, WITHDRAW_VAULT_ZAPPER, WITHDRAW_VAULT_RETURNED, CONNECT_WALLET, UPDATE_WITHDRAWAL_STATUS } from '../../stores/constants';
 
 export default function Withdraw({ vault }) {
+  const [zapperSlippage, setZapperSlippage] = useState(0.01);
   const storeAccount = stores.accountStore.getStore('account');
   const [withdrawalStatus, setWithdrawalStatus] = useState('');
   const [account, setAccount] = useState(storeAccount);
@@ -28,6 +31,11 @@ export default function Withdraw({ vault }) {
     { label: 'USDT', address: '0xdac17f958d2ee523a2206206994597c13d831ec7', img: `${zapperImgUrl}USDT-icon.png` },
     { label: 'WBTC', address: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599', img: `${zapperImgUrl}WBTC-icon.png` },
   ];
+
+  const handleZapperSlippage = (event, slippage) => {
+    if (slippage === 0.01 || slippage === 0.02 || slippage === 0.03) setZapperSlippage(slippage);
+  };
+
   const [selectedToken, setSelectedToken] = useState(withdrawTokens[0]);
   const setAmountPercent = (percent) => {
     setAmountError(false);
@@ -65,6 +73,7 @@ export default function Withdraw({ vault }) {
           amount: BigNumber(amount).div(vault.pricePerFullShare).toFixed(vault.decimals, BigNumber.ROUND_DOWN),
           gasSpeed: gasSpeed,
           currentToken: selectedToken,
+          zapperSlippage: zapperSlippage,
         },
       });
     }
@@ -183,8 +192,8 @@ export default function Withdraw({ vault }) {
           <Typography variant={'h5'}>100%</Typography>
         </Button>
       </div>
-      { vault.type !== 'Earn' &&
-        <div className={ classes.textField }>
+      {vault.type !== 'Earn' && (
+        <div className={classes.textField}>
           <div className={classes.inputTitleContainer}>
             <div className={classes.inputTitle}>
               <Typography variant="h5" noWrap>
@@ -229,10 +238,46 @@ export default function Withdraw({ vault }) {
             )}
           />
         </div>
-      }
-      <div className={ vault.type !== 'Earn' ? classes.gasExtraPadding : null }>
+      )}
+      <div className={vault.type !== 'Earn' ? classes.gasExtraPadding : null}>
         <GasSpeed setParentSpeed={setSpeed} />
       </div>
+      {selectedToken.isVault ? null : (
+        <div className={classes.zapperSlippageContainer}>
+          <Typography variant="h5" className={classes.title}>
+            Slippage
+          </Typography>{' '}
+          <div className={classes.zapperSlippageForm}>
+            <FormGroup style={{ width: '100%' }}>
+              <ToggleButtonGroup value={zapperSlippage} exclusive onChange={handleZapperSlippage} aria-label="text alignment">
+                <ToggleButton value={0.01} aria-label="0.1%">
+                  1%
+                </ToggleButton>
+                <ToggleButton value={0.02} aria-label="0.2%">
+                  2%
+                </ToggleButton>
+                <ToggleButton value={0.03} aria-label="0.3%">
+                  3%
+                </ToggleButton>
+              </ToggleButtonGroup>
+            </FormGroup>
+            <FormGroup>
+              <TextField
+                className="slippageText"
+                placeholder={0.5}
+                InputProps={{ endAdornment: <InputAdornment position="end">%</InputAdornment> }}
+                fullWidth={false}
+                value={zapperSlippage * 100}
+                style={{ width: '25%', marginTop: '-7px', marginLeft: '10px' }}
+                onChange={(event) => {
+                  setZapperSlippage(event.currentTarget.value / 100);
+                }}
+              />
+            </FormGroup>
+          </div>
+        </div>
+      )}
+
       {(!account || !account.address) && (
         <div className={classes.actionButton}>
           <Button fullWidth disableElevation variant="contained" color="primary" size="large" onClick={onConnectWallet} disabled={loading}>
@@ -243,7 +288,7 @@ export default function Withdraw({ vault }) {
       {account && account.address && (
         <div className={classes.actionButton}>
           <Button fullWidth disableElevation variant="contained" color="primary" size="large" onClick={onWithdraw} disabled={loading}>
-            <Typography variant="h5" className={ classes.flexInline }>
+            <Typography variant="h5" className={classes.flexInline}>
               {loading ? (
                 <>
                   <CircularProgress size={25} />
