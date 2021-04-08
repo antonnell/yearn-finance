@@ -688,7 +688,7 @@ class Store {
       //maybe throw an error
     }
 
-    const { vault, amount, currentToken } = payload.content;
+    const { vault, amount, currentToken, zapperSlippage } = payload.content;
     let fullAmount = new BigNumber(amount).times(10 ** currentToken.decimals).toFixed(0);
     this._callDepositVaultZapper(web3, vault, account, fullAmount, currentToken, zapperSlippage);
   };
