@@ -175,6 +175,10 @@ export default function Deposit({ vault }) {
           tokens = tokensJSON[account.address];
           let tmpTokens = [];
           tokens.map((token) => {
+
+            //we don't trust zapper API balance field. It isn't accurate.
+            token.balance = BigNumber(token.balanceRaw).div(10 ** token.decimals).toFixed(token.decimals)
+            
             if (token?.address?.toLowerCase() === vault?.tokenMetadata?.address?.toLowerCase()) {
               setHasVaultToken(true);
               tmpHasVaultToken = true;
