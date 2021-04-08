@@ -188,7 +188,7 @@ export default function Withdraw({ vault }) {
           <div className={classes.inputTitleContainer}>
             <div className={classes.inputTitle}>
               <Typography variant="h5" noWrap>
-                Withdraw
+                Withdraw to
               </Typography>
             </div>
           </div>
