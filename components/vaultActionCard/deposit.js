@@ -59,7 +59,7 @@ export default function Deposit({ vault }) {
     }
 
     setLoading(true);
-    if (currentToken.address.toLowerCase() === vault.tokenMetadata.address.toLowerCase()) {
+    if (currentToken.address.toLowerCase() === vault.tokenMetadata.address.toLowerCase() || vault.type === 'Earn') {
       stores.dispatcher.dispatch({
         type: DEPOSIT_VAULT,
         content: { vault: vault, amount: amount, gasSpeed: gasSpeed },
@@ -201,7 +201,13 @@ export default function Deposit({ vault }) {
         }
       }
     }
-    fetchAccountBalanceFromZapper();
+
+    if(vault.type === 'Earn') {
+      setCurrentToken(vault.tokenMetadata);
+      setSelectedZapBalanceToken(vault.tokenMetadata);
+    } else {
+      fetchAccountBalanceFromZapper();
+    }
   }, []);
 
   useEffect(() => {
@@ -236,66 +242,87 @@ export default function Deposit({ vault }) {
             </Typography>
           </div>
         </div>
-
-        <div style={{ display: 'flex', flexWrap: 'wrap', marginTop: '10px' }}>
-          <Autocomplete
-            options={zapperBalanceTokens}
-            value={selectedZapBalanceToken}
-            onChange={(event, newValue) => {
-              if (newValue?.address) {
-                let newCurrentToken = {
-                  address: newValue.address,
-                  balance: newValue.balance,
-                  decimals: newValue.decimals,
-                  displayName: newValue.label,
-                  img: newValue.icon,
-                  price: newValue.price,
-                  name: newValue.label,
-                  symbol: newValue.symbol,
-                  allowance: newValue.allowance,
-                };
-                setAmount(0);
-                setCurrentToken(newCurrentToken);
-                setSelectedZapBalanceToken(newValue);
-              }
+        {
+          vault.type === 'Earn' &&
+          <TextField
+            variant="outlined"
+            fullWidth
+            placeholder=""
+            value={amount}
+            error={amountError}
+            onChange={onAmountChanged}
+            InputProps={{
+              endAdornment: <InputAdornment position="end">{vault.tokenMetadata.displayName}</InputAdornment>,
+              startAdornment: (
+                <InputAdornment position="start">
+                  <img src={vault.tokenMetadata.icon} alt="" width={30} height={30} />
+                </InputAdornment>
+              ),
             }}
-            getOptionLabel={(option) => option.label}
-            style={{ width: '55%', marginRight: '5px' }}
-            renderOption={(option, { selected }) => (
-              <React.Fragment>
-                <img src={option.icon ? option.icon : `https://zapper.fi/images/${option.img}`} alt="" width={30} height={30} style={{ marginRight: '10px' }} />
-                <span className={classes.color} style={{ backgroundColor: option.color }} />
-                <div className={classes.text}>
-                  {option.label}
-                  <br />
-                </div>
-              </React.Fragment>
-            )}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                InputProps={{
-                  ...params.InputProps,
-                  ...{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <img
-                          src={selectedZapBalanceToken?.icon ? selectedZapBalanceToken.icon : `https://zapper.fi/images/${selectedZapBalanceToken.img}`}
-                          alt=""
-                          width={30}
-                          height={30}
-                        />
-                      </InputAdornment>
-                    ),
-                  },
-                }}
-                label="Token"
-                variant="outlined"
-              />
-            )}
           />
-          <TextField variant="outlined" style={{ width: '40%' }} placeholder="" value={amount} error={amountError} onChange={onAmountChanged} />
-        </div>
+        }
+        {
+          vault.type !== 'Earn' &&
+          <div style={{ display: 'flex', flexWrap: 'wrap', marginTop: '10px' }}>
+            <Autocomplete
+              options={zapperBalanceTokens}
+              value={selectedZapBalanceToken}
+              onChange={(event, newValue) => {
+                if (newValue?.address) {
+                  let newCurrentToken = {
+                    address: newValue.address,
+                    balance: newValue.balance,
+                    decimals: newValue.decimals,
+                    displayName: newValue.label,
+                    img: newValue.icon,
+                    price: newValue.price,
+                    name: newValue.label,
+                    symbol: newValue.symbol,
+                    allowance: newValue.allowance,
+                  };
+                  setAmount(0);
+                  setCurrentToken(newCurrentToken);
+                  setSelectedZapBalanceToken(newValue);
+                }
+              }}
+              getOptionLabel={(option) => option.label}
+              style={{ width: '55%', marginRight: '5px' }}
+              renderOption={(option, { selected }) => (
+                <React.Fragment>
+                  <img src={option.icon ? option.icon : `https://zapper.fi/images/${option.img}`} alt="" width={30} height={30} style={{ marginRight: '10px' }} />
+                  <span className={classes.color} style={{ backgroundColor: option.color }} />
+                  <div className={classes.text}>
+                    {option.label}
+                    <br />
+                  </div>
+                </React.Fragment>
+              )}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  InputProps={{
+                    ...params.InputProps,
+                    ...{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <img
+                            src={selectedZapBalanceToken?.icon ? selectedZapBalanceToken.icon : `https://zapper.fi/images/${selectedZapBalanceToken.img}`}
+                            alt=""
+                            width={30}
+                            height={30}
+                          />
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
+                  label="Token"
+                  variant="outlined"
+                />
+              )}
+            />
+            <TextField variant="outlined" style={{ width: '40%' }} placeholder="" value={amount} error={amountError} onChange={onAmountChanged} />
+          </div>
+        }
       </div>
       <div className={classes.scaleContainer}>
         <Tooltip title="25% of your wallet balance">

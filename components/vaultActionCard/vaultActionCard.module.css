@@ -19,7 +19,7 @@
 }
 
 .scaleContainer {
-  margin: 12px 0px 72px 0px;
+  margin: 12px 0px 36px 0px;
   width: 100%;
   display: flex;
   align-items: center;
@@ -68,6 +68,10 @@
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+.gasExtraPadding {
+  padding-top: 24px;
 }
 
 @media screen and (max-width: 1400px) {

@@ -183,10 +183,56 @@ export default function Withdraw({ vault }) {
           <Typography variant={'h5'}>100%</Typography>
         </Button>
       </div>
-      <div>
+      { vault.type !== 'Earn' &&
+        <div className={ classes.textField }>
+          <div className={classes.inputTitleContainer}>
+            <div className={classes.inputTitle}>
+              <Typography variant="h5" noWrap>
+                Withdraw
+              </Typography>
+            </div>
+          </div>
+          <Autocomplete
+            disableClearable={true}
+            options={withdrawTokens}
+            value={selectedToken}
+            onChange={(event, newValue) => {
+              setSelectedToken(newValue);
+            }}
+            getOptionLabel={(option) => option.label}
+            fullWidth={true}
+            renderOption={(option, { selected }) => (
+              <React.Fragment>
+                <img src={option.img} alt="" width={30} height={30} style={{ marginRight: '10px' }} />
+                <span className={classes.color} style={{ backgroundColor: option.color }} />
+                <div className={classes.text}>
+                  {option.label}
+                  <br />
+                </div>
+              </React.Fragment>
+            )}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                InputProps={{
+                  ...params.InputProps,
+                  ...{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <img src={selectedToken.img} alt="" width={30} height={30} />
+                      </InputAdornment>
+                    ),
+                  },
+                }}
+                variant="outlined"
+              />
+            )}
+          />
+        </div>
+      }
+      <div className={ vault.type !== 'Earn' ? classes.gasExtraPadding : null }>
         <GasSpeed setParentSpeed={setSpeed} />
       </div>
-
       {(!account || !account.address) && (
         <div className={classes.actionButton}>
           <Button fullWidth disableElevation variant="contained" color="primary" size="large" onClick={onConnectWallet} disabled={loading}>
@@ -195,61 +241,20 @@ export default function Withdraw({ vault }) {
         </div>
       )}
       {account && account.address && (
-        <>
-          <div className={classes.actionButton}>
-            <Autocomplete
-              disableClearable={true}
-              options={withdrawTokens}
-              value={selectedToken}
-              onChange={(event, newValue) => {
-                setSelectedToken(newValue);
-              }}
-              getOptionLabel={(option) => option.label}
-              fullWidth={true}
-              renderOption={(option, { selected }) => (
-                <React.Fragment>
-                  <img src={option.img} alt="" width={30} height={30} style={{ marginRight: '10px' }} />
-                  <span className={classes.color} style={{ backgroundColor: option.color }} />
-                  <div className={classes.text}>
-                    {option.label}
-                    <br />
-                  </div>
-                </React.Fragment>
+        <div className={classes.actionButton}>
+          <Button fullWidth disableElevation variant="contained" color="primary" size="large" onClick={onWithdraw} disabled={loading}>
+            <Typography variant="h5" className={ classes.flexInline }>
+              {loading ? (
+                <>
+                  <CircularProgress size={25} />
+                  {withdrawalStatus}
+                </>
+              ) : (
+                `Withdraw to ${selectedToken.label}`
               )}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  InputProps={{
-                    ...params.InputProps,
-                    ...{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <img src={selectedToken.img} alt="" width={30} height={30} />
-                        </InputAdornment>
-                      ),
-                    },
-                  }}
-                  label="Withdraw to..."
-                  variant="outlined"
-                />
-              )}
-            />
-          </div>
-          <div className={classes.actionButton}>
-            <Button fullWidth disableElevation variant="contained" color="primary" size="large" onClick={onWithdraw} disabled={loading}>
-              <Typography variant="h5" className={ classes.flexInline }>
-                {loading ? (
-                  <>
-                    <CircularProgress size={25} />
-                    {withdrawalStatus}
-                  </>
-                ) : (
-                  `Withdraw to ${selectedToken.label}`
-                )}
-              </Typography>
-            </Button>
-          </div>
-        </>
+            </Typography>
+          </Button>
+        </div>
       )}
     </div>
   );
