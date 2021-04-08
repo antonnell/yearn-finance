@@ -872,7 +872,7 @@ class Store {
       sellTokenAddress: vault.address,
       ownerAddress: account.address,
     });
-    let alreadyApproved = currentToken.displayName === 'ETH' || currentToken.address === '0x0000000000000000000000000000000000000000';
+    let alreadyApproved = false;
     try {
       this.emitter.emit(UPDATE_DEPOSIT_STATUS, 'Getting gas prices from zapper...');
       const response = await fetch(zapperfiGasURI);
