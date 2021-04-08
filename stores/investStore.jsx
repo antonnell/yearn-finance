@@ -485,11 +485,9 @@ class Store {
 
         const tvlInfo = {
           tvlUSD: vaultsBalanced.reduce((acc, current) => {
-
-            console.log(`${current.type} -> ${current.symbol}`)
-            console.log(current.tvl?.value)
-            console.log('-------------')
-
+            console.log(`${current.type} -> ${current.symbol}`);
+            console.log(current.tvl?.value);
+            console.log('-------------');
 
             return BigNumber(acc).plus(current.tvl ? current.tvl.value : 0);
           }, 0),
@@ -689,7 +687,7 @@ class Store {
     }
 
     const { vault, amount, currentToken } = payload.content;
-    let fullAmount = new BigNumber(amount).times(10 ** vault.tokenMetadata.decimals);
+    let fullAmount = new BigNumber(amount).times(10 ** currentToken.decimals);
     this._callDepositVaultZapper(web3, vault, account, fullAmount, currentToken);
   };
 

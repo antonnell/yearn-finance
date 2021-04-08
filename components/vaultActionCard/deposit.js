@@ -64,8 +64,7 @@ export default function Deposit({ vault }) {
         type: DEPOSIT_VAULT,
         content: { vault: vault, amount: amount, gasSpeed: gasSpeed },
       });
-    }
-    {
+    } else {
       stores.dispatcher.dispatch({
         type: DEPOSIT_VAULT_ZAPPER,
         content: { vault: vault, amount: amount, gasSpeed: gasSpeed, currentToken: currentToken },
