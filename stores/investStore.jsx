@@ -18,6 +18,7 @@ import {
   DEPOSIT_VAULT_ZAPPER,
   DEPOSIT_VAULT_RETURNED,
   WITHDRAW_VAULT,
+  WITHDRAW_VAULT_ZAPPER,
   WITHDRAW_VAULT_RETURNED,
   APPROVE_VAULT,
   APPROVE_VAULT_RETURNED,
@@ -29,6 +30,7 @@ import {
   ZAPPER_API_KEY,
   ZAPPER_SLIPPAGE_PERCENTAGE,
   UPDATE_DEPOSIT_STATUS,
+  UPDATE_WITHDRAWAL_STATUS,
 } from './constants';
 
 import stores from './';
@@ -77,6 +79,9 @@ class Store {
             break;
           case WITHDRAW_VAULT:
             this.withdrawVault(payload);
+            break;
+          case WITHDRAW_VAULT_ZAPPER:
+            this.withdrawVaultZapper(payload);
             break;
           case APPROVE_VAULT:
             this.approveVault(payload);
@@ -303,8 +308,6 @@ class Store {
     );
     const zapperfiBalance = await zapperfiBalanceResults.json();
 
-    console.log(zapperfiBalance);
-
     async.map(
       vaults,
       async (vault, callback) => {
@@ -361,7 +364,6 @@ class Store {
             .div(bnDec(vault.tokenMetadata.decimals))
             .toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN);
 
-          if (vault.displayName.includes('YFI')) console.log('vvvvvvvvvvvv', vault);
           if (BigNumber(vault.balance).gt(0)) {
             let foundZapperVault = zapperfiBalance[account.address].filter((v) => {
               return vault.address.toLowerCase() === v.address.toLowerCase();
@@ -722,9 +724,6 @@ class Store {
           zapperfiApproval = await responseApproval.json();
         }
         if (responseApproval.status === 200) {
-          console.log('zapperfiApproval0', zapperfiApproval);
-
-          console.log('zapperfiApproval1', zapperfiApproval);
           if (zapperfiApprovalURI) {
             const zapperfiApprovalTransactionURI = this._setZapperAPI('/zap-in/yearn/approval-transaction', {
               sellTokenAddress: currentToken.address,
@@ -797,7 +796,6 @@ class Store {
         }
       }
     } catch (error) {
-      console.log('Zap Failed', error);
       console.log({ message: `Zap Failed. ${error.message}`, poolAddress: 'poolAddress' });
       return this.emitter.emit(ERROR, error.message ? error.message : 'Sorry, we could not process your request, no funds have been touched.');
     }
@@ -839,6 +837,133 @@ class Store {
     }
   };
 
+  withdrawVaultZapper = async (payload) => {
+    const account = stores.accountStore.getStore('account');
+    if (!account) {
+      return false;
+      //maybe throw an error
+    }
+
+    const web3 = await stores.accountStore.getWeb3Provider();
+    if (!web3) {
+      return false;
+      //maybe throw an error
+    }
+
+    const { vault, amount, gasSpeed, currentToken } = payload.content;
+
+    this._callWithdrawVaultZapper(web3, vault, account, amount, currentToken, (err, withdrawResult) => {
+      if (err) {
+        return this.emitter.emit(ERROR, err);
+      }
+
+      return this.emitter.emit(WITHDRAW_VAULT_RETURNED, withdrawResult);
+    });
+  };
+
+  _callWithdrawVaultZapper = async (web3, vault, account, amount, currentToken, callback) => {
+    const zapperfiGasURI = this._setZapperAPI('/gas-price', {
+      sellTokenAddress: vault.address,
+      ownerAddress: account.address,
+    });
+    let alreadyApproved = currentToken.displayName === 'ETH' || currentToken.address === '0x0000000000000000000000000000000000000000';
+    try {
+      this.emitter.emit(UPDATE_DEPOSIT_STATUS, 'Getting gas prices from zapper...');
+      const response = await fetch(zapperfiGasURI);
+      if (response.status === 200) {
+        const zapperfiGasPrices = await response.json();
+
+        const zapperfiGasPrice = new BigNumber(zapperfiGasPrices.fast).times(10 ** 9);
+        const zapperfiApprovalURI = this._setZapperAPI('/zap-out/yearn/approval-state', {
+          sellTokenAddress: vault.address,
+          ownerAddress: account.address,
+        });
+        this.emitter.emit(UPDATE_WITHDRAWAL_STATUS, 'Checking token approval...');
+        let responseApproval = { status: 200 };
+        let zapperfiApproval = {};
+        if (!alreadyApproved) {
+          responseApproval = await fetch(zapperfiApprovalURI);
+          zapperfiApproval = await responseApproval.json();
+        }
+        if (responseApproval.status === 200) {
+          if (zapperfiApprovalURI) {
+            const zapperfiApprovalTransactionURI = this._setZapperAPI('/zap-out/yearn/approval-transaction', {
+              sellTokenAddress: vault.address,
+              ownerAddress: account.address,
+              gasPrice: zapperfiGasPrice,
+            });
+            this.emitter.emit(UPDATE_WITHDRAWAL_STATUS, 'Getting approval transaction...');
+            let responseApprovalTransaction = { status: 200 };
+            let zapperfiApprovalTransaction = {};
+            if (!alreadyApproved) {
+              responseApprovalTransaction = await fetch(zapperfiApprovalTransactionURI);
+              zapperfiApprovalTransaction = await responseApprovalTransaction.json();
+            }
+
+            this.emitter.emit(UPDATE_WITHDRAWAL_STATUS, 'Waiting for your approval...');
+            if (responseApprovalTransaction.status === 200) {
+              alreadyApproved = (zapperfiApproval?.isApproved && zapperfiApproval.allowance > 0) || alreadyApproved;
+              this._callZapperContract(web3, zapperfiApprovalTransaction, alreadyApproved, async (err, approveResult) => {
+                if (err) {
+                  return this.emitter.emit(ERROR, err);
+                } else {
+                  if (!alreadyApproved) {
+                    this.emitter.emit(WITHDRAW_VAULT_RETURNED, approveResult);
+                  }
+
+                  const sellAmount = new BigNumber(amount).times(10 ** vault.decimals);
+                  const zapperfiSendTransactionURI = this._setZapperAPI('/zap-out/yearn/transaction', {
+                    ownerAddress: account.address,
+                    gasPrice: zapperfiGasPrice,
+                    slippagePercentage: ZAPPER_SLIPPAGE_PERCENTAGE,
+                    poolAddress: vault.address.toLowerCase(),
+                    sellAmount: sellAmount,
+                    toTokenAddress: currentToken.address,
+                  });
+                  const responseSendTransaction = await fetch(zapperfiSendTransactionURI);
+                  let zapperfiSendTransaction = await responseSendTransaction.json();
+                  this.emitter.emit(UPDATE_WITHDRAWAL_STATUS, 'Getting withdrawal transaction...');
+                  if (responseSendTransaction.status === 200) {
+                    this._callZapperContract(web3, zapperfiSendTransaction, false, (err, depositResult) => {
+                      if (err) {
+                        return this.emitter.emit(ERROR, err);
+                      } else {
+                        this.emitter.emit(WITHDRAW_VAULT_RETURNED, depositResult);
+                      }
+                    });
+                  } else {
+                    if (zapperfiSendTransaction?.message) {
+                      return this.emitter.emit(
+                        ERROR,
+                        zapperfiSendTransaction.message
+                          ? zapperfiSendTransaction.message
+                          : 'Sorry, we could not process your request, no funds have been touched.',
+                      );
+                    }
+                  }
+                }
+              });
+            } else {
+              return this.emitter.emit(
+                ERROR,
+                zapperfiApprovalTransaction?.message
+                  ? zapperfiApprovalTransaction.message
+                  : 'Sorry, we could not process your request, no funds have been touched.',
+              );
+            }
+          }
+        } else {
+          return this.emitter.emit(
+            ERROR,
+            zapperfiApproval?.message ? zapperfiApproval.message : 'Sorry, we could not process your request, no funds have been touched.',
+          );
+        }
+      }
+    } catch (error) {
+      console.log({ message: `Zap Failed. ${error.message}`, poolAddress: 'poolAddress' });
+      return this.emitter.emit(ERROR, error.message ? error.message : 'Sorry, we could not process your request, no funds have been touched.');
+    }
+  };
   withdrawVault = async (payload) => {
     const account = stores.accountStore.getStore('account');
     if (!account) {
