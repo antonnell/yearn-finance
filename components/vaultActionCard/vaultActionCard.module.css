@@ -64,6 +64,12 @@
   margin-right: 6px !important;
 }
 
+.flexInline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 @media screen and (max-width: 1400px) {
   .vaultActionContainer {
     margin-right: 24px;

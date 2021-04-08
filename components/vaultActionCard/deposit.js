@@ -178,7 +178,7 @@ export default function Deposit({ vault }) {
 
             //we don't trust zapper API balance field. It isn't accurate.
             token.balance = BigNumber(token.balanceRaw).div(10 ** token.decimals).toFixed(token.decimals)
-            
+
             if (token?.address?.toLowerCase() === vault?.tokenMetadata?.address?.toLowerCase()) {
               setHasVaultToken(true);
               tmpHasVaultToken = true;
@@ -367,7 +367,7 @@ export default function Deposit({ vault }) {
             BigNumber(currentToken.allowance).gte(amount) ||
             currentToken.address.toLowerCase() !== vault.tokenMetadata.address.toLowerCase()) && (
             <Button fullWidth disableElevation variant="contained" color="primary" size="large" onClick={onDeposit} disabled={loading}>
-              <Typography variant="h5">
+              <Typography variant="h5" className={ classes.flexInline }>
                 {loading ? (
                   <>
                     <CircularProgress size={25} />

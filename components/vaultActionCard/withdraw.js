@@ -237,7 +237,7 @@ export default function Withdraw({ vault }) {
           </div>
           <div className={classes.actionButton}>
             <Button fullWidth disableElevation variant="contained" color="primary" size="large" onClick={onWithdraw} disabled={loading}>
-              <Typography variant="h5">
+              <Typography variant="h5" className={ classes.flexInline }>
                 {loading ? (
                   <>
                     <CircularProgress size={25} />

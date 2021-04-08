@@ -742,7 +742,7 @@ class Store {
             this.emitter.emit(UPDATE_DEPOSIT_STATUS, 'Waiting for your approval...');
             if (responseApprovalTransaction.status === 200) {
               alreadyApproved = (zapperfiApproval?.isApproved && zapperfiApproval.allowance > 0) || alreadyApproved;
-              this._callZapperContract(web3, zapperfiApprovalTransaction, alreadyApproved, async (err, approveResult) => {
+              this._callZapperContract(web3, zapperfiApprovalTransaction, alreadyApproved, false, null, async (err, approveResult) => {
                 if (err) {
                   return this.emitter.emit(ERROR, err);
                 } else {
@@ -761,7 +761,7 @@ class Store {
                   let zapperfiSendTransaction = await responseSendTransaction.json();
                   this.emitter.emit(UPDATE_DEPOSIT_STATUS, 'Getting deposit transaction...');
                   if (responseSendTransaction.status === 200) {
-                    this._callZapperContract(web3, zapperfiSendTransaction, false, (err, depositResult) => {
+                    this._callZapperContract(web3, zapperfiSendTransaction, false, true, GET_VAULT_BALANCES, (err, depositResult) => {
                       if (err) {
                         return this.emitter.emit(ERROR, err);
                       } else {
@@ -802,7 +802,7 @@ class Store {
     }
   };
 
-  _callZapperContract = async (web3, transaction, skip, callback) => {
+  _callZapperContract = async (web3, transaction, skip, returnImediately, dispatchEvent, callback) => {
     if (skip) {
       callback(null);
       return true;
@@ -812,9 +812,14 @@ class Store {
         .sendTransaction(transaction)
         .on('transactionHash', function (hash) {
           context.emitter.emit(TX_SUBMITTED, hash);
-          callback(null, hash);
+          if(returnImediately) {
+            callback(null, hash);
+          }
         })
         .on('confirmation', function (confirmationNumber, receipt) {
+          if(!returnImediately && confirmationNumber === 1) {
+            callback(null, receipt.transactionHash);
+          }
           if (dispatchEvent && confirmationNumber === 1) {
             context.dispatcher.dispatch({ type: dispatchEvent });
           }
@@ -904,7 +909,7 @@ class Store {
             this.emitter.emit(UPDATE_WITHDRAWAL_STATUS, 'Waiting for your approval...');
             if (responseApprovalTransaction.status === 200) {
               alreadyApproved = (zapperfiApproval?.isApproved && zapperfiApproval.allowance > 0) || alreadyApproved;
-              this._callZapperContract(web3, zapperfiApprovalTransaction, alreadyApproved, async (err, approveResult) => {
+              this._callZapperContract(web3, zapperfiApprovalTransaction, alreadyApproved, false, null, async (err, approveResult) => {
                 if (err) {
                   return this.emitter.emit(ERROR, err);
                 } else {
@@ -925,7 +930,7 @@ class Store {
                   let zapperfiSendTransaction = await responseSendTransaction.json();
                   this.emitter.emit(UPDATE_WITHDRAWAL_STATUS, 'Getting withdrawal transaction...');
                   if (responseSendTransaction.status === 200) {
-                    this._callZapperContract(web3, zapperfiSendTransaction, false, (err, depositResult) => {
+                    this._callZapperContract(web3, zapperfiSendTransaction, false, true, GET_VAULT_BALANCES, (err, depositResult) => {
                       if (err) {
                         return this.emitter.emit(ERROR, err);
                       } else {
