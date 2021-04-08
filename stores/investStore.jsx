@@ -487,9 +487,9 @@ class Store {
 
         const tvlInfo = {
           tvlUSD: vaultsBalanced.reduce((acc, current) => {
-            console.log(`${current.type} -> ${current.symbol}`);
-            console.log(current.tvl?.value);
-            console.log('-------------');
+            // console.log(`${current.type} -> ${current.symbol}`);
+            // console.log(current.tvl?.value);
+            // console.log('-------------');
 
             return BigNumber(acc).plus(current.tvl ? current.tvl.value : 0);
           }, 0),

@@ -389,7 +389,7 @@ export default function EnhancedTable({ cdps, borrowAsset }) {
 
                 return (
                   <ExpandableTableRow
-                    key={row.name}
+                    key={labelId}
                     expandComponent={
                       <CDPDetails
                         cdp={row}

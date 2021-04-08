@@ -134,7 +134,7 @@ class Store {
           .call({});
         ethPrice = BigNumber(ethPrice).div(1e6).toNumber();
       } catch (ex) {
-        console.log(ex);
+        // console.log(ex);
         try {
           const sendAmount0 = (1e18).toFixed(0);
           const keep3rContract = new web3.eth.Contract(KEEP3RV1ORACLEABI, KEEP3R_ORACLE_ADDRESS);
@@ -143,7 +143,7 @@ class Store {
             .call({});
           ethPrice = BigNumber(ethPrice).div(1e6).toNumber();
         } catch (ex) {
-          console.log(ex);
+          // console.log(ex);
           // this.emitter.emit(CDP_UPDATED);
           // this.emitter.emit(CDP_CONFIGURED);
 
@@ -192,8 +192,20 @@ class Store {
                 const prepend = oracleType === 4 ? 'UNI' : 'SUSHI'
                 const erc20Contract0 = new web3.eth.Contract(ERC20ABI, token0)
                 const erc20Contract1 = new web3.eth.Contract(ERC20ABI, token1)
-                const symbol0 = await erc20Contract0.methods.symbol().call()
-                const symbol1 = await erc20Contract1.methods.symbol().call()
+                let symbol0 = ''
+                let symbol1 = ''
+
+                if(token0 !== '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2') {
+                  symbol0 = await erc20Contract0.methods.symbol().call()
+                } else {
+                  symbol0 = 'MKR'
+                }
+
+                if(token1 !== '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2') {
+                  symbol1 = await erc20Contract1.methods.symbol().call()
+                } else {
+                  symbol1 = 'MKR'
+                }
 
                 symbol = `${prepend}-${symbol0}/${symbol1}`
               } else {
@@ -504,7 +516,13 @@ class Store {
             token0Price = ethPrice
           } else {
             let erc20Contract = new web3.eth.Contract(ERC20ABI, token0)
-            let decimalsToken0 = parseInt(await erc20Contract.methods.decimals().call())
+            let decimalsToken0 = 18
+            if(token0 !== '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2') {
+              decimalsToken0 = parseInt(await erc20Contract.methods.decimals().call())
+            } else {
+              //for MKR
+              decimalsToken0 = 18
+            }
             let sendAmountToken0 = (10 ** decimalsToken0).toFixed(0);
             let token0EthPrice = await keep3rContract.methods.current(token0, sendAmountToken0, '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2').call({});
 
@@ -518,7 +536,14 @@ class Store {
             token1Price = ethPrice
           } else {
             let erc20Contract = new web3.eth.Contract(ERC20ABI, token1)
-            let decimalsToken1 = parseInt(await erc20Contract.methods.decimals().call())
+            let decimalsToken1 = 18
+            if(token1 !== '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2') {
+              decimalsToken1 = parseInt(await erc20Contract.methods.decimals().call())
+            } else {
+              //for MKR
+              decimalsToken0 = 18
+            }
+
             let sendAmountToken1 = (10 ** decimalsToken1).toFixed(0);
             let token1EthPrice = await keep3rContract.methods.current(token1, sendAmountToken1, '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2').call({});
 
@@ -542,7 +567,7 @@ class Store {
 
       return dolar;
     } catch (ex) {
-      console.log(ex)
+      // console.log(ex)
       if(ex.message?.includes('stale prices')) {
         return 'Stale price'
       }

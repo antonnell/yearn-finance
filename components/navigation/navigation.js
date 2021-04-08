@@ -131,8 +131,8 @@ function StatsIcon(props) {
         fill={color}
       />
       <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
+        fillRule="evenodd"
+        clipRule="evenodd"
         d="M21 20.7129H3V18.7129H21V20.7129Z"
         fill={color}
       />
@@ -155,8 +155,8 @@ function StatsIconSelected(props) {
         fill={altColor}
       />
       <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
+        fillRule="evenodd"
+        clipRule="evenodd"
         d="M33 32.7129H15V30.7129H33V32.7129Z"
         fill={altColor}
       />

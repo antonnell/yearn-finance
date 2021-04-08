@@ -318,7 +318,7 @@ export default function EnhancedTable({ cdps, borrowAsset }) {
               const labelId = `enhanced-table-checkbox-${index}`;
 
               return (
-                <ExpandableTableRow key={row.name} expandComponent={<CDPDetails cdp={row} borrowAsset={borrowAsset} classes={classes} />}>
+                <ExpandableTableRow key={labelId} expandComponent={<CDPDetails cdp={row} borrowAsset={borrowAsset} classes={classes} />}>
                   <TableCell className={classes.cell}>
                     <div className={classes.inline}>
                       <img

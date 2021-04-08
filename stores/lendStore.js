@@ -292,7 +292,7 @@ class Store {
     async.map(
       lendingAssets,
       async (asset, callback) => {
-        console.log(asset)
+        // console.log(asset)
         try {
           const marketContract = new web3.eth.Contract(CERC20DELEGATORABI, asset.address);
 
