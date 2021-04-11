@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Typography,
   Button,
@@ -11,21 +11,21 @@ import {
   CircularProgress,
   Grid,
   InputAdornment,
-} from "@material-ui/core";
-import Collapse from "@material-ui/core/Collapse";
-import IconButton from "@material-ui/core/IconButton";
-import Box from "@material-ui/core/Box";
-import { withStyles } from "@material-ui/core/styles";
-import Skeleton from "@material-ui/lab/Skeleton";
-import BigNumber from "bignumber.js";
-import { formatCurrency } from "../../utils";
-import GasSpeed from "../gasSpeed";
-import TableRow from "@material-ui/core/TableRow";
-import TableCell from "@material-ui/core/TableCell";
-import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
+} from '@material-ui/core';
+import Collapse from '@material-ui/core/Collapse';
+import IconButton from '@material-ui/core/IconButton';
+import Box from '@material-ui/core/Box';
+import { withStyles } from '@material-ui/core/styles';
+import Skeleton from '@material-ui/lab/Skeleton';
+import BigNumber from 'bignumber.js';
+import { formatCurrency } from '../../utils';
+import GasSpeed from '../gasSpeed';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 
-import stores from "../../stores/index.js";
+import stores from '../../stores/index.js';
 import {
   ERROR,
   APPROVE_LEND,
@@ -39,24 +39,24 @@ import {
   DISABLE_COLLATERAL_LEND,
   DISABLE_COLLATERAL_LEND_RETURNED,
   CONNECT_WALLET,
-} from "../../stores/constants";
+} from '../../stores/constants';
 
-import classes from "./lendAllAssetRow.module.css";
+import classes from './lendAllAssetRow.module.css';
 
 const AntSwitch = withStyles((theme) => ({
   root: {
     width: 28,
     height: 16,
     padding: 0,
-    display: "flex",
+    display: 'flex',
   },
   switchBase: {
     padding: 2,
     color: theme.palette.grey[500],
-    "&$checked": {
-      transform: "translateX(12px)",
+    '&$checked': {
+      transform: 'translateX(12px)',
       color: theme.palette.common.white,
-      "& + $track": {
+      '& + $track': {
         opacity: 1,
         backgroundColor: theme.palette.primary.main,
         borderColor: theme.palette.primary.main,
@@ -66,7 +66,7 @@ const AntSwitch = withStyles((theme) => ({
   thumb: {
     width: 12,
     height: 12,
-    boxShadow: "none",
+    boxShadow: 'none',
   },
   track: {
     border: `1px solid ${theme.palette.grey[500]}`,
@@ -77,19 +77,13 @@ const AntSwitch = withStyles((theme) => ({
   checked: {},
 }))(Switch);
 
-function LendAllAssetRowDetails({
-  lendingAsset,
-  account,
-  lendingBorrow,
-  lendingSupply,
-  lendingBorrowLimit,
-}) {
+function LendAllAssetRowDetails({ lendingAsset, account, lendingBorrow, lendingSupply, lendingBorrowLimit }) {
   const [loading, setLoading] = useState(false);
-  const [supplyAmount, setSupplyAmount] = useState("");
+  const [supplyAmount, setSupplyAmount] = useState('');
   const [supplyAmountError, setSupplyAmountError] = useState(false);
-  const [borrowAmount, setBorrowAmount] = useState("");
+  const [borrowAmount, setBorrowAmount] = useState('');
   const [borrowAmountError, setBorrowAmountError] = useState(false);
-  const [gasSpeed, setGasSpeed] = useState("");
+  const [gasSpeed, setGasSpeed] = useState('');
 
   const setSpeed = (speed) => {
     setGasSpeed(speed);
@@ -110,13 +104,13 @@ function LendAllAssetRowDetails({
   const supplyReturned = () => {
     stores.emitter.removeListener(LENDING_SUPPLY_RETURNED, supplyReturned);
     setLoading(false);
-    setSupplyAmount("");
+    setSupplyAmount('');
   };
 
   const borrowReturned = () => {
     stores.emitter.removeListener(LENDING_BORROW_RETURNED, borrowReturned);
     setLoading(false);
-    setBorrowAmount("");
+    setBorrowAmount('');
   };
 
   const approveReturned = () => {
@@ -125,33 +119,21 @@ function LendAllAssetRowDetails({
   };
 
   const changeCollateralReturned = () => {
-    stores.emitter.removeListener(
-      ENABLE_COLLATERAL_LEND_RETURNED,
-      changeCollateralReturned
-    );
-    stores.emitter.removeListener(
-      DISABLE_COLLATERAL_LEND_RETURNED,
-      changeCollateralReturned
-    );
+    stores.emitter.removeListener(ENABLE_COLLATERAL_LEND_RETURNED, changeCollateralReturned);
+    stores.emitter.removeListener(DISABLE_COLLATERAL_LEND_RETURNED, changeCollateralReturned);
     setLoading(false);
   };
 
   const handleCollateralChange = (event, newValue) => {
     setLoading(true);
     if (newValue === true) {
-      stores.emitter.on(
-        ENABLE_COLLATERAL_LEND_RETURNED,
-        changeCollateralReturned
-      );
+      stores.emitter.on(ENABLE_COLLATERAL_LEND_RETURNED, changeCollateralReturned);
       stores.dispatcher.dispatch({
         type: ENABLE_COLLATERAL_LEND,
         content: { lendingAsset: lendingAsset, gasSpeed: gasSpeed },
       });
     } else {
-      stores.emitter.on(
-        DISABLE_COLLATERAL_LEND_RETURNED,
-        changeCollateralReturned
-      );
+      stores.emitter.on(DISABLE_COLLATERAL_LEND_RETURNED, changeCollateralReturned);
       stores.dispatcher.dispatch({
         type: DISABLE_COLLATERAL_LEND,
         content: { lendingAsset: lendingAsset, gasSpeed: gasSpeed },
@@ -229,7 +211,7 @@ function LendAllAssetRowDetails({
       type: APPROVE_LEND,
       content: {
         lendingAsset: lendingAsset,
-        amount: "max",
+        amount: 'max',
         gasSpeed: gasSpeed,
       },
     });
@@ -244,10 +226,7 @@ function LendAllAssetRowDetails({
       return;
     }
 
-    const amount = BigNumber(lendingAsset.tokenMetadata.balance)
-      .times(percent)
-      .div(100)
-      .toFixed(lendingAsset.tokenMetadata.decimals);
+    const amount = BigNumber(lendingAsset.tokenMetadata.balance).times(percent).div(100).toFixed(lendingAsset.tokenMetadata.decimals);
 
     setSupplyAmount(amount);
   };
@@ -257,10 +236,7 @@ function LendAllAssetRowDetails({
       return;
     }
 
-    const amount = BigNumber(lendingAsset.supplyBalance)
-      .times(percent)
-      .div(100)
-      .toFixed(lendingAsset.tokenMetadata.decimals);
+    const amount = BigNumber(lendingAsset.supplyBalance).times(percent).div(100).toFixed(lendingAsset.tokenMetadata.decimals);
 
     setBorrowAmount(amount);
   };
@@ -268,62 +244,47 @@ function LendAllAssetRowDetails({
   let theLimitUsed = (lendingBorrow * 100) / lendingBorrowLimit || 0;
 
   if (lendingAsset.collateralEnabled) {
-    if (supplyAmount && supplyAmount !== "" && lendingBorrowLimit !== 0) {
-      theLimitUsed =
-        (lendingBorrow * 100) /
-        (lendingBorrowLimit +
-          (supplyAmount * lendingAsset.price * lendingAsset.collateralPercent) /
-            100);
+    if (supplyAmount && supplyAmount !== '' && lendingBorrowLimit !== 0) {
+      theLimitUsed = (lendingBorrow * 100) / (lendingBorrowLimit + (supplyAmount * lendingAsset.price * lendingAsset.collateralPercent) / 100);
     }
   }
 
-  if (borrowAmount && borrowAmount !== "") {
-    theLimitUsed =
-      ((lendingBorrow + borrowAmount * lendingAsset.price) * 100) /
-      lendingBorrowLimit;
+  if (borrowAmount && borrowAmount !== '') {
+    theLimitUsed = ((lendingBorrow + borrowAmount * lendingAsset.price) * 100) / lendingBorrowLimit;
   }
 
   return (
     <Paper elevation={0} square className={classes.assetActions}>
-      <div
-        className={
-          BigNumber(theLimitUsed).gt(100)
-            ? classes.assetInfoError
-            : classes.assetInfo
-        }
-      >
+      <div className={BigNumber(theLimitUsed).gt(100) ? classes.assetInfoError : classes.assetInfo}>
         <div className={classes.infoField}>
-          <Typography variant={"h5"} color="textSecondary">
+          <Typography variant={'h5'} color="textSecondary">
             Borrow limit:
           </Typography>
           <div className={classes.flexy}>
-            <Typography variant={"h6"} noWrap>
+            <Typography variant={'h6'} noWrap>
               $ {formatCurrency(lendingBorrowLimit)}
             </Typography>
           </div>
         </div>
         <div className={classes.infoField}>
-          <Typography variant={"h5"} color="textSecondary">
+          <Typography variant={'h5'} color="textSecondary">
             Borrow limit used:
           </Typography>
           <div className={classes.flexy}>
-            <Typography variant={"h6"} noWrap>
+            <Typography variant={'h6'} noWrap>
               {formatCurrency(theLimitUsed)}%
             </Typography>
           </div>
         </div>
         <div>
-          <Typography variant={"h5"} color="textSecondary">
+          <Typography variant={'h5'} color="textSecondary">
             Collateral:
           </Typography>
           <Typography component="div" variant="h6">
             <Grid component="label" container alignItems="center" spacing={1}>
               <Grid item>Off</Grid>
               <Grid item>
-                <AntSwitch
-                  checked={lendingAsset.collateralEnabled}
-                  onChange={handleCollateralChange}
-                />
+                <AntSwitch checked={lendingAsset.collateralEnabled} onChange={handleCollateralChange} />
               </Grid>
               <Grid item>On</Grid>
             </Grid>
@@ -347,9 +308,7 @@ function LendAllAssetRowDetails({
                 className={classes.value}
                 noWrap
               >
-                {"Wallet: " +
-                  formatCurrency(lendingAsset.tokenMetadata.balance)}{" "}
-                {lendingAsset.tokenMetadata.symbol}
+                {'Wallet: ' + formatCurrency(lendingAsset.tokenMetadata.balance)} {lendingAsset.tokenMetadata.symbol}
               </Typography>
             </div>
           </div>
@@ -363,19 +322,10 @@ function LendAllAssetRowDetails({
             placeholder="0.00"
             variant="outlined"
             InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  {lendingAsset.tokenMetadata.displayName}
-                </InputAdornment>
-              ),
+              endAdornment: <InputAdornment position="end">{lendingAsset.tokenMetadata.displayName}</InputAdornment>,
               startAdornment: (
                 <InputAdornment position="start">
-                  <img
-                    src={lendingAsset.tokenMetadata.icon}
-                    alt=""
-                    width={30}
-                    height={30}
-                  />
+                  <img src={lendingAsset.tokenMetadata.icon} alt="" width={30} height={30} />
                 </InputAdornment>
               ),
             }}
@@ -390,7 +340,7 @@ function LendAllAssetRowDetails({
                 setSupplyAmountPercent(25);
               }}
             >
-              <Typography variant={"h5"}>25%</Typography>
+              <Typography variant={'h5'}>25%</Typography>
             </Button>
             <Button
               className={classes.scale}
@@ -401,7 +351,7 @@ function LendAllAssetRowDetails({
                 setSupplyAmountPercent(50);
               }}
             >
-              <Typography variant={"h5"}>50%</Typography>
+              <Typography variant={'h5'}>50%</Typography>
             </Button>
             <Button
               className={classes.scale}
@@ -412,7 +362,7 @@ function LendAllAssetRowDetails({
                 setSupplyAmountPercent(75);
               }}
             >
-              <Typography variant={"h5"}>75%</Typography>
+              <Typography variant={'h5'}>75%</Typography>
             </Button>
             <Button
               className={classes.scale}
@@ -423,20 +373,18 @@ function LendAllAssetRowDetails({
                 setSupplyAmountPercent(100);
               }}
             >
-              <Typography variant={"h5"}>100%</Typography>
+              <Typography variant={'h5'}>100%</Typography>
             </Button>
           </div>
           <div className={classes.gasSpeedContainer}>
             <GasSpeed setParentSpeed={setSpeed} />
           </div>
           <div className={classes.buttons}>
-            {supplyAmount !== "" &&
+            {supplyAmount !== '' &&
               BigNumber(supplyAmount).gt(0) &&
               (!lendingAsset.tokenMetadata.allowance ||
                 BigNumber(lendingAsset.tokenMetadata.allowance).eq(0) ||
-                BigNumber(lendingAsset.tokenMetadata.allowance).lt(
-                  supplyAmount
-                )) && (
+                BigNumber(lendingAsset.tokenMetadata.allowance).lt(supplyAmount)) && (
                 <React.Fragment>
                   <Button
                     fullWidth
@@ -448,13 +396,7 @@ function LendAllAssetRowDetails({
                     disabled={loading}
                     className={classes.marginRight}
                   >
-                    <Typography variant="h5">
-                      {loading ? (
-                        <CircularProgress size={25} />
-                      ) : (
-                        "Approve Exact"
-                      )}
-                    </Typography>
+                    <Typography variant="h5">{loading ? <CircularProgress size={25} /> : 'Approve Exact'}</Typography>
                   </Button>
                   <Button
                     fullWidth
@@ -466,16 +408,11 @@ function LendAllAssetRowDetails({
                     disabled={loading}
                     className={classes.marginLeft}
                   >
-                    <Typography variant="h5">
-                      {loading ? <CircularProgress size={25} /> : "Approve Max"}
-                    </Typography>
+                    <Typography variant="h5">{loading ? <CircularProgress size={25} /> : 'Approve Max'}</Typography>
                   </Button>
                 </React.Fragment>
               )}
-            {(supplyAmount === "" ||
-              BigNumber(lendingAsset.tokenMetadata.allowance).gte(
-                supplyAmount
-              )) && (
+            {(supplyAmount === '' || BigNumber(lendingAsset.tokenMetadata.allowance).gte(supplyAmount)) && (
               <Button
                 fullWidth
                 disableElevation
@@ -487,29 +424,21 @@ function LendAllAssetRowDetails({
                   !supplyAmount ||
                   isNaN(supplyAmount) ||
                   BigNumber(lendingAsset.tokenMetadata.balance).eq(0) ||
-                  BigNumber(supplyAmount).gt(
-                    BigNumber(lendingAsset.tokenMetadata.balance)
-                  )
+                  BigNumber(supplyAmount).gt(BigNumber(lendingAsset.tokenMetadata.balance))
                 }
                 onClick={onSupply}
               >
                 {loading && <CircularProgress size={20} />}
                 {!loading && (
-                  <Typography className={classes.buttonText} variant={"h5"}>
-                    {BigNumber(lendingAsset.tokenMetadata.balance).eq(0) &&
-                      "No Balance to Supply"}
+                  <Typography className={classes.buttonText} variant={'h5'}>
+                    {BigNumber(lendingAsset.tokenMetadata.balance).eq(0) && 'No Balance to Supply'}
                     {BigNumber(lendingAsset.tokenMetadata.balance).gt(0) &&
                       supplyAmount &&
-                      BigNumber(supplyAmount).gt(
-                        BigNumber(lendingAsset.tokenMetadata.balance)
-                      ) &&
-                      "Insufficient Balance"}
+                      BigNumber(supplyAmount).gt(BigNumber(lendingAsset.tokenMetadata.balance)) &&
+                      'Insufficient Balance'}
                     {BigNumber(lendingAsset.tokenMetadata.balance).gt(0) &&
-                      (!supplyAmount ||
-                        BigNumber(supplyAmount).lte(
-                          BigNumber(lendingAsset.tokenMetadata.balance)
-                        )) &&
-                      "Supply"}
+                      (!supplyAmount || BigNumber(supplyAmount).lte(BigNumber(lendingAsset.tokenMetadata.balance))) &&
+                      'Supply'}
                   </Typography>
                 )}
               </Button>
@@ -525,13 +454,8 @@ function LendAllAssetRowDetails({
               </Typography>
             </div>
             <div className={classes.balances}>
-              <Typography
-                variant="h5"
-                onClick={() => {}}
-                className={classes.value}
-                noWrap
-              >
-                {"~"}
+              <Typography variant="h5" onClick={() => {}} className={classes.value} noWrap>
+                {'~'}
               </Typography>
             </div>
           </div>
@@ -545,19 +469,10 @@ function LendAllAssetRowDetails({
             placeholder="0.00"
             variant="outlined"
             InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  {lendingAsset.tokenMetadata.displayName}
-                </InputAdornment>
-              ),
+              endAdornment: <InputAdornment position="end">{lendingAsset.tokenMetadata.displayName}</InputAdornment>,
               startAdornment: (
                 <InputAdornment position="start">
-                  <img
-                    src={lendingAsset.tokenMetadata.icon}
-                    alt=""
-                    width={30}
-                    height={30}
-                  />
+                  <img src={lendingAsset.tokenMetadata.icon} alt="" width={30} height={30} />
                 </InputAdornment>
               ),
             }}
@@ -575,23 +490,14 @@ function LendAllAssetRowDetails({
               variant="contained"
               color="primary"
               size="large"
-              disabled={
-                loading ||
-                BigNumber(theLimitUsed).gt(100) ||
-                !borrowAmount ||
-                BigNumber(lendingBorrowLimit).eq(0)
-              }
+              disabled={loading || BigNumber(theLimitUsed).gt(100) || !borrowAmount || BigNumber(lendingBorrowLimit).eq(0)}
               onClick={onBorrow}
             >
               {loading && <CircularProgress size={20} />}
               {!loading && (
-                <Typography className={classes.buttonText} variant={"h5"}>
-                  {(BigNumber(theLimitUsed).gt(100) ||
-                    BigNumber(lendingBorrowLimit).eq(0)) &&
-                    "Insufficient collateral"}
-                  {BigNumber(theLimitUsed).lte(100) &&
-                    BigNumber(lendingBorrowLimit).gt(0) &&
-                    "Borrow"}
+                <Typography className={classes.buttonText} variant={'h5'}>
+                  {(BigNumber(theLimitUsed).gt(100) || BigNumber(lendingBorrowLimit).eq(0)) && 'Insufficient collateral'}
+                  {BigNumber(theLimitUsed).lte(100) && BigNumber(lendingBorrowLimit).gt(0) && 'Borrow'}
                 </Typography>
               )}
             </Button>
@@ -602,42 +508,21 @@ function LendAllAssetRowDetails({
   );
 }
 
-export default function LendAllAssetRow({
-  lendingAsset,
-  account,
-  lendingBorrow,
-  lendingSupply,
-  lendingBorrowLimit,
-}) {
+export default function LendAllAssetRow({ lendingAsset, account, lendingBorrow, lendingSupply, lendingBorrowLimit }) {
   const [expanded, setExpanded] = useState(false);
 
   const handleExpand = () => {
     setExpanded(!expanded);
   };
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(lendingAsset.open);
 
   return (
     <React.Fragment>
-      <TableRow
-        hover
-        tabIndex={-1}
-        key={lendingAsset.symbol}
-        onClick={() => setOpen(!open)}
-        class={classes.lendindAssetTableRow}
-      >
-        <TableCell  className={ classes.removePadding }>
-          <div className={classes.lendTitleCell}>
+      <TableRow hover tabIndex={-1} key={lendingAsset.symbol} onClick={() => setOpen(!open)} class={classes.lendindAssetTableRow}>
+        <TableCell className={classes.removePadding}>
+          <div className={classes.lendTitleCell} id={lendingAsset.address}>
             <div className={classes.logo}>
-              <img
-                src={
-                  lendingAsset.tokenMetadata.icon
-                    ? lendingAsset.tokenMetadata.icon
-                    : "/tokens/unknown-logo.png"
-                }
-                alt=""
-                width={30}
-                height={30}
-              />
+              <img src={lendingAsset.tokenMetadata.icon ? lendingAsset.tokenMetadata.icon : '/tokens/unknown-logo.png'} alt="" width={30} height={30} />
             </div>
             <div className={classes.name}>
               <Typography variant="h5" className={classes.fontWeightBold}>
@@ -646,34 +531,28 @@ export default function LendAllAssetRow({
             </div>
           </div>
         </TableCell>
-        <TableCell scope="row" align="right" className={ classes.removePadding }>
+        <TableCell scope="row" align="right" className={classes.removePadding}>
           <Typography variant="h5" className={classes.vaultVersionText}>
-            {formatCurrency(lendingAsset.tokenMetadata.balance)}{" "}
-            {lendingAsset.tokenMetadata.symbol}
+            {formatCurrency(lendingAsset.tokenMetadata.balance)} {lendingAsset.tokenMetadata.symbol}
           </Typography>
         </TableCell>
-        <TableCell scope="row" align="right" className={ classes.removePadding }>
+        <TableCell scope="row" align="right" className={classes.removePadding}>
           <Typography variant="h5" className={classes.vaultVersionText}>
             {formatCurrency(lendingAsset.borrowAPY)} %
           </Typography>
         </TableCell>
-        <TableCell scope="row" align="right" className={ classes.removePadding }>
+        <TableCell scope="row" align="right" className={classes.removePadding}>
           <Typography variant="h5" className={classes.vaultVersionText}>
             {formatCurrency(lendingAsset.supplyAPY)} %
           </Typography>
         </TableCell>
-        <TableCell scope="row" align="right" className={ classes.removePadding }>
+        <TableCell scope="row" align="right" className={classes.removePadding}>
           <Typography variant="h5" className={classes.vaultVersionText}>
-            {formatCurrency(lendingAsset.liquidity)}{" "}
-            {lendingAsset.tokenMetadata.symbol}
+            {formatCurrency(lendingAsset.liquidity)} {lendingAsset.tokenMetadata.symbol}
           </Typography>
         </TableCell>
-        <TableCell  className={ classes.removePadding }>
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={() => setOpen(!open)}
-          >
+        <TableCell className={classes.removePadding}>
+          <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>

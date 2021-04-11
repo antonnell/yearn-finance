@@ -3,6 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { Typography, Switch, Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { withTheme } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import InputBase from '@material-ui/core/InputBase';
+import IconButton from '@material-ui/core/IconButton';
 
 import WbSunnyOutlinedIcon from '@material-ui/icons/WbSunnyOutlined';
 import Brightness2Icon from '@material-ui/icons/Brightness2';
@@ -18,6 +21,8 @@ import { formatAddress } from '../../utils';
 import classes from './header.module.css';
 import HelpIcon from '@material-ui/icons/Help';
 import AboutModal from './aboutModal';
+import SearchModal from './searchModal';
+import { useHotkeys } from 'react-hotkeys-hook';
 
 const StyledSwitch = withStyles((theme) => ({
   root: {
@@ -76,8 +81,14 @@ function Header(props) {
 
   const [account, setAccount] = useState(accountStore);
   const [toggleAboutModal, setToggleAboutModal] = useState(false);
+  const [toggleSearchModal, setToggleSearchModal] = useState(false);
   const [darkMode, setDarkMode] = useState(props.theme.palette.type === 'dark' ? true : false);
   const [unlockOpen, setUnlockOpen] = useState(false);
+  const [isMac, setIsMac] = useState(false);
+
+  useHotkeys('ctrl+k', () => setToggleSearchModal(true), { filterPreventDefault: true });
+  useHotkeys('cmd+k', () => setToggleSearchModal(true));
+  useHotkeys('/', () => setToggleSearchModal(true));
 
   useEffect(() => {
     const accountConfigure = () => {
@@ -114,6 +125,13 @@ function Header(props) {
     const localStorageDarkMode = window.localStorage.getItem('yearn.finance-dark-mode');
     setDarkMode(localStorageDarkMode ? localStorageDarkMode === 'dark' : false);
   }, []);
+  useEffect(function () {
+    var mac = /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform);
+
+    if (mac) {
+      setIsMac(true);
+    }
+  }, []);
 
   return (
     <div className={classes.headerContainer}>
@@ -123,7 +141,24 @@ function Header(props) {
             <ArrowBackIcon fontSize={'large'} />
           </Button>
         </div>
-      )}
+      )}{' '}
+      <Paper
+        component="form"
+        style={{ display: 'flex', marginRight: '15px' }}
+        onClick={(e) => {
+          setToggleSearchModal(!toggleSearchModal);
+          e.preventDefault();
+        }}
+      >
+        <InputBase
+          style={{ paddingi: '20px', marginLeft: '15px', flex: 1 }}
+          placeholder="Instant Search ⚡"
+          inputProps={{ 'aria-label': 'search google maps' }}
+        />
+        <IconButton type="submit" className={classes.iconButton} aria-label="search">
+          {isMac ? `Cmd+K` : `⊞ Win+K`} or /
+        </IconButton>
+      </Paper>
       <div className={classes.themeSelectContainer}>
         <StyledSwitch
           icon={<Brightness2Icon className={classes.switchIcon} />}
@@ -146,9 +181,9 @@ function Header(props) {
         {account && account.address && <div className={`${classes.accountIcon} ${classes.metamask}`}></div>}
         <Typography variant="h5">{account && account.address ? formatAddress(account.address) : 'Connect Wallet'}</Typography>
       </Button>
-
       {unlockOpen && <Unlock modalOpen={unlockOpen} closeModal={closeUnlock} />}
-      {toggleAboutModal && <AboutModal />}
+      {toggleAboutModal && <AboutModal setToggleAboutModal={setToggleAboutModal} />}
+      {toggleSearchModal && <SearchModal setToggleSearchModal={setToggleSearchModal} />}
     </div>
   );
 }
