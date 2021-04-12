@@ -54,6 +54,8 @@ export default function vaultStrategyCard({ strategy, vault }) {
       return 'This debt-based strategy opens a Maker Vault, locks up YFI, draws DAI and earns yield by depositing into Yearn DAI Vault.'
     } else if (name.includes('StrategySynthetixRewardsGeneric')) {
       return 'This universal strategy harvests farm of the week and can be easily refashioned for new farms as they appear.'
+    } else if (name.includes('StrategyYearnVECRV')) {
+      return 'This strategy claims weekly 3CRV rewards and uses them to acquire more yveCRV via market-buy or mint, depending on which is most efficient at time of harvest.'
     } else {
       return "I don't have a description for this strategy yet.";
     }
