@@ -1,79 +1,82 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
-import {
-  Typography,
-  Paper,
-  Tooltip,
-  TextField,
-  InputAdornment,
-} from "@material-ui/core";
-import SearchIcon from "@material-ui/icons/Search";
-import Skeleton from "@material-ui/lab/Skeleton";
-import BigNumber from "bignumber.js";
+import { Typography, Paper, Tooltip, TextField, InputAdornment } from '@material-ui/core';
+import SearchIcon from '@material-ui/icons/Search';
+import Skeleton from '@material-ui/lab/Skeleton';
+import BigNumber from 'bignumber.js';
 
-import Head from "next/head";
-import Layout from "../../components/layout/layout.js";
-import classes from "./lend.module.css";
+import Head from 'next/head';
+import { useRouter } from 'next/router';
 
-import stores from "../../stores/index.js";
-import { LEND_UPDATED } from "../../stores/constants";
-import { formatCurrency } from "../../utils";
+import Layout from '../../components/layout/layout.js';
+import classes from './lend.module.css';
 
-import LendSupplyAssetRow from "../../components/lendSupplyAssetRow";
-import LendBorrowAssetRow from "../../components/lendBorrowAssetRow";
-import LendAllAssetRow from "../../components/lendAllAssetRow";
-import LendSupplyGraph from "../../components/lendSupplyGraph";
-import LendBorrowGraph from "../../components/lendBorrowGraph";
+import stores from '../../stores/index.js';
+import { LEND_UPDATED } from '../../stores/constants';
+import { formatCurrency } from '../../utils';
 
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
+import LendSupplyAssetRow from '../../components/lendSupplyAssetRow';
+import LendBorrowAssetRow from '../../components/lendBorrowAssetRow';
+import LendAllAssetRow from '../../components/lendAllAssetRow';
+import LendSupplyGraph from '../../components/lendSupplyGraph';
+import LendBorrowGraph from '../../components/lendBorrowGraph';
+
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import TableSortLabel from '@material-ui/core/TableSortLabel';
+
 function Lend({ changeTheme }) {
   const tvl = null;
-
+  const router = useRouter();
+  const { address } = router.query;
   const [, updateState] = React.useState();
   const forceUpdate = React.useCallback(() => updateState({}), []);
-  const [search, setSearch] = useState("");
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("none");
+  const [search, setSearch] = useState('');
+  const [order, setOrder] = React.useState('asc');
+  const [orderBy, setOrderBy] = React.useState('none');
   const getOrderBy = (x) => {
     let y;
-    order === "asc" ? (y = -x) : (y = x);
+    order === 'asc' ? (y = -x) : (y = x);
     return y;
   };
-  const account = stores.accountStore.getStore("account");
-  const storeLendingAssets = stores.lendStore.getStore("lendingAssets");
-  const storeLendingSupply = stores.lendStore.getStore("lendingSupply");
-  const storeLendingBorrow = stores.lendStore.getStore("lendingBorrow");
-  const storeLendingBorrowLimit = stores.lendStore.getStore(
-    "lendingBorrowLimit"
-  );
-  const storeLendingSupplyAPY = stores.lendStore.getStore("lendingSupplyAPY");
-  const storeLendingBorrowAPY = stores.lendStore.getStore("lendingBorrowAPY");
+  const account = stores.accountStore.getStore('account');
+  const storeLendingAssets = stores.lendStore.getStore('lendingAssets');
+  const storeLendingSupply = stores.lendStore.getStore('lendingSupply');
+  const storeLendingBorrow = stores.lendStore.getStore('lendingBorrow');
+  const storeLendingBorrowLimit = stores.lendStore.getStore('lendingBorrowLimit');
+  const storeLendingSupplyAPY = stores.lendStore.getStore('lendingSupplyAPY');
+  const storeLendingBorrowAPY = stores.lendStore.getStore('lendingBorrowAPY');
 
   const [lendingAssets, setLendingAssets] = useState(storeLendingAssets);
   const [lendingSupply, setLendingSupply] = useState(storeLendingSupply);
   const [lendingBorrow, setLendingBorrow] = useState(storeLendingBorrow);
-  const [lendingBorrowLimit, setLendingBorrowLimit] = useState(
-    storeLendingBorrowLimit
-  );
-  const [lendingSupplyAPY, setLendingSupplyAPY] = useState(
-    storeLendingSupplyAPY
-  );
-  const [lendingBorrowAPY, setLendingBorrowAPY] = useState(
-    storeLendingBorrowAPY
-  );
+  const [lendingBorrowLimit, setLendingBorrowLimit] = useState(storeLendingBorrowLimit);
+  const [lendingSupplyAPY, setLendingSupplyAPY] = useState(storeLendingSupplyAPY);
+  const [lendingBorrowAPY, setLendingBorrowAPY] = useState(storeLendingBorrowAPY);
+  const [currentAsset, setCurrentAsset] = useState();
   const onSearchChanged = (event) => {
     setSearch(event.target.value);
   };
+  useEffect(() => {
+    document?.getElementById(address)?.scrollIntoView();
+    setCurrentAsset(address);
+  }, []);
   const filteredLendingAssets = lendingAssets
+    .map((asset) => {
+      if (asset.address.toLowerCase() === address?.toLocaleLowerCase()) {
+        asset.open = true;
+      } else {
+        asset.open = false;
+      }
+      return asset;
+    })
     .filter((asset) => {
       let returnValue = true;
-      if (search && search !== "") {
+      if (search && search !== '') {
         returnValue =
           asset.displayName.toLowerCase().includes(search.toLowerCase()) ||
           asset.address.toLowerCase().includes(search.toLowerCase()) ||
@@ -83,37 +86,31 @@ function Lend({ changeTheme }) {
       return returnValue;
     })
     .sort((a, b) => {
-      if (orderBy === "none") {
+      if (orderBy === 'none') {
         if (BigNumber(a.tokenMetadata.balance).gt(b.tokenMetadata.balance)) {
           return -1;
-        } else if (
-          BigNumber(a.tokenMetadata.balance).lt(b.tokenMetadata.balance)
-        ) {
+        } else if (BigNumber(a.tokenMetadata.balance).lt(b.tokenMetadata.balance)) {
           return 1;
         } else {
           return 0;
         }
-      } else if (orderBy.id === "name") {
+      } else if (orderBy.id === 'name') {
         if (a.displayName.toLowerCase() > b.displayName.toLowerCase()) {
           return getOrderBy(1);
         } else if (a.displayName.toLowerCase() < b.displayName.toLowerCase()) {
           return getOrderBy(-1);
         }
-      } else if (orderBy.id === "balance") {
+      } else if (orderBy.id === 'balance') {
         let availableA = 0;
         let availableB = 0;
-        a.tokenMetadata?.balance
-          ? (availableA = a.tokenMetadata?.balance)
-          : (availableA = 0);
-        b.tokenMetadata?.balance
-          ? (availableB = b.tokenMetadata?.balance)
-          : (availableB = 0);
+        a.tokenMetadata?.balance ? (availableA = a.tokenMetadata?.balance) : (availableA = 0);
+        b.tokenMetadata?.balance ? (availableB = b.tokenMetadata?.balance) : (availableB = 0);
         if (BigNumber(availableA).gt(BigNumber(availableB))) {
           return getOrderBy(-1);
         } else if (BigNumber(availableA).lt(BigNumber(availableB))) {
           return getOrderBy(1);
         }
-      } else if (orderBy.id === "supplyAPY") {
+      } else if (orderBy.id === 'supplyAPY') {
         let supplyA = a.supplyAPY;
         let supplyB = b.supplyAPY;
         if (BigNumber(supplyA).gt(BigNumber(supplyB))) {
@@ -121,7 +118,7 @@ function Lend({ changeTheme }) {
         } else if (BigNumber(supplyA).lt(BigNumber(supplyB))) {
           return getOrderBy(1);
         }
-      } else if (orderBy.id === "borrowAPY") {
+      } else if (orderBy.id === 'borrowAPY') {
         let borrowA = a.borrowAPY;
         let borrowB = b.borrowAPY;
         if (BigNumber(borrowA).gt(BigNumber(borrowB))) {
@@ -129,7 +126,7 @@ function Lend({ changeTheme }) {
         } else if (BigNumber(borrowA).lt(BigNumber(borrowB))) {
           return getOrderBy(1);
         }
-      } else if (orderBy.id === "liquidity") {
+      } else if (orderBy.id === 'liquidity') {
         let liquidityA = a.liquidity;
         let liquidityB = b.liquidity;
         if (BigNumber(liquidityA).gt(BigNumber(liquidityB))) {
@@ -141,12 +138,12 @@ function Lend({ changeTheme }) {
     });
 
   const lendingUpdated = () => {
-    setLendingAssets(stores.lendStore.getStore("lendingAssets"));
-    setLendingSupply(stores.lendStore.getStore("lendingSupply"));
-    setLendingBorrow(stores.lendStore.getStore("lendingBorrow"));
-    setLendingSupplyAPY(stores.lendStore.getStore("lendingSupplyAPY"));
-    setLendingBorrowAPY(stores.lendStore.getStore("lendingBorrowAPY"));
-    setLendingBorrowLimit(stores.lendStore.getStore("lendingBorrowLimit"));
+    setLendingAssets(stores.lendStore.getStore('lendingAssets'));
+    setLendingSupply(stores.lendStore.getStore('lendingSupply'));
+    setLendingBorrow(stores.lendStore.getStore('lendingBorrow'));
+    setLendingSupplyAPY(stores.lendStore.getStore('lendingSupplyAPY'));
+    setLendingBorrowAPY(stores.lendStore.getStore('lendingBorrowAPY'));
+    setLendingBorrowLimit(stores.lendStore.getStore('lendingBorrowLimit'));
     forceUpdate();
   };
 
@@ -249,8 +246,8 @@ function Lend({ changeTheme }) {
   };
 
   const handleRequestSort = (event, property) => {
-    const isAsc = order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
+    const isAsc = order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
 
@@ -259,28 +256,28 @@ function Lend({ changeTheme }) {
 
     let headers = [
       {
-        label: "Name",
-        id: "name",
+        label: 'Name',
+        id: 'name',
       },
       {
-        label: "Balance",
-        id: "balance",
+        label: 'Balance',
+        id: 'balance',
         numeric: true,
       },
       {
-        label: "Borrow APY",
+        label: 'Borrow APY',
         numeric: true,
-        id: "borrowAPY",
+        id: 'borrowAPY',
       },
       {
-        label: "Supply APY",
+        label: 'Supply APY',
         numeric: true,
-        id: "supplyAPY",
+        id: 'supplyAPY',
       },
       {
-        label: "Liquidity",
+        label: 'Liquidity',
         numeric: true,
-        id: "liquidity",
+        id: 'liquidity',
       },
     ];
     const createSortHandler = (property) => (event) => {
@@ -292,25 +289,15 @@ function Lend({ changeTheme }) {
           {headers.map((headCell, i) => (
             <TableCell
               key={headCell.id}
-              align={headCell.numeric ? "right" : "left"}
-              padding={headCell.disablePadding ? "none" : "default"}
+              align={headCell.numeric ? 'right' : 'left'}
+              padding={headCell.disablePadding ? 'none' : 'default'}
               sortDirection={orderBy === headCell.id ? order : false}
             >
-              <TableSortLabel
-                active={orderBy === headCell.id}
-                direction={orderBy === headCell.id ? order : "asc"}
-                onClick={createSortHandler(headCell)}
-              >
+              <TableSortLabel active={orderBy === headCell.id} direction={orderBy === headCell.id ? order : 'asc'} onClick={createSortHandler(headCell)}>
                 <Typography variant="h5" className={classes.fontWeightBold}>
                   {headCell.label}
                 </Typography>
-                {orderBy === headCell.id ? (
-                  <span className={classes.visuallyHidden}>
-                    {order === "desc"
-                      ? "sorted descending"
-                      : "sorted ascending"}
-                  </span>
-                ) : null}
+                {orderBy === headCell.id ? <span className={classes.visuallyHidden}>{order === 'desc' ? 'sorted descending' : 'sorted ascending'}</span> : null}
               </TableSortLabel>
             </TableCell>
           ))}
@@ -320,12 +307,8 @@ function Lend({ changeTheme }) {
     );
   };
 
-  const supplyAssets = lendingAssets
-    ? lendingAssets.filter(filterSupplied).sort(sortSupply)
-    : [];
-  const borrowAssets = lendingAssets
-    ? lendingAssets.filter(filterBorrowed).sort(sortBorrow)
-    : [];
+  const supplyAssets = lendingAssets ? lendingAssets.filter(filterSupplied).sort(sortSupply) : [];
+  const borrowAssets = lendingAssets ? lendingAssets.filter(filterBorrowed).sort(sortBorrow) : [];
 
   const renderSupplyTootip = () => {
     return (
@@ -333,12 +316,8 @@ function Lend({ changeTheme }) {
         {supplyAssets.map((asset) => {
           return (
             <div className={classes.tooltipValue}>
-              <Typography className={classes.val}>
-                {asset.tokenMetadata.symbol}
-              </Typography>
-              <Typography className={classes.valBold}>
-                {formatCurrency(asset.supplyAPY)}%
-              </Typography>
+              <Typography className={classes.val}>{asset.tokenMetadata.symbol}</Typography>
+              <Typography className={classes.valBold}>{formatCurrency(asset.supplyAPY)}%</Typography>
             </div>
           );
         })}
@@ -352,12 +331,8 @@ function Lend({ changeTheme }) {
         {borrowAssets.map((asset) => {
           return (
             <div className={classes.tooltipValue}>
-              <Typography className={classes.val}>
-                {asset.tokenMetadata.symbol}
-              </Typography>
-              <Typography className={classes.valBold}>
-                {formatCurrency(asset.borrowAPY)}%
-              </Typography>
+              <Typography className={classes.val}>{asset.tokenMetadata.symbol}</Typography>
+              <Typography className={classes.valBold}>{formatCurrency(asset.borrowAPY)}%</Typography>
             </div>
           );
         })}
@@ -377,20 +352,10 @@ function Lend({ changeTheme }) {
             <div>
               <Typography variant="h2">Total Supplied</Typography>
               <Typography variant="h1" className={classes.headAmount}>
-                {lendingSupply === null ? (
-                  <Skeleton style={{ minWidth: "200px " }} />
-                ) : (
-                  `$ ${formatCurrency(lendingSupply)}`
-                )}
+                {lendingSupply === null ? <Skeleton style={{ minWidth: '200px ' }} /> : `$ ${formatCurrency(lendingSupply)}`}
               </Typography>
               <Tooltip title={renderSupplyTootip()}>
-                <Typography>
-                  {!lendingSupplyAPY ? (
-                    <Skeleton style={{ minWidth: "200px " }} />
-                  ) : (
-                    `${formatCurrency(lendingSupplyAPY)} % Average APY`
-                  )}
-                </Typography>
+                <Typography>{!lendingSupplyAPY ? <Skeleton style={{ minWidth: '200px ' }} /> : `${formatCurrency(lendingSupplyAPY)} % Average APY`}</Typography>
               </Tooltip>
             </div>
           </div>
@@ -402,20 +367,10 @@ function Lend({ changeTheme }) {
             <div>
               <Typography variant="h2">Total Borrowed</Typography>
               <Typography variant="h1" className={classes.headAmount}>
-                {lendingBorrow === null ? (
-                  <Skeleton style={{ minWidth: "200px " }} />
-                ) : (
-                  `$ ${formatCurrency(lendingBorrow)}`
-                )}
+                {lendingBorrow === null ? <Skeleton style={{ minWidth: '200px ' }} /> : `$ ${formatCurrency(lendingBorrow)}`}
               </Typography>
               <Tooltip title={renderBorrowTooltip()}>
-                <Typography>
-                  {!lendingBorrowAPY ? (
-                    <Skeleton style={{ minWidth: "200px " }} />
-                  ) : (
-                    `${formatCurrency(lendingBorrowAPY)} % Average APY`
-                  )}
-                </Typography>
+                <Typography>{!lendingBorrowAPY ? <Skeleton style={{ minWidth: '200px ' }} /> : `${formatCurrency(lendingBorrowAPY)} % Average APY`}</Typography>
               </Tooltip>
             </div>
           </div>
@@ -425,13 +380,9 @@ function Lend({ changeTheme }) {
               <Typography variant="h2">Borrow Limit Used</Typography>
               <Typography variant="h1">
                 {lendingBorrowLimit === null ? (
-                  <Skeleton style={{ minWidth: "200px " }} />
+                  <Skeleton style={{ minWidth: '200px ' }} />
                 ) : (
-                  `${formatCurrency(
-                    lendingBorrowLimit > 0
-                      ? (lendingBorrow * 100) / lendingBorrowLimit
-                      : 0
-                  )} %`
+                  `${formatCurrency(lendingBorrowLimit > 0 ? (lendingBorrow * 100) / lendingBorrowLimit : 0)} %`
                 )}
               </Typography>
             </div>
@@ -501,12 +452,7 @@ function Lend({ changeTheme }) {
         </Typography>
         <Paper elevation={0} className={classes.lendingTable}>
           <TableContainer>
-            <Table
-              className={classes.investTable}
-              aria-labelledby="tableTitle"
-              size="medium"
-              aria-label="enhanced table"
-            >
+            <Table className={classes.investTable} aria-labelledby="tableTitle" size="medium" aria-label="enhanced table">
               {renderAllHeaders({
                 order: order,
                 orderBy: orderBy,

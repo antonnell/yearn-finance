@@ -115,7 +115,7 @@ function StatsData({ vault }) {
       </TableCell>
       <TableCell scope="row" align="right">
         <Typography variant="h5" align="right" className={classes.fontWeightBold}>
-          {vault.apy?.recommended ? formatCurrency(BigNumber(vault.apy.recommended).times(100)) : '0.00'}%
+          {vault.apy?.recommended ? formatCurrency(BigNumber(vault.apy.recommended).times(100)) : '0.00'}kiki%
         </Typography>
       </TableCell>
     </TableRow>
@@ -140,7 +140,7 @@ function Stats({ changeTheme }) {
 
   const [vaults, setVaults] = useState(storeVaults);
   const [tvl, setTvl] = useState(storeTvl);
-  const [ironBankTVL, setIronBankTVL] = useState(storeIronBankTVL)
+  const [ironBankTVL, setIronBankTVL] = useState(storeIronBankTVL);
   const onSearchChanged = (event) => {
     setSearch(event.target.value);
   };
@@ -248,9 +248,9 @@ function Stats({ changeTheme }) {
     };
 
     const lendUpdated = () => {
-      setIronBankTVL(stores.lendStore.getStore('ironBankTVL'))
+      setIronBankTVL(stores.lendStore.getStore('ironBankTVL'));
       forceUpdate();
-    }
+    };
 
     stores.emitter.on(VAULTS_UPDATED, vaultsUpdated);
     stores.emitter.on(LEND_UPDATED, lendUpdated);
@@ -270,7 +270,9 @@ function Stats({ changeTheme }) {
         <div className={classes.overviewCard}>
           <div>
             <Typography variant="h2">Total Value Locked</Typography>
-            <Typography variant="h1">{!tvl ? <Skeleton style={{ minWidth: '200px ' }} /> : `$ ${formatCurrency(BigNumber(tvl.tvlUSD).plus(ironBankTVL), 0)}`}</Typography>
+            <Typography variant="h1">
+              {!tvl ? <Skeleton style={{ minWidth: '200px ' }} /> : `$ ${formatCurrency(BigNumber(tvl.tvlUSD).plus(ironBankTVL), 0)}`}
+            </Typography>
           </div>
         </div>
         <div className={classes.separator}></div>

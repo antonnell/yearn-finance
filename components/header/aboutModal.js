@@ -84,7 +84,8 @@ const ProPrimer = () => {
     </>
   );
 };
-export default function AboutModal() {
+export default function AboutModal(props) {
+  const { setToggleAboutModal } = props;
   const [open, setOpen] = React.useState(true);
 
   const handleClickOpen = () => {
@@ -92,6 +93,7 @@ export default function AboutModal() {
   };
   const handleClose = () => {
     setOpen(false);
+    setToggleAboutModal(false);
   };
 
   return (
