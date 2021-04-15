@@ -1,32 +1,33 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
-import { Typography, Paper, TextField, MenuItem } from "@material-ui/core";
-import Skeleton from "@material-ui/lab/Skeleton";
+import { Typography, Paper, TextField, MenuItem, InputAdornment } from '@material-ui/core';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import Skeleton from '@material-ui/lab/Skeleton';
 
-import Head from "next/head";
-import Layout from "../../components/layout/layout.js";
-import classes from "./ltv.module.css";
-import BigNumber from "bignumber.js";
+import Head from 'next/head';
+import Layout from '../../components/layout/layout.js';
+import classes from './ltv.module.css';
+import BigNumber from 'bignumber.js';
 
-import stores from "../../stores/index.js";
-import { GET_MAX, MAX_RETURNED, ERROR } from "../../stores/constants";
+import stores from '../../stores/index.js';
+import { GET_MAX, MAX_RETURNED, ERROR } from '../../stores/constants';
 
-import { formatCurrency, formatAddress } from "../../utils";
+import { formatCurrency, formatAddress } from '../../utils';
 
 function LTV({ changeTheme }) {
-  const [asset, setAsset] = useState("");
+  const [asset, setAsset] = useState('');
   const [loading, setLoading] = useState(false);
   const [web3, setWeb3] = useState(null);
   const [assets, setAssets] = useState([]);
   const [assetDetails, setAssetDetails] = useState(null);
 
-  useEffect(async function() {
+  useEffect(async function () {
     setWeb3(await stores.accountStore.getWeb3Provider());
-    setAssets(stores.ltvStore.getStore("assets"));
+    setAssets(stores.ltvStore.getStore('assets'));
   }, []);
 
-  useEffect(function() {
-    const maxReturned = maxVals => {
+  useEffect(function () {
+    const maxReturned = (maxVals) => {
       console.log(maxVals);
       setAssetDetails(maxVals);
       setLoading(false);
@@ -39,32 +40,24 @@ function LTV({ changeTheme }) {
     };
   }, []);
 
-  const onPoolSelectChange = event => {
-    setAsset(event.target.value);
-
-    let theOption = assets.filter(asset => {
-      return asset.symbol === event.target.value;
-    });
+  const onPoolSelectChange = (event, theOption) => {
+    setAsset(theOption);
 
     setLoading(true);
     stores.dispatcher.dispatch({
       type: GET_MAX,
-      content: { address: theOption[0].address }
+      content: { address: theOption.address },
     });
   };
 
   const renderAssetOption = (web3, option) => {
     return (
-      <MenuItem
-        key={option.id}
-        value={option.symbol}
-        className={classes.assetSelectMenu}
-      >
+      <MenuItem key={option.id} value={option.symbol} className={classes.assetSelectMenu}>
         <div className={classes.poolSelectOption}>
           <img
             className={classes.poolIcon}
             src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${web3.utils.toChecksumAddress(
-              option.address
+              option.address,
             )}/logo.png`}
             width={30}
             height={30}
@@ -90,48 +83,59 @@ function LTV({ changeTheme }) {
                 </Typography>
               </div>
             </div>
-            <TextField
-              select
+            <Autocomplete
+              disableClearable={true}
+              options={assets}
               value={asset}
               onChange={onPoolSelectChange}
-              SelectProps={{
-                native: false,
-                renderValue: option => {
-                  let theOption = assets.filter(asset => {
-                    return asset.symbol === option;
-                  });
-
-                  return (
-                    <div className={classes.assetSelectIconName}>
-                      <div className={classes.poolSelectOption}>
-                        <img
-                          className={classes.poolIcon}
-                          src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${web3.utils.toChecksumAddress(
-                            theOption[0].address
-                          )}/logo.png`}
-                          width={30}
-                          height={30}
-                        />
-                        <Typography variant="h5">
-                          {theOption[0].symbol}
-                        </Typography>
-                      </div>
-                    </div>
-                  );
-                }
-              }}
-              fullWidth
-              variant="outlined"
-              disabled={loading}
-              className={classes.actionInput}
-              placeholder={"Select"}
-            >
-              {assets
-                ? assets.map(a => {
-                    return renderAssetOption(web3, a);
-                  })
-                : ""}
-            </TextField>
+              getOptionLabel={(option) => option.symbol}
+              fullWidth={true}
+              renderOption={(option, { selected }) => (
+                <React.Fragment>
+                  <img
+                    src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${web3.utils.toChecksumAddress(
+                      option.address,
+                    )}/logo.png`}
+                    alt=""
+                    width={30}
+                    height={30}
+                    style={{ marginRight: '10px' }}
+                  />
+                  <span className={classes.color} style={{ backgroundColor: option.color }} />
+                  <div className={classes.text}>
+                    {option.symbol}
+                    <br />
+                  </div>
+                </React.Fragment>
+              )}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  InputProps={{
+                    ...params.InputProps,
+                    ...{
+                      placeholder: 'ETH, BTC, YFI...',
+                      startAdornment: asset && (
+                        <InputAdornment position="start">
+                          <img
+                            src={
+                              asset &&
+                              `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${web3.utils.toChecksumAddress(
+                                asset.address,
+                              )}/logo.png`
+                            }
+                            alt=""
+                            width={30}
+                            height={30}
+                          />
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
+                  variant="outlined"
+                />
+              )}
+            />
           </div>
           <div>
             <div className={classes.pair}>
@@ -140,15 +144,11 @@ function LTV({ changeTheme }) {
             </div>
             <div className={classes.pair}>
               <Typography>yearn.fi/lend</Typography>
-              <Typography>
-                {assetDetails ? assetDetails.ironBank : 0} %
-              </Typography>
+              <Typography>{assetDetails ? assetDetails.ironBank : 0} %</Typography>
             </div>
             <div className={classes.pair}>
               <Typography>compound.finance</Typography>
-              <Typography>
-                {assetDetails ? assetDetails.compound : 0} %
-              </Typography>
+              <Typography>{assetDetails ? assetDetails.compound : 0} %</Typography>
             </div>
             <div className={classes.pair}>
               <Typography>aave.com v1</Typography>
@@ -169,8 +169,7 @@ function LTV({ changeTheme }) {
             LTV Lookup
           </Typography>
           <Typography variant="h5" className={classes.lineHeightIncrease}>
-            LTV Lookup displays how much you can borrow per $1 worth of the
-            asset provided to the different protocols.
+            LTV Lookup displays how much you can borrow per $1 worth of the asset provided to the different protocols.
           </Typography>
         </div>
       </div>
