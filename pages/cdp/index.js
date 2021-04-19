@@ -93,7 +93,7 @@ function CDP({ changeTheme }) {
         <Paper elevation={0} className={classes.overviewContainer}>
           <div className={classes.overviewCard}>
             <CDPSuppliedGraph assets={cdps} />
-            <Tooltip title={ cdpSupplied === 'Unknown' ? 'Unable to calculate the supplied amount. This is most likely because the price oracle is out of date.' : 'Dolar value of the assets that you have supplied to the protocol' }>
+            <Tooltip title={ cdpSupplied === 'Unknown' ? 'Unable to calculate the supplied amount. This is most likely because the price oracle is out of date.' : 'Dollar value of the assets that you have supplied to the protocol' }>
               <div>
                 <Typography variant="h2">Total Supplied</Typography>
                 <Typography variant="h1" className={` ${classes.headAmount} ${cdpSupplied === 'Unknown' ? classes.statusWarning : null} `}>{ cdpSupplied === 'Unknown' ? 'Unknown' :  `$ ${formatCurrency(cdpSupplied)}`}</Typography>

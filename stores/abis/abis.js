@@ -19,6 +19,7 @@ import { vaultManagerKeep3rMainAssetABI } from "./vaultManagerKeep3rMainAssetABI
 import { vaultMangerStandardABI } from "./vaultMangerStandardABI";
 import { collateralRegistryABI } from "./collateralRegistryABI";
 import { uniswapPairABI } from "./uniswapPairABI";
+import { chainlinkOracleABI } from "./chainlinkOracleABI";
 
 export const ERC20ABI = erc20ABI;
 export const VAULTV1ABI = vaultV1ABI;
@@ -41,3 +42,4 @@ export const VAULTMANAGERKEEP3RABI = vaultManagerKeep3rMainAssetABI;
 export const VAULTMANAGERSTANDARDABI = vaultMangerStandardABI;
 export const COLLATERALREGISTRYABI = collateralRegistryABI;
 export const UNISWAPPAIRABI = uniswapPairABI;
+export const CHAINLINKORACLEABI = chainlinkOracleABI;

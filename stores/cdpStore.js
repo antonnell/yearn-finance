@@ -42,7 +42,8 @@ import {
   VAULTMANAGERKEEP3RSUSHIABI,
   VAULTMANAGERSTANDARDABI,
   COLLATERALREGISTRYABI,
-  UNISWAPPAIRABI
+  UNISWAPPAIRABI,
+  CHAINLINKORACLEABI,
 } from './abis';
 import { bnDec, sqrt } from '../utils';
 import cdpJSON from './configurations/cdp';
@@ -127,29 +128,15 @@ class Store {
 
       let ethPrice = null;
       try {
-        const sendAmount0 = (1e18).toFixed(0);
-        const keep3rContract = new web3.eth.Contract(KEEP3RV1ORACLEABI, KEEP3R_SUSHI_ORACLE_ADDRESS);
-        ethPrice = await keep3rContract.methods
-          .current('0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', sendAmount0, '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48')
-          .call({});
-        ethPrice = BigNumber(ethPrice).div(1e6).toNumber();
-      } catch (ex) {
-        // console.log(ex);
-        try {
-          const sendAmount0 = (1e18).toFixed(0);
-          const keep3rContract = new web3.eth.Contract(KEEP3RV1ORACLEABI, KEEP3R_ORACLE_ADDRESS);
-          ethPrice = await keep3rContract.methods
-            .current('0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', sendAmount0, '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48')
-            .call({});
-          ethPrice = BigNumber(ethPrice).div(1e6).toNumber();
-        } catch (ex) {
-          // console.log(ex);
-          // this.emitter.emit(CDP_UPDATED);
-          // this.emitter.emit(CDP_CONFIGURED);
+        const contractAddress = await web3.eth.ens.getAddress(`eth-usd.data.eth`)
+        const chainLinkContract = new web3.eth.Contract(CHAINLINKORACLEABI, contractAddress)
 
-          this.emitter.emit(ERROR, ex);
-          ethPrice = 'Stale price';
-        }
+        const assetPrice = await chainLinkContract.methods.latestAnswer().call()
+        ethPrice = BigNumber(assetPrice)
+          .div(10 ** 8)
+          .toNumber();
+      } catch (ex) {
+        console.log(ex)
       }
 
       const vaultManagerParamsContract = new web3.eth.Contract(VAULTMANAGERPARAMSABI, VAULT_MANAGER_PARAMETERS_ADDRESS);
@@ -167,7 +154,18 @@ class Store {
             const collateral = await vaultContract.methods.collaterals(asset.address, account.address).call();
             const debt = await vaultContract.methods.debts(asset.address, account.address).call();
 
-            const oracleType = await this._getORacleType(vaultParametersContract, asset.address)
+            const oracleType = await this._getORacleType(vaultParametersContract, asset.address);
+
+            if(![5, 12].includes(oracleType)) {
+              if (callback) {
+                callback(null, returnAsset);
+              } else {
+                return returnAsset;
+              }
+
+              return
+            }
+
             const stabilityFee = await vaultParametersContract.methods.stabilityFee(asset.address).call();
             const tokenDebts = await vaultContract.methods.tokenDebts(asset.address).call();
             const liquidationFee = await vaultParametersContract.methods.liquidationFee(asset.address).call();
@@ -184,12 +182,14 @@ class Store {
             let symbol = ''
             // MAKER returns a web3 error for .decimals. logic
             if(asset.address !== '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2') {
-              if(oracleType === 4 || oracleType === 8) {
+              if(oracleType === 4 || oracleType === 8 || oracleType === 12) {
+                const isSushi = await this._isSushi(vaultParametersContract, asset.address)
+
                 const uniswapPairContract = new web3.eth.Contract(UNISWAPPAIRABI, asset.address)
                 const token0 = await uniswapPairContract.methods.token0().call()
                 const token1 = await uniswapPairContract.methods.token1().call()
 
-                const prepend = oracleType === 4 ? 'UNI' : 'SUSHI'
+                const prepend = isSushi ? 'SUSHI' : 'UNI'
                 const erc20Contract0 = new web3.eth.Contract(ERC20ABI, token0)
                 const erc20Contract1 = new web3.eth.Contract(ERC20ABI, token1)
                 let symbol0 = ''
@@ -264,6 +264,8 @@ class Store {
               } else {
                 status = 'Safe';
               }
+            } else {
+              status = 'Safe'
             }
 
             const returnAsset = {
@@ -342,10 +344,14 @@ class Store {
             if(val === 'Unknown') {
               return 'Unknown'
             }
-            if (asset.collateralDolar === 'Unknown') {
+            if (BigNumber(asset.collateral).gt(0) && asset.collateralDolar === 'Unknown') {
               return 'Unknown'
             }
-            return BigNumber(val).plus(asset.collateralDolar).toNumber();
+            if(asset.collateralDolar !== 'Unknown') {
+              return BigNumber(val).plus(asset.collateralDolar).toNumber();
+            }
+
+            return val
           }, 0);
 
           const cdpMinted = allAssetsPopulated.reduce((val, asset) => {
@@ -379,10 +385,20 @@ class Store {
     }
   };
 
+  _isSushi = async (vaultParams, address) => {
+    const isSushi = await vaultParams.methods.isOracleTypeEnabled(8, address).call()
+    return isSushi
+  }
+
   _getORacleType = async (vaultParams, address) => {
 
     //only ever seen oracle types: 3, 4, 7, 8
 
+    // 5 is chainlink, which I believe they changed all their feeds to
+    const is5 = await vaultParams.methods.isOracleTypeEnabled(5, address).call()
+    if(is5) {
+      return 5
+    }
     const is3 = await vaultParams.methods.isOracleTypeEnabled(3, address).call()
     if(is3) {
       return 3
@@ -391,6 +407,12 @@ class Store {
     if(is7) {
       return 7
     }
+
+    const is12 = await vaultParams.methods.isOracleTypeEnabled(12, address).call()
+    if(is12) {
+      return 12
+    }
+
     const is4 = await vaultParams.methods.isOracleTypeEnabled(4, address).call()
     if(is4) {
       return 4
@@ -415,6 +437,10 @@ class Store {
     return [7, 8].includes(oracleType);
   };
 
+  isChainlinkOracle = (oracleType) => {
+    return [5, 12].includes(oracleType);
+  }
+
   _getDolarPrice = async (asset, ethPrice) => {
     try {
       const web3 = await stores.accountStore.getWeb3Provider();
@@ -428,7 +454,85 @@ class Store {
         return ethPrice;
       }
 
-      if (this.isKeydonixOracle(asset.defaultOracleType)) {
+      if (this.isChainlinkOracle(asset.defaultOracleType)) {
+        try {
+
+          if(asset.defaultOracleType === 5) {
+            const contractAddress = await web3.eth.ens.getAddress(`${['WBTC', 'renBTC'].includes(asset.symbol) ? 'btc' : asset.symbol.toLowerCase()}-eth.data.eth`)
+            const chainLinkContract = new web3.eth.Contract(CHAINLINKORACLEABI, contractAddress)
+
+            const assetPrice = await chainLinkContract.methods.latestAnswer().call()
+
+            dolar = BigNumber(assetPrice)
+              .times(ethPrice)
+              .div(10 ** 18)
+              .toNumber();
+          } else {
+            const uniswapPairContract = new web3.eth.Contract(UNISWAPPAIRABI, asset.address)
+            const token0 = await uniswapPairContract.methods.token0().call()
+            const token1 = await uniswapPairContract.methods.token1().call()
+
+            const totalSupply = await uniswapPairContract.methods.totalSupply().call()
+            const obj = await uniswapPairContract.methods.getReserves().call()
+            let reserve0 = obj[0]
+            let reserve1 = obj[1]
+
+            let token0Price = 0
+            let token1Price = 0
+
+            if(token0.toLowerCase() === '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'.toLowerCase()) {
+              token0Price = ethPrice
+            } else {
+              let erc20Contract = new web3.eth.Contract(ERC20ABI, token0)
+              let decimalsToken0 = parseInt(await erc20Contract.methods.decimals().call())
+              let symbolToken0 = await erc20Contract.methods.symbol().call()
+              let sendAmountToken0 = (10 ** decimalsToken0).toFixed(0);
+
+              const contractAddress = await web3.eth.ens.getAddress(`${['WBTC', 'renBTC'].includes(symbolToken0) ? 'btc' : symbolToken0.toLowerCase()}-eth.data.eth`)
+              const chainLinkContract = new web3.eth.Contract(CHAINLINKORACLEABI, contractAddress)
+              const token0EthPrice = await chainLinkContract.methods.latestAnswer().call()
+
+              token0Price = BigNumber(token0EthPrice)
+                .times(ethPrice)
+                .div(10 ** decimalsToken0)
+                .toNumber();
+            }
+
+            if(token1.toLowerCase() === '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'.toLowerCase()) {
+              token1Price = ethPrice
+            } else {
+              let erc20Contract = new web3.eth.Contract(ERC20ABI, token1)
+              let decimalsToken1 = parseInt(await erc20Contract.methods.decimals().call())
+              let symbolToken1 = await erc20Contract.methods.symbol().call()
+              let sendAmountToken1 = (10 ** decimalsToken1).toFixed(0);
+
+              const contractAddress = await web3.eth.ens.getAddress(`${['WBTC', 'renBTC'].includes(symbolToken1) ? 'btc' : symbolToken1.toLowerCase()}-eth.data.eth`)
+              const chainLinkContract = new web3.eth.Contract(CHAINLINKORACLEABI, contractAddress)
+              const token1EthPrice = await chainLinkContract.methods.latestAnswer().call()
+
+              token1Price = BigNumber(token1EthPrice)
+                .times(ethPrice)
+                .div(10 ** decimalsToken1)
+                .toNumber();
+            }
+
+            console.log(token0)
+            console.log(token0Price)
+            console.log(reserve0)
+            console.log('---')
+            console.log(token1)
+            console.log(token1Price)
+            console.log(reserve1)
+            console.log('----------------------')
+
+            let pricePerShare0 = BigNumber(token0Price).times(reserve0)
+            let pricePerShare1 = BigNumber(token1Price).times(reserve1)
+
+            dolar = BigNumber(BigNumber(pricePerShare0).plus(pricePerShare1)).div(totalSupply).toNumber()
+          }
+        } catch(ex) {
+          console.log(ex)
+        }
       } else if (this.isKeep3rOracle(asset.defaultOracleType)) {
         const keep3rContract = new web3.eth.Contract(KEEP3RV1ORACLEABI, KEEP3R_ORACLE_ADDRESS);
 

@@ -30,6 +30,7 @@ import BigNumber from "bignumber.js";
 import CDPDepositAndBorrow from "../cdpDepositAndBorrow";
 import CDPRepayAndWithdraw from "../cdpRepayAndWithdraw";
 import CDPInformation from "../cdpInformation";
+import CDPActiveInformation from '../cdpActiveInformation';
 
 import { formatCurrency, formatAddress } from "../../utils";
 
@@ -213,7 +214,7 @@ const useStyles = makeStyles(theme => ({
   cdpActions: {
     display: "flex",
     alignItems: "flex-start",
-    justifyContent: "center",
+    justifyContent: "space-between",
     borderBottom: "1px solid rgba(128, 128, 128, 0.32)",
     borderTop: "1px solid rgba(128, 128, 128, 0.25)",
     background: theme.palette.type === "dark" ? "#22252E" : "#fff"
@@ -269,7 +270,10 @@ const CDPDetails = ({ cdp, borrowAsset, classes }) => {
     <TableCell colSpan="6" className={classes.overrideCell}>
       <div className={classes.cdpActions}>
         <CDPInformation cdp={cdp} />
-        <CDPDepositAndBorrow cdp={cdp} borrowAsset={borrowAsset} />
+        <div className={classes.cdpActionInputs}>
+          <CDPDepositAndBorrow cdp={cdp} borrowAsset={borrowAsset} />
+        </div>
+        <CDPActiveInformation cdp={cdp} />
       </div>
     </TableCell>
   );
