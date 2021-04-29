@@ -155,6 +155,11 @@ class Store {
             vault.type = 'Lockup';
           }
           vault.tokenMetadata = vault.token;
+
+          if(!vault.tokenMetadata.displayName) {
+            vault.tokenMetadata.displayName = vault.tokenMetadata.name
+          }
+
           return vault;
         });
 
