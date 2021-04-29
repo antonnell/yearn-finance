@@ -62,11 +62,14 @@ export default function VaultCard({ vault, account }) {
           {activeVault && (
             <div className={classes.vaultInfoField}>
               <Typography variant="h2" className={classes.fontWeightBold}>
-                { !(vault && vault.balance) && <Skeleton /> }
-                { (vault && vault.balance && vault.type === 'Lockup') && formatCurrency(vault.balance) + ' ' + vault.symbol }
-                { (vault && vault.balanceUSD && vault.type !== 'Lockup') && '$ ' + formatCurrency(vault.balanceUSD) }
+                {!(vault && vault.balance) && <Skeleton />}
+                {vault && vault.balanceUSD && vault.type !== 'Lockup' && '$ ' + formatCurrency(vault.balanceUSD)}
               </Typography>
-              <Typography variant="body1">Balance</Typography>
+              <Typography variant="h2" className={classes.fontWeightBold}>
+                {!(vault && vault.balance) && <Skeleton />}
+                {vault && vault.balance && formatCurrency(vault.balance) + ' ' + vault.displayName}
+              </Typography>
+              <Typography variant="h2">Balance</Typography>
             </div>
           )}
           {!activeVault && account && account.address && (
@@ -78,14 +81,14 @@ export default function VaultCard({ vault, account }) {
                   formatCurrency(vault.tokenMetadata.balance) + ' ' + vault.tokenMetadata.displayName
                 )}
               </Typography>
-              <Typography variant="body1">Available to deposit</Typography>
+              <Typography variant="h2">Available to deposit</Typography>
             </div>
           )}
-          <div className={classes.vaultInfoField}>
+          <div className={classes.vaultInfoFieldSlim}>
             <Typography variant="h2" className={classes.fontWeightBold}>
               {!vault.apy ? <Skeleton /> : vault.apy.recommended ? BigNumber(vault.apy.recommended).times(100).toFixed(2) + '%' : 'Unknown'}
             </Typography>
-            <Typography variant="body1">Yearly Growth</Typography>
+            <Typography variant="h2">Yearly Growth</Typography>
           </div>
         </div>
       </Paper>
