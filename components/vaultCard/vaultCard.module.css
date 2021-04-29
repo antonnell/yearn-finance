@@ -2,7 +2,7 @@
   width: 100%;
   border-radius: 10px;
   cursor: pointer;
-  min-height: 213px;
+  min-height: 223px;
 }
 
 .vaultContainerActive {
@@ -11,7 +11,7 @@
   cursor: pointer;
   background: rgb(63,94,251);
   background: radial-gradient(circle, rgba(63,94,251,0.7) 0%, rgba(47,128,237,0.7) 48%) rgba(63,94,251,0.7) 100%;
-  min-height: 213px;
+  min-height: 223px;
 }
 
 .vaultTitle {
@@ -98,6 +98,10 @@
 }
 
 @media screen and (max-width: 1000px) {
+
+}
+
+@media screen and (max-width: 600px) {
   .vaultContainer {
     min-height: 0;
   }
@@ -105,8 +109,4 @@
   .vaultContainerActive {
     min-height: 0;
   }
-}
-
-@media screen and (max-width: 576px) {
-
 }
