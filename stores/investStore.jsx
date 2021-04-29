@@ -924,7 +924,7 @@ class Store {
                   if (!slippage || slippage === 0 || Number.isNaN(slippage)) {
                     slippage = ZAPPER_SLIPPAGE_PERCENTAGE;
                   }
-                  const sellAmount = new BigNumber(amount).times(10 ** vault.decimals);
+                  const sellAmount = new BigNumber(amount).times(10 ** vault.decimals).toFixed(0);
                   const zapperfiSendTransactionURI = this._setZapperAPI('/zap-out/yearn/transaction', {
                     ownerAddress: account.address,
                     gasPrice: zapperfiGasPrice,
