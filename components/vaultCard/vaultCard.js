@@ -67,7 +67,7 @@ export default function VaultCard({ vault, account }) {
               </Typography>
               <Typography variant="h2" className={classes.fontWeightBold}>
                 {!(vault && vault.balance) && <Skeleton />}
-                {vault && vault.balance && formatCurrency(vault.balance) + ' ' + vault.displayName}
+                {vault && vault.balanceInToken && formatCurrency(vault.balanceInToken) + ' ' + vault.displayName}
               </Typography>
               <Typography variant="h2">Balance</Typography>
             </div>

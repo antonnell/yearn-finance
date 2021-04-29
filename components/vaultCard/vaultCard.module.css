@@ -43,7 +43,7 @@
 }
 
 .vaultInfoFieldSlim {
-  width: 30%;
+  width: 35%;
 }
 
 .vaultVersionContainer {
@@ -105,7 +105,7 @@
   .vaultContainer {
     min-height: 0;
   }
-  
+
   .vaultContainerActive {
     min-height: 0;
   }
