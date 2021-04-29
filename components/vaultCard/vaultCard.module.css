@@ -39,6 +39,11 @@
 }
 
 .vaultInfoField {
+  padding-right: 10px;
+}
+
+.vaultInfoFieldSlim {
+  width: 30%;
 }
 
 .vaultVersionContainer {
