@@ -34,6 +34,8 @@ export default function vaultStrategyCard({ strategy, vault }) {
       return 'Supplies DAI on Compound and opens a long-term debt for an additional amount of DAI from Ironbank without the need for collateral, to maximize COMP farming. Earned COMP is harvested and sold for more DAI and re-deposited into the vault.';
     } else if (name.includes('StrategysteCurveWETHSingleSided')) {
       return 'Supplies WETH to the liquidity pool on Curve here to obtain steCRV tokens which it then puts into the v2 Curve stETH Pool yVault (yvsteCRV)to gain yield.';
+    } else if (name.includes('StrategyeCurveWETHSingleSided')) {
+      return 'Supplies WETH to the liquidity pool on Curve here to obtain eCRV tokens which it then puts into the v2 Curve sETH Pool yVault (yveCRV) to gain yield.';
     } else if (name.includes('DAOFeeClaim')) {
       return 'This vault converts your CRV into yveCRV, earning you a continuous share of Curve fees. The more converted, the greater the rewards. Every Friday, these can be claimed from the vault as 3Crv (Curve’s 3pool LP token).';
     } else if (name.includes('LPProfitSwitching')) {
@@ -51,12 +53,32 @@ export default function vaultStrategyCard({ strategy, vault }) {
     } else if (name.includes('StrategymUSDCurve')) {
       return 'This vault deposits mUSD into the mUSD/3Crv pool on Curve.fi. The crvMUSD is then deposited into the Curve mUSD Pool yVault.';
     } else if (name.includes('StrategyMakerYFIDAIDelegate')) {
-      return 'This debt-based strategy opens a Maker Vault, locks up YFI, draws DAI and earns yield by depositing into Yearn DAI Vault.'
+      return 'This debt-based strategy opens a Maker Vault, locks up YFI, draws DAI and earns yield by depositing into Yearn DAI Vault.';
     } else if (name.includes('StrategySynthetixRewardsGeneric')) {
-      return 'This universal strategy harvests farm of the week and can be easily refashioned for new farms as they appear.'
+      return 'This universal strategy harvests farm of the week and can be easily refashioned for new farms as they appear.';
     } else if (name.includes('StrategyYearnVECRV')) {
-      return 'This strategy claims weekly 3CRV rewards and uses them to acquire more yveCRV via market-buy or mint, depending on which is most efficient at time of harvest.'
-    } else {
+      return 'This strategy claims weekly 3CRV rewards and uses them to acquire more yveCRV via market-buy or mint, depending on which is most efficient at time of harvest.';
+    } else if (name.includes('Strategy1INCHGovernance')) {
+      return 'Stakes 1INCH token on 1INCH DAO to collect governance rewards. Rewards are harvested and deposited back into the vault.';
+    }
+
+    else if (name.includes('StrategyMakerETHDAIDelegate')) {
+      return 'This strategy uses ETH to mint DAI at MakerDAO. This newly minted DAI is then deposited into the v2 DAI yVault.';
+    } else if (name.includes('PoolTogether')) {
+      return `Supplies ${tokens} to the PoolTogether protocol to farm POOL. Rewards are harvested, sold for more ${tokens}, and deposited back into the vault. If it gets the prize of the week it will also be added to the vault.`;
+    } else if (name.includes('StrategyAH2Earncy')) {
+      return `Lends ${tokens} on Alpha Homora v2 to generate interest. Users of Alpha Homora borrow ${tokens} to perform leveraged yield-farming on Alpha Homora’s platform.`;
+    } else if (name.includes('SingleSidedCrv')) {
+      return `Deposits ${tokens} to a ${tokens} curve pool on curve.fi, and switches to the most profitable curve pool.`;
+    } else if (name.includes('StrategyCurveIBVoterProxy')) {
+      return `This vault accepts deposits of ib3CRV tokens obtained by supplying either cyDAI, cyUSDC, or cyUSDT to the liquidity pool on Curve in exchange for ib3CRV tokens. ib3CRV are staked in the gauge on Curve Finance to earn CRV rewards. Rewards are swapped for one of the underlying assets and resupplied to the liquidity pool to obtain more ib3CRV.`;
+    } else if (name.includes('Curve') && name.includes('VoterProxy')) {
+      return `This vault accepts deposits of ${tokens} tokens obtained by supplying supported tokens to the liquidity pool on Curve. ${tokens} tokens are staked in the gauge on Curve to earn CRV rewards. Rewards are swapped for one of the underlying assets and resupplied to the liquidity pool to obtain more ${tokens}.`;
+    } else if (name.includes('StrategystETHCurve')) {
+      return 'This vault accepts deposits of steCRV tokens obtained by supplying either ETH or stETH to the liquidity pool on Curve here. steCRV are staked in the gauge on curve.finance to earn CRV and LDO rewards. Rewards are swapped for WETH and resupplied to the liquidity pool to obtain more steCRV.';
+    }
+
+    else {
       return "I don't have a description for this strategy yet.";
     }
   };
