@@ -161,6 +161,14 @@ class Store {
           }
 
           return vault;
+        })
+        .map((vault) => {
+          //hack for Fameal, show APY as new for WBTC vault
+          if(vault && vault.address == '0xA696a63cc78DfFa1a63E9E50587C197387FF6C7E' && vault.apy) {
+            vault.apy.recommended = 'New'
+          }
+
+          return vault
         });
 
       //, ...lockup

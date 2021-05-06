@@ -46,6 +46,7 @@ export default function VaultGrowthNumbers({ vault }) {
                 {!vault ? (
                   <Skeleton />
                 ) : (
+                  vault.apy.recommended === 'New' ? 'New' :
                   BigNumber(vault.apy.recommended)
                     .times(100)
                     .toFixed(2) + "%"

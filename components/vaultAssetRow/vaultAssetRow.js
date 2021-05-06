@@ -614,7 +614,8 @@ export default function VaultAssetRow({ vault, account }) {
           {!vault.apy ? (
             <Skeleton stlye={{ minWidth: '100px' }} />
           ) : vault.apy.recommended ? (
-            BigNumber(vault.apy.recommended).times(100).toFixed(2) + '%'
+            vault.apy.recommended === 'New' ? 'New' :
+            (BigNumber(vault.apy.recommended).times(100).toFixed(2) + '%')
           ) : (
             'Unknown'
           )}
