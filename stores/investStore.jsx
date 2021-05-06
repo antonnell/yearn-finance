@@ -479,6 +479,7 @@ class Store {
             BigNumber(currentValue.balanceUSD).eq(0) ||
             !currentValue.apy ||
             !currentValue.apy.recommended ||
+            currentValue.apy.recommended === 'New' ||
             BigNumber(currentValue.apy.recommended).eq(0)
           ) {
             return accumulator;
