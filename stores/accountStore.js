@@ -1,4 +1,4 @@
-import async from "async";
+import async from 'async';
 import {
   GAS_PRICE_API,
   ERROR,
@@ -14,26 +14,19 @@ import {
   CDP_CONFIGURED,
   ACCOUNT_CHANGED,
   GET_GAS_PRICES,
-  GAS_PRICES_RETURNED
-} from "./constants";
+  GAS_PRICES_RETURNED,
+} from './constants';
 
-import { ERC20ABI } from "./abis";
+import { ERC20ABI } from './abis';
 
-import { bnDec } from "../utils";
+import { bnDec } from '../utils';
 
-import stores from "./";
+import stores from './';
 
-import {
-  injected,
-  walletconnect,
-  walletlink,
-  fortmatic,
-  portis,
-  network
-} from "./connectors";
+import { injected, walletconnect, walletlink, fortmatic, portis, network } from './connectors';
 
-import BigNumber from "bignumber.js";
-import Web3 from "web3";
+import BigNumber from 'bignumber.js';
+import Web3 from 'web3';
 
 class Store {
   constructor(dispatcher, emitter) {
@@ -42,6 +35,7 @@ class Store {
 
     this.store = {
       account: null,
+      chainInvalid: false,
       web3context: null,
       tokens: [],
       connectorsByName: {
@@ -53,7 +47,7 @@ class Store {
         // Trezor: trezor,
         // Frame: frame,
         Fortmatic: fortmatic,
-        Portis: portis
+        Portis: portis,
         // Squarelink: squarelink,
         // Torus: torus,
         // Authereum: authereum
@@ -62,14 +56,14 @@ class Store {
         slow: 90,
         standard: 90,
         fast: 100,
-        instant: 130
+        instant: 130,
       },
-      gasSpeed: "fast",
-      currentBlock: 11743358
+      gasSpeed: 'fast',
+      currentBlock: 11743358,
     };
 
     dispatcher.register(
-      function(payload) {
+      function (payload) {
         switch (payload.type) {
           case CONFIGURE:
             this.configure(payload);
@@ -80,7 +74,7 @@ class Store {
           default: {
           }
         }
-      }.bind(this)
+      }.bind(this),
     );
   }
 
@@ -97,46 +91,51 @@ class Store {
   configure = async () => {
     this.getGasPrices();
     this.getCurrentBlock();
+    injected.isAuthorized().then((isAuthorized) => {
+      const { supportedChainIds } = injected;
+      // fall back to ethereum mainnet if chainId undefined
+      const { chainId = 1 } = window.ethereum || {};
+      const parsedChainId = parseInt(chainId, 16);
+      const isChainSupported = supportedChainIds.includes(parsedChainId);
 
-    injected.isAuthorized().then(isAuthorized => {
-      if (isAuthorized) {
+      if (isAuthorized && isChainSupported) {
         injected
           .activate()
-          .then(a => {
+          .then((a) => {
             this.setStore({
               account: { address: a.account },
-              web3context: { library: { provider: a.provider } }
+              web3context: { library: { provider: a.provider } },
             });
             this.emitter.emit(ACCOUNT_CONFIGURED);
 
             this.dispatcher.dispatch({
               type: CONFIGURE_VAULTS,
-              content: { connected: true }
+              content: { connected: true },
             });
             this.dispatcher.dispatch({
               type: CONFIGURE_LENDING,
-              content: { connected: true }
+              content: { connected: true },
             });
             this.dispatcher.dispatch({
               type: CONFIGURE_CDP,
-              content: { connected: true }
+              content: { connected: true },
             });
           })
-          .catch(e => {
+          .catch((e) => {
             this.emitter.emit(ERROR, e);
             this.emitter.emit(ACCOUNT_CONFIGURED);
 
             this.dispatcher.dispatch({
               type: CONFIGURE_VAULTS,
-              content: { connected: false }
+              content: { connected: false },
             });
             this.dispatcher.dispatch({
               type: CONFIGURE_LENDING,
-              content: { connected: false }
+              content: { connected: false },
             });
             this.dispatcher.dispatch({
               type: CONFIGURE_CDP,
-              content: { connected: false }
+              content: { connected: false },
             });
           });
       } else {
@@ -147,48 +146,52 @@ class Store {
 
         this.dispatcher.dispatch({
           type: CONFIGURE_VAULTS,
-          content: { connected: false }
+          content: { connected: false },
         });
+
+        if (!isChainSupported) {
+          this.setStore({ chainInvalid: true });
+        }
       }
     });
 
     if (window.ethereum) {
       this.updateAccount();
     } else {
-      window.removeEventListener("ethereum#initialized", this.updateAccount);
-      window.addEventListener("ethereum#initialized", this.updateAccount, {
-        once: true
+      window.removeEventListener('ethereum#initialized', this.updateAccount);
+      window.addEventListener('ethereum#initialized', this.updateAccount, {
+        once: true,
       });
     }
   };
 
   updateAccount = () => {
     const that = this;
-    const res = window.ethereum.on("accountsChanged", function(accounts) {
+    const res = window.ethereum.on('accountsChanged', function (accounts) {
       that.setStore({
         account: { address: accounts[0] },
-        web3context: { library: { provider: window.ethereum } }
+        web3context: { library: { provider: window.ethereum } },
       });
       that.emitter.emit(ACCOUNT_CHANGED);
       that.emitter.emit(ACCOUNT_CONFIGURED);
 
       that.dispatcher.dispatch({
         type: CONFIGURE_VAULTS,
-        content: { connected: true }
+        content: { connected: true },
       });
       that.dispatcher.dispatch({
         type: CONFIGURE_LENDING,
-        content: { connected: true }
+        content: { connected: true },
       });
       that.dispatcher.dispatch({
         type: CONFIGURE_CDP,
-        content: { connected: true }
+        content: { connected: true },
       });
     });
   };
 
-  getBalances = async payload => {
-    const account = this.getStore("account");
+  getBalances = async (payload) => {
+    const account = this.getStore('account');
     if (!account) {
       return false;
       //maybe throw an error
@@ -200,16 +203,16 @@ class Store {
       //maybe throw an error
     }
 
-    const vaults = stores.investStore.getStore("vaults");
+    const vaults = stores.investStore.getStore('vaults');
 
-    const vaultTokens = vaults.map(v => {
+    const vaultTokens = vaults.map((v) => {
       return {
         address: v.tokenAddress,
         decimals: v.tokenMetadata.decimals,
         symbol: v.tokenMetadata.symbol,
         displayName: v.tokenMetadata.displayName,
         name: v.tokenMetadata.name,
-        icon: v.tokenMetadata.icon
+        icon: v.tokenMetadata.icon,
       };
     });
     //get lelnding assets, append them to this
@@ -219,13 +222,9 @@ class Store {
       async (token, callback) => {
         try {
           const erc20Contract = new web3.eth.Contract(ERC20ABI, token.address);
-          const balanceOf = await erc20Contract.methods
-            .balanceOf(account.address)
-            .call();
+          const balanceOf = await erc20Contract.methods.balanceOf(account.address).call();
 
-          token.balance = BigNumber(balanceOf)
-            .div(bnDec(token.decimals))
-            .toFixed(token.decimals, BigNumber.ROUND_DOWN);
+          token.balance = BigNumber(balanceOf).div(bnDec(token.decimals)).toFixed(token.decimals, BigNumber.ROUND_DOWN);
 
           if (callback) {
             callback(null, token);
@@ -242,11 +241,11 @@ class Store {
         }
 
         const tokens = this.setStore({ tokens: tokensBalanced });
-      }
+      },
     );
   };
 
-  getCurrentBlock = async payload => {
+  getCurrentBlock = async (payload) => {
     try {
       var web3 = new Web3(process.env.NEXT_PUBLIC_PROVIDER);
       const block = await web3.eth.getBlockNumber();
@@ -256,13 +255,13 @@ class Store {
     }
   };
 
-  getGasPrices = async payload => {
+  getGasPrices = async (payload) => {
     const gasPrices = await this._getGasPrices();
-    let gasSpeed = localStorage.getItem("yearn.finance-gas-speed");
+    let gasSpeed = localStorage.getItem('yearn.finance-gas-speed');
 
     if (!gasSpeed) {
-      gasSpeed = "fast";
-      localStorage.getItem("yearn.finance-gas-speed", "fast");
+      gasSpeed = 'fast';
+      localStorage.getItem('yearn.finance-gas-speed', 'fast');
     }
 
     this.setStore({ gasPrices: gasPrices, gasSpeed: gasSpeed });
@@ -284,10 +283,10 @@ class Store {
     }
   };
 
-  getGasPrice = async speed => {
+  getGasPrice = async (speed) => {
     let gasSpeed = speed;
     if (!speed) {
-      gasSpeed = this.getStore("gasSpeed");
+      gasSpeed = this.getStore('gasSpeed');
     }
 
     try {
@@ -305,11 +304,11 @@ class Store {
   };
 
   getWeb3Provider = async () => {
-    let web3context = this.getStore("web3context");
+    let web3context = this.getStore('web3context');
     let provider = null;
 
     if (!web3context) {
-      provider = network.providers["1"];
+      provider = network.providers['1'];
     } else {
       provider = web3context.library.provider;
     }
