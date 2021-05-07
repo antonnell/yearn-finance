@@ -63,6 +63,7 @@ function Invest({ changeTheme }) {
   const storePortfolioGrowth = stores.investStore.getStore('portfolioGrowth');
   const storeHighestHoldings = stores.investStore.getStore('highestHoldings');
   const account = stores.accountStore.getStore('account');
+  const chainInvalid = stores.accountStore.getStore('chainInvalid');
 
   const localStorageCoinTypes = localStorage.getItem('yearn.finance-invest-coin-types');
   const localStoragelayout = localStorage.getItem('yearn.finance-invest-layout');
@@ -592,6 +593,12 @@ function Invest({ changeTheme }) {
             </div>
           </Paper>
         </div>
+
+        {chainInvalid ? (
+          <div className={classes.chainInvalidError}>
+            The chain you're connected to isn't supported. Please check that your wallet is connected to ethereum.
+          </div>
+        ) : null}
 
         <div className={classes.vaultsContainer}>
           <div className={classes.vaultFilters}>
