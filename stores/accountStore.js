@@ -188,6 +188,16 @@ class Store {
         content: { connected: true },
       });
     });
+
+    window.ethereum.on('chainChanged', function (chainId) {
+      const supportedChainIds = [1]
+      const parsedChainId = parseInt(chainId, 16);
+      const isChainSupported = supportedChainIds.includes(parsedChainId);
+      console.log(chainId)
+      that.setStore({ chainInvalid: !isChainSupported });
+
+      that.emitter.emit(ACCOUNT_CHANGED);
+    })
   };
 
   getBalances = async (payload) => {

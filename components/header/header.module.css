@@ -2,8 +2,9 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  padding: 0px 48px;
-  height: 120px;
+  flex-wrap: wrap;
+  padding: 24px 48px;
+  min-height: 120px;
 }
 
 .accountButton {
@@ -47,6 +48,19 @@
 
 .backButton {
   flex: 1;
+}
+
+.chainInvalidError {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  margin-top: 24px;
+  padding: 36px;
+  min-width: 100%;
+  flex-wrap: wrap;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.32);
+  background: #dc3545;
 }
 
 @media screen and (max-width: 1200px) {

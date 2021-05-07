@@ -404,16 +404,3 @@
   font-size: 20px;
   font-weight: bold;
 }
-
-.chainInvalidError {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex: 1;
-  margin-top: 24px;
-  padding: 36px;
-  width: 100%;
-  flex-wrap: wrap;
-  border-bottom: 1px solid rgba(128, 128, 128, 0.32);
-  background: #dc3545;
-}

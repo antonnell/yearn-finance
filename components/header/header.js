@@ -11,7 +11,7 @@ import WbSunnyOutlinedIcon from '@material-ui/icons/WbSunnyOutlined';
 import Brightness2Icon from '@material-ui/icons/Brightness2';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
-import { CONNECT_WALLET, ACCOUNT_CONFIGURED } from '../../stores/constants';
+import { CONNECT_WALLET, ACCOUNT_CONFIGURED, ACCOUNT_CHANGED } from '../../stores/constants';
 
 import Unlock from '../unlock';
 
@@ -85,6 +85,7 @@ function Header(props) {
   const [darkMode, setDarkMode] = useState(props.theme.palette.type === 'dark' ? true : false);
   const [unlockOpen, setUnlockOpen] = useState(false);
   const [isMac, setIsMac] = useState(false);
+  const [chainInvalid, setChainInvalid] = useState(false)
 
   useHotkeys('ctrl+k', () => setToggleSearchModal(true), { filterPreventDefault: true });
   useHotkeys('cmd+k', () => setToggleSearchModal(true));
@@ -99,12 +100,21 @@ function Header(props) {
     const connectWallet = () => {
       onAddressClicked();
     };
+    const accountChanged = () => {
+      const invalid = stores.accountStore.getStore('chainInvalid');
+      setChainInvalid(invalid)
+    }
+
+    const invalid = stores.accountStore.getStore('chainInvalid');
+    setChainInvalid(invalid)
 
     stores.emitter.on(ACCOUNT_CONFIGURED, accountConfigure);
     stores.emitter.on(CONNECT_WALLET, connectWallet);
+    stores.emitter.on(ACCOUNT_CHANGED, accountChanged);
     return () => {
       stores.emitter.removeListener(ACCOUNT_CONFIGURED, accountConfigure);
       stores.emitter.removeListener(CONNECT_WALLET, connectWallet);
+      stores.emitter.removeListener(ACCOUNT_CHANGED, accountChanged);
     };
   }, []);
 
@@ -184,6 +194,14 @@ function Header(props) {
       {unlockOpen && <Unlock modalOpen={unlockOpen} closeModal={closeUnlock} />}
       {toggleAboutModal && <AboutModal setToggleAboutModal={setToggleAboutModal} />}
       {toggleSearchModal && <SearchModal setToggleSearchModal={setToggleSearchModal} />}
+
+
+
+      {chainInvalid ? (
+        <div className={classes.chainInvalidError}>
+          The chain you're connected to isn't supported. Please check that your wallet is connected to Ethereum Mainnet.
+        </div>
+      ) : null}
     </div>
   );
 }
