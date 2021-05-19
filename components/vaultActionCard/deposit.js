@@ -173,14 +173,16 @@ export default function Deposit({ vault }) {
 
   useEffect(() => {
     async function fetchAccountBalanceFromZapper() {
-      const response = await fetch(`https://api.zapper.fi/v1/balances/tokens?api_key=96e0cc51-a62e-42ca-acee-910ea7d2a241&addresses[]=${account.address}`);
+      const response = await fetch(
+        `https://api.zapper.fi/v1/protocols/tokens/balances?api_key=96e0cc51-a62e-42ca-acee-910ea7d2a241&addresses[]=${account.address}`,
+      );
       if (response.status === 200) {
         const tokensJSON = await response.json();
         let tokens = [];
         let tmpHasVaultToken = false;
         vault.tokenMetadata = { ...vault.tokenMetadata, ...{ img: vault.tokenMetadata.icon, label: vault.tokenMetadata.displayName } };
-        if (tokensJSON && tokensJSON[account.address]) {
-          tokens = tokensJSON[account.address];
+        if (tokensJSON && tokensJSON[account.address]?.products[0]?.assets) {
+          tokens = tokensJSON[account.address].products[0].assets;
           let tmpTokens = [];
           tokens.map((token) => {
 
