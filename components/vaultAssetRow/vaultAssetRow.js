@@ -563,6 +563,10 @@ export default function VaultAssetRow({ vault, account }) {
       break;
   }
 
+  if(vault.address === '0xa9fE4601811213c340e850ea305481afF02f5b28') {
+    vault.apy.recommended = null
+  }
+
   return (
     <TableRow
       hover

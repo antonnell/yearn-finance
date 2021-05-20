@@ -8,6 +8,7 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import { formatCurrency } from '../../utils';
 import GasSpeed from '../gasSpeed';
 import classes from './vaultActionCard.module.css';
+import InfoIcon from "@material-ui/icons/Info";
 
 import stores from '../../stores';
 import {
@@ -228,6 +229,13 @@ export default function Deposit({ vault }) {
     fetchTokensFromZapper();
   }, []);
 
+  let depositDisabled = false
+  let depositDisabledMessage = null
+  if(vault.address === '0xa9fE4601811213c340e850ea305481afF02f5b28') {
+    depositDisabled = true
+    depositDisabledMessage = 'We have taken steps to increase the safety factor on our strategies that have LTV ratios that must be maintained. In the process of doing this, an accounting issue was uncovered with artifical losses reported that drove down the price of the yvWETH vault significantly. We are taking actions to resolve this accounting error and return the vault to normal. Please do not withdraw until the issue has been patched, as you currently will receive WETH at the artificially lowered share price of ~0.90.'
+  }
+
   return selectedZapBalanceToken?.address && zapperBalanceUpdated ? (
     <div className={classes.depositContainer}>
       <div className={classes.textField}>
@@ -435,7 +443,7 @@ export default function Deposit({ vault }) {
           {(amount === '' ||
             BigNumber(currentToken.allowance).gte(amount) ||
             currentToken.address.toLowerCase() !== vault.tokenMetadata.address.toLowerCase()) && (
-            <Button fullWidth disableElevation variant="contained" color="primary" size="large" onClick={onDeposit} disabled={loading}>
+            <Button fullWidth disableElevation variant="contained" color="primary" size="large" onClick={onDeposit} disabled={loading || depositDisabled}>
               <Typography variant="h5" className={ classes.flexInline }>
                 {loading ? (
                   <>
@@ -460,7 +468,7 @@ export default function Deposit({ vault }) {
                   color="primary"
                   size="large"
                   onClick={onApprove}
-                  disabled={loading}
+                  disabled={loading || depositDisabled}
                   className={classes.marginRight}
                 >
                   <Typography variant="h5">{loading ? <CircularProgress size={25} /> : 'Approve Exact'}</Typography>
@@ -472,7 +480,7 @@ export default function Deposit({ vault }) {
                   color="primary"
                   size="large"
                   onClick={onApproveMax}
-                  disabled={loading}
+                  disabled={loading || depositDisabled}
                   className={classes.marginLeft}
                 >
                   <Typography variant="h5">{loading ? <CircularProgress size={25} /> : 'Approve Max'}</Typography>
@@ -481,6 +489,15 @@ export default function Deposit({ vault }) {
             )}
         </div>
       )}
+      {
+        depositDisabledMessage &&
+        <>
+          <Typography variant='h5' className={ classes.disabledWarning }><InfoIcon className={ classes.disabledIcon } />Deposits Temporarily Dsiabled</Typography>
+          <Typography className={ classes.disabledWarning }>
+            { depositDisabledMessage }
+          </Typography>
+        </>
+      }
     </div>
   ) : (
     <>
