@@ -39,6 +39,8 @@ import {
   DISABLE_COLLATERAL_LEND,
   DISABLE_COLLATERAL_LEND_RETURNED,
   CONNECT_WALLET,
+  LENDING_SUPPLY_RETURNED,
+  LENDING_BORROW_RETURNED,
 } from '../../stores/constants';
 
 import classes from './lendAllAssetRow.module.css';
