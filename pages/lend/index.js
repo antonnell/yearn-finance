@@ -43,13 +43,13 @@ function Lend({ changeTheme }) {
     order === 'asc' ? (y = -x) : (y = x);
     return y;
   };
-  const account = stores.accountStore.getStore('account');
   const storeLendingAssets = stores.lendStore.getStore('lendingAssets');
   const storeLendingSupply = stores.lendStore.getStore('lendingSupply');
   const storeLendingBorrow = stores.lendStore.getStore('lendingBorrow');
   const storeLendingBorrowLimit = stores.lendStore.getStore('lendingBorrowLimit');
   const storeLendingSupplyAPY = stores.lendStore.getStore('lendingSupplyAPY');
   const storeLendingBorrowAPY = stores.lendStore.getStore('lendingBorrowAPY');
+  const storeLendingPosition = stores.lendStore.getStore('position');
 
   const [lendingAssets, setLendingAssets] = useState(storeLendingAssets);
   const [lendingSupply, setLendingSupply] = useState(storeLendingSupply);
@@ -57,6 +57,7 @@ function Lend({ changeTheme }) {
   const [lendingBorrowLimit, setLendingBorrowLimit] = useState(storeLendingBorrowLimit);
   const [lendingSupplyAPY, setLendingSupplyAPY] = useState(storeLendingSupplyAPY);
   const [lendingBorrowAPY, setLendingBorrowAPY] = useState(storeLendingBorrowAPY);
+  const [position, setPosition] = useState(storeLendingPosition);
   const [currentAsset, setCurrentAsset] = useState();
   const onSearchChanged = (event) => {
     setSearch(event.target.value);
@@ -352,7 +353,11 @@ function Lend({ changeTheme }) {
             <div>
               <Typography variant="h2">Total Supplied</Typography>
               <Typography variant="h1" className={classes.headAmount}>
-                {lendingSupply === null ? <Skeleton style={{ minWidth: '200px ' }} /> : `$ ${formatCurrency(lendingSupply)}`}
+                {lendingSupply === null ? (
+                  <Skeleton style={{ minWidth: '200px ' }} />
+                ) : (
+                  `$ ${formatCurrency(position && position.length >= 3 ? position[0] / 1000000 : 0)} %`
+                )}
               </Typography>
               <Tooltip title={renderSupplyTootip()}>
                 <Typography>{!lendingSupplyAPY ? <Skeleton style={{ minWidth: '200px ' }} /> : `${formatCurrency(lendingSupplyAPY)} % Average APY`}</Typography>
@@ -367,7 +372,11 @@ function Lend({ changeTheme }) {
             <div>
               <Typography variant="h2">Total Borrowed</Typography>
               <Typography variant="h1" className={classes.headAmount}>
-                {lendingBorrow === null ? <Skeleton style={{ minWidth: '200px ' }} /> : `$ ${formatCurrency(lendingBorrow)}`}
+                {lendingBorrow === null ? (
+                  <Skeleton style={{ minWidth: '200px ' }} />
+                ) : (
+                  `$ ${formatCurrency(position && position.length >= 3 ? position[1] / 1000000 : 0)} %`
+                )}
               </Typography>
               <Tooltip title={renderBorrowTooltip()}>
                 <Typography>{!lendingBorrowAPY ? <Skeleton style={{ minWidth: '200px ' }} /> : `${formatCurrency(lendingBorrowAPY)} % Average APY`}</Typography>
@@ -382,7 +391,7 @@ function Lend({ changeTheme }) {
                 {lendingBorrowLimit === null ? (
                   <Skeleton style={{ minWidth: '200px ' }} />
                 ) : (
-                  `${formatCurrency(lendingBorrowLimit > 0 ? (lendingBorrow * 100) / lendingBorrowLimit : 0)} %`
+                  `${formatCurrency(position && position.length >= 3 ? position[3] / 100 : 0)} %`
                 )}
               </Typography>
             </div>
