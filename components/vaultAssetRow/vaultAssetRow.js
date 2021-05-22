@@ -565,8 +565,8 @@ export default function VaultAssetRow({ vault, account }) {
       break;
   }
 
-  if(vault.address === '0xa9fE4601811213c340e850ea305481afF02f5b28') {
-    vault.apy.recommended = null
+  if (vault.address === '0xa9fE4601811213c340e850ea305481afF02f5b28') {
+    vault.apy.recommended = null;
   }
 
   return (
@@ -598,9 +598,9 @@ export default function VaultAssetRow({ vault, account }) {
       {account && account.address && (
         <TableCell align="right">
           <Typography variant="h5" className={classes.fontWeightBold}>
-            { !(vault && vault.balance) && <Skeleton stlye={{ minWidth: '100px' }} /> }
-            { (vault && vault.balance && vault.type === 'Lockup') && formatCurrency(vault.balance) + ' ' + vault.symbol }
-            { (vault && vault.balanceUSD && vault.type !== 'Lockup') && '$ ' + formatCurrency(vault.balanceUSD) }
+            {!(vault && vault.balance) && <Skeleton stlye={{ minWidth: '100px' }} />}
+            {vault && vault.balance && vault.type === 'Lockup' && formatCurrency(vault.balance) + ' ' + vault.symbol}
+            {vault && vault.balanceUSD && vault.type !== 'Lockup' && '$ ' + formatCurrency(vault.balanceUSD)}
           </Typography>
         </TableCell>
       )}
@@ -620,8 +620,11 @@ export default function VaultAssetRow({ vault, account }) {
           {!vault.apy ? (
             <Skeleton stlye={{ minWidth: '100px' }} />
           ) : vault.apy.recommended ? (
-            vault.apy.recommended === 'New' ? 'New' :
-            (BigNumber(vault.apy.recommended).times(100).toFixed(2) + '%')
+            vault.apy.recommended === 'New' ? (
+              'New'
+            ) : (
+              BigNumber(vault.apy.recommended).times(100).toFixed(2) + '%'
+            )
           ) : (
             'Unknown'
           )}

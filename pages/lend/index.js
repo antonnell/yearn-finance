@@ -356,7 +356,7 @@ function Lend({ changeTheme }) {
                 {lendingSupply === null ? (
                   <Skeleton style={{ minWidth: '200px ' }} />
                 ) : (
-                  `$ ${formatCurrency(position && position.length >= 3 ? position[0] / 1000000 : 0)} %`
+                  `$ ${formatCurrency(position && position.length >= 3 ? position[0] / 1000000 : 0)}`
                 )}
               </Typography>
               <Tooltip title={renderSupplyTootip()}>
@@ -375,7 +375,7 @@ function Lend({ changeTheme }) {
                 {lendingBorrow === null ? (
                   <Skeleton style={{ minWidth: '200px ' }} />
                 ) : (
-                  `$ ${formatCurrency(position && position.length >= 3 ? position[1] / 1000000 : 0)} %`
+                  `$ ${formatCurrency(position && position.length >= 3 ? position[1] / 1000000 : 0)}`
                 )}
               </Typography>
               <Tooltip title={renderBorrowTooltip()}>
