@@ -190,14 +190,14 @@ class Store {
     });
 
     window.ethereum.on('chainChanged', function (chainId) {
-      const supportedChainIds = [1]
+      const supportedChainIds = [1];
       const parsedChainId = parseInt(chainId, 16);
       const isChainSupported = supportedChainIds.includes(parsedChainId);
-      console.log(chainId)
+      console.log(chainId);
       that.setStore({ chainInvalid: !isChainSupported });
 
       that.emitter.emit(ACCOUNT_CHANGED);
-    })
+    });
   };
 
   getBalances = async (payload) => {
@@ -226,7 +226,6 @@ class Store {
       };
     });
     //get lelnding assets, append them to this
-
     async.map(
       vaultTokens,
       async (token, callback) => {

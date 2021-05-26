@@ -25,13 +25,14 @@ import {
   ENABLE_COLLATERAL_LEND_RETURNED,
   DISABLE_COLLATERAL_LEND,
   DISABLE_COLLATERAL_LEND_RETURNED,
+  IRON_BANK_REGISTRY_ADAPTER,
 } from './constants';
 
 import * as moment from 'moment';
 
 import stores from './';
 import lendJSON from './configurations/lend';
-import { ERC20ABI, COMPTROLLERABI, CERC20DELEGATORABI, CREAMPRICEORACLEABI } from './abis';
+import { ERC20ABI, COMPTROLLERABI, CERC20DELEGATORABI, CREAMPRICEORACLEABI, IRONBANKREGISTRYADAPTERABI } from './abis';
 import { bnDec } from '../utils';
 
 import BatchCall from 'web3-batch-call';
@@ -54,6 +55,7 @@ class Store {
       lendingSupplyAPY: null,
       lendingBorrowAPY: null,
       ironBankTVL: 0,
+      position: null,
     };
 
     dispatcher.register(
@@ -113,8 +115,14 @@ class Store {
 
     const blocksPeryear = 2425846;
     const defaultValues = lendJSON;
+    const account = await stores.accountStore.getStore('account');
+    if (!account) {
+      return null;
+    }
 
-    const creamPriceOracleContract = new web3.eth.Contract(CREAMPRICEORACLEABI, CREAM_PRICE_ORACLE_ADDRESS);
+    const IronBankRegistryAdapter = new web3.eth.Contract(IRONBANKREGISTRYADAPTERABI, IRON_BANK_REGISTRY_ADAPTER);
+    const adapterPositionOf = await IronBankRegistryAdapter.methods.adapterPositionOf(account.address).call();
+    this.setStore({ position: adapterPositionOf });
 
     async.map(
       allMarkets,
@@ -248,8 +256,8 @@ class Store {
       const comptrollerContract = new web3.eth.Contract(COMPTROLLERABI, COMPTROLLER_ADDRESS);
       let allMarkets = await comptrollerContract.methods.getAllMarkets().call();
       let newMarkets = allMarkets.filter((market) => {
-        return market !== '0x4e3a36A633f63aee0aB57b5054EC78867CB3C0b8'
-      })
+        return market !== '0x4e3a36A633f63aee0aB57b5054EC78867CB3C0b8';
+      });
       return newMarkets;
     } catch (ex) {
       console.log(ex);
@@ -295,7 +303,6 @@ class Store {
         // console.log(asset)
         try {
           const marketContract = new web3.eth.Contract(CERC20DELEGATORABI, asset.address);
-
           const exchangeRate = await marketContract.methods.exchangeRateStored().call();
           const exchangeRateReal = BigNumber(exchangeRate).div(bnDec(asset.tokenMetadata.decimals)).toFixed(asset.tokenMetadata.decimals, BigNumber.ROUND_DOWN);
 
@@ -310,7 +317,6 @@ class Store {
 
           let totalBorrows = await marketContract.methods.totalBorrows().call();
           totalBorrows = new BigNumber(totalBorrows).div(bnDec(asset.tokenMetadata.decimals)).toFixed(asset.tokenMetadata.decimals, BigNumber.ROUND_DOWN);
-
           if (account && account.address) {
             const erc20Contract = new web3.eth.Contract(ERC20ABI, asset.tokenMetadata.address);
             let balance = await erc20Contract.methods.balanceOf(account.address).call();
@@ -342,10 +348,11 @@ class Store {
             asset.collateralEnabled = assetsIn.includes(asset.address);
           }
 
-          asset.totalBorrows = totalBorrows
+          asset.totalBorrows = totalBorrows;
 
           asset.liquidity = cash;
           asset.collateralPercent = this._getCollateralPercent(asset.symbol);
+
           asset.supplyAPY = supplyRatePerYear;
           asset.borrowAPY = borrowRatePerYear;
           asset.exchangeRate = exchangeRate;
@@ -399,7 +406,7 @@ class Store {
         const ironBankTVL = populatedLendingAssets.reduce((val, market) => {
           const vvvv = BigNumber(BigNumber(market.liquidity).plus(market.totalBorrows)).times(market.price).toNumber();
           return BigNumber(vvvv).plus(val).toNumber();
-        }, 0)
+        }, 0);
 
         this.setStore({
           lendingAssets: populatedLendingAssets,
@@ -408,7 +415,7 @@ class Store {
           lendingBorrowLimit: lendingBorrowLimit,
           lendingBorrow: lendingBorrow,
           lendingBorrowAPY: lendingBorrowAPY,
-          ironBankTVL: ironBankTVL
+          ironBankTVL: ironBankTVL,
         });
 
         this.emitter.emit(LEND_UPDATED);

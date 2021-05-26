@@ -61,6 +61,7 @@ class Store {
       cdpAssets: [],
       cdpActive: [],
       borrowAsset: cdpJSON.borrowAsset,
+      position: {},
     };
 
     dispatcher.register(
@@ -128,15 +129,15 @@ class Store {
 
       let ethPrice = null;
       try {
-        const contractAddress = await web3.eth.ens.getAddress(`eth-usd.data.eth`)
-        const chainLinkContract = new web3.eth.Contract(CHAINLINKORACLEABI, contractAddress)
+        const contractAddress = await web3.eth.ens.getAddress(`eth-usd.data.eth`);
+        const chainLinkContract = new web3.eth.Contract(CHAINLINKORACLEABI, contractAddress);
 
-        const assetPrice = await chainLinkContract.methods.latestAnswer().call()
+        const assetPrice = await chainLinkContract.methods.latestAnswer().call();
         ethPrice = BigNumber(assetPrice)
           .div(10 ** 8)
           .toNumber();
       } catch (ex) {
-        console.log(ex)
+        console.log(ex);
       }
 
       const vaultManagerParamsContract = new web3.eth.Contract(VAULTMANAGERPARAMSABI, VAULT_MANAGER_PARAMETERS_ADDRESS);
@@ -156,14 +157,14 @@ class Store {
 
             const oracleType = await this._getORacleType(vaultParametersContract, asset.address);
 
-            if(![5, 12].includes(oracleType)) {
+            if (![5, 12].includes(oracleType)) {
               if (callback) {
                 callback(null, returnAsset);
               } else {
                 return returnAsset;
               }
 
-              return
+              return;
             }
 
             const stabilityFee = await vaultParametersContract.methods.stabilityFee(asset.address).call();
@@ -178,47 +179,46 @@ class Store {
 
             const erc20Contract = new web3.eth.Contract(ERC20ABI, asset.address);
 
-            let decimals = 0
-            let symbol = ''
+            let decimals = 0;
+            let symbol = '';
             // MAKER returns a web3 error for .decimals. logic
-            if(asset.address !== '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2') {
-              if(oracleType === 4 || oracleType === 8 || oracleType === 12) {
-                const isSushi = await this._isSushi(vaultParametersContract, asset.address)
+            if (asset.address !== '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2') {
+              if (oracleType === 4 || oracleType === 8 || oracleType === 12) {
+                const isSushi = await this._isSushi(vaultParametersContract, asset.address);
 
-                const uniswapPairContract = new web3.eth.Contract(UNISWAPPAIRABI, asset.address)
-                const token0 = await uniswapPairContract.methods.token0().call()
-                const token1 = await uniswapPairContract.methods.token1().call()
+                const uniswapPairContract = new web3.eth.Contract(UNISWAPPAIRABI, asset.address);
+                const token0 = await uniswapPairContract.methods.token0().call();
+                const token1 = await uniswapPairContract.methods.token1().call();
 
-                const prepend = isSushi ? 'SUSHI' : 'UNI'
-                const erc20Contract0 = new web3.eth.Contract(ERC20ABI, token0)
-                const erc20Contract1 = new web3.eth.Contract(ERC20ABI, token1)
-                let symbol0 = ''
-                let symbol1 = ''
+                const prepend = isSushi ? 'SUSHI' : 'UNI';
+                const erc20Contract0 = new web3.eth.Contract(ERC20ABI, token0);
+                const erc20Contract1 = new web3.eth.Contract(ERC20ABI, token1);
+                let symbol0 = '';
+                let symbol1 = '';
 
-                if(token0 !== '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2') {
-                  symbol0 = await erc20Contract0.methods.symbol().call()
+                if (token0 !== '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2') {
+                  symbol0 = await erc20Contract0.methods.symbol().call();
                 } else {
-                  symbol0 = 'MKR'
+                  symbol0 = 'MKR';
                 }
 
-                if(token1 !== '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2') {
-                  symbol1 = await erc20Contract1.methods.symbol().call()
+                if (token1 !== '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2') {
+                  symbol1 = await erc20Contract1.methods.symbol().call();
                 } else {
-                  symbol1 = 'MKR'
+                  symbol1 = 'MKR';
                 }
 
-                symbol = `${prepend}-${symbol0}/${symbol1}`
+                symbol = `${prepend}-${symbol0}/${symbol1}`;
               } else {
                 symbol = await erc20Contract.methods.symbol().call();
               }
               decimals = BigNumber(await erc20Contract.methods.decimals().call()).toNumber();
             } else {
-              decimals = 18
-              symbol = 'MKR'
+              decimals = 18;
+              symbol = 'MKR';
             }
             const balanceOf = await erc20Contract.methods.balanceOf(account.address).call();
             const allowance = await erc20Contract.methods.allowance(account.address, CDP_VAULT_ADDRESS).call();
-
 
             let addy = asset.address;
             if (symbol.includes('UNI-')) {
@@ -227,9 +227,9 @@ class Store {
               addy = '0x6b3595068778dd592e39a122f4f5a5cf09c90fe2';
             }
 
-            asset.decimals = decimals
-            asset.symbol = symbol
-            asset.defaultOracleType = oracleType
+            asset.decimals = decimals;
+            asset.symbol = symbol;
+            asset.defaultOracleType = oracleType;
 
             // get dolar price
             const dolarPrice = await this._getDolarPrice(asset, ethPrice);
@@ -243,12 +243,15 @@ class Store {
               let theDebt = BigNumber(debt).div(bnDec(borrowAsset.decimals));
               let theCollateral = BigNumber(collateral).div(bnDec(decimals));
 
-              if(dolarPrice === 'Stale price') {
-                utilizationRatio = 'Unknown'
-                maxUSDPAvailable = 'Unknown'
-                liquidationPrice = 'Unknown'
+              if (dolarPrice === 'Stale price') {
+                utilizationRatio = 'Unknown';
+                maxUSDPAvailable = 'Unknown';
+                liquidationPrice = 'Unknown';
               } else {
-                utilizationRatio = BigNumber(theDebt).times(10000).div(BigNumber(theCollateral).times(liquidationRatio).times(dolarPrice).toNumber()).toNumber();
+                utilizationRatio = BigNumber(theDebt)
+                  .times(10000)
+                  .div(BigNumber(theCollateral).times(liquidationRatio).times(dolarPrice).toNumber())
+                  .toNumber();
                 maxUSDPAvailable = BigNumber(collateral).div(bnDec(decimals)).times(liquidationRatio).div(100).times(dolarPrice).toNumber();
                 liquidationPrice = BigNumber(dolarPrice).times(utilizationRatio).div(100).toNumber();
               }
@@ -265,15 +268,16 @@ class Store {
                 status = 'Safe';
               }
             } else {
-              status = 'Safe'
+              status = 'Safe';
             }
 
             const returnAsset = {
               defaultOracleType: oracleType,
               collateral: BigNumber(BigNumber(collateral).div(bnDec(decimals)).toFixed(decimals, BigNumber.ROUND_DOWN)).toNumber(),
-              collateralDolar: dolarPrice === 'Stale price' ? 'Unknown' : BigNumber(
-                BigNumber(collateral).times(dolarPrice).div(bnDec(decimals)).toFixed(decimals, BigNumber.ROUND_DOWN),
-              ).toNumber(),
+              collateralDolar:
+                dolarPrice === 'Stale price'
+                  ? 'Unknown'
+                  : BigNumber(BigNumber(collateral).times(dolarPrice).div(bnDec(decimals)).toFixed(decimals, BigNumber.ROUND_DOWN)).toNumber(),
               debt: BigNumber(BigNumber(debt).div(bnDec(borrowAsset.decimals)).toFixed(borrowAsset.decimals, BigNumber.ROUND_DOWN)).toNumber(),
               stabilityFee: BigNumber(BigNumber(stabilityFee).div(1000).toFixed(decimals, BigNumber.ROUND_DOWN)).toNumber(),
               liquidationFee: BigNumber(BigNumber(liquidationFee).toFixed(decimals, BigNumber.ROUND_DOWN)).toNumber(),
@@ -308,9 +312,10 @@ class Store {
                 symbol: symbol,
                 decimals: decimals,
                 balance: BigNumber(BigNumber(balanceOf).div(bnDec(decimals)).toFixed(decimals, BigNumber.ROUND_DOWN)).toNumber(),
-                balanceDolar: dolarPrice === 'Stale price' ? 'Unknown' : BigNumber(
-                  BigNumber(balanceOf).times(dolarPrice).div(bnDec(decimals)).toFixed(decimals, BigNumber.ROUND_DOWN),
-                ).toNumber(),
+                balanceDolar:
+                  dolarPrice === 'Stale price'
+                    ? 'Unknown'
+                    : BigNumber(BigNumber(balanceOf).times(dolarPrice).div(bnDec(decimals)).toFixed(decimals, BigNumber.ROUND_DOWN)).toNumber(),
                 allowance: BigNumber(BigNumber(allowance).div(bnDec(decimals)).toFixed(decimals)).toNumber(),
                 icon: `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${web3.utils.toChecksumAddress(addy)}/logo.png`,
               },
@@ -321,16 +326,15 @@ class Store {
             } else {
               return returnAsset;
             }
-          } catch(ex) {
-            console.log(asset)
-            console.log(ex)
+          } catch (ex) {
+            console.log(asset);
+            console.log(ex);
             if (callback) {
               callback(null, null);
             } else {
               return null;
             }
           }
-
         },
         (err, allAssetsPopulated) => {
           if (err) {
@@ -341,17 +345,17 @@ class Store {
             if (!asset) {
               return val;
             }
-            if(val === 'Unknown') {
-              return 'Unknown'
+            if (val === 'Unknown') {
+              return 'Unknown';
             }
             if (BigNumber(asset.collateral).gt(0) && asset.collateralDolar === 'Unknown') {
-              return 'Unknown'
+              return 'Unknown';
             }
-            if(asset.collateralDolar !== 'Unknown') {
+            if (asset.collateralDolar !== 'Unknown') {
               return BigNumber(val).plus(asset.collateralDolar).toNumber();
             }
 
-            return val
+            return val;
           }, 0);
 
           const cdpMinted = allAssetsPopulated.reduce((val, asset) => {
@@ -381,49 +385,48 @@ class Store {
     } catch (ex) {
       console.log(ex);
       this.emitter.emit(CDP_CONFIGURED);
-      this.emitter.emit(ERROR, ex)
+      this.emitter.emit(ERROR, ex);
     }
   };
 
   _isSushi = async (vaultParams, address) => {
-    const isSushi = await vaultParams.methods.isOracleTypeEnabled(8, address).call()
-    return isSushi
-  }
+    const isSushi = await vaultParams.methods.isOracleTypeEnabled(8, address).call();
+    return isSushi;
+  };
 
   _getORacleType = async (vaultParams, address) => {
-
     //only ever seen oracle types: 3, 4, 7, 8
 
     // 5 is chainlink, which I believe they changed all their feeds to
-    const is5 = await vaultParams.methods.isOracleTypeEnabled(5, address).call()
-    if(is5) {
-      return 5
+    const is5 = await vaultParams.methods.isOracleTypeEnabled(5, address).call();
+    if (is5) {
+      return 5;
     }
-    const is3 = await vaultParams.methods.isOracleTypeEnabled(3, address).call()
-    if(is3) {
-      return 3
+    const is3 = await vaultParams.methods.isOracleTypeEnabled(3, address).call();
+    if (is3) {
+      return 3;
     }
-    const is7 = await vaultParams.methods.isOracleTypeEnabled(7, address).call()
-    if(is7) {
-      return 7
-    }
-
-    const is12 = await vaultParams.methods.isOracleTypeEnabled(12, address).call()
-    if(is12) {
-      return 12
+    const is7 = await vaultParams.methods.isOracleTypeEnabled(7, address).call();
+    if (is7) {
+      return 7;
     }
 
-    const is4 = await vaultParams.methods.isOracleTypeEnabled(4, address).call()
-    if(is4) {
-      return 4
-    }
-    const is8 = await vaultParams.methods.isOracleTypeEnabled(8, address).call()
-    if(is8) {
-      return 8
+    const is12 = await vaultParams.methods.isOracleTypeEnabled(12, address).call();
+    if (is12) {
+      return 12;
     }
 
-    return 0
-  }
+    const is4 = await vaultParams.methods.isOracleTypeEnabled(4, address).call();
+    if (is4) {
+      return 4;
+    }
+    const is8 = await vaultParams.methods.isOracleTypeEnabled(8, address).call();
+    if (is8) {
+      return 8;
+    }
+
+    return 0;
+  };
 
   isKeydonixOracle = (oracleType) => {
     return [1, 2].includes(oracleType);
@@ -439,7 +442,7 @@ class Store {
 
   isChainlinkOracle = (oracleType) => {
     return [5, 12].includes(oracleType);
-  }
+  };
 
   _getDolarPrice = async (asset, ethPrice) => {
     try {
@@ -456,41 +459,44 @@ class Store {
 
       if (this.isChainlinkOracle(asset.defaultOracleType)) {
         try {
+          if (asset.defaultOracleType === 5) {
+            const contractAddress = await web3.eth.ens.getAddress(
+              `${['WBTC', 'renBTC'].includes(asset.symbol) ? 'btc' : asset.symbol.toLowerCase()}-eth.data.eth`,
+            );
+            const chainLinkContract = new web3.eth.Contract(CHAINLINKORACLEABI, contractAddress);
 
-          if(asset.defaultOracleType === 5) {
-            const contractAddress = await web3.eth.ens.getAddress(`${['WBTC', 'renBTC'].includes(asset.symbol) ? 'btc' : asset.symbol.toLowerCase()}-eth.data.eth`)
-            const chainLinkContract = new web3.eth.Contract(CHAINLINKORACLEABI, contractAddress)
-
-            const assetPrice = await chainLinkContract.methods.latestAnswer().call()
+            const assetPrice = await chainLinkContract.methods.latestAnswer().call();
 
             dolar = BigNumber(assetPrice)
               .times(ethPrice)
               .div(10 ** 18)
               .toNumber();
           } else {
-            const uniswapPairContract = new web3.eth.Contract(UNISWAPPAIRABI, asset.address)
-            const token0 = await uniswapPairContract.methods.token0().call()
-            const token1 = await uniswapPairContract.methods.token1().call()
+            const uniswapPairContract = new web3.eth.Contract(UNISWAPPAIRABI, asset.address);
+            const token0 = await uniswapPairContract.methods.token0().call();
+            const token1 = await uniswapPairContract.methods.token1().call();
 
-            const totalSupply = await uniswapPairContract.methods.totalSupply().call()
-            const obj = await uniswapPairContract.methods.getReserves().call()
-            let reserve0 = obj[0]
-            let reserve1 = obj[1]
+            const totalSupply = await uniswapPairContract.methods.totalSupply().call();
+            const obj = await uniswapPairContract.methods.getReserves().call();
+            let reserve0 = obj[0];
+            let reserve1 = obj[1];
 
-            let token0Price = 0
-            let token1Price = 0
+            let token0Price = 0;
+            let token1Price = 0;
 
-            if(token0.toLowerCase() === '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'.toLowerCase()) {
-              token0Price = ethPrice
+            if (token0.toLowerCase() === '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'.toLowerCase()) {
+              token0Price = ethPrice;
             } else {
-              let erc20Contract = new web3.eth.Contract(ERC20ABI, token0)
-              let decimalsToken0 = parseInt(await erc20Contract.methods.decimals().call())
-              let symbolToken0 = await erc20Contract.methods.symbol().call()
+              let erc20Contract = new web3.eth.Contract(ERC20ABI, token0);
+              let decimalsToken0 = parseInt(await erc20Contract.methods.decimals().call());
+              let symbolToken0 = await erc20Contract.methods.symbol().call();
               let sendAmountToken0 = (10 ** decimalsToken0).toFixed(0);
 
-              const contractAddress = await web3.eth.ens.getAddress(`${['WBTC', 'renBTC'].includes(symbolToken0) ? 'btc' : symbolToken0.toLowerCase()}-eth.data.eth`)
-              const chainLinkContract = new web3.eth.Contract(CHAINLINKORACLEABI, contractAddress)
-              const token0EthPrice = await chainLinkContract.methods.latestAnswer().call()
+              const contractAddress = await web3.eth.ens.getAddress(
+                `${['WBTC', 'renBTC'].includes(symbolToken0) ? 'btc' : symbolToken0.toLowerCase()}-eth.data.eth`,
+              );
+              const chainLinkContract = new web3.eth.Contract(CHAINLINKORACLEABI, contractAddress);
+              const token0EthPrice = await chainLinkContract.methods.latestAnswer().call();
 
               token0Price = BigNumber(token0EthPrice)
                 .times(ethPrice)
@@ -498,17 +504,19 @@ class Store {
                 .toNumber();
             }
 
-            if(token1.toLowerCase() === '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'.toLowerCase()) {
-              token1Price = ethPrice
+            if (token1.toLowerCase() === '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'.toLowerCase()) {
+              token1Price = ethPrice;
             } else {
-              let erc20Contract = new web3.eth.Contract(ERC20ABI, token1)
-              let decimalsToken1 = parseInt(await erc20Contract.methods.decimals().call())
-              let symbolToken1 = await erc20Contract.methods.symbol().call()
+              let erc20Contract = new web3.eth.Contract(ERC20ABI, token1);
+              let decimalsToken1 = parseInt(await erc20Contract.methods.decimals().call());
+              let symbolToken1 = await erc20Contract.methods.symbol().call();
               let sendAmountToken1 = (10 ** decimalsToken1).toFixed(0);
 
-              const contractAddress = await web3.eth.ens.getAddress(`${['WBTC', 'renBTC'].includes(symbolToken1) ? 'btc' : symbolToken1.toLowerCase()}-eth.data.eth`)
-              const chainLinkContract = new web3.eth.Contract(CHAINLINKORACLEABI, contractAddress)
-              const token1EthPrice = await chainLinkContract.methods.latestAnswer().call()
+              const contractAddress = await web3.eth.ens.getAddress(
+                `${['WBTC', 'renBTC'].includes(symbolToken1) ? 'btc' : symbolToken1.toLowerCase()}-eth.data.eth`,
+              );
+              const chainLinkContract = new web3.eth.Contract(CHAINLINKORACLEABI, contractAddress);
+              const token1EthPrice = await chainLinkContract.methods.latestAnswer().call();
 
               token1Price = BigNumber(token1EthPrice)
                 .times(ethPrice)
@@ -516,27 +524,27 @@ class Store {
                 .toNumber();
             }
 
-            console.log(token0)
-            console.log(token0Price)
-            console.log(reserve0)
-            console.log('---')
-            console.log(token1)
-            console.log(token1Price)
-            console.log(reserve1)
-            console.log('----------------------')
+            console.log(token0);
+            console.log(token0Price);
+            console.log(reserve0);
+            console.log('---');
+            console.log(token1);
+            console.log(token1Price);
+            console.log(reserve1);
+            console.log('----------------------');
 
-            let pricePerShare0 = BigNumber(token0Price).times(reserve0)
-            let pricePerShare1 = BigNumber(token1Price).times(reserve1)
+            let pricePerShare0 = BigNumber(token0Price).times(reserve0);
+            let pricePerShare1 = BigNumber(token1Price).times(reserve1);
 
-            dolar = BigNumber(BigNumber(pricePerShare0).plus(pricePerShare1)).div(totalSupply).toNumber()
+            dolar = BigNumber(BigNumber(pricePerShare0).plus(pricePerShare1)).div(totalSupply).toNumber();
           }
-        } catch(ex) {
-          console.log(ex)
+        } catch (ex) {
+          console.log(ex);
         }
       } else if (this.isKeep3rOracle(asset.defaultOracleType)) {
         const keep3rContract = new web3.eth.Contract(KEEP3RV1ORACLEABI, KEEP3R_ORACLE_ADDRESS);
 
-        if(asset.defaultOracleType === 3) {
+        if (asset.defaultOracleType === 3) {
           const ethPerAsset = await keep3rContract.methods.current(asset.address, sendAmount0, '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2').call({});
 
           dolar = BigNumber(ethPerAsset)
@@ -545,23 +553,23 @@ class Store {
             .toNumber();
         } else {
           // pool asset
-          const uniswapPairContract = new web3.eth.Contract(UNISWAPPAIRABI, asset.address)
-          const token0 = await uniswapPairContract.methods.token0().call()
-          const token1 = await uniswapPairContract.methods.token1().call()
+          const uniswapPairContract = new web3.eth.Contract(UNISWAPPAIRABI, asset.address);
+          const token0 = await uniswapPairContract.methods.token0().call();
+          const token1 = await uniswapPairContract.methods.token1().call();
 
-          const totalSupply = await uniswapPairContract.methods.totalSupply().call()
-          const obj = await uniswapPairContract.methods.getReserves().call()
-          let reserve0 = obj[0]
-          let reserve1 = obj[1]
+          const totalSupply = await uniswapPairContract.methods.totalSupply().call();
+          const obj = await uniswapPairContract.methods.getReserves().call();
+          let reserve0 = obj[0];
+          let reserve1 = obj[1];
 
-          let token0Price = 0
-          let token1Price = 0
+          let token0Price = 0;
+          let token1Price = 0;
 
-          if(token0.toLowerCase() === '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'.toLowerCase()) {
-            token0Price = ethPrice
+          if (token0.toLowerCase() === '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'.toLowerCase()) {
+            token0Price = ethPrice;
           } else {
-            let erc20Contract = new web3.eth.Contract(ERC20ABI, token0)
-            let decimalsToken0 = parseInt(await erc20Contract.methods.decimals().call())
+            let erc20Contract = new web3.eth.Contract(ERC20ABI, token0);
+            let decimalsToken0 = parseInt(await erc20Contract.methods.decimals().call());
             let sendAmountToken0 = (10 ** decimalsToken0).toFixed(0);
             let token0EthPrice = await keep3rContract.methods.current(token0, sendAmountToken0, '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2').call({});
 
@@ -571,11 +579,11 @@ class Store {
               .toNumber();
           }
 
-          if(token1.toLowerCase() === '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'.toLowerCase()) {
-            token1Price = ethPrice
+          if (token1.toLowerCase() === '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'.toLowerCase()) {
+            token1Price = ethPrice;
           } else {
-            let erc20Contract = new web3.eth.Contract(ERC20ABI, token1)
-            let decimalsToken1 = parseInt(await erc20Contract.methods.decimals().call())
+            let erc20Contract = new web3.eth.Contract(ERC20ABI, token1);
+            let decimalsToken1 = parseInt(await erc20Contract.methods.decimals().call());
             let sendAmountToken1 = (10 ** decimalsToken1).toFixed(0);
             let token1EthPrice = await keep3rContract.methods.current(token1, sendAmountToken1, '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2').call({});
 
@@ -586,17 +594,15 @@ class Store {
             //still need to multiply by ethPrice ???
           }
 
-          let pricePerShare0 = BigNumber(token0Price).times(reserve0)
-          let pricePerShare1 = BigNumber(token1Price).times(reserve1)
+          let pricePerShare0 = BigNumber(token0Price).times(reserve0);
+          let pricePerShare1 = BigNumber(token1Price).times(reserve1);
 
-          dolar = BigNumber(BigNumber(pricePerShare0).plus(pricePerShare1)).div(totalSupply).toNumber()
+          dolar = BigNumber(BigNumber(pricePerShare0).plus(pricePerShare1)).div(totalSupply).toNumber();
         }
-
       } else if (this.isKeep3rSushiSwapOracle(asset.defaultOracleType)) {
         const keep3rContract = new web3.eth.Contract(KEEP3RV1ORACLEABI, KEEP3R_SUSHI_ORACLE_ADDRESS);
 
-
-        if(asset.defaultOracleType === 7) {
+        if (asset.defaultOracleType === 7) {
           const ethPerAsset = await keep3rContract.methods.current(asset.address, sendAmount0, '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2').call({});
           dolar = BigNumber(ethPerAsset)
             .times(ethPrice)
@@ -604,28 +610,28 @@ class Store {
             .toNumber();
         } else {
           // pool asset
-          const uniswapPairContract = new web3.eth.Contract(UNISWAPPAIRABI, asset.address)
-          const token0 = await uniswapPairContract.methods.token0().call()
-          const token1 = await uniswapPairContract.methods.token1().call()
+          const uniswapPairContract = new web3.eth.Contract(UNISWAPPAIRABI, asset.address);
+          const token0 = await uniswapPairContract.methods.token0().call();
+          const token1 = await uniswapPairContract.methods.token1().call();
 
-          const totalSupply = await uniswapPairContract.methods.totalSupply().call()
-          const obj = await uniswapPairContract.methods.getReserves().call()
-          let reserve0 = obj[0]
-          let reserve1 = obj[1]
+          const totalSupply = await uniswapPairContract.methods.totalSupply().call();
+          const obj = await uniswapPairContract.methods.getReserves().call();
+          let reserve0 = obj[0];
+          let reserve1 = obj[1];
 
-          let token0Price = 0
-          let token1Price = 0
+          let token0Price = 0;
+          let token1Price = 0;
 
-          if(token0.toLowerCase() === '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'.toLowerCase()) {
-            token0Price = ethPrice
+          if (token0.toLowerCase() === '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'.toLowerCase()) {
+            token0Price = ethPrice;
           } else {
-            let erc20Contract = new web3.eth.Contract(ERC20ABI, token0)
-            let decimalsToken0 = 18
-            if(token0 !== '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2') {
-              decimalsToken0 = parseInt(await erc20Contract.methods.decimals().call())
+            let erc20Contract = new web3.eth.Contract(ERC20ABI, token0);
+            let decimalsToken0 = 18;
+            if (token0 !== '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2') {
+              decimalsToken0 = parseInt(await erc20Contract.methods.decimals().call());
             } else {
               //for MKR
-              decimalsToken0 = 18
+              decimalsToken0 = 18;
             }
             let sendAmountToken0 = (10 ** decimalsToken0).toFixed(0);
             let token0EthPrice = await keep3rContract.methods.current(token0, sendAmountToken0, '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2').call({});
@@ -636,16 +642,16 @@ class Store {
               .toNumber();
           }
 
-          if(token1.toLowerCase() === '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'.toLowerCase()) {
-            token1Price = ethPrice
+          if (token1.toLowerCase() === '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'.toLowerCase()) {
+            token1Price = ethPrice;
           } else {
-            let erc20Contract = new web3.eth.Contract(ERC20ABI, token1)
-            let decimalsToken1 = 18
-            if(token1 !== '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2') {
-              decimalsToken1 = parseInt(await erc20Contract.methods.decimals().call())
+            let erc20Contract = new web3.eth.Contract(ERC20ABI, token1);
+            let decimalsToken1 = 18;
+            if (token1 !== '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2') {
+              decimalsToken1 = parseInt(await erc20Contract.methods.decimals().call());
             } else {
               //for MKR
-              decimalsToken0 = 18
+              decimalsToken0 = 18;
             }
 
             let sendAmountToken1 = (10 ** decimalsToken1).toFixed(0);
@@ -658,12 +664,11 @@ class Store {
             //still need to multiply by ethPrice ???
           }
 
-          let pricePerShare0 = BigNumber(token0Price).times(reserve0)
-          let pricePerShare1 = BigNumber(token1Price).times(reserve1)
+          let pricePerShare0 = BigNumber(token0Price).times(reserve0);
+          let pricePerShare1 = BigNumber(token1Price).times(reserve1);
 
-          dolar = BigNumber(BigNumber(pricePerShare0).plus(pricePerShare1)).div(totalSupply).toNumber()
+          dolar = BigNumber(BigNumber(pricePerShare0).plus(pricePerShare1)).div(totalSupply).toNumber();
         }
-
       } else {
         //don't know?
         return 0;
@@ -672,8 +677,8 @@ class Store {
       return dolar;
     } catch (ex) {
       // console.log(ex)
-      if(ex.message?.includes('stale prices')) {
-        return 'Stale price'
+      if (ex.message?.includes('stale prices')) {
+        return 'Stale price';
       }
       return 0;
     }
