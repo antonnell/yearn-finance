@@ -309,7 +309,7 @@ class Store {
 
     const web3 = await stores.accountStore.getWeb3Provider();
     const zapperfiBalanceResults = await fetch(
-      `https://api.zapper.fi/v1/balances/yearn?api_key=96e0cc51-a62e-42ca-acee-910ea7d2a241&addresses[]=${account.address}`,
+      `https://api.zapper.fi/v1/protocols/yearn/balances?api_key=96e0cc51-a62e-42ca-acee-910ea7d2a241&addresses[]=${account.address}`,
     );
     const zapperfiBalance = await zapperfiBalanceResults.json();
 
@@ -370,7 +370,11 @@ class Store {
             .toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN);
 
           if (BigNumber(vault.balance).gt(0)) {
-            let foundZapperVault = zapperfiBalance[account.address].filter((v) => {
+            console.log(zapperfiBalance[account.address])
+            let foundZapperVault = zapperfiBalance[account.address].products.filter((v) => {
+              if(!vault.address || !v.address) {
+                return false
+              }
               return vault.address.toLowerCase() === v.address.toLowerCase();
             });
             if (foundZapperVault && foundZapperVault.length > 0) {
