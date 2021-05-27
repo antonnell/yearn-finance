@@ -33,7 +33,6 @@ const StyledSwitch = withStyles((theme) => ({
   },
   switchBase: {
     paddingTop: 1.5,
-    // paddingBottom: 1,
     width: '75%',
     margin: 'auto',
     '&$checked': {
@@ -50,10 +49,6 @@ const StyledSwitch = withStyles((theme) => ({
       border: '6px solid #fff',
     },
   },
-  // thumb: {
-  //   width: 24,
-  //   height: 24,
-  // },
   track: {
     borderRadius: 32 / 2,
     border: `1px solid #212529`,

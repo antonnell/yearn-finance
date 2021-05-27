@@ -34,8 +34,8 @@
 .portfolioOutline {
   border: 1px solid #212529;
   border-radius: 30px;
-  height: 60px;
-  width: 60px;
+  height: 40px;
+  width: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -43,7 +43,7 @@
 }
 
 .portfolioIcon {
-  font-size: 2.4rem !important;
+  font-size: 1.5rem !important;
 }
 
 .portfolioGrowthContainer {
@@ -258,7 +258,7 @@
 }
 
 .overviewContainer {
-  padding: 32px 48px;
+  padding: 20px 25px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -401,6 +401,6 @@
 
 .topVaultPerformersLink {
   cursor: pointer;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: bold;
 }

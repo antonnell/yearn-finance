@@ -489,7 +489,7 @@ function Invest({ changeTheme }) {
                           {vault.symbol.split(' Vault')[0]} {(vault.apy * 100).toFixed(2)}%{' '}
                         </span>
                         <HelpIcon
-                          style={{ cursor: 'pointer' }}
+                          style={{ cursor: 'pointer', width: 15 }}
                           onClick={(event) => {
                             handlePopoverOpen(event, vault, true);
                           }}
@@ -535,7 +535,7 @@ function Invest({ changeTheme }) {
                           {vault.symbol.split(' Vault')[0]} {(vault.apy * 100).toFixed(2)}%{' '}
                         </span>
                         <HelpIcon
-                          style={{ cursor: 'pointer' }}
+                          style={{ cursor: 'pointer', width: 15 }}
                           onClick={(event) => {
                             handlePopoverOpen(event, vault), false;
                           }}
@@ -582,7 +582,7 @@ function Invest({ changeTheme }) {
                             {vault.symbol.split(' Vault')[0]} {(vault.apy * 100).toFixed(2)}%{' '}
                           </span>
                           <HelpIcon
-                            style={{ cursor: 'pointer' }}
+                            style={{ cursor: 'pointer', width: 15 }}
                             onClick={(event) => {
                               handlePopoverOpen(event, vault, false);
                             }}
