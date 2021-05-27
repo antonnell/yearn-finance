@@ -22,6 +22,7 @@ import HelpIcon from '@material-ui/icons/Help';
 import AboutModal from './aboutModal';
 import SearchModal from './searchModal';
 import { useHotkeys } from 'react-hotkeys-hook';
+import { auto } from 'async';
 
 const StyledSwitch = withStyles((theme) => ({
   root: {
@@ -31,10 +32,14 @@ const StyledSwitch = withStyles((theme) => ({
     margin: theme.spacing(1),
   },
   switchBase: {
-    padding: 1,
+    paddingTop: 1.5,
+    // paddingBottom: 1,
+    width: '75%',
+    margin: 'auto',
     '&$checked': {
       transform: 'translateX(28px)',
       color: '#212529',
+      width: '30%',
       '& + $track': {
         backgroundColor: '#ffffff',
         opacity: 1,
@@ -45,10 +50,10 @@ const StyledSwitch = withStyles((theme) => ({
       border: '6px solid #fff',
     },
   },
-  thumb: {
-    width: 24,
-    height: 24,
-  },
+  // thumb: {
+  //   width: 24,
+  //   height: 24,
+  // },
   track: {
     borderRadius: 32 / 2,
     border: `1px solid #212529`,
