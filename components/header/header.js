@@ -165,8 +165,8 @@ function Header(props) {
           placeholder="Instant Search ⚡"
           inputProps={{ 'aria-label': 'search google maps' }}
         />
-        <IconButton type="submit" className={classes.iconButton} aria-label="search">
-          {isMac ? `Cmd+K` : `⊞ Win+K`} or /
+        <IconButton type="submit" aria-label="search">
+          <p className={classes.shortcutInfo}>{isMac ? `Cmd+K` : `⊞ Win+K`} or /</p>
         </IconButton>
       </Paper>
       <div className={classes.themeSelectContainer}>
