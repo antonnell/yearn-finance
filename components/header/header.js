@@ -5,7 +5,6 @@ import { withStyles } from '@material-ui/core/styles';
 import { withTheme } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import InputBase from '@material-ui/core/InputBase';
-import IconButton from '@material-ui/core/IconButton';
 
 import WbSunnyOutlinedIcon from '@material-ui/icons/WbSunnyOutlined';
 import Brightness2Icon from '@material-ui/icons/Brightness2';
@@ -165,9 +164,9 @@ function Header(props) {
           placeholder="Instant Search ⚡"
           inputProps={{ 'aria-label': 'search google maps' }}
         />
-        <IconButton type="submit" aria-label="search">
+        <span type="submit" aria-label="search">
           <p className={classes.shortcutInfo}>{isMac ? `Cmd+K` : `⊞ Win+K`} or /</p>
-        </IconButton>
+        </span>
       </Paper>
       <div className={classes.themeSelectContainer}>
         <StyledSwitch
