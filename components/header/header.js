@@ -5,7 +5,6 @@ import { withStyles } from '@material-ui/core/styles';
 import { withTheme } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import InputBase from '@material-ui/core/InputBase';
-import IconButton from '@material-ui/core/IconButton';
 
 import WbSunnyOutlinedIcon from '@material-ui/icons/WbSunnyOutlined';
 import Brightness2Icon from '@material-ui/icons/Brightness2';
@@ -23,6 +22,7 @@ import HelpIcon from '@material-ui/icons/Help';
 import AboutModal from './aboutModal';
 import SearchModal from './searchModal';
 import { useHotkeys } from 'react-hotkeys-hook';
+import { auto } from 'async';
 
 const StyledSwitch = withStyles((theme) => ({
   root: {
@@ -32,10 +32,13 @@ const StyledSwitch = withStyles((theme) => ({
     margin: theme.spacing(1),
   },
   switchBase: {
-    padding: 1,
+    paddingTop: 1.5,
+    width: '75%',
+    margin: 'auto',
     '&$checked': {
       transform: 'translateX(28px)',
       color: '#212529',
+      width: '30%',
       '& + $track': {
         backgroundColor: '#ffffff',
         opacity: 1,
@@ -45,10 +48,6 @@ const StyledSwitch = withStyles((theme) => ({
       color: '#ffffff',
       border: '6px solid #fff',
     },
-  },
-  thumb: {
-    width: 24,
-    height: 24,
   },
   track: {
     borderRadius: 32 / 2,
@@ -165,9 +164,9 @@ function Header(props) {
           placeholder="Instant Search ⚡"
           inputProps={{ 'aria-label': 'search google maps' }}
         />
-        <IconButton type="submit" className={classes.iconButton} aria-label="search">
-          {isMac ? `Cmd+K` : `⊞ Win+K`} or /
-        </IconButton>
+        <span type="submit" aria-label="search">
+          <p className={classes.shortcutInfo}>{isMac ? `Cmd+K` : `⊞ Win+K`} or /</p>
+        </span>
       </Paper>
       <div className={classes.themeSelectContainer}>
         <StyledSwitch

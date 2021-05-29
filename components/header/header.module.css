@@ -63,6 +63,12 @@
   background: #dc3545;
 }
 
+.shortcutInfo {
+  color: rgb(133, 133, 133);
+  font-size: 16px;
+  margin-right: 15px;
+}
+
 @media screen and (max-width: 1200px) {
   .headerContainer {
     display: none;
