@@ -1,10 +1,9 @@
-import { useRouter } from "next/router";
-import { Typography, SvgIcon } from "@material-ui/core";
+import { SvgIcon } from "@material-ui/core";
 import { withTheme } from "@material-ui/core/styles";
 import classes from "./configure.module.css";
 
 function YearnIcon(props) {
-  const { color, altColor, className, width, height } = props;
+  const { color, className, width, height } = props;
   return (
     <SvgIcon
       viewBox="0 0 105 37"
@@ -66,8 +65,6 @@ function YearnIcon(props) {
 }
 
 function Configure({ theme }) {
-  const router = useRouter();
-
   return (
     <div className={classes.configureContainer}>
       <YearnIcon

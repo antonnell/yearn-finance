@@ -30,7 +30,6 @@ import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 function Lend({ changeTheme }) {
-  const tvl = null;
   const router = useRouter();
   const { address } = router.query;
   const [, updateState] = React.useState();
@@ -57,14 +56,12 @@ function Lend({ changeTheme }) {
   const [lendingBorrowLimit, setLendingBorrowLimit] = useState(storeLendingBorrowLimit);
   const [lendingSupplyAPY, setLendingSupplyAPY] = useState(storeLendingSupplyAPY);
   const [lendingBorrowAPY, setLendingBorrowAPY] = useState(storeLendingBorrowAPY);
-  const [position, setPosition] = useState(storeLendingPosition);
-  const [currentAsset, setCurrentAsset] = useState();
+  const [position, /* setPosition */] = useState(storeLendingPosition);
   const onSearchChanged = (event) => {
     setSearch(event.target.value);
   };
   useEffect(() => {
     document?.getElementById(address)?.scrollIntoView();
-    setCurrentAsset(address);
   }, []);
   const filteredLendingAssets = lendingAssets
     .map((asset) => {
@@ -192,16 +189,6 @@ function Lend({ changeTheme }) {
     }
   };
 
-  const sortAll = (a, b) => {
-    if (BigNumber(a.tokenMetadata.balance).gt(b.tokenMetadata.balance)) {
-      return -1;
-    } else if (BigNumber(a.tokenMetadata.balance).lt(b.tokenMetadata.balance)) {
-      return 1;
-    } else {
-      return 0;
-    }
-  };
-
   const renderSupplyHeaders = () => {
     return (
       <div className={classes.lendingRow}>
@@ -287,7 +274,7 @@ function Lend({ changeTheme }) {
     return (
       <TableHead>
         <TableRow>
-          {headers.map((headCell, i) => (
+          {headers.map(headCell => (
             <TableCell
               key={headCell.id}
               align={headCell.numeric ? 'right' : 'left'}

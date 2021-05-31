@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import { Typography, Paper, TextField, InputAdornment, Tooltip } from '@material-ui/core';
-import Skeleton from '@material-ui/lab/Skeleton';
 import SearchIcon from '@material-ui/icons/Search';
-import BigNumber from 'bignumber.js';
 
 import Head from 'next/head';
 import Layout from '../../components/layout/layout.js';

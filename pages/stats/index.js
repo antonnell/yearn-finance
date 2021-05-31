@@ -18,7 +18,7 @@ import BigNumber from 'bignumber.js';
 import stores from '../../stores/index.js';
 import { VAULTS_UPDATED, ETHERSCAN_URL, LEND_UPDATED } from '../../stores/constants';
 
-import { formatCurrency, formatAddress } from '../../utils';
+import { formatCurrency } from '../../utils';
 
 const StatsHeader = (props) => {
   const { order, orderBy, onRequestSort } = props;
@@ -43,7 +43,7 @@ const StatsHeader = (props) => {
   return (
     <TableHead>
       <TableRow>
-        {headers.map((headCell, i) => (
+        {headers.map(headCell => (
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}

@@ -5,8 +5,6 @@ import LTV from "./ltv";
 import CDP from "./cdp";
 import { useRouter } from "next/router";
 
-import Head from "next/head";
-
 function Home({ changeTheme, ...props }) {
   const router = useRouter();
   const activePath = router.asPath;
