@@ -371,7 +371,7 @@ class Store {
 
           if (BigNumber(vault.balance).gt(0)) {
             console.log(zapperfiBalance[account.address])
-            let foundZapperVault = zapperfiBalance[account.address].products.filter((v) => {
+            let foundZapperVault = zapperfiBalance[account.address].products[0].assets.filter((v) => {
               if(!vault.address || !v.address) {
                 return false
               }
