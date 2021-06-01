@@ -1,4 +1,4 @@
-import { Typography, Paper } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 import Skeleton from "@material-ui/lab/Skeleton";
 
 import AccountBalanceWalletOutlinedIcon from "@material-ui/icons/AccountBalanceWalletOutlined";

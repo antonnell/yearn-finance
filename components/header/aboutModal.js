@@ -88,9 +88,6 @@ export default function AboutModal(props) {
   const { setToggleAboutModal } = props;
   const [open, setOpen] = React.useState(true);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
   const handleClose = () => {
     setOpen(false);
     setToggleAboutModal(false);

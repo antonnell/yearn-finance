@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Typography, Button, ButtonGroup } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 import {
   ComposedChart,
-  Area,
   Line,
   CartesianGrid,
   XAxis,
@@ -12,8 +11,6 @@ import {
 } from "recharts";
 import * as moment from "moment";
 import BigNumber from "bignumber.js";
-import TrendingUpIcon from "@material-ui/icons/TrendingUp";
-import AttachMoneyicon from "@material-ui/icons/AttachMoney";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { bnDec, formatCurrency } from "../../utils";
 import { useRouter } from "next/router";
@@ -26,7 +23,7 @@ import stores from "../../stores/index.js";
 
 import classes from "./vaultPerformanceGraph.module.css";
 
-function CustomTooltip({ payload, label, active }) {
+function CustomTooltip({ payload, active }) {
   if (active && payload && payload.length > 0) {
     return (
       <div className={classes.tooltipContainer}>
@@ -195,7 +192,6 @@ export default function VaultPerformanceGraph({ vault }) {
               hide
               domain={[1, "dataMax"]}
             />{" "}
-            />
             <YAxis
               yAxisId="right"
               orientation="right"

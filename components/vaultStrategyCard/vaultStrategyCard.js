@@ -1,8 +1,5 @@
-import { Typography, Paper, Tooltip } from '@material-ui/core';
+import { Typography, Tooltip } from '@material-ui/core';
 import Skeleton from '@material-ui/lab/Skeleton';
-import BigNumber from 'bignumber.js';
-import { useRouter } from 'next/router';
-
 import { ETHERSCAN_URL } from '../../stores/constants';
 
 import classes from './vaultStrategyCard.module.css';

@@ -3,16 +3,12 @@ import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
-import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import stores from '../../stores/index.js';
 import BigNumber from 'bignumber.js';
-import LendAllAssetRow from '../../components/lendAllAssetRow';
 import { useRouter } from 'next/router';
 
 const styles = (theme) => ({
@@ -29,19 +25,13 @@ const styles = (theme) => ({
 });
 
 const DialogTitle = withStyles(styles)((props) => {
-  const { children, classes, onClose, ...other } = props;
+  const { children, classes, ...other } = props;
   return (
     <MuiDialogTitle disableTypography className={classes.root} {...other}>
       <Typography variant="h6">{children}</Typography>
     </MuiDialogTitle>
   );
 });
-
-const DialogContent = withStyles((theme) => ({
-  root: {
-    padding: theme.spacing(2),
-  },
-}))(MuiDialogContent);
 
 const DialogActions = withStyles((theme) => ({
   root: {

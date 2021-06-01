@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Typography, Tooltip, Paper } from "@material-ui/core";
-import Skeleton from "@material-ui/lab/Skeleton";
 import { withTheme } from "@material-ui/core/styles";
-import BigNumber from "bignumber.js";
 import InfoIcon from "@material-ui/icons/Info";
 
 import classes from "./cdpInformation.module.css";

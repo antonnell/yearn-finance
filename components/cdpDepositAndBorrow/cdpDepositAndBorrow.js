@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
   Typography,
-  Paper,
-  Tabs,
-  Tab,
   TextField,
   InputAdornment,
   Button,
@@ -13,7 +10,6 @@ import {
 } from "@material-ui/core";
 import Skeleton from "@material-ui/lab/Skeleton";
 import BigNumber from "bignumber.js";
-import { useRouter } from "next/router";
 
 import classes from "./cdpDepositAndBorrow.module.css";
 
@@ -171,30 +167,6 @@ export default function CDPDepositAndBorrow({ cdp, borrowAsset }) {
     setDepositAmount(amount);
 
     handleSliderChange(null, borrowAmountPerc, amount);
-  };
-
-  const setBorrowAmountPercent = percent => {
-    if (loading) {
-      return;
-    }
-
-    let depositUSDPAvailable =
-      depositAmount && depositAmount > 0 ? depositAmount : 0;
-    depositUSDPAvailable = BigNumber(depositUSDPAvailable)
-      .times(cdp.initialCollateralRatio)
-      .div(100)
-      .toNumber();
-
-    const amount = BigNumber(
-      BigNumber(cdp.maxUSDPAvailable)
-        .plus(depositUSDPAvailable)
-        .minus(cdp.debt)
-        .toNumber()
-    )
-      .times(percent)
-      .div(100)
-      .toFixed(cdp.tokenMetadata.decimals);
-    setBorrowAmount(amount);
   };
 
   const handleSliderChange = (event, percent, deposittedAmount) => {

@@ -1,13 +1,11 @@
 import { Typography, Paper } from "@material-ui/core";
-import Skeleton from "@material-ui/lab/Skeleton";
-import BigNumber from "bignumber.js";
 import { useRouter } from "next/router";
-import { formatCurrency, formatAddress } from "../../utils";
+import { formatCurrency } from "../../utils";
 import * as moment from "moment";
 
 import classes from "./coverCard.module.css";
 
-export default function CoverCard({ cover, account }) {
+export default function CoverCard({ cover }) {
   const router = useRouter();
 
   function handleNavigate() {
