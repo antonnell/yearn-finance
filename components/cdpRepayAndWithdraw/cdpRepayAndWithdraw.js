@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
   Typography,
-  Paper,
-  Tabs,
-  Tab,
   TextField,
   InputAdornment,
   Button,
@@ -11,7 +8,6 @@ import {
 } from "@material-ui/core";
 import Skeleton from "@material-ui/lab/Skeleton";
 import BigNumber from "bignumber.js";
-import { useRouter } from "next/router";
 
 import classes from "./cdpRepayAndWithdraw.module.css";
 

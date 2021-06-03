@@ -1,8 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Typography, Paper, Tabs, Tab, TextField } from "@material-ui/core";
-import Skeleton from "@material-ui/lab/Skeleton";
-import BigNumber from "bignumber.js";
-import { useRouter } from "next/router";
+import React, { useState } from "react";
+import { Paper, Tabs, Tab } from "@material-ui/core";
 
 import Buy from "./buy";
 import Sell from "./sell";

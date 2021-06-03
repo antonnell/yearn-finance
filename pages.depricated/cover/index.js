@@ -95,7 +95,7 @@ function Cover({ changeTheme }) {
         {
           filteredCover && filteredCover.length > 0 && (
             filteredCover.map((cover, index) => {
-              return <CoverCard key={ index } cover={ cover } account={ account } />
+              return <CoverCard key={ index } cover={ cover } />
             })
           )
         }

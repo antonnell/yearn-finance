@@ -27,7 +27,7 @@ import {
 export default function Sell({ coverProtocol }) {
   const storeAccount = stores.accountStore.getStore("account");
 
-  const [account, setAccount] = useState(storeAccount);
+  const [account, /* setAccount */] = useState(storeAccount);
   const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState("");
   const [amountError, setAmountError] = useState(false);

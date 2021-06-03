@@ -1,6 +1,4 @@
-import { Typography, Paper } from "@material-ui/core";
-import Skeleton from "@material-ui/lab/Skeleton";
-
+import { Typography } from "@material-ui/core";
 import BigNumber from "bignumber.js";
 import * as moment from "moment";
 
@@ -10,7 +8,7 @@ import { formatCurrency, formatAddress, bnDec } from "../../utils";
 
 import classes from "./vaultTransactions.module.css";
 
-function TransactionHeader({ tx }) {
+function TransactionHeader() {
   return (
     <div className={classes.txRow}>
       <div className={classes.txCellDescription}>

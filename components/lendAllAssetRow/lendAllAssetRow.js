@@ -2,9 +2,6 @@ import React, { useState, useEffect } from 'react';
 import {
   Typography,
   Button,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
   Switch,
   TextField,
   Paper,
@@ -14,9 +11,7 @@ import {
 } from '@material-ui/core';
 import Collapse from '@material-ui/core/Collapse';
 import IconButton from '@material-ui/core/IconButton';
-import Box from '@material-ui/core/Box';
 import { withStyles } from '@material-ui/core/styles';
-import Skeleton from '@material-ui/lab/Skeleton';
 import BigNumber from 'bignumber.js';
 import { formatCurrency } from '../../utils';
 import GasSpeed from '../gasSpeed';
@@ -38,7 +33,6 @@ import {
   ENABLE_COLLATERAL_LEND_RETURNED,
   DISABLE_COLLATERAL_LEND,
   DISABLE_COLLATERAL_LEND_RETURNED,
-  CONNECT_WALLET,
   LENDING_SUPPLY_RETURNED,
   LENDING_BORROW_RETURNED,
 } from '../../stores/constants';
@@ -79,7 +73,7 @@ const AntSwitch = withStyles((theme) => ({
   checked: {},
 }))(Switch);
 
-function LendAllAssetRowDetails({ lendingAsset, account, lendingBorrow, lendingSupply, lendingBorrowLimit }) {
+function LendAllAssetRowDetails({ lendingAsset, lendingBorrow, lendingBorrowLimit }) {
   const [loading, setLoading] = useState(false);
   const [supplyAmount, setSupplyAmount] = useState('');
   const [supplyAmountError, setSupplyAmountError] = useState(false);
@@ -219,10 +213,6 @@ function LendAllAssetRowDetails({ lendingAsset, account, lendingBorrow, lendingS
     });
   };
 
-  const onConnectWallet = () => {
-    stores.emitter.emit(CONNECT_WALLET);
-  };
-
   const setSupplyAmountPercent = (percent) => {
     if (loading) {
       return;
@@ -231,16 +221,6 @@ function LendAllAssetRowDetails({ lendingAsset, account, lendingBorrow, lendingS
     const amount = BigNumber(lendingAsset.tokenMetadata.balance).times(percent).div(100).toFixed(lendingAsset.tokenMetadata.decimals);
 
     setSupplyAmount(amount);
-  };
-
-  const setBorrowAmountPercent = (percent) => {
-    if (loading) {
-      return;
-    }
-
-    const amount = BigNumber(lendingAsset.supplyBalance).times(percent).div(100).toFixed(lendingAsset.tokenMetadata.decimals);
-
-    setBorrowAmount(amount);
   };
 
   let theLimitUsed = (lendingBorrow * 100) / lendingBorrowLimit || 0;
@@ -510,12 +490,7 @@ function LendAllAssetRowDetails({ lendingAsset, account, lendingBorrow, lendingS
   );
 }
 
-export default function LendAllAssetRow({ lendingAsset, account, lendingBorrow, lendingSupply, lendingBorrowLimit }) {
-  const [expanded, setExpanded] = useState(false);
-
-  const handleExpand = () => {
-    setExpanded(!expanded);
-  };
+export default function LendAllAssetRow({ lendingAsset, lendingBorrow, lendingBorrowLimit }) {
   const [open, setOpen] = React.useState(lendingAsset.open);
 
   return (
@@ -565,7 +540,6 @@ export default function LendAllAssetRow({ lendingAsset, account, lendingBorrow, 
             <LendAllAssetRowDetails
               lendingAsset={lendingAsset}
               lendingBorrow={lendingBorrow}
-              lendingSupply={lendingSupply}
               lendingBorrowLimit={lendingBorrowLimit}
             />
           </Collapse>

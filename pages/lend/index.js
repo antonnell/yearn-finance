@@ -397,7 +397,6 @@ function Lend({ changeTheme }) {
                     key={asset.address}
                     lendingAsset={asset}
                     lendingBorrow={lendingBorrow}
-                    lendingSupply={lendingSupply}
                     lendingBorrowLimit={lendingBorrowLimit}
                   />
                 );
@@ -418,7 +417,6 @@ function Lend({ changeTheme }) {
                     key={asset.address}
                     lendingAsset={asset}
                     lendingBorrow={lendingBorrow}
-                    lendingSupply={lendingSupply}
                     lendingBorrowLimit={lendingBorrowLimit}
                   />
                 );
@@ -462,7 +460,6 @@ function Lend({ changeTheme }) {
                         key={asset.address}
                         lendingAsset={asset}
                         lendingBorrow={lendingBorrow}
-                        lendingSupply={lendingSupply}
                         lendingBorrowLimit={lendingBorrowLimit}
                       />
                     );

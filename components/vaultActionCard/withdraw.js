@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Typography, InputAdornment, Button, CircularProgress, Tooltip, FormGroup } from '@material-ui/core';
+import { TextField, Typography, InputAdornment, Button, CircularProgress, FormGroup } from '@material-ui/core';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -18,7 +18,7 @@ export default function Withdraw({ vault }) {
   const [zapperSlippage, setZapperSlippage] = useState(0.01);
   const storeAccount = stores.accountStore.getStore('account');
   const [withdrawalStatus, setWithdrawalStatus] = useState('');
-  const [account, setAccount] = useState(storeAccount);
+  const [account, /* setAccount */] = useState(storeAccount);
   const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState('');
   const [amountError, setAmountError] = useState(false);
@@ -218,7 +218,7 @@ export default function Withdraw({ vault }) {
             }}
             getOptionLabel={(option) => option.label}
             fullWidth={true}
-            renderOption={(option, { selected }) => (
+            renderOption={(option) => (
               <React.Fragment>
                 <img src={option.img} alt="" width={30} height={30} style={{ marginRight: '10px' }} />
                 <span className={classes.color} style={{ backgroundColor: option.color }} />

@@ -1,7 +1,6 @@
 import { Typography, Paper } from "@material-ui/core";
 import Skeleton from "@material-ui/lab/Skeleton";
 import BigNumber from "bignumber.js";
-import { useRouter } from "next/router";
 import * as moment from "moment";
 
 import { formatCurrency } from "../../utils";
@@ -18,7 +17,6 @@ export default function coverSummaryCard({ coverProtocol }) {
 
   const claimPoolData = coverProtocol.poolData[0].claimPoolData;
   const claimAsset = coverProtocol.poolData[0].claimAsset;
-  const collateralAsset = coverProtocol.poolData[0].collateralAsset;
 
   return (
     <Paper elevation={0} className={classes.coverSummaryContainer}>

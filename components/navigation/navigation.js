@@ -3,17 +3,12 @@ import { Typography, Paper, Switch, Button, SvgIcon } from "@material-ui/core";
 import { withTheme } from "@material-ui/core/styles";
 import { withStyles } from "@material-ui/core/styles";
 
-import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
-import BarChartIcon from "@material-ui/icons/BarChart";
-
 import { useRouter } from "next/router";
 import MenuIcon from "@material-ui/icons/Menu";
 import CloseIcon from "@material-ui/icons/Close";
 import WbSunnyOutlinedIcon from "@material-ui/icons/WbSunnyOutlined";
 import Brightness2Icon from "@material-ui/icons/Brightness2";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
-import AddBoxIcon from "@material-ui/icons/AddBox";
 
 import Unlock from "../unlock";
 
@@ -21,9 +16,8 @@ import stores from "../../stores";
 import { formatAddress } from "../../utils";
 
 import classes from "./navigation.module.css";
-import LocalParkingIcon from "@material-ui/icons/LocalParking";
 function YearnIcon(props) {
-  const { color, altColor, className, width, height } = props;
+  const { color, className, width, height } = props;
   return (
     <SvgIcon
       viewBox="0 0 105 37"
@@ -85,7 +79,7 @@ function YearnIcon(props) {
 }
 
 function InvestIcon(props) {
-  const { color, altColor, className } = props;
+  const { color, className } = props;
   return (
     <SvgIcon viewBox="0, 0, 24, 24" className={className}>
       <path
@@ -118,7 +112,7 @@ function InvestIconSelected(props) {
 }
 
 function StatsIcon(props) {
-  const { color, altColor, className } = props;
+  const { color, className } = props;
   return (
     <SvgIcon viewBox="0, 0, 24, 24" className={className}>
       <path
@@ -165,7 +159,7 @@ function StatsIconSelected(props) {
 }
 
 function LendIcon(props) {
-  const { color, altColor, className } = props;
+  const { color, className } = props;
   return (
     <SvgIcon viewBox="0, 0, 24, 24" className={className}>
       <path
@@ -190,7 +184,7 @@ function LendIconSelected(props) {
 }
 
 function LTVIcon(props) {
-  const { color, altColor, className } = props;
+  const { color, className } = props;
   return (
     <SvgIcon viewBox="0, 0, 24, 24" className={className}>
       <path
@@ -225,7 +219,7 @@ function LTVIconSelected(props) {
 }
 
 function CDPIcon(props) {
-  const { color, altColor, className } = props;
+  const { color, className } = props;
   return (
     <SvgIcon viewBox="0, 0, 24, 24" className={className}>
       <path

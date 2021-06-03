@@ -13,7 +13,6 @@ import {
   InputAdornment
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import Skeleton from "@material-ui/lab/Skeleton";
 import BigNumber from "bignumber.js";
 import { formatCurrency } from "../../utils";
 import GasSpeed from "../gasSpeed";
@@ -31,7 +30,6 @@ import {
   ENABLE_COLLATERAL_LEND_RETURNED,
   DISABLE_COLLATERAL_LEND,
   DISABLE_COLLATERAL_LEND_RETURNED,
-  CONNECT_WALLET
 } from "../../stores/constants";
 
 import classes from "./lendSupplyAssetRow.module.css";
@@ -72,9 +70,7 @@ const AntSwitch = withStyles(theme => ({
 
 function LendSupplyAssetDetails({
   lendingAsset,
-  account,
   lendingBorrow,
-  lendingSupply,
   lendingBorrowLimit
 }) {
   const [loading, setLoading] = useState(false);
@@ -222,10 +218,6 @@ function LendSupplyAssetDetails({
       type: APPROVE_LEND,
       content: { lendingAsset: lendingAsset, amount: "max", gasSpeed: gasSpeed }
     });
-  };
-
-  const onConnectWallet = () => {
-    stores.emitter.emit(CONNECT_WALLET);
   };
 
   const setSupplyAmountPercent = percent => {
@@ -657,9 +649,7 @@ function LendSupplyAssetDetails({
 
 export default function LendSupplyAssetRow({
   lendingAsset,
-  account,
   lendingBorrow,
-  lendingSupply,
   lendingBorrowLimit
 }) {
   const [expanded, setExpanded] = useState(false);
@@ -726,7 +716,6 @@ export default function LendSupplyAssetRow({
         <LendSupplyAssetDetails
           lendingAsset={lendingAsset}
           lendingBorrow={lendingBorrow}
-          lendingSupply={lendingSupply}
           lendingBorrowLimit={lendingBorrowLimit}
         />
       </AccordionDetails>

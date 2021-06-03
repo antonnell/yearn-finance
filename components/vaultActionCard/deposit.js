@@ -29,7 +29,7 @@ export default function Deposit({ vault }) {
   const [depositStatus, setDepositStatus] = useState('');
   const storeAccount = stores.accountStore.getStore('account');
   const [selectedZapBalanceToken, setSelectedZapBalanceToken] = useState();
-  const [account, setAccount] = useState(storeAccount);
+  const [account, /* setAccount */] = useState(storeAccount);
   const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState('');
   const [amountError, setAmountError] = useState(false);
@@ -37,7 +37,6 @@ export default function Deposit({ vault }) {
   const [zapperVaults, setZapperVaults] = useState([]);
   const [zapperBalanceTokens, setZapperBalanceTokens] = useState([]);
   const [currentToken, setCurrentToken] = useState();
-  const [hasVaultToken, setHasVaultToken] = useState(true);
   const [zapperBalanceUpdated, setZapperBalanceUpdated] = useState(false);
 
   const handleZapperSlippage = (event, slippage) => {
@@ -132,7 +131,7 @@ export default function Deposit({ vault }) {
       setDepositStatus(message);
     };
 
-    const vaultsUpdated = (vaults) => {
+    const vaultsUpdated = () => {
       if (vault?.address) {
         let currentVault = stores.investStore.getVault(vault.address);
         let zapperBalanceTokensTmp = zapperBalanceTokens;
@@ -191,7 +190,6 @@ export default function Deposit({ vault }) {
             token.balance = BigNumber(token.balanceRaw).div(10 ** token.decimals).toFixed(token.decimals)
 
             if (token?.address?.toLowerCase() === vault?.tokenMetadata?.address?.toLowerCase()) {
-              setHasVaultToken(true);
               tmpHasVaultToken = true;
             } else {
               tmpTokens.push(token);
@@ -202,7 +200,6 @@ export default function Deposit({ vault }) {
           }
           setZapperBalanceTokens(tmpTokens);
           if (!tmpHasVaultToken) {
-            setHasVaultToken(false);
             if (tmpTokens?.length > 0) {
               setCurrentToken(tmpTokens[0]);
               setSelectedZapBalanceToken(tmpTokens[0]);
@@ -219,16 +216,6 @@ export default function Deposit({ vault }) {
     } else {
       fetchAccountBalanceFromZapper();
     }
-  }, []);
-
-  useEffect(() => {
-    async function fetchTokensFromZapper() {
-      const response = await fetch('https://api.zapper.fi/v1/prices?api_key=96e0cc51-a62e-42ca-acee-910ea7d2a241');
-      if (response.status === 200) {
-        const zapperVaultsJSON = await response.json();
-      }
-    }
-    fetchTokensFromZapper();
   }, []);
 
   let depositDisabled = false
@@ -305,7 +292,7 @@ export default function Deposit({ vault }) {
               }}
               getOptionLabel={(option) => option.label}
               style={{ width: '55%', marginRight: '5px' }}
-              renderOption={(option, { selected }) => (
+              renderOption={(option) => (
                 <React.Fragment>
                   <img src={option.icon ? option.icon : `https://zapper.fi/images/${option.img}`} alt="" width={30} height={30} style={{ marginRight: '10px' }} />
                   <span className={classes.color} style={{ backgroundColor: option.color }} />

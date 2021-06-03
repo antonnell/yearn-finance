@@ -22,7 +22,6 @@ import HelpIcon from '@material-ui/icons/Help';
 import AboutModal from './aboutModal';
 import SearchModal from './searchModal';
 import { useHotkeys } from 'react-hotkeys-hook';
-import { auto } from 'async';
 
 const StyledSwitch = withStyles((theme) => ({
   root: {

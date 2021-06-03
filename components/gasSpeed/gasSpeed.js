@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Typography, TextField } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 
@@ -9,23 +9,15 @@ import stores from "../../stores/index.js";
 
 import classes from "./gasSpeed.module.css";
 
-export default function GasSpeed({ vault, setParentSpeed }) {
+export default function GasSpeed({ setParentSpeed }) {
   const storeGasPrices = stores.accountStore.getStore("gasPrices");
 
   const [gasSpeed, setGasSpeed] = useState("fast");
-  const [customSpeed, setCustomSpeed] = useState("");
   const [gasPrices, setGasPrices] = useState(storeGasPrices);
 
   const handleGasSpeedChanged = (event, newVal) => {
     setGasSpeed(newVal);
     setParentSpeed(newVal);
-  };
-
-  const customSpeedChanged = event => {
-    if (event.target.value !== "") {
-      setGasSpeed("");
-    }
-    setCustomSpeed(event.target.value);
   };
 
   useEffect(() => {
@@ -90,14 +82,3 @@ export default function GasSpeed({ vault, setParentSpeed }) {
     </div>
   );
 }
-
-/*
-
-<TextField
-  variant="outlined"
-  placeholder="custom"
-  value={ customSpeed }
-  onChange={ customSpeedChanged }
-/>
-
-*/

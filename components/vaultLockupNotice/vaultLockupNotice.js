@@ -1,8 +1,6 @@
 import { Typography, Paper, Button } from "@material-ui/core";
 import Skeleton from "@material-ui/lab/Skeleton";
 import BigNumber from "bignumber.js";
-import { useRouter } from "next/router";
-import * as moment from "moment";
 import React, { useState, useEffect } from "react";
 
 import { formatCurrency } from "../../utils";

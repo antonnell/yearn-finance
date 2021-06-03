@@ -12,9 +12,6 @@ import EditAttributesIcon from '@material-ui/icons/SettingsApplications';
 
 export default function Simulation({ tokenAmount, vault, currentToken, zapperVaults }) {
   const [apy, setAPY] = useState(vault.apy.recommended);
-  const interests = BigNumber(amount).times(apy);
-  const results = BigNumber(amount).plus(interests);
-  const priceUSD = 1000;
   const [pricePerToken, setPricePerToken] = useState(1);
 
   const [years, setYears] = useState(1);
@@ -39,7 +36,6 @@ export default function Simulation({ tokenAmount, vault, currentToken, zapperVau
   const [showSimulationForm, setShowSimulationForm] = useState(false);
   React.useEffect(() => {
     function setPriceFromZapper() {
-      let currentTokenPrice = 0;
       zapperVaults?.length > 0 &&
         zapperVaults.map((zvault) => {
           if (zvault.address.toLowerCase() === vault.address.toLowerCase()) {

@@ -1,21 +1,19 @@
 import React, { useState } from "react";
-import { Typography, Paper } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 import {
   PieChart,
   Pie,
-  Sector,
   ResponsiveContainer,
   Cell,
   Tooltip
 } from "recharts";
-import { useRouter } from "next/router";
 import { formatCurrency } from "../../utils";
 
 import BigNumber from "bignumber.js";
 
 import classes from "./cdpMintedGraph.module.css";
 
-function CustomTooltip({ payload, label, active }) {
+function CustomTooltip({ payload, active }) {
   if (active && payload && payload.length > 0) {
     return (
       <div className={classes.tooltipContainer}>
@@ -35,8 +33,6 @@ function CustomTooltip({ payload, label, active }) {
 }
 
 export default function LendBorrowGraph({ assets }) {
-  const router = useRouter();
-
   const [activeIndex, setActiveIndex] = useState(0);
 
   const data = assets
