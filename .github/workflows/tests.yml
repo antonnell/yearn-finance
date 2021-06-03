@@ -1,0 +1,16 @@
+name: Tests
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2
+    - run: npm install
+    - run: npm run lint
+    - run: npm run build
+      env:
+        NEXT_PUBLIC_PROVIDER: https://mainnet.infura.io/v3/0123456789abcdef0123456789abcdef

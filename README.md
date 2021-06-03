@@ -1,5 +1,7 @@
 # Yearn.Finance
 
+[![Tests](https://github.com/antonnell/yearn-finance/workflows/Tests/badge.svg?branch=master)](https://github.com/antonnell/yearn-finance/actions?query=workflow%3ATests)
+
 ## TODO:
 - [x] check values ( work in root token for all inputs, not processed/vault token)
 - [x] add earn page
