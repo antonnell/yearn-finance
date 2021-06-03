@@ -52,6 +52,7 @@
     max-width: calc(100vw - 24px);
     min-width: auto;
     flex-direction: column;
+    align-items: flex-start;
   }
   .portfolioGrowthContainer {
     margin-bottom: 12px;

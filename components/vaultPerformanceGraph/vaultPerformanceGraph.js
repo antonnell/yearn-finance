@@ -168,16 +168,16 @@ export default function VaultPerformanceGraph({ vault }) {
       {!vault || data.length === 0 ? (
         <Skeleton
           variant="rect"
-          width={window.innerWidth > 600 ? "100%" : window.innerWidth - 24}
+          width={window.innerWidth > 600 ? "100%" : window.innerWidth - 48}
           height={300}
         />
       ) : (
         <ResponsiveContainer
-          width={window.innerWidth > 600 ? "99%" : window.innerWidth - 24}
+          width={window.innerWidth > 600 ? "99%" : window.innerWidth - 48}
           height={300}
         >
           <ComposedChart
-            width={window.innerWidth > 600 ? 600 : window.innerWidth - 24}
+            width={window.innerWidth > 600 ? 600 : window.innerWidth - 48}
             height={350}
             data={data}
           >

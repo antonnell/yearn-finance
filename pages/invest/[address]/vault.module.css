@@ -8,12 +8,15 @@
 .vaultStatsContainer {
   display: flex;
   align-items: center;
+
+  grid-column-start: 1;
+  grid-column-end: 1;
+  grid-row-end: span 3;
 }
 
 .vaultBalanceContainer {
   display: flex;
   align-items: center;
-  margin-right: 48px;
   cursor: pointer;
 }
 
@@ -139,19 +142,19 @@
 
 .overviewContainer {
   padding: 32px 48px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
+  padding-bottom: 18px;
   border: 1px solid rgba(128, 128, 128, 0.25);
   border-radius: 10px;
+
+  display: grid;
+  grid-template-columns: 260px 1fr 10fr 1fr 10fr 1fr 10fr;
 }
 
 .separator {
   border-right: 1px solid rgba(128, 128, 128, 0.25);
   height: 100px;
-  margin-right: 48px;
-  margin-left: 48px;
+  margin-right: 30px;
+  margin-left: 30px;
 }
 
 .overviewCard {
@@ -159,15 +162,20 @@
   align-items: center;
   justify-content: flex-start;
   flex: 1;
+  margin-bottom: 30px;
 }
 
 @media screen and (max-width: 1600px) {
   .overviewContainer {
     padding: 24px 24px;
+    padding-bottom: 4px;
+    grid-template-columns: 260px 1fr 10fr 1fr 10fr;
   }
   .separator {
-    margin-left: 24px;
-    margin-right: 24px;
+    margin-right: 20px;
+  }
+  .overviewCard {
+    margin-bottom: 20px;
   }
   .vaultInfo {
     margin-top: 24px;
@@ -186,22 +194,20 @@
     margin-top: 12px;
   }
   .borderedSection {
-    min-width: 600px;
+    padding: 12px;
   }
   .overviewContainer {
-    padding: 24px;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
+    padding: 24px 24px;
+    grid-template-columns: 1fr;
   }
   .separator {
     border-bottom: 1px solid rgba(128, 128, 128, 0.25);
-    width: calc(100%);
-    margin: 12px 0px 12px 0px;
+    width: calc(100% - 48px);
+    margin: 24px 0px 24px 0px;
     height: 0px;
   }
   .overviewCard {
-    padding-bottom: 12px;
+    margin-bottom: 0px;
   }
 }
 
