@@ -12,10 +12,6 @@ import classes from "./vaultGrowthNumbers.module.css";
 
 export default function VaultGrowthNumbers({ vault }) {
 
-  if(vault.address === '0xa9fE4601811213c340e850ea305481afF02f5b28') {
-    vault.apy.recommended = null
-  }
-
   return (
     <div className={classes.extraContainer}>
       <div className={classes.vaultGrowthContainer}>

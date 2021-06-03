@@ -39,10 +39,6 @@ export default function VaultCard({ vault, account }) {
       break;
   }
 
-  if(vault.address === '0xa9fE4601811213c340e850ea305481afF02f5b28') {
-    vault.apy.recommended = null
-  }
-
   return (
     <Grid item xs={12} sm={6} md={4} lg={3}>
       <Paper elevation={0} className={activeVault ? classes.vaultContainerActive : classes.vaultContainer} onClick={handleNavigate}>

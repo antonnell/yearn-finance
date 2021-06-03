@@ -220,10 +220,7 @@ export default function Deposit({ vault }) {
 
   let depositDisabled = false
   let depositDisabledMessage = null
-  if(vault.address === '0xa9fE4601811213c340e850ea305481afF02f5b28') {
-    depositDisabled = true
-    depositDisabledMessage = 'We have taken steps to increase the safety factor on our strategies that have LTV ratios that must be maintained. In the process of doing this, an accounting issue was uncovered with artifical losses reported that drove down the price of the yvWETH vault significantly. We are taking actions to resolve this accounting error and return the vault to normal. Please do not withdraw until the issue has been patched, as you currently will receive WETH at the artificially lowered share price of ~0.90.'
-  }
+
 
   return selectedZapBalanceToken?.address && zapperBalanceUpdated ? (
     <div className={classes.depositContainer}>
