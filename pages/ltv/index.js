@@ -1,22 +1,16 @@
 import React, { useState, useEffect } from 'react';
 
-import { Typography, Paper, TextField, MenuItem, InputAdornment } from '@material-ui/core';
+import { Typography, Paper, TextField, InputAdornment } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import Skeleton from '@material-ui/lab/Skeleton';
-
 import Head from 'next/head';
 import Layout from '../../components/layout/layout.js';
 import classes from './ltv.module.css';
-import BigNumber from 'bignumber.js';
 
 import stores from '../../stores/index.js';
-import { GET_MAX, MAX_RETURNED, ERROR } from '../../stores/constants';
-
-import { formatCurrency, formatAddress } from '../../utils';
+import { GET_MAX, MAX_RETURNED } from '../../stores/constants';
 
 function LTV({ changeTheme }) {
   const [asset, setAsset] = useState('');
-  const [loading, setLoading] = useState(false);
   const [web3, setWeb3] = useState(null);
   const [assets, setAssets] = useState([]);
   const [assetDetails, setAssetDetails] = useState(null);
@@ -30,7 +24,6 @@ function LTV({ changeTheme }) {
     const maxReturned = (maxVals) => {
       console.log(maxVals);
       setAssetDetails(maxVals);
-      setLoading(false);
     };
 
     stores.emitter.on(MAX_RETURNED, maxReturned);
@@ -43,29 +36,10 @@ function LTV({ changeTheme }) {
   const onPoolSelectChange = (event, theOption) => {
     setAsset(theOption);
 
-    setLoading(true);
     stores.dispatcher.dispatch({
       type: GET_MAX,
       content: { address: theOption.address },
     });
-  };
-
-  const renderAssetOption = (web3, option) => {
-    return (
-      <MenuItem key={option.id} value={option.symbol} className={classes.assetSelectMenu}>
-        <div className={classes.poolSelectOption}>
-          <img
-            className={classes.poolIcon}
-            src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${web3.utils.toChecksumAddress(
-              option.address,
-            )}/logo.png`}
-            width={30}
-            height={30}
-          />
-          <Typography variant="h5">{option.symbol}</Typography>
-        </div>
-      </MenuItem>
-    );
   };
 
   return (
@@ -90,7 +64,7 @@ function LTV({ changeTheme }) {
               onChange={onPoolSelectChange}
               getOptionLabel={(option) => option.symbol}
               fullWidth={true}
-              renderOption={(option, { selected }) => (
+              renderOption={(option) => (
                 <React.Fragment>
                   <img
                     src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${web3.utils.toChecksumAddress(

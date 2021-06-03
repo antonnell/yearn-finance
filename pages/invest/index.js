@@ -10,7 +10,6 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import classes from './invest.module.css';
 import VaultAssetRow from '../../components/vaultAssetRow';
 import VaultCard from '../../components/vaultCard';
-import VaultGrowthNumbers from '../../components/vaultGrowthNumbers';
 import VaultSplitGraph from '../../components/vaultSplitGraph';
 import FilterListIcon from '@material-ui/icons/FilterList';
 
@@ -18,14 +17,12 @@ import BigNumber from 'bignumber.js';
 import Popover from '@material-ui/core/Popover';
 import HelpIcon from '@material-ui/icons/Help';
 
-import AccountBalanceWalletOutlinedIcon from '@material-ui/icons/AccountBalanceWalletOutlined';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 import StarIcon from '@material-ui/icons/Star';
 import SearchIcon from '@material-ui/icons/Search';
 import ListAltIcon from '@material-ui/icons/ListAlt';
-import PieChartIcon from '@material-ui/icons/PieChart';
 import AppsIcon from '@material-ui/icons/Apps';
 import ListIcon from '@material-ui/icons/List';
 import Table from '@material-ui/core/Table';
@@ -64,7 +61,6 @@ function Invest({ changeTheme }) {
   const storeHighestHoldings = stores.investStore.getStore('highestHoldings');
   const account = stores.accountStore.getStore('account');
 
-  const localStorageCoinTypes = localStorage.getItem('yearn.finance-invest-coin-types');
   const localStoragelayout = localStorage.getItem('yearn.finance-invest-layout');
   const localStorageversions = localStorage.getItem('yearn.finance-invest-versions');
 
@@ -75,11 +71,9 @@ function Invest({ changeTheme }) {
   const [highestHoldings, setHighestHoldings] = useState(storeHighestHoldings);
   const [search, setSearch] = useState('');
   const [versions, setVersions] = useState(JSON.parse(localStorageversions ? localStorageversions : '[]'));
-  const [coinTypes, setCoinTypes] = useState(JSON.parse(localStorageCoinTypes ? localStorageCoinTypes : '[]'));
   const [layout, setLayout] = useState(localStoragelayout ? localStoragelayout : 'grid');
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('none');
-  const [zapperVaults, setZapperVaults] = useState([]);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [investPopoverText, setInvestPopoverText] = useState('');
   const handlePopoverOpen = (event, vault, isStableCoin) => {
@@ -92,7 +86,7 @@ function Invest({ changeTheme }) {
     setAnchorEl(event.currentTarget);
   };
 
-  const handlePopoverClose = (event) => {
+  const handlePopoverClose = () => {
     setAnchorEl(null);
   };
   const open = Boolean(anchorEl);
@@ -303,11 +297,6 @@ function Invest({ changeTheme }) {
     localStorage.setItem('yearn.finance-invest-versions', newVals && newVals.length ? JSON.stringify(newVals) : '');
   };
 
-  const handeCoinTypesChanged = (event, newVals) => {
-    setCoinTypes(newVals);
-    localStorage.setItem('yearn.finance-invest-coin-types', newVals && newVals.length ? JSON.stringify(newVals) : '');
-  };
-
   const handleLayoutChanged = (event, newVal) => {
     if (newVal !== null) {
       setLayout(newVal);
@@ -347,7 +336,7 @@ function Invest({ changeTheme }) {
     return (
       <TableHead>
         <TableRow>
-          {headers.map((headCell, i) =>
+          {headers.map(headCell =>
             headCell.show ? (
               <TableCell
                 key={headCell.id}

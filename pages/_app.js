@@ -12,7 +12,7 @@ import Configure from './configure';
 
 import stores from '../stores/index.js';
 
-import { CONFIGURE, CONFIGURE_RETURNED, VAULTS_CONFIGURED, ACCOUNT_CONFIGURED, LENDING_CONFIGURED, CDP_CONFIGURED } from '../stores/constants';
+import { CONFIGURE, VAULTS_CONFIGURED, ACCOUNT_CONFIGURED, LENDING_CONFIGURED, CDP_CONFIGURED } from '../stores/constants';
 
 export default function MyApp({ Component, pageProps }) {
   const router = useRouter();

@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import Head from 'next/head';
+import React from 'react';
 import { useRouter } from 'next/router';
 
-function Redirect(props) {
+function Redirect() {
   const router = useRouter();
   const { address, section } = router.query;
   if (section === 'invest') {
