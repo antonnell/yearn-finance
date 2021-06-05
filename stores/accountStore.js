@@ -1,6 +1,7 @@
 import async from 'async';
 import {
   GAS_PRICE_API,
+  ZAPPER_GAS_PRICE_API,
   ERROR,
   STORE_UPDATED,
   CONFIGURE,
@@ -53,7 +54,6 @@ class Store {
         // Authereum: authereum
       },
       gasPrices: {
-        slow: 90,
         standard: 90,
         fast: 100,
         instant: 130,
@@ -279,7 +279,7 @@ class Store {
 
   _getGasPrices = async () => {
     try {
-      const url = GAS_PRICE_API;
+      const url = ZAPPER_GAS_PRICE_API;
       const priceResponse = await fetch(url);
       const priceJSON = await priceResponse.json();
 
@@ -288,7 +288,14 @@ class Store {
       }
     } catch (e) {
       console.log(e);
-      return {};
+      const web3 = await this._getWeb3Provider();
+      const gasPrice = await web3.eth.getGasPrice();
+      const gasPriceInGwei = web3.utils.fromWei(gasPrice, "gwei");
+      return {
+        standard: gasPriceInGwei,
+        fast: gasPriceInGwei,
+        instant: gasPriceInGwei,
+      };
     }
   };
 
@@ -299,7 +306,7 @@ class Store {
     }
 
     try {
-      const url = GAS_PRICE_API;
+      const url = ZAPPER_GAS_PRICE_API;
       const priceResponse = await fetch(url);
       const priceJSON = await priceResponse.json();
 

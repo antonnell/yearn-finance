@@ -46,19 +46,11 @@ export default function GasSpeed({ setParentSpeed }) {
         onChange={handleGasSpeedChanged}
         className={classes.gasSpeed}
       >
-        <ToggleButton value="slow">
-          <div className={classes.toggleButtonText}>
-            <Typography variant="h5">Slow</Typography>
-            <Typography className={classes.smallText}>
-              {gasPrices.slow} Gwei
-            </Typography>
-          </div>
-        </ToggleButton>
         <ToggleButton value="standard">
           <div className={classes.toggleButtonText}>
             <Typography variant="h5">Standard</Typography>
             <Typography className={classes.smallText}>
-              {gasPrices.standard} Gwei
+              {gasPrices?.standard?.toFixed(0)} Gwei
             </Typography>
           </div>
         </ToggleButton>
@@ -66,7 +58,7 @@ export default function GasSpeed({ setParentSpeed }) {
           <div className={classes.toggleButtonText}>
             <Typography variant="h5">Fast</Typography>
             <Typography className={classes.smallText}>
-              {gasPrices.fast} Gwei
+              {gasPrices?.fast?.toFixed(0)} Gwei
             </Typography>
           </div>
         </ToggleButton>
@@ -74,7 +66,7 @@ export default function GasSpeed({ setParentSpeed }) {
           <div className={classes.toggleButtonText}>
             <Typography variant="h5">Instant</Typography>
             <Typography className={classes.smallText}>
-              {gasPrices.instant} Gwei
+              {gasPrices?.instant?.toFixed(0)} Gwei
             </Typography>
           </div>
         </ToggleButton>
