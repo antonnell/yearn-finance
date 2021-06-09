@@ -77,6 +77,8 @@ export default function vaultStrategyCard({ strategy, vault }) {
       return `Supplies ${tokens} to KeeperDAO to farm ROOK. Rewards are harvested, sold for more ${tokens}, and deposited back into the vault.`
     } else if (name.includes('StrategySynthetixSusdMinter')) {
       return `Stakes SNX at Synthetix to mint sUSD. The newly minted sUSD is then deposited into the v2 sUSD yVault to earn yield. Yield from sUSD and rewards from weekly fees plus vested rewards (when claimable) are swapped for more SNX and re-deposited into the vault.`
+    } else if (name.includes('Convex')) {
+      return `Supplies ${tokens} to Convex Finance to farm CVX. Rewards are harvested, sold for more ${tokens}, and deposited back into the vault.`
     }
 
     else {
