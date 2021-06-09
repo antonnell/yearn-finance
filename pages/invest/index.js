@@ -45,6 +45,33 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
+const Podium = ({vaults, isStableCoin, handlePopoverOpen}) => (
+  <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
+    {vaults.length > 4 &&
+      vaults.slice(0, 3).map((vault, i) => (
+        <li key={i}>
+          <span style={{ fontSize: '25px' }}>
+            {i === 0 ? '🥇' : null}
+            {i === 1 ? '🥈' : null}
+            {i === 2 ? '🥉' : null}
+          </span>
+          <span
+            href={`/vaults/${vault.nonLowerCaseAddress}`}
+            onClick={() => handleNavigate(vault)}
+            className={classes.topVaultPerformersLink}
+          >
+            {vault.symbol.split(' Vault')[0]} {(vault.apy * 100).toFixed(2)}%{' '}
+          </span>
+          <HelpIcon
+            style={{ cursor: 'pointer', width: 15 }}
+            onClick={event => handlePopoverOpen(event, vault, isStableCoin)}
+          />
+        </li>
+      ))}
+  </ul>
+);
+
 function Invest({ changeTheme }) {
   const localClasses = useStyles();
   const router = useRouter();
@@ -133,7 +160,7 @@ function Invest({ changeTheme }) {
         otherVaults.push(v);
       }
     });
-    stableCoinVaults.sort((a, b) => {
+    const vaultSort = (a, b) => {
       if (orderBy === 'none') {
         if (BigNumber(a.apy).gt(BigNumber(b.apy))) {
           return -1;
@@ -141,25 +168,10 @@ function Invest({ changeTheme }) {
           return 1;
         }
       }
-    });
-    ethBTCVaults.sort((a, b) => {
-      if (orderBy === 'none') {
-        if (BigNumber(a.apy).gt(BigNumber(b.apy))) {
-          return -1;
-        } else if (BigNumber(a.apy).lt(BigNumber(b.apy))) {
-          return 1;
-        }
-      }
-    });
-    otherVaults.sort((a, b) => {
-      if (orderBy === 'none') {
-        if (BigNumber(a.apy).gt(BigNumber(b.apy))) {
-          return -1;
-        } else if (BigNumber(a.apy).lt(BigNumber(b.apy))) {
-          return 1;
-        }
-      }
-    });
+    };
+    stableCoinVaults.sort(vaultSort);
+    ethBTCVaults.sort(vaultSort);
+    otherVaults.sort(vaultSort);
     setTopVaultPerformers({ stableCoinVaults: stableCoinVaults, ethBTCVaults: ethBTCVaults, otherVaults: otherVaults });
   };
   React.useEffect(() => {
@@ -441,7 +453,6 @@ function Invest({ changeTheme }) {
                     vertical: 'center',
                     horizontal: 'left',
                   }}
-                  anchorPosition={anchorEl}
                   anchorEl={anchorEl}
                   onClose={handlePopoverClose}
                   disableRestoreFocus
@@ -461,33 +472,7 @@ function Invest({ changeTheme }) {
                   <FilterListIcon />
                   <Typography variant="h2">Top Stablecoins APYs</Typography>
                 </ToggleButton>
-                <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
-                  {topVaultPerformers.stableCoinVaults.length > 4 &&
-                    topVaultPerformers.stableCoinVaults.slice(0, 3).map((vault, i) => (
-                      <li>
-                        <span style={{ fontSize: '25px' }}>
-                          {i === 0 ? '🥇' : null}
-                          {i === 1 ? '🥈' : null}
-                          {i === 2 ? '🥉' : null}
-                        </span>
-                        <span
-                          href={`/vaults/${vault.nonLowerCaseAddress}`}
-                          onClick={() => {
-                            handleNavigate(vault);
-                          }}
-                          className={classes.topVaultPerformersLink}
-                        >
-                          {`${vault.label} (${vault.version})`} {(vault.apy * 100).toFixed(2)}%{' '}
-                        </span>
-                        <HelpIcon
-                          style={{ cursor: 'pointer', width: 15 }}
-                          onClick={(event) => {
-                            handlePopoverOpen(event, vault, true);
-                          }}
-                        />
-                      </li>
-                    ))}
-                </ul>
+                <Podium vaults={topVaultPerformers.stableCoinVaults} isStableCoin={true} handlePopoverOpen={handlePopoverOpen} />
               </div>
             </div>
             <div className={classes.separator}></div>
@@ -507,33 +492,8 @@ function Invest({ changeTheme }) {
                   <FilterListIcon />
                   <Typography variant="h2">Top BTC and ETH APYs</Typography>
                 </ToggleButton>
-                <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
-                  {topVaultPerformers.ethBTCVaults.length > 4 &&
-                    topVaultPerformers.ethBTCVaults.slice(0, 3).map((vault, i) => (
-                      <li>
-                        <span style={{ fontSize: '25px' }}>
-                          {i === 0 ? '🥇' : null}
-                          {i === 1 ? '🥈' : null}
-                          {i === 2 ? '🥉' : null}
-                        </span>
-                        <span
-                          href={`/vaults/${vault.nonLowerCaseAddress}`}
-                          onClick={() => {
-                            handleNavigate(vault);
-                          }}
-                          className={classes.topVaultPerformersLink}
-                        >
-                          {`${vault.label} (${vault.version})`} {(vault.apy * 100).toFixed(2)}%{' '}
-                        </span>
-                        <HelpIcon
-                          style={{ cursor: 'pointer', width: 15 }}
-                          onClick={(event) => {
-                            handlePopoverOpen(event, vault), false;
-                          }}
-                        />
-                      </li>
-                    ))}
-                </ul>
+                <Podium vaults={topVaultPerformers.ethBTCVaults} isStableCoin={false} handlePopoverOpen={handlePopoverOpen} />
+
               </div>
             </div>
             <div className={classes.separator}></div>
@@ -554,33 +514,7 @@ function Invest({ changeTheme }) {
                   <Typography variant="h2">Other Top APYs</Typography>
                 </ToggleButton>
                 <Typography variant="h2" className={classes.headAmount}>
-                  <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
-                    {topVaultPerformers.otherVaults.length > 4 &&
-                      topVaultPerformers.otherVaults.slice(0, 3).map((vault, i) => (
-                        <li>
-                          <span style={{ fontSize: '25px' }}>
-                            {i === 0 ? '🥇' : null}
-                            {i === 1 ? '🥈' : null}
-                            {i === 2 ? '🥉' : null}
-                          </span>
-                          <span
-                            href={`/vaults/${vault.nonLowerCaseAddress}`}
-                            onClick={() => {
-                              handleNavigate(vault);
-                            }}
-                            className={classes.topVaultPerformersLink}
-                          >
-                            {`${vault.label} (${vault.version})`} {(vault.apy * 100).toFixed(2)}%{' '}
-                          </span>
-                          <HelpIcon
-                            style={{ cursor: 'pointer', width: 15 }}
-                            onClick={(event) => {
-                              handlePopoverOpen(event, vault, false);
-                            }}
-                          />
-                        </li>
-                      ))}
-                  </ul>
+                  <Podium vaults={topVaultPerformers.otherVaults} isStableCoin={false} handlePopoverOpen={handlePopoverOpen} />
                 </Typography>
               </div>
             </div>
@@ -668,15 +602,5 @@ function Invest({ changeTheme }) {
     </Layout>
   );
 }
-
-/*
-
-<ToggleButtonGroup className={ classes.vaultTypeButtons } value={ coinTypes } onChange={ handeCoinTypesChanged } >
-  <ToggleButton className={ `${classes.vaultTypeButton} ${ coinTypes.includes('Stablecoins') ? classes.typeSelected : classes.type }` } value='Stablecoins' >Stable</ToggleButton>
-  <ToggleButton className={ `${classes.vaultTypeButton} ${ coinTypes.includes('BTC') ? classes.typeSelected : classes.type }` } value='BTC' >BTC</ToggleButton>
-  <ToggleButton className={ `${classes.vaultTypeButton} ${ coinTypes.includes('Eth') ? classes.typeSelected : classes.type }` } value='Eth' >ETH</ToggleButton>
-</ToggleButtonGroup>
-
-*/
 
 export default Invest;
