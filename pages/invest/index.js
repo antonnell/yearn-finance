@@ -61,7 +61,7 @@ const Podium = ({vaults, isStableCoin, handlePopoverOpen}) => (
             onClick={() => handleNavigate(vault)}
             className={classes.topVaultPerformersLink}
           >
-            {vault.symbol.split(' Vault')[0]} {(vault.apy * 100).toFixed(2)}%{' '}
+            {`${vault.label} (${vault.version})`} {(vault.apy * 100).toFixed(2)}%{' '}
           </span>
           <HelpIcon
             style={{ cursor: 'pointer', width: 15 }}
