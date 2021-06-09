@@ -145,6 +145,8 @@ function Invest({ changeTheme }) {
         if (v.address.toLowerCase() === vault.address.toLowerCase()) {
           v.apy = vault.apy?.recommended;
           v.nonLowerCaseAddress = vault.address;
+          v.symbol = vault.symbol;
+          v.label = vault.displayName;
         }
         if(v.apy === 'New') {
           v.apy = 0
@@ -491,6 +493,7 @@ function Invest({ changeTheme }) {
                   <Typography variant="h2">Top BTC and ETH APYs</Typography>
                 </ToggleButton>
                 <Podium vaults={topVaultPerformers.ethBTCVaults} isStableCoin={false} handlePopoverOpen={handlePopoverOpen} />
+
               </div>
             </div>
             <div className={classes.separator}></div>

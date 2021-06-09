@@ -536,7 +536,7 @@ function LendBorrowAssetDetails({
                   loading ||
                   BigNumber(lendingAsset.borrowBalance).eq(0) ||
                   !repayAmount ||
-                  BigNumber(repayAmount).gt(lendingAsset.supplyBalance)
+                  BigNumber(repayAmount).gt(lendingAsset.borrowBalance)
                 }
                 onClick={onRepay}
               >

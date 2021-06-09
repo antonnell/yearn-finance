@@ -28,7 +28,8 @@ export default function Deposit({ vault }) {
   const [zapperSlippage, setZapperSlippage] = useState(0.01);
   const [depositStatus, setDepositStatus] = useState('');
   const storeAccount = stores.accountStore.getStore('account');
-  const [selectedZapBalanceToken, setSelectedZapBalanceToken] = useState();
+  const storeCurrentVault = stores.investStore.getVault(vault.address);
+  const [selectedZapBalanceToken, setSelectedZapBalanceToken] = useState(storeCurrentVault?.tokenMetadata);
   const [account, /* setAccount */] = useState(storeAccount);
   const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState('');
@@ -382,7 +383,7 @@ export default function Deposit({ vault }) {
         ) : null}
         <GasSpeed setParentSpeed={setSpeed} />
       </div>
-      {currentToken.address.toLowerCase() === vault.tokenMetadata.address.toLowerCase() ? null : (
+      {currentToken?.address.toLowerCase() === vault.tokenMetadata.address.toLowerCase() ? null : (
         <div className={classes.zapperSlippageContainer}>
           <Typography variant="h5" className={classes.title}>
             Slippage

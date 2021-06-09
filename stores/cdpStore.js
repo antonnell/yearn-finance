@@ -524,15 +524,6 @@ class Store {
                 .toNumber();
             }
 
-            console.log(token0);
-            console.log(token0Price);
-            console.log(reserve0);
-            console.log('---');
-            console.log(token1);
-            console.log(token1Price);
-            console.log(reserve1);
-            console.log('----------------------');
-
             let pricePerShare0 = BigNumber(token0Price).times(reserve0);
             let pricePerShare1 = BigNumber(token1Price).times(reserve1);
 

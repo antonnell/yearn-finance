@@ -370,7 +370,6 @@ class Store {
             .toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN);
 
           if (BigNumber(vault.balance).gt(0)) {
-            console.log(zapperfiBalance[account.address])
             let foundZapperVault = zapperfiBalance[account.address].products[0].assets.filter((v) => {
               if(!vault.address || !v.address) {
                 return false
@@ -533,104 +532,109 @@ class Store {
   };
 
   getVaultPerformance = async (payload) => {
-    const { address, duration } = payload.content;
+    try {
+      const { address, duration } = payload.content;
 
-    //maybe do this on initial configuration load.
+      //maybe do this on initial configuration load.
 
-    const account = stores.accountStore.getStore('account');
-    if (!account) {
-      //maybe throw an error
-    }
+      const account = stores.accountStore.getStore('account');
+      if (!account) {
+        //maybe throw an error
+      }
 
-    const web3 = await stores.accountStore.getWeb3Provider();
-    if (!web3) {
-    }
+      const web3 = await stores.accountStore.getWeb3Provider();
+      if (!web3) {
+      }
 
-    const provider = process.env.NEXT_PUBLIC_PROVIDER;
-    const etherscanApiKey = process.env.NEXT_PUBLIC_ETHERSCAN_KEY;
+      const provider = process.env.NEXT_PUBLIC_PROVIDER;
+      const etherscanApiKey = process.env.NEXT_PUBLIC_ETHERSCAN_KEY;
 
-    const options = {
-      provider,
-      etherscan: {
-        apiKey: etherscanApiKey, // Only required if not providing abi in contract request configuration
-        delayTime: 300, // delay time between etherscan ABI reqests. default is 300 ms
-      },
-    };
-
-    let callOptions = {};
-
-    switch (duration) {
-      case 'Week':
-        callOptions = {
-          blockHeight: 272 * 24 * 7, // Historical blocks to read (60 * (60/15) = 240)... Enter 240 for one hours worth of data - 272 = 13.2 seconds per block
-          blockResolution: 272 * 24, // 7 data points
-        };
-        break;
-      case 'Month':
-        callOptions = {
-          blockHeight: 272 * 24 * 30, // Historical blocks to read (60 * (60/15) = 240)... Enter 240 for one hours worth of data - 272 = 13.2 seconds per block
-          blockResolution: 272 * 24, // 30 data points
-        };
-        break;
-      case 'Year':
-        callOptions = {
-          blockHeight: 272 * 24 * 365, // Historical blocks to read (60 * (60/15) = 240)... Enter 240 for one hours worth of data - 272 = 13.2 seconds per block
-          blockResolution: 272 * 24 * 18, // 20 data points
-        };
-        break;
-      default:
-        callOptions = {
-          blockHeight: 272 * 24 * 30, // Historical blocks to read (60 * (60/15) = 240)... Enter 240 for one hours worth of data - 272 = 13.2 seconds per block
-          blockResolution: 272 * 24, // 30 data points
-        };
-    }
-
-    let contracts = {};
-
-    if (!account || !account.address) {
-      contracts = [
-        {
-          namespace: 'vaults',
-          store: localStorage,
-          addresses: [address],
-          allReadMethods: true,
-          groupByNamespace: false,
-          logging: false,
-          readMethods: [],
+      const options = {
+        provider,
+        etherscan: {
+          apiKey: etherscanApiKey, // Only required if not providing abi in contract request configuration
+          delayTime: 300, // delay time between etherscan ABI reqests. default is 300 ms
         },
-      ];
-    } else {
-      contracts = [
-        {
-          namespace: 'vaults',
-          store: localStorage,
-          addresses: [address],
-          allReadMethods: true,
-          groupByNamespace: false,
-          logging: false,
-          readMethods: [
-            {
-              name: 'balanceOf',
-              args: [account.address],
-            },
-          ],
-        },
-      ];
+      };
+
+      let callOptions = {};
+
+      switch (duration) {
+        case 'Week':
+          callOptions = {
+            blockHeight: 272 * 24 * 7, // Historical blocks to read (60 * (60/15) = 240)... Enter 240 for one hours worth of data - 272 = 13.2 seconds per block
+            blockResolution: 272 * 24, // 7 data points
+          };
+          break;
+        case 'Month':
+          callOptions = {
+            blockHeight: 272 * 24 * 30, // Historical blocks to read (60 * (60/15) = 240)... Enter 240 for one hours worth of data - 272 = 13.2 seconds per block
+            blockResolution: 272 * 24, // 30 data points
+          };
+          break;
+        case 'Year':
+          callOptions = {
+            blockHeight: 272 * 24 * 365, // Historical blocks to read (60 * (60/15) = 240)... Enter 240 for one hours worth of data - 272 = 13.2 seconds per block
+            blockResolution: 272 * 24 * 18, // 20 data points
+          };
+          break;
+        default:
+          callOptions = {
+            blockHeight: 272 * 24 * 30, // Historical blocks to read (60 * (60/15) = 240)... Enter 240 for one hours worth of data - 272 = 13.2 seconds per block
+            blockResolution: 272 * 24, // 30 data points
+          };
+      }
+
+      let contracts = {};
+
+      if (!account || !account.address) {
+        contracts = [
+          {
+            namespace: 'vaults',
+            store: localStorage,
+            addresses: [address],
+            allReadMethods: true,
+            groupByNamespace: false,
+            logging: false,
+            readMethods: [],
+          },
+        ];
+      } else {
+        contracts = [
+          {
+            namespace: 'vaults',
+            store: localStorage,
+            addresses: [address],
+            allReadMethods: true,
+            groupByNamespace: false,
+            logging: false,
+            readMethods: [
+              {
+                name: 'balanceOf',
+                args: [account.address],
+              },
+            ],
+          },
+        ];
+      }
+
+      const batchCall = new BatchCall(options);
+      const result = await batchCall.execute(contracts, callOptions);
+
+      const vault = this.getVault(payload.content.address);
+
+      vault.historicData = result[0];
+
+      this.setVault({
+        address: payload.content.address,
+        vault: vault,
+      });
+
+      this.emitter.emit(VAULT_PERFORMANCE_RETURNED);
+    } catch(ex) {
+      console.log(ex)
+      this.emitter.emit(VAULT_PERFORMANCE_RETURNED);
     }
-
-    const batchCall = new BatchCall(options);
-    const result = await batchCall.execute(contracts, callOptions);
-
-    const vault = this.getVault(payload.content.address);
-
-    vault.historicData = result[0];
-
-    this.setVault({
-      address: payload.content.address,
-      vault: vault,
-    });
-
-    this.emitter.emit(VAULT_PERFORMANCE_RETURNED);
   };
 
   depositVault = async (payload) => {
@@ -1124,6 +1128,14 @@ class Store {
       //maybe throw an error
       return false;
     }
+
+
+    //we are not using the transactions call anymore as it is broken. I think the core team has depricated api.yearn.tools.
+    this.emitter.emit(VAULTS_UPDATED);
+    this.emitter.emit(VAULT_TRANSACTIONS_RETURNED);
+
+    return;
+
 
     try {
       const url = `${YEARN_API}user/${account.address}/vaults/transactions`;
