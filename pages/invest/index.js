@@ -118,6 +118,8 @@ function Invest({ changeTheme }) {
         if (v.address.toLowerCase() === vault.address.toLowerCase()) {
           v.apy = vault.apy?.recommended;
           v.nonLowerCaseAddress = vault.address;
+          v.symbol = vault.symbol;
+          v.label = vault.displayName;
         }
         if(v.apy === 'New') {
           v.apy = 0
@@ -475,7 +477,7 @@ function Invest({ changeTheme }) {
                           }}
                           className={classes.topVaultPerformersLink}
                         >
-                          {vault.symbol.split(' Vault')[0]} {(vault.apy * 100).toFixed(2)}%{' '}
+                          {`${vault.label} (${vault.version})`} {(vault.apy * 100).toFixed(2)}%{' '}
                         </span>
                         <HelpIcon
                           style={{ cursor: 'pointer', width: 15 }}
@@ -521,7 +523,7 @@ function Invest({ changeTheme }) {
                           }}
                           className={classes.topVaultPerformersLink}
                         >
-                          {vault.symbol.split(' Vault')[0]} {(vault.apy * 100).toFixed(2)}%{' '}
+                          {`${vault.label} (${vault.version})`} {(vault.apy * 100).toFixed(2)}%{' '}
                         </span>
                         <HelpIcon
                           style={{ cursor: 'pointer', width: 15 }}
@@ -568,7 +570,7 @@ function Invest({ changeTheme }) {
                             }}
                             className={classes.topVaultPerformersLink}
                           >
-                            {vault.symbol.split(' Vault')[0]} {(vault.apy * 100).toFixed(2)}%{' '}
+                            {`${vault.label} (${vault.version})`} {(vault.apy * 100).toFixed(2)}%{' '}
                           </span>
                           <HelpIcon
                             style={{ cursor: 'pointer', width: 15 }}
