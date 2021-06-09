@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const Podium = ({vaults, isStableCoin, handlePopoverOpen}) => (
+const Podium = ({vaults, isStableCoin, handlePopoverOpen, handleNavigate}) => (
   <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
     {vaults.length > 4 &&
       vaults.slice(0, 3).map((vault, i) => (
@@ -472,7 +472,7 @@ function Invest({ changeTheme }) {
                   <FilterListIcon />
                   <Typography variant="h2">Top Stablecoins APYs</Typography>
                 </ToggleButton>
-                <Podium vaults={topVaultPerformers.stableCoinVaults} isStableCoin={true} handlePopoverOpen={handlePopoverOpen} />
+                <Podium vaults={topVaultPerformers.stableCoinVaults} isStableCoin={true} handlePopoverOpen={handlePopoverOpen} handleNavigate={handleNavigate} />
               </div>
             </div>
             <div className={classes.separator}></div>
@@ -492,7 +492,7 @@ function Invest({ changeTheme }) {
                   <FilterListIcon />
                   <Typography variant="h2">Top BTC and ETH APYs</Typography>
                 </ToggleButton>
-                <Podium vaults={topVaultPerformers.ethBTCVaults} isStableCoin={false} handlePopoverOpen={handlePopoverOpen} />
+                <Podium vaults={topVaultPerformers.ethBTCVaults} isStableCoin={false} handlePopoverOpen={handlePopoverOpen} handleNavigate={handleNavigate} />
 
               </div>
             </div>
@@ -514,7 +514,7 @@ function Invest({ changeTheme }) {
                   <Typography variant="h2">Other Top APYs</Typography>
                 </ToggleButton>
                 <Typography variant="h2" className={classes.headAmount}>
-                  <Podium vaults={topVaultPerformers.otherVaults} isStableCoin={false} handlePopoverOpen={handlePopoverOpen} />
+                  <Podium vaults={topVaultPerformers.otherVaults} isStableCoin={false} handlePopoverOpen={handlePopoverOpen} handleNavigate={handleNavigate} />
                 </Typography>
               </div>
             </div>
