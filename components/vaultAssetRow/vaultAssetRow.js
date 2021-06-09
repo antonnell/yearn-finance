@@ -1,28 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { Typography, Button, TextField, Paper, CircularProgress, Grid, InputAdornment } from '@material-ui/core';
+import React from 'react';
+import { Typography } from '@material-ui/core';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import Skeleton from '@material-ui/lab/Skeleton';
 import BigNumber from 'bignumber.js';
 import { formatCurrency } from '../../utils';
-import GasSpeed from '../gasSpeed';
 import { useRouter } from 'next/router';
-
-import stores from '../../stores/index.js';
-import {
-  ERROR,
-  APPROVE_LEND,
-  APPROVE_LEND_RETURNED,
-  WITHDRAW_LEND,
-  WITHDRAW_LEND_RETURNED,
-  DEPOSIT_LEND,
-  DEPOSIT_LEND_RETURNED,
-  ENABLE_COLLATERAL_LEND,
-  ENABLE_COLLATERAL_LEND_RETURNED,
-  DISABLE_COLLATERAL_LEND,
-  DISABLE_COLLATERAL_LEND_RETURNED,
-  LENDING_SUPPLY_RETURNED,
-} from '../../stores/constants';
 
 import classes from './vaultAssetRow.module.css';
 
