@@ -36,10 +36,10 @@ const StyledSwitch = withStyles((theme) => ({
     margin: 'auto',
     '&$checked': {
       transform: 'translateX(28px)',
-      color: '#212529',
+      color: 'rgba(128,128,128, 1)',
       width: '30%',
       '& + $track': {
-        backgroundColor: '#ffffff',
+        backgroundColor: 'rgba(0,0,0, 0.3)',
         opacity: 1,
       },
     },
@@ -50,8 +50,8 @@ const StyledSwitch = withStyles((theme) => ({
   },
   track: {
     borderRadius: 32 / 2,
-    border: `1px solid #212529`,
-    backgroundColor: '#212529',
+    border: '1px solid rgba(128,128,128, 0.2)',
+    backgroundColor: 'rgba(0,0,0, 0)',
     opacity: 1,
     transition: theme.transitions.create(['background-color', 'border']),
   },
@@ -75,6 +75,7 @@ const StyledSwitch = withStyles((theme) => ({
 });
 
 function Header(props) {
+
   const accountStore = stores.accountStore.getStore('account');
 
   const [account, setAccount] = useState(accountStore);
@@ -142,65 +143,70 @@ function Header(props) {
   }, []);
 
   return (
-    <div className={classes.headerContainer}>
-      {props.backClicked && (
-        <div className={classes.backButton}>
-          <Button color={props.theme.palette.type === 'light' ? 'primary' : 'secondary'} onClick={props.backClicked} disableElevation>
-            <ArrowBackIcon fontSize={'large'} />
-          </Button>
+    <Paper elevation={0} className={classes.headerContainer}>
+        {props.backClicked && (
+          <div className={classes.backButton}>
+            <Button color={props.theme.palette.type === 'light' ? 'primary' : 'secondary'} onClick={props.backClicked} disableElevation>
+              <ArrowBackIcon fontSize={'medium'} />
+            </Button>
+          </div>
+        )}{' '}
+        <div className={classes.instantSearch}
+            component="form"
+            style={{ display: 'flex', marginRight: '15px' }}
+            onClick={(e) => {
+              setToggleSearchModal(!toggleSearchModal);
+              e.preventDefault();
+            }}
+          >
+            <InputBase
+              style={{ paddingi: '20px', marginLeft: '15px', flex: 1 }}
+              placeholder="Instant Search ⚡"
+              inputProps={{ 'aria-label': 'search google maps' }}
+            />
+            <span type="submit" aria-label="search">
+              <p className={classes.shortcutInfo}>{isMac ? `Cmd+K` : `⊞ Win+K`} or /</p>
+            </span>
         </div>
-      )}{' '}
-      <Paper
-        component="form"
-        style={{ display: 'flex', marginRight: '15px' }}
-        onClick={(e) => {
-          setToggleSearchModal(!toggleSearchModal);
-          e.preventDefault();
-        }}
-      >
-        <InputBase
-          style={{ paddingi: '20px', marginLeft: '15px', flex: 1 }}
-          placeholder="Instant Search ⚡"
-          inputProps={{ 'aria-label': 'search google maps' }}
-        />
-        <span type="submit" aria-label="search">
-          <p className={classes.shortcutInfo}>{isMac ? `Cmd+K` : `⊞ Win+K`} or /</p>
-        </span>
-      </Paper>
-      <div className={classes.themeSelectContainer}>
-        <StyledSwitch
-          icon={<Brightness2Icon className={classes.switchIcon} />}
-          checkedIcon={<WbSunnyOutlinedIcon className={classes.switchIcon} />}
-          checked={darkMode}
-          onChange={handleToggleChange}
-        />
-      </div>
-      <Button
-        disableElevation
-        className={classes.accountButton}
-        variant="contained"
-        color="secondary"
-        startIcon={<HelpIcon />}
-        onClick={() => setToggleAboutModal(!toggleAboutModal)}
-      >
-        <Typography variant="h5">What is yearn?</Typography>
-      </Button>
-      <Button disableElevation className={classes.accountButton} variant="contained" color="secondary" onClick={onAddressClicked}>
-        {account && account.address && <div className={`${classes.accountIcon} ${classes.metamask}`}></div>}
-        <Typography variant="h5">{account && account.address ? formatAddress(account.address) : 'Connect Wallet'}</Typography>
-      </Button>
-      {unlockOpen && <Unlock modalOpen={unlockOpen} closeModal={closeUnlock} />}
-      {toggleAboutModal && <AboutModal setToggleAboutModal={setToggleAboutModal} />}
-      {toggleSearchModal && <SearchModal setToggleSearchModal={setToggleSearchModal} />}
-
-
-
-      {chainInvalid ? (
-        <div className={classes.chainInvalidError}>
-          The chain you're connected to isn't supported. Please check that your wallet is connected to Ethereum Mainnet.
+        <div className={classes.themeSelectContainer}>
+          <StyledSwitch
+            icon={<Brightness2Icon className={classes.switchIcon} />}
+            checkedIcon={<WbSunnyOutlinedIcon className={classes.switchIcon} />}
+            checked={darkMode}
+            onChange={handleToggleChange}
+          />
         </div>
-      ) : null}
-    </div>
+        <Button
+          disableElevation
+          className={classes.accountButton}
+          variant="contained"
+          color={props.theme.palette.type === 'dark' ? 'primary' : 'secondary'}
+          startIcon={<HelpIcon />}
+          onClick={() => setToggleAboutModal(!toggleAboutModal)}
+        >
+          <Typography variant="p">Need help?</Typography>
+        </Button>
+        <Button
+          disableElevation
+          className={classes.accountButton}
+          variant="contained"
+          color={props.theme.palette.type === 'dark' ? 'primary' : 'secondary'}
+          onClick={onAddressClicked}>
+          {account && account.address && <div className={`${classes.accountIcon} ${classes.metamask}`}></div>}
+          <Typography variant="p">{account && account.address ? formatAddress(account.address) : 'Connect Wallet'}</Typography>
+        </Button>
+        {unlockOpen && <Unlock modalOpen={unlockOpen} closeModal={closeUnlock} />}
+        {toggleAboutModal && <AboutModal setToggleAboutModal={setToggleAboutModal} />}
+        {toggleSearchModal && <SearchModal setToggleSearchModal={setToggleSearchModal} />}
+
+
+
+        {chainInvalid ? (
+          <div className={classes.chainInvalidError}>
+            The chain you're connected to isn't supported. Please check that your wallet is connected to Ethereum Mainnet.
+          </div>
+        ) : null}
+    </Paper>
   );
 }
 

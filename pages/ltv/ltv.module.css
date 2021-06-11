@@ -4,12 +4,14 @@
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  min-height: calc(100vh - 200px);
+  min-height: calc(100vh);
+  margin-left: -10px;
 }
 
 .searchContainer {
-  padding: 24px;
+  padding: 60px;
   min-width: 400px;
+  border-radius: 0px 12px 12px 0px !important;
 }
 
 .inputTitleContainer {
@@ -20,8 +22,11 @@
 }
 
 .inputTitle {
-  padding-bottom: 6px;
-  margin-left: 12px;
+  margin-bottom: 30px;
+}
+
+.inputTitle h5 {
+  font-size: 140%;
 }
 
 .poolSelectOption {
@@ -37,16 +42,60 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px;
+  padding: 18px 0;
+  border-bottom: 1px solid rgba(108,108,123, 0.2);
+}
+
+.pairs {
+  margin-top: 18px;
+}
+
+.pair:nth-last-child(1) {
+  border-bottom: 0;
+}
+
+.amount {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !important;
+  font-weight: 700 !important;
+}
+
+
+.ltvgrid {
+  max-width: 1200px;
+  border: 1px solid rgba(128,128,128, 0.2);
+  border-radius: 12px;
+}
+
+.ltvanim {
+  opacity: 0.2;
+  width: 800px;
+  position: absolute;
 }
 
 .copyContainer {
+  position: relative;
+  overflow: hidden;
+  top: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  max-width: 500px;
-  padding: 24px;
-  margin-left: 100px;
+  padding: 80px 80px;
+  margin-left: 0px;
+  background-image: linear-gradient(-20deg, #2b5876 0%, #4e4376 100%);
+  height: 100%;
+  border-radius: 12px 0px 0px 12px;
+  color: #FFF;
+}
+
+.copyContainer h1 {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !important;
+  font-weight: 700 !important;
+}
+
+.copyContainer h5 {
+  font-size: 120%;
+  font-weight: 100;
+  color: rgba(255,255,255, 0.7);
 }
 
 .titleSpacing {

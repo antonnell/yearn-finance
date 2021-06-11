@@ -4,12 +4,19 @@
   display: flex;
   flex-direction: column;
   padding: 0px 48px;
+  margin-top: 0px;
+  padding-bottom: 48px;
+  position: relative;
 }
 
 .tableHeader {
   margin-top: 48px !important;
-  margin-bottom: 12px !important;
-  margin-left: 24px !important;
+  margin-bottom: 30px !important;
+  margin-left: 0px !important;
+}
+
+.fixtop {
+  margin-top: 208px;
 }
 
 .cdpFilters {
@@ -18,14 +25,19 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  margin: 48px 0px 24px 0px;
+  margin: 98px 0px 0px 0px;
+  position: sticky;
+  top: 80px;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+  z-index: 8;
 }
 
 .tableContainer {
   display: flex;
   flex-direction: column;
   flex: 1;
-  border: 1px solid rgba(128, 128, 128, 0.25);
+  border: 1px solid rgba(108, 108, 123, 0.2);
   border-radius: 10px;
   width: 100%;
 }
@@ -36,12 +48,29 @@
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  border: 1px solid rgba(128, 128, 128, 0.25);
+  border: 1px solid rgba(108, 108, 123, 0.2);
   border-radius: 10px;
 }
 
+
+.overviewContainer2 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  position: absolute;
+  width: calc(100% + 10px);
+  left: -10px;
+  padding: 50px 70px;
+  z-index: 9;
+  top: 60px;
+  background-image: linear-gradient(-20deg, #2b5876 0%, #4e4376 100%);
+  color: #FFF !important;
+  border-radius: 0px !important;
+}
+
 .separator {
-  border-right: 1px solid rgba(128, 128, 128, 0.25);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
   height: 100px;
   margin-right: 48px;
   margin-left: 48px;
@@ -52,6 +81,23 @@
   align-items: center;
   justify-content: flex-start;
   flex: 1;
+}
+
+.overviewCard h1 {
+  color: #FFF !important;
+  font-size: 140% !important;
+  line-height: 1.4em;
+}
+
+.fillerText {
+  font-size: 13px !important;
+  color: rgba(255,255,255, 0.6);
+  line-height: 1.4em !important;
+}
+
+.fillerText a {
+  color: #FFF;
+  font-size: 13px !important;
 }
 
 .statusLiquid {
@@ -67,8 +113,8 @@
 }
 
 .fillerContent {
-  margin-right: 24px !important;
-  color: #2f80ed;
+  margin-right: 38px !important;
+  color: #374DFA;
 }
 
 @media screen and (max-width: 1600px) {
@@ -85,6 +131,19 @@
   .portfolioOutline {
     margin-right: 12px;
   }
+}
+
+@media screen and (max-width: 1200px) {
+
+  .overviewContainer2 {
+    top: 0;
+  }
+
+  .cdpFilters {
+    margin: 120px 0px 0px 0px;
+    top: 0px;
+  }
+
 }
 
 @media screen and (max-width: 1000px) {

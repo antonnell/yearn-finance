@@ -279,7 +279,10 @@ function MyComponent(props) {
             <Button
               style={{
                 width: width > 576 ? "350px" : "calc(100vw - 100px)",
-                height: "160px"
+                height: "200px",
+                backgroundColor: "rgba(0,0,0,0.05)",
+                border: "1px solid rgba(108,108,123,0.2)",
+                color: "rgba(108,108,123,1)"
               }}
               variant="contained"
               onClick={() => {
@@ -296,7 +299,7 @@ function MyComponent(props) {
             >
               <div
                 style={{
-                  height: "130px",
+                  height: "160px",
                   width: "100%",
                   display: "flex",
                   flexDirection: "column",
@@ -306,8 +309,8 @@ function MyComponent(props) {
               >
                 <img
                   style={{
-                    width: "40px",
-                    height: "40px"
+                    width: "60px",
+                    height: "60px"
                   }}
                   src={url}
                   alt=""
@@ -324,7 +327,10 @@ function MyComponent(props) {
                       borderRadius: "10px",
                       width: "10px",
                       height: "10px",
-                      marginRight: "10px"
+                      marginRight: "0px",
+                      position: "absolute",
+                      top: "15px",
+                      right: "15px"
                     }}
                   ></div>
                 )}

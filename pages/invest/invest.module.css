@@ -10,6 +10,20 @@
   flex-direction: column;
 }
 
+.growthanimclass {
+  transform: scale(0.65);
+  margin-top: 3px;
+  margin-left: 1px;
+  opacity: 0.6;
+}
+
+.rocketanimclass {
+  transform: scale(0.7);
+  margin-top: 6px;
+  margin-left: 0px;
+  opacity: 0.6;
+}
+
 .portfolioStatsContainer {
   display: flex;
   flex-wrap: wrap;
@@ -32,10 +46,10 @@
 }
 
 .portfolioOutline {
-  border: 1px solid #212529;
+  border: 1px solid rgba(108,108,123,0.2);
   border-radius: 30px;
-  height: 40px;
-  width: 40px;
+  height: 55px;
+  width: 55px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -55,7 +69,7 @@
   display: flex;
   flex-direction: column;
   flex: 1;
-  border: 1px solid rgba(128, 128, 128, 0.25);
+  border: 1px solid rgba(108,108,123, 0.25);
   border-radius: 10px;
   width: 100%;
 }
@@ -80,14 +94,15 @@
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: flex-start;
-  padding-top: 24px;
+  padding-top: 0px;
+  padding-bottom: 50px;
 }
 
 .searchContainer {
   flex: 1;
   min-width: 300px !important;
-  margin-left: 48px !important;
-  margin-right: 48px !important;
+  margin-left: 30px !important;
+  margin-right: 40px !important;
 }
 
 .vaultSectionTitle {
@@ -96,7 +111,7 @@
 }
 
 .vaultTypeButtons {
-  width: 400px;
+  width: 680px;
   padding-bottom: 12px;
   padding-top: 12px;
 }
@@ -105,92 +120,106 @@
   border: 0px !important;
   padding: 5px 12px !important;
   border-radius: 10px !important;
-  margin: 0px 6px !important;
+  margin-right: 18px !important;
   line-height: 1.167 !important;
   text-transform: none !important;
 }
 
-.v1 {
-  border: 1px solid rgba(229, 107, 115, 1) !important;
-  color: rgba(229, 107, 115, 1) !important;
-}
-
-.v2 {
-  border: 1px solid rgba(25, 101, 233, 1) !important;
-  color: rgba(25, 101, 233, 1) !important;
-}
-
-.exp {
-  border: 1px solid rgba(255, 179, 71, 1) !important;
-  color: rgba(255, 179, 71, 1) !important;
-}
-
-.earn {
-  border: 1px solid rgba(220, 107, 229, 1) !important;
-  color: rgba(220, 107, 229, 1) !important;
-}
-
-.active {
-  border: 1px solid rgba(63, 94, 251, 1) !important;
-  color: rgba(63, 94, 251, 1) !important;
-}
-
+.v1,
+.v2,
+.exp,
+.earn,
+.active,
 .lockup {
-  border: 1px solid rgba(244, 220, 10, 1) !important;
-  color: rgba(244, 220, 10, 1) !important;
+  border: 1px solid rgba(108,108,123, 0.3) !important;
+  color: rgba(108,108,123, 0.8) !important;
+  padding: 12px 12px !important;
 }
 
 .stableCoins,
 .ethbtc,
 .others {
-  border: 1px solid rgba(221, 82, 2, 0.911) !important;
-  color: rgba(221, 82, 2, 0.911) !important;
+  border: 1px solid rgba(58, 155, 73, 1) !important;
+  color: rgba(58, 155, 73, 1) !important;
 }
 
 .v1Selected {
   background: rgba(229, 107, 115, 1) !important;
   color: #fff !important;
+  padding: 12px 12px !important;
+  border: 1px solid rgba(108,108,123, 0) !important;
 }
 
 .v2Selected {
-  background: rgba(25, 101, 233, 1) !important;
+  background: rgba(27, 44, 191, 1) !important;
   color: #fff !important;
+  padding: 12px 12px !important;
+  border: 1px solid rgba(108,108,123, 0) !important;
 }
 
 .expSelected {
   background: rgba(255, 179, 71, 1) !important;
   color: #fff !important;
+  padding: 12px 12px !important;
+  border: 1px solid rgba(108,108,123, 0) !important;
 }
 
 .earnSelected {
   background: rgba(220, 107, 229, 1) !important;
   color: #fff !important;
+  padding: 12px 12px !important;
+  border: 1px solid rgba(108,108,123, 0) !important;
 }
 
 .activeSelected {
-  background: radial-gradient(circle, rgba(63, 94, 251, 0.7) 0%, rgba(47, 128, 237, 0.7) 48%) rgba(63, 94, 251, 0.7) 100% !important;
+  background: radial-gradient(circle, rgba(63, 94, 251, 1) 0%, rgba(47, 128, 237, 0.7) 48%) rgba(63, 94, 251, 0.7) 100% !important;
   color: #fff !important;
+  padding: 12px 12px !important;
+  border: 1px solid rgba(108,108,123, 0) !important;
 }
 
 .lockupSelected {
-  background: rgba(244, 220, 10, 0.8) !important;
+  background: rgba(244, 220, 10, 1) !important;
   color: #22252e !important;
+  padding: 12px 12px !important;
+  border: 1px solid rgba(108,108,123, 0) !important;
 }
 
 .stableCoinsSelected,
 .ethBTCSelected,
 .othersSelected {
-  background: rgba(221, 82, 2, 0.911) !important;
+  background: rgba(58, 155, 73, 1) !important;
   color: #fff !important;
+  border: 1px solid rgba(58, 155, 73, 1) !important;
 }
 
 .vaultFilters {
-  width: 100%;
+  width: calc(100% + 10px);
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  margin: 48px 0px 24px 0px;
+  margin: 60px 0px 0px 0px;
+  background: #111729;
+  position: sticky;
+  top: 60px;
+  margin-left: -10px;
+  padding: 10px 0;
+  z-index: 9;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  border-bottom: 1px solid rgba(108,108,123, 0.2)
+}
+
+.vaultFiltersInside {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 48px;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 0 !important;
+  box-shadow: none !important;
 }
 
 .type {
@@ -204,28 +233,40 @@
 }
 
 .layoutToggleButton {
-  max-width: 50px;
-  padding: 16px !important;
+  padding: 8px !important;
+  margin: 5px !important;
+  border-radius: 0 !important;
 }
 
 .layoutToggleButtons {
-  width: 112px;
+  width: auto;
+  border: 1px solid rgba(108,108,123, 0.2);
+  border-radius: 50px !important;
+}
+
+.layoutToggleButton:hover, {
+  background: none !important;
 }
 
 .vaultsTable {
   display: flex;
   flex-direction: column;
   flex: 1;
-  border: 1px solid rgba(128, 128, 128, 0.25);
+  border: 1px solid rgba(108,108,123, 0.25);
   border-radius: 10px;
 }
 
 .vaultRow {
   display: flex;
   align-items: center;
-  padding: 24px 24px;
-  border-bottom: 1px solid rgba(128, 128, 128, 0.25);
+  padding: 18px 24px;
+  border-bottom: 1px solid rgba(108,108,123, 0.2);
   flex: 1;
+}
+
+.tablehead th {
+  padding: 20px 30px !important;
+  border-bottom: 1px solid rgba(108,108,123, 0.2);
 }
 
 .vaultTitleCell {
@@ -258,24 +299,42 @@
 }
 
 .overviewContainer {
-  padding: 20px 25px;
+  padding: 35px 40px;
+  padding-bottom: 25px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  border: 1px solid rgba(128, 128, 128, 0.25);
+  border: 1px solid rgba(108,108,123, 0.25);
   border-radius: 10px;
 }
 
+.overviewContainer2 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  position: relative;
+  width: calc(100% + 10px);
+  left: -10px;
+  padding: 45px 10px;
+  padding-left: 70px;
+  z-index: 9;
+  top: 60px;
+  border-bottom: 1px solid rgba(108,108,123, 0.2);
+  border-radius: 0px !important;
+}
+
 .overviewTopPerformersContainer {
-  margin-top: 20px;
+  margin: 48px 0;
 }
 
 .separator {
-  border-right: 1px solid rgba(128, 128, 128, 0.25);
+  border-right: 1px solid rgba(108,108,123, 0.15);
   height: 100px;
   margin-right: 48px;
   margin-left: 48px;
+  display: none;
 }
 
 .overviewCard {
@@ -285,7 +344,20 @@
   flex: 1;
 }
 
+.overviewCard h2 {
+  color: rgba(108,108,123, 0.9);
+  background: rgba(108,108,123, 0.1);
+  margin-bottom: 6px;
+  padding: 4px 12px;
+  text-transform: uppercase;
+  font-size: 12px !important;
+  border-radius: 25px;
+  text-align: center;
+}
+
 .headAmount {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !important;
+  font-weight: 700 !important;
 }
 
 .tooltipContainer {
@@ -324,6 +396,11 @@
   .portfolioOutline {
     margin-right: 12px;
   }
+  .vaultTypeButtons {
+    width: 480px;
+    padding-bottom: 12px;
+    padding-top: 12px;
+  }
 }
 
 @media screen and (max-width: 1200px) {
@@ -335,12 +412,52 @@
     padding: 0px;
     margin: 0;
   }
+  .overviewTopPerformersContainer {
+    margin: 10px 0 48px 0;
+  }
+
+  .overviewContainer2 {
+    width: calc(100% + 10px);
+    left: -10px;
+    padding: 45px 10px;
+    padding-left: 70px;
+    z-index: 9;
+    top: 0px;
+    border-top: 1px solid rgba(108,108,123, 0.2);
+    border-bottom: 1px solid rgba(108,108,123, 0.2);
+    border-radius: 0px !important;
+  }
+
+  .vaultFilters {
+    width: calc(100% + 10px);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0px 0px 0px 0px;
+    background: #111729;
+    position: sticky;
+    top: 0px;
+  }
+
+  .vaultTypeButtons {
+    width: 480px;
+    padding-bottom: 12px;
+    padding-top: 12px;
+  }
+
   .vaultTypeButton {
-    margin: 0px 3px !important;
+    border: 0px !important;
+    padding: 5px 12px !important;
+    border-radius: 10px !important;
+    margin-right: 18px !important;
+    line-height: 1.167 !important;
+    text-transform: none !important;
   }
 }
 
 @media screen and (max-width: 1000px) {
+
   .overviewContainer {
     padding: 24px;
     flex-direction: column;
@@ -348,7 +465,7 @@
     justify-content: flex-start;
   }
   .separator {
-    border-bottom: 1px solid rgba(128, 128, 128, 0.25);
+    border-bottom: 1px solid rgba(108,108,123, 0.25);
     width: calc(100%);
     margin: 12px 0px 12px 0px;
     height: 0px;
@@ -375,7 +492,7 @@
     display: none;
   }
   .vaultTypeButtons {
-    width: 100%;
+    max-width: 100%;
     padding-bottom: 12px;
     padding-top: 12px;
   }

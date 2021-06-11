@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+ import React, { useState, useEffect, useCallback } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Layout from '../../../components/layout/layout.js';
@@ -141,16 +141,16 @@ function Vault(props) {
           })}
         </Paper>
         <div className={classes.vaultInfo}>
-          <div className={classes.cardSeparation}>
+          <div>
             <VaultActionCard vault={vault} />
           </div>
-          <div className={classes.borderedSection}>
+          <Paper elevation={0} className={classes.borderedSection}>
             <div className={classes.cardSeparation}>
               {account && account.address && <VaultGrowthNumbers vault={vault} />}
               {vaultType !== 'Lockup' && <VaultPerformanceGraph vault={vault} />}
               {vaultType === 'Lockup' && <VaultLockupNotice vault={vault} account={account} />}
             </div>
-          </div>
+          </Paper>
         </div>
         <div className={classes.vaultTransactionsContainer}>
           {account && account.address && vaultType !== 'Earn' && vaultType !== 'Lockup' && <VaultTransactions vault={vault} />}

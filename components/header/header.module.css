@@ -3,8 +3,53 @@
   justify-content: flex-end;
   align-items: center;
   flex-wrap: wrap;
-  padding: 24px 48px;
-  min-height: 120px;
+  padding: 0 10px;
+  min-height: 60px;
+  /* background-color: rgba(0,0,0, 0);
+  background-color: #070D1F; */
+  margin-left: -10px;
+  position: fixed;
+  top: 0;
+  z-index: 10;
+  width: calc(100% - 170px);
+  border: 0;
+  border-radius: 0 !important;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.2) !important;
+}
+
+.intro {
+  background-image: linear-gradient(-20deg, #2b5876 0%, #4e4376 100%);
+  color: #FFF !important;
+}
+
+.aboutmodal dialog {
+  border: 10px solid red;
+}
+
+.abouttext {
+  background: none !important;
+  margin-top: 20px !important;
+  font-size: 14px !important;
+  line-height: 1.5em !important;
+}
+
+.abouttext a {
+  color: #374DFA !important;
+}
+
+.abouttitle {
+  background: none !important;
+  margin-bottom: 20px !important;
+  font-size: 16px !important;
+  margin: 0 !important;
+}
+
+.instantSearch {
+  position: absolute;
+  left: 10px;
+  border-right: 1px solid rgba(128, 128, 128, 0.2);
+  padding-right: 15px;
+  height: 100%;
 }
 
 .accountButton {
@@ -12,11 +57,21 @@
   align-items: center;
   margin-left: 24px !important;
   min-height: 40px;
+  background-color: rgba(0,0,0,0) !important;
+  border: 1px solid rgba(108,108,123, 0.2) !important;
+  border-radius: 60px !important;
+  /* color: #FFF !important; */
+}
+
+.accountButton {
+  font-weight: 700 !important;
+  font-size: 12px !important;
+  margin-left: 14px !important;
 }
 
 .accountIcon {
-  width: 30px;
-  height: 30px;
+  width: 20px;
+  height: 20px;
   background-size: 100%;
   margin-right: 12px;
 }
@@ -42,12 +97,24 @@
 }
 
 .switchIcon {
-  font-size: 1.5rem !important;
-  margin-top: 0.2rem;
+  font-size: 1.2rem !important;
+  margin-top: 0.35rem;
+  color: rgba(108,108,123, 1);
+}
+
+.switchIcon:hover {
+  background: none !important;
 }
 
 .backButton {
+  width: 40px;
   flex: 1;
+  top: 170px;
+  left: 5px;
+  position: absolute;
+  z-index: 0;
+  color: white !important;
+  border-radius: 60px;
 }
 
 .chainInvalidError {

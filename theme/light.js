@@ -8,11 +8,8 @@ const theme = createMuiTheme({
   palette: {
     ...coreTheme.palette,
     background: {
-      default: "#fff",
-      paper: "#F8F9FE"
-    },
-    accountButton: {
-      default: "#EFEFEF"
+      default: "#F0F2F5",
+      paper: "#ffffff"
     },
     type: "light"
   },
@@ -33,6 +30,11 @@ const theme = createMuiTheme({
       },
       action: {
         marginRight: "0px"
+      }
+    },
+    headerContainer: {
+      root: {
+        backgroundColor: "#FF00aa"
       }
     },
     MuiTooltip: {

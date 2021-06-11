@@ -430,7 +430,7 @@ export default function Deposit({ vault }) {
           {(amount === '' ||
             BigNumber(currentToken.allowance).gte(amount) ||
             currentToken.address.toLowerCase() !== vault.tokenMetadata.address.toLowerCase()) && (
-            <Button fullWidth disableElevation variant="contained" color="primary" size="large" onClick={onDeposit} disabled={loading || depositDisabled}>
+            <Button fullWidth disableElevation variant="contained" color="secondary" size="large" onClick={onDeposit} disabled={loading || depositDisabled}>
               <Typography variant="h5" className={ classes.flexInline }>
                 {loading ? (
                   <>

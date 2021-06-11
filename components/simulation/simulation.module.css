@@ -1,6 +1,9 @@
 .simulationContainer {
   margin-bottom: 20px;
-  margin-top: -40px;
+  margin-top: -20px;
+  background: rgba(108,108,123, 0.1) !important;
+  border: 1px solid rgba(108,108,123, 0.1) !important;
+  box-shadow: none !important;
 }
 
 .simulationCard {
@@ -22,6 +25,11 @@
 }
 
 .title {
-  padding-left: 12px;
-  padding-bottom: 12px;
+  width: calc(100% + 32px);
+  padding: 12px;
+  background-image: linear-gradient(-20deg, #2b5876 0%, #4e4376 100%);
+  position: relative;
+  top: -16px;
+  left: -16px;
+  color: #FFF !important;
 }

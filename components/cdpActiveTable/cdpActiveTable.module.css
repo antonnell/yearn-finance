@@ -27,7 +27,7 @@
   padding: 36px;
   width: 100%;
   flex-wrap: wrap;
-  border-bottom: 1px solid rgba(128, 128, 128, 0.32);
+  border-bottom: 1px solid rgba(108, 108, 123, 0.2);
   background: radial-gradient(circle, rgba(63,94,251,0.7) 0%, rgba(47,128,237,0.7) 48%) rgba(63,94,251,0.7) 100%;
 }
 
@@ -39,7 +39,7 @@
   padding: 36px;
   width: 100%;
   flex-wrap: wrap;
-  border-bottom: 1px solid rgba(128, 128, 128, 0.32);
+  border-bottom: 1px solid rgba(108, 108, 123, 0.2);
   background: #dc3545;
 }
 
