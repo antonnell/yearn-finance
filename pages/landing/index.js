@@ -146,22 +146,22 @@ function Landing({ changeTheme }) {
               </Paper>
             </a>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={3} onClick={() => { window.open('https://multichain.xyz', '_blank') }}>
             <Paper elevation={0}  className={classes.sublinks}>
               <Typography variant="h2">Multichain</Typography>
             </Paper>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={3} onClick={() => { window.open('https://chainlist.org/', '_blank') }}>
             <Paper elevation={0}  className={classes.sublinks}>
               <Typography variant="h2">Chainlist</Typography>
             </Paper>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={3} onClick={() => { window.open('https://feeds.sushiquote.finance/', '_blank') }}>
             <Paper elevation={0}  className={classes.sublinks}>
               <Typography variant="h2">Feeds</Typography>
             </Paper>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={3} onClick={() => { window.open('https://ve-token-voting.vercel.app/', '_blank') }}>
             <Paper elevation={0}  className={classes.sublinks}>
               <Typography variant="h2">veAssets</Typography>
             </Paper>
