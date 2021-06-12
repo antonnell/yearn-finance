@@ -88,7 +88,7 @@ function CDP({ changeTheme }) {
     const status = getStatus(cdps);
     return (
       <div className={classes.fixtop}>
-        <Paper elevation={0} className={classes.overviewContainer}>
+        <Paper elevation={0} className={classes.overviewContainer2}>
           <div className={classes.overviewCard}>
             <CDPSuppliedGraph assets={cdps} />
             <Tooltip title={ cdpSupplied === 'Unknown' ? 'Unable to calculate the supplied amount. This is most likely because the price oracle is out of date.' : 'Dollar value of the assets that you have supplied to the protocol' }>

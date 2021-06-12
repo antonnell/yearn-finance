@@ -16,7 +16,7 @@
 }
 
 .fixtop {
-  margin-top: 208px;
+  margin-top: 260px;
 }
 
 .cdpFilters {
@@ -144,6 +144,10 @@
     top: 0px;
   }
 
+  .fixtop {
+    margin-top: 200px;
+  }
+
 }
 
 @media screen and (max-width: 1000px) {
@@ -167,5 +171,9 @@
   }
   .fillerText {
     flex: 1;
+  }
+
+  .fixtop {
+    margin-top: 357px;
   }
 }
