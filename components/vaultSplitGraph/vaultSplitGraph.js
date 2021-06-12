@@ -52,8 +52,8 @@ export default function VaultSplitGraph({ vaults }) {
 
   const COLORS = [
     "#FFE8B0",
-    "#B4E4FF",
-    "#B4C8FF",
+    "#9748c0",
+    "#4bb46b",
     "#C9FFCD",
     "#AAEBFF",
     "#004BBC",

@@ -69,7 +69,7 @@ export default function VaultCard({ vault, account }) {
                 {!(vault && vault.balance) && <Skeleton />}
                 {vault && vault.balanceInToken && formatCurrency(vault.balanceInToken) + ' ' + vault.displayName}
               </Typography>
-              <Typography variant="h2">Balance</Typography>
+              <Typography variant="h2" className={classes.subinfofield}>Balance</Typography>
             </div>
           )}
           {!activeVault && account && account.address && (
@@ -81,14 +81,14 @@ export default function VaultCard({ vault, account }) {
                   formatCurrency(vault.tokenMetadata.balance) + ' ' + vault.tokenMetadata.displayName
                 )}
               </Typography>
-              <Typography variant="h2">Available to deposit</Typography>
+              <Typography variant="h2" className={classes.subinfofield}>Available to deposit</Typography>
             </div>
           )}
           <div className={classes.vaultInfoFieldSlim}>
             <Typography variant="h2" className={classes.fontWeightBold}>
               {!vault.apy ? <Skeleton /> : vault.apy.recommended ? (vault.apy.recommended === 'New' ? 'New' : (BigNumber(vault.apy.recommended).times(100).toFixed(2) + '%')) : 'Unknown'}
             </Typography>
-            <Typography variant="h2">Yearly Growth</Typography>
+            <Typography variant="h2" className={classes.subinfofield}>Yearly Growth</Typography>
           </div>
         </div>
       </Paper>

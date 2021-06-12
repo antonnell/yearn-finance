@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="99" height="99" viewBox="0 0 99 99">
+  <g id="icon_ui_cta-cdp" transform="translate(0.757 0.505)">
+    <circle id="Ellipse_48" data-name="Ellipse 48" cx="49" cy="49" r="49" transform="translate(-0.257 -0.005)" fill="#e56b73" stroke="#e56b73" stroke-linecap="square" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1"/>
+    <g id="Group_664" data-name="Group 664" transform="translate(29.243 29.495)">
+      <rect id="Rectangle_189" data-name="Rectangle 189" width="40" height="40" rx="10" fill="none" stroke="#fff" stroke-linecap="square" stroke-miterlimit="10" stroke-width="3"/>
+      <line id="Line_60" data-name="Line 60" y2="20" transform="translate(20 10)" fill="none" stroke="#fff" stroke-linecap="square" stroke-miterlimit="10" stroke-width="3"/>
+      <line id="Line_61" data-name="Line 61" x1="20" transform="translate(10 20)" fill="none" stroke="#fff" stroke-linecap="square" stroke-miterlimit="10" stroke-width="3"/>
+    </g>
+  </g>
+</svg>

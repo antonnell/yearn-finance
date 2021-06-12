@@ -50,7 +50,7 @@ export default function LendSupplyGraph({ assets }) {
     });
 
   const COLORS = [
-    "#FFE8B0",
+    "#dfcd79",
     "#B4E4FF",
     "#B4C8FF",
     "#C9FFCD",

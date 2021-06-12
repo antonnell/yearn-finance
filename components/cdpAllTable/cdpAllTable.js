@@ -179,8 +179,8 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     alignItems: "flex-start",
     justifyContent: "space-between",
-    borderBottom: "1px solid rgba(128, 128, 128, 0.32)",
-    borderTop: "1px solid rgba(128, 128, 128, 0.25)",
+    borderBottom: "1px solid rgba(108, 108, 123, 0.2)",
+    borderTop: "1px solid rgba(108, 108, 123, 0.25)",
     background: theme.palette.type === "dark" ? "#22252E" : "#fff"
   },
   assetInfo: {
@@ -191,7 +191,7 @@ const useStyles = makeStyles(theme => ({
     padding: "24px",
     width: "100%",
     flexWrap: "wrap",
-    borderBottom: "1px solid rgba(128, 128, 128, 0.32)",
+    borderBottom: "1px solid rgba(108, 108, 123, 0.2)",
     background:
       "radial-gradient(circle, rgba(63,94,251,0.7) 0%, rgba(47,128,237,0.7) 48%) rgba(63,94,251,0.7) 100%"
   },
@@ -203,7 +203,7 @@ const useStyles = makeStyles(theme => ({
     padding: "24px",
     width: "100%",
     flexWrap: "wrap",
-    borderBottom: "1px solid rgba(128, 128, 128, 0.32)",
+    borderBottom: "1px solid rgba(108, 108, 123, 0.2)",
     background: "#dc3545"
   },
   infoField: {

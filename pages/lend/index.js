@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { Typography, Paper, Tooltip, TextField, InputAdornment } from '@material-ui/core';
+import { Typography, Paper, Tooltip, TextField, InputAdornment, Grid } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import Skeleton from '@material-ui/lab/Skeleton';
 import BigNumber from 'bignumber.js';
@@ -272,7 +272,7 @@ function Lend({ changeTheme }) {
       onRequestSort(event, property);
     };
     return (
-      <TableHead>
+      <TableHead className={classes.tablehead}>
         <TableRow>
           {headers.map(headCell => (
             <TableCell
@@ -333,57 +333,64 @@ function Lend({ changeTheme }) {
       <Head>
         <title>Lend</title>
       </Head>
+      <Paper elevation={0} className={classes.overviewContainer2}>
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={4}>
+            <div className={classes.overviewCard}>
+              <LendSupplyGraph assets={supplyAssets} />
+              <div>
+                <Typography variant="h2">Total Supplied</Typography>
+                <Typography variant="h1" className={classes.headAmount}>
+                  {lendingSupply === null ? (
+                    <Skeleton style={{ minWidth: '200px ' }} />
+                  ) : (
+                    `$ ${formatCurrency(position && position.length >= 3 ? position[0] / 1000000 : 0)}`
+                  )}
+                </Typography>
+                <Tooltip title={renderSupplyTootip()}>
+                  <Typography>{!lendingSupplyAPY ? <Skeleton style={{ minWidth: '200px ' }} /> : `${formatCurrency(lendingSupplyAPY)} % Average APY`}</Typography>
+                </Tooltip>
+              </div>
+            </div>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <div className={classes.overviewCard}>
+              <Tooltip title="View transaction">
+                <LendBorrowGraph assets={borrowAssets} />
+              </Tooltip>
+              <div>
+                <Typography variant="h2">Total Borrowed</Typography>
+                <Typography variant="h1" className={classes.headAmount}>
+                  {lendingBorrow === null ? (
+                    <Skeleton style={{ minWidth: '200px ' }} />
+                  ) : (
+                    `$ ${formatCurrency(position && position.length >= 3 ? position[1] / 1000000 : 0)}`
+                  )}
+                </Typography>
+                <Tooltip title={renderBorrowTooltip()}>
+                  <Typography>{!lendingBorrowAPY ? <Skeleton style={{ minWidth: '200px ' }} /> : `${formatCurrency(lendingBorrowAPY)} % Average APY`}</Typography>
+                </Tooltip>
+              </div>
+            </div>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <div className={classes.overviewCard}>
+              <div>
+                <Typography variant="h2">Borrow Limit Used</Typography>
+                <Typography variant="h1" className={classes.headAmount}>
+                  {lendingBorrowLimit === null ? (
+                    <Skeleton style={{ minWidth: '200px ' }} />
+                  ) : (
+                    `${formatCurrency(position && position.length >= 3 ? position[3] / 100 : 0)} %`
+                  )}
+                </Typography>
+              </div>
+            </div>
+          </Grid>
+        </Grid>
+      </Paper>
       <div className={classes.lendingContainer}>
-        <Paper elevation={0} className={classes.lendingOverviewContainer}>
-          <div className={classes.overviewCard}>
-            <LendSupplyGraph assets={supplyAssets} />
-            <div>
-              <Typography variant="h2">Total Supplied</Typography>
-              <Typography variant="h1" className={classes.headAmount}>
-                {lendingSupply === null ? (
-                  <Skeleton style={{ minWidth: '200px ' }} />
-                ) : (
-                  `$ ${formatCurrency(position && position.length >= 3 ? position[0] / 1000000 : 0)}`
-                )}
-              </Typography>
-              <Tooltip title={renderSupplyTootip()}>
-                <Typography>{!lendingSupplyAPY ? <Skeleton style={{ minWidth: '200px ' }} /> : `${formatCurrency(lendingSupplyAPY)} % Average APY`}</Typography>
-              </Tooltip>
-            </div>
-          </div>
-          <div className={classes.separator}></div>
-          <div className={classes.overviewCard}>
-            <Tooltip title="View transaction">
-              <LendBorrowGraph assets={borrowAssets} />
-            </Tooltip>
-            <div>
-              <Typography variant="h2">Total Borrowed</Typography>
-              <Typography variant="h1" className={classes.headAmount}>
-                {lendingBorrow === null ? (
-                  <Skeleton style={{ minWidth: '200px ' }} />
-                ) : (
-                  `$ ${formatCurrency(position && position.length >= 3 ? position[1] / 1000000 : 0)}`
-                )}
-              </Typography>
-              <Tooltip title={renderBorrowTooltip()}>
-                <Typography>{!lendingBorrowAPY ? <Skeleton style={{ minWidth: '200px ' }} /> : `${formatCurrency(lendingBorrowAPY)} % Average APY`}</Typography>
-              </Tooltip>
-            </div>
-          </div>
-          <div className={classes.separator}></div>
-          <div className={classes.overviewCard}>
-            <div>
-              <Typography variant="h2">Borrow Limit Used</Typography>
-              <Typography variant="h1">
-                {lendingBorrowLimit === null ? (
-                  <Skeleton style={{ minWidth: '200px ' }} />
-                ) : (
-                  `${formatCurrency(position && position.length >= 3 ? position[3] / 100 : 0)} %`
-                )}
-              </Typography>
-            </div>
-          </div>
-        </Paper>
+
         {supplyAssets.length > 0 && (
           <React.Fragment>
             <Typography variant="h6" className={classes.tableHeader}>
@@ -424,7 +431,7 @@ function Lend({ changeTheme }) {
             </Paper>
           </React.Fragment>
         )}
-        <div className={classes.lendingFilters}>
+        <Paper className={classes.lendingFilters}>
           <TextField
             className={classes.searchContainer}
             variant="outlined"
@@ -440,7 +447,7 @@ function Lend({ changeTheme }) {
               ),
             }}
           />
-        </div>
+        </Paper>
         <Typography variant="h6" className={classes.tableHeader}>
           All Assets
         </Typography>

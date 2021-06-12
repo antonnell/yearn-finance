@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="99" height="99" viewBox="0 0 99 99">
+  <g id="circle-caret-right" transform="translate(0.757 0.5)">
+    <circle id="Ellipse_39" data-name="Ellipse 39" cx="49" cy="49" r="49" transform="translate(-0.257)" fill="#69e2dc" stroke="#69e2dc" stroke-linecap="square" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1"/>
+    <path id="Path_62" data-name="Path 62" d="M21.549,20.946l11.1,10.795a2.024,2.024,0,0,1-.218,3.087,20.346,20.346,0,0,1-12.378,4.159C8.215,38.986-1.222,29.015.129,17.243A19.839,19.839,0,0,1,18,.1a20.433,20.433,0,0,1,14.513,4.12,2,2,0,0,1,.135,3.026l-11.111,10.8A2.014,2.014,0,0,0,21.549,20.946Z" transform="matrix(1, -0.017, 0.017, 1, 31.243, 30.081)" fill="#fff" fill-rule="evenodd"/>
+  </g>
+</svg>

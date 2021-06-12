@@ -266,7 +266,7 @@ function Stats({ changeTheme }) {
       <Head>
         <title>Stats</title>
       </Head>
-      <Paper elevation={0} className={classes.overviewContainer}>
+      <Paper elevation={0} className={classes.overviewContainer2}>
         <div className={classes.overviewCard}>
           <div>
             <Typography variant="h2">Total Value Locked</Typography>
@@ -275,21 +275,21 @@ function Stats({ changeTheme }) {
             </Typography>
           </div>
         </div>
-        <div className={classes.separator}></div>
+
         <div className={classes.overviewCard}>
           <div>
             <Typography variant="h2">Total Vault Balance</Typography>
             <Typography variant="h1">{!tvl ? <Skeleton style={{ minWidth: '200px ' }} /> : `$ ${formatCurrency(tvl.totalVaultHoldingsUSD, 0)}`}</Typography>
           </div>
         </div>
-        <div className={classes.separator}></div>
+
         <div className={classes.overviewCard}>
           <div>
             <Typography variant="h2">Total Earn Balance</Typography>
             <Typography variant="h1">{!tvl ? <Skeleton style={{ minWidth: '200px ' }} /> : `$ ${formatCurrency(tvl.totalEarnHoldingsUSD, 0)}`}</Typography>
           </div>
         </div>
-        <div className={classes.separator}></div>
+        
         <div className={classes.overviewCard}>
           <div>
             <Typography variant="h2">Total Iron Bank Balance</Typography>

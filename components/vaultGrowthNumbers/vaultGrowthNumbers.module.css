@@ -16,6 +16,10 @@
   padding-bottom: 24px;
 }
 
+.mysubtitle {
+  margin-bottom: 6px !important;
+}
+
 .portfolioGrowthContainer {
   display: flex;
   align-items: center;

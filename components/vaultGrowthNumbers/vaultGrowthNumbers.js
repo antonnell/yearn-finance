@@ -20,7 +20,7 @@ export default function VaultGrowthNumbers({ vault }) {
             <AccountBalanceWalletOutlinedIcon className={classes.growthIcon} />
           </div>
           <div>
-            <Typography variant="subtitle1" color="textSecondary">
+            <Typography className={classes.mysubtitle} variant="subtitle1" color="textSecondary">
               Your Balance
             </Typography>
             <Typography variant="h6">
@@ -40,7 +40,7 @@ export default function VaultGrowthNumbers({ vault }) {
               <TrendingUpIcon className={classes.growthIcon} />
             </div>
             <div>
-              <Typography variant="subtitle1" color="textSecondary">
+              <Typography className={classes.mysubtitle} variant="subtitle1" color="textSecondary">
                 Yearly Growth
               </Typography>
               <Typography variant="h6">
@@ -62,7 +62,7 @@ export default function VaultGrowthNumbers({ vault }) {
               <TrendingUpIcon className={classes.growthIcon} />
             </div>
             <div>
-              <Typography variant="subtitle1" color="textSecondary">
+              <Typography className={classes.mysubtitle} variant="subtitle1" color="textSecondary">
                 Total Locked in Vault
               </Typography>
               <Typography variant="h6">

@@ -9,7 +9,7 @@ export const colors = {
 
 const coreTheme = {
   shape: {
-    borderRadius: "10px"
+    borderRadius: "12px"
   },
   typography: {
     fontFamily: [
@@ -28,7 +28,7 @@ const coreTheme = {
     h1: {
       // Portfolio balance numbers
       fontSize: "32px",
-      fontWeight: 700,
+      fontWeight: 800,
       lineHeight: 1.167,
       ["@media (max-width:576px)"]: {
         // eslint-disable-line no-useless-computed-key
@@ -38,7 +38,7 @@ const coreTheme = {
     h2: {
       // Navigation tabs / section headers
       fontSize: "16px",
-      fontWeight: 500,
+      fontWeight: 700,
       lineHeight: 1.5,
       ["@media (max-width:576px)"]: {
         // eslint-disable-line no-useless-computed-key
@@ -121,7 +121,7 @@ const coreTheme = {
       main: "rgba(0, 0, 0, 0.87)"
     },
     secondary: {
-      main: "#EFEFEF"
+      main: "#FFFFFF"
     },
     error: {
       main: "#dc3545"
@@ -162,7 +162,7 @@ const coreTheme = {
         flex: 1,
         border: "none",
         padding: "0px",
-        borderRadius: "4px !important",
+        borderRadius: "30px !important",
         margin: "0px 6px"
       }
     },
@@ -210,7 +210,7 @@ const coreTheme = {
     },
     MuiTableCell: {
       head: {
-        padding: "36px 24px"
+        padding: "26px 24px"
       },
       body: {
         padding: "12px 24px",

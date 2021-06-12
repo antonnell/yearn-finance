@@ -1,10 +1,11 @@
 .vaultActionContainer {
-  width: 420px;
+  width: 520px;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
   padding: 24px;
   margin-right: 48px;
+  border: 1px solid rgba(108,108,123, 0.2);
 }
 
 .depositContainer {
@@ -16,6 +17,11 @@
   align-items: center;
   justify-content: center;
   margin-top: 48px;
+}
+
+.actionButton button {
+  background: #1b2cbf;
+  color: #FFF;
 }
 
 .scaleContainer {
@@ -81,6 +87,18 @@
 
 .gasExtraPadding {
   padding-top: 24px;
+}
+
+.tabz {
+  background: red;
+  border-bottom: 1px solid rgba(108,108,123,0.2);
+  padding: 5px;
+  border-radius: 12px !important;
+}
+
+.zetab {
+  background-image: linear-gradient(to top, #30cfd0 0%, #330867 100%);
+  border-radius: 6px !important;
 }
 
 @media screen and (max-width: 1400px) {

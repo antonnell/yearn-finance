@@ -5,9 +5,12 @@
   flex-direction: column;
   align-items: center;
   width: 170px;
-  padding: 48px 0px 24px 0px;
+  padding: 24px 0px 24px 0px;
   border-radius: 0px !important;
+  border-right: 1px solid rgba(128,128,128, 0.2);
 }
+
+a.linkz { cursor: pointer !important; }
 
 .navigationHeading {
   display: flex;
@@ -45,12 +48,18 @@
   align-items: center;
   justify-content: space-evenly;
   width: 100%;
+  margin-bottom: 20px;
+}
+
+.socialgrid {
+  text-align: center;
+  padding: 0 45px;
 }
 
 .socialButton {
-  padding: 8px;
-  width: 24px;
-  height: 24px;
+  padding: 0px;
+  width: 20px !important;
+  height: 20px !important;
   background-size: 60%;
   background-repeat: no-repeat;
   background-position: center;
@@ -152,14 +161,14 @@
 }
 
 .navigationOptionSelected {
-  border-left: 6px solid #000;
+  border-left: 6px solid rgba(0, 0, 0, 0);
   border-radius: 0px 8px 8px 0px;
   height: 32px;
   margin-right: 12px;
 }
 
 .navigationOptionSelectedWhite {
-  border-left: 6px solid #fff;
+  border-left: 6px solid rgba(0, 0, 0, 0);
   border-radius: 0px 8px 8px 0px;
   height: 32px;
   margin-right: 12px;
@@ -212,7 +221,7 @@
 }
 
 .yearnLogo {
-  width: 123px !important;
+  width: 95px !important;
   height: 42.3px !important;
 }
 

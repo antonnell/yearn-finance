@@ -1,10 +1,11 @@
 .lendingContainer {
-  height: 100%;
   width: 100%;
+  height: auto;
   display: flex;
   flex-direction: column;
-  padding: 0px 48px;
-  padding-bottom: 48px;
+  padding: 0px 48px 48px 48px;
+  position: relative;
+  top: 0 !important;
 }
 
 .lendingFilters {
@@ -14,13 +15,26 @@
   align-items: center;
   justify-content: space-between;
   margin: 48px 0px 0px 0px;
+  position: sticky;
+  top: 80px;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+  z-index: 8;
+}
+
+.searchContainer {
+  border-radius: 12px !important;
+}
+
+.MuiInputBase-input {
+  border: 2px solid red !important;
 }
 
 .lendingTable {
   display: flex;
   flex-direction: column;
   flex: 1;
-  border: 1px solid rgba(128, 128, 128, 0.25);
+  border: 1px solid rgba(108,108,123, 0.25);
   border-radius: 10px;
   width: 100%;
 }
@@ -29,8 +43,13 @@
   display: flex;
   align-items: center;
   padding: 24px 24px;
-  border-bottom: 1px solid rgba(128, 128, 128, 0.25);
+  border-bottom: 1px solid rgba(108,108,123, 0.25);
   flex: 1;
+}
+
+.tablehead th {
+  padding: 20px 30px !important;
+  border-bottom: 1px solid rgba(108,108,123, 0.2);
 }
 
 .lendTitleCell {
@@ -63,9 +82,9 @@
 }
 
 .tableHeader {
-  margin-top: 48px !important;
-  margin-bottom: 12px !important;
-  margin-left: 24px !important;
+  margin-top: 40px !important;
+  margin-bottom: 30px !important;
+  margin-left: 0px !important;
 }
 
 .lendingOverviewContainer {
@@ -74,12 +93,31 @@
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  border: 1px solid rgba(128, 128, 128, 0.25);
+  border: 1px solid rgba(108,108,123, 0.25);
   border-radius: 10px;
 }
 
+.overviewContainer2 {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  position: relative;
+  width: calc(100% + 10px);
+  left: -10px;
+  padding: 45px 10px;
+  padding-left: 70px;
+  z-index: 9;
+  top: 60px;
+  background-image: linear-gradient(15deg, #13547a 0%, #80d0c7 100%);
+  /* border-bottom: 1px solid rgba(108,108,123, 0.2); */
+  border-radius: 0px !important;
+  margin-bottom: 60px;
+  color: #FFF !important;
+}
+
 .separator {
-  border-right: 1px solid rgba(128, 128, 128, 0.25);
+  border-right: 1px solid rgba(108,108,123, 0.25);
   height: 100px;
   margin-right: 48px;
   margin-left: 48px;
@@ -92,8 +130,21 @@
   flex: 1;
 }
 
+.overviewCard h2 {
+  color: rgba(0,0,0, 0.5) !important;
+  margin-bottom: 6px;
+  margin-top: 6px;
+  padding: 0;
+  text-transform: uppercase;
+  font-size: 12px !important;
+  text-align: left;
+}
+
 .headAmount {
-  padding-bottom: 12px;
+  padding-bottom: 10px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !important;
+  font-weight: 700 !important;
+  color: #FFF !important;
 }
 
 .tooltipContainer {
@@ -138,6 +189,13 @@
   }
 }
 
+@media screen and (max-width: 1200px) {
+  .overviewContainer2 {
+    top: 0px;
+    margin-bottom: 0px;
+  }
+}
+
 @media screen and (max-width: 1000px) {
   .lendingOverviewContainer {
     padding: 24px;
@@ -146,7 +204,7 @@
     justify-content: flex-start;
   }
   .separator {
-    border-bottom: 1px solid rgba(128, 128, 128, 0.25);
+    border-bottom: 1px solid rgba(108,108,123, 0.25);
     width: calc(100%);
     margin: 12px 0px 12px 0px;
     height: 0px;
@@ -159,7 +217,7 @@
     margin-left: 24px !important;
   }
   .lendingTable {
-    border: 1px solid rgba(128, 128, 128, 0.25);
+    border: 1px solid rgba(108,108,123, 0.25);
   }
   .lendingRow {
     padding: 12px 6px;

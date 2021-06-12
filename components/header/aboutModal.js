@@ -8,16 +8,17 @@ import MuiDialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
+import classes from './header.module.css';
 
 const styles = (theme) => ({
   root: {
     margin: 0,
-    padding: theme.spacing(2),
+    padding: theme.spacing(4),
   },
   closeButton: {
     position: 'absolute',
     right: theme.spacing(1),
-    top: theme.spacing(1),
+    top: theme.spacing(2),
     color: theme.palette.grey[500],
   },
 });
@@ -38,7 +39,7 @@ const DialogTitle = withStyles(styles)((props) => {
 
 const DialogContent = withStyles((theme) => ({
   root: {
-    padding: theme.spacing(2),
+    padding: theme.spacing(5),
   },
 }))(MuiDialogContent);
 
@@ -52,16 +53,16 @@ const DialogActions = withStyles((theme) => ({
 const NewbiePrimer = () => {
   return (
     <>
-      <h3>Here is a primer if you are completely new to the crypto and DeFi world:</h3>
-      <Typography gutterBottom>
+      <h3 className={classes.abouttitle}>Here is a primer if you are completely new to the crypto and DeFi world:</h3>
+      <Typography className={classes.abouttext} gutterBottom>
         Simply put, Yearn's goal is to make it as easy as possible to make money on your crypto money without any effort. You just deposit your crypto assets in
         one of our vaults and you don't need to think about it anymore. Think of vaults as fancy saving accounts.
       </Typography>
-      <Typography gutterBottom>
+      <Typography className={classes.abouttext} gutterBottom>
         While the old way to make money in crypto was to just "hodl" until you hit your price target, with Yearn, you get to make interests while you hodl, even
         better, some of our vaults accepts stable coins pegged to the dollar or euro so you aren't subject to downturns in the market.
       </Typography>
-      <Typography gutterBottom>
+      <Typography className={classes.abouttext} gutterBottom>
         If you are completely new to crypto, you first need to buy crypto money with your regular fiat money on a centralized exchange such as Coinbase or
         Binance. You then need to create an ethereum wallet by installing{' '}
         <a href="https://metamask.io/" target="_blank">
@@ -76,8 +77,8 @@ const NewbiePrimer = () => {
 const ProPrimer = () => {
   return (
     <>
-      <h3>Already familiar with DeFi? Here's a primer for you:</h3>
-      <Typography gutterBottom>
+      <h3 className={classes.abouttitle}>Already familiar with DeFi? Here's a primer for you:</h3>
+      <Typography className={classes.abouttext} gutterBottom>
         Yearn Finance is a suite of products in Decentralized Finance (DeFi) that provides lending aggregation, yield generation, and insurance on the Ethereum
         blockchain. The protocol is maintained by various independent developers and is governed by YFI holders.
       </Typography>
