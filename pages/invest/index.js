@@ -17,12 +17,7 @@ import BigNumber from 'bignumber.js';
 import Popover from '@material-ui/core/Popover';
 import HelpIcon from '@material-ui/icons/Help';
 
-import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
-import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
-import TrendingUpIcon from '@material-ui/icons/TrendingUp';
-import StarIcon from '@material-ui/icons/Star';
 import SearchIcon from '@material-ui/icons/Search';
-import ListAltIcon from '@material-ui/icons/ListAlt';
 import AppsIcon from '@material-ui/icons/Apps';
 import ListIcon from '@material-ui/icons/List';
 import Table from '@material-ui/core/Table';
