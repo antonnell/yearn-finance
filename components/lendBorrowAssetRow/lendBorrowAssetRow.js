@@ -30,6 +30,8 @@ import {
   ENABLE_COLLATERAL_LEND_RETURNED,
   DISABLE_COLLATERAL_LEND,
   DISABLE_COLLATERAL_LEND_RETURNED,
+  LENDING_BORROW_RETURNED,
+  LENDING_REPAY_RETURNED
 } from "../../stores/constants";
 
 import classes from "./lendBorrowAssetRow.module.css";
