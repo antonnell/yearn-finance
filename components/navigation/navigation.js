@@ -468,7 +468,7 @@ function Navigation(props) {
         <a onClick={() => router.push('/landing')} className={classes.linkz}>
         <YearnIcon
           color={darkMode ? "white" : "rgb(33, 37, 41)"}
-          altColor={darkMode ? "rgb(33, 37, 41)" : "white"}
+          altColor={darkMode ? "rgb(255, 255, 255)" : "white"}
           width="123px"
           height="42.3px"
           className={classes.yearnLogo}
@@ -491,9 +491,13 @@ function Navigation(props) {
               <CloseIcon fontSize={"large"} />
             </Button>
           </div>
-          <div className={classes.navigationHeading}>
-            <img src="/logo-stacked.svg" width="123px" height="42.3px" />
-          </div>
+          <YearnIcon
+            color={darkMode ? "white" : "rgb(33, 37, 41)"}
+            altColor={darkMode ? "rgb(255, 255, 255)" : "white"}
+            width="123px"
+            height="42.3px"
+            className={classes.yearnLogo}
+          />
           <div className={classes.navigationContentNavs}>{renderNavs()}</div>
           <div className={classes.headerThings}>
             <div className={classes.themeSelectContainer}>

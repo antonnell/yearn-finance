@@ -90,7 +90,7 @@
   width: fit-content;
   border-radius: 12px;
   padding: 3px 12px;
-  background: rgba(229, 107, 115, 1);
+  background: #BD1550;
   color: #FFFFFF;
   margin-top: 10px;
 }
@@ -99,7 +99,7 @@
   width: fit-content;
   border-radius: 22px;
   padding: 5px 12px;
-  background: #1a2cbf;
+  background: #0048FF;
   color: #FFFFFF;
   margin-top: 10px;
 }
@@ -108,16 +108,16 @@
   width: fit-content;
   border-radius: 22px;
   padding: 5px 12px;
-  border: 1px solid rgba(255, 179, 71, 1);
-  color: rgba(255, 179, 71, 1);
+  background: #703D6F;
+  color: #FFF;
 }
 
 .vaultEarnVersionContainer {
   width: fit-content;
   border-radius: 22px;
   padding: 5px 12px;
-  background: rgba(220, 107, 229, 1);
-  color: #FFFFFF;
+  background: #77CCA4;
+  color: #000;
   margin-top: 10px;
 }
 
@@ -125,7 +125,7 @@
   width: fit-content;
   border-radius: 22px;
   padding: 5px 12px;
-  background: rgba(244, 220, 10, 1);
+  background: #FFD000;
   color: #000000;
   margin-top: 10px;
 }

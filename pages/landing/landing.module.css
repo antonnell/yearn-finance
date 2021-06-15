@@ -42,7 +42,7 @@ a.linkz { cursor: pointer !important; }
   box-shadow: none !important;
   border: 1px solid rgba(108,108,123, 0);
   height: 100%;
-  background-image: linear-gradient(-20deg, #2b5876 0%, #4e4376 100%);
+  background-image: linear-gradient(to top, #1c46f5 0%, #0005d3 100%);
 }
 
 .intro h1 {

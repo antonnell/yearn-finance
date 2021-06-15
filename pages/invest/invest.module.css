@@ -5,11 +5,13 @@
 
 .investContainer {
   height: 100%;
-  padding: 0px 48px;
+  padding: 0px 30px 0px 20px;
   display: flex;
   flex-direction: column;
 }
-
+.overviewTopPerformersContainer {
+  margin: 30px 0;
+}
 .growthanimclass {
   transform: scale(0.65);
   margin-top: 3px;
@@ -135,14 +137,29 @@
   color: rgba(108,108,123, 0.8) !important;
   padding: 12px 12px !important;
 }
-
+.filtericon {
+  color: #1c47f5;
+  margin-right: 8px;
+}
 .stableCoins,
 .ethbtc,
 .others {
   border: 1px solid rgba(58, 155, 73, 1) !important;
   color: rgba(58, 155, 73, 1) !important;
 }
+.stableCoinsSelected,
+.ethBTCSelected,
+.othersSelected {
+  background: #1c47f5 !important;
+  color: #fff !important;
+  border: 1px solid #1c47f5 !important;
+}
 
+.stableCoinsSelected .filtericon,
+.ethBTCSelected .filtericon,
+.othersSelected .filtericon {
+  color: #FFF !important;
+}
 .v1Selected {
   background: rgba(229, 107, 115, 1) !important;
   color: #fff !important;
@@ -182,15 +199,7 @@
   background: rgba(244, 220, 10, 1) !important;
   color: #22252e !important;
   padding: 12px 12px !important;
-  border: 1px solid rgba(108,108,123, 0) !important;
-}
-
-.stableCoinsSelected,
-.ethBTCSelected,
-.othersSelected {
-  background: rgba(58, 155, 73, 1) !important;
-  color: #fff !important;
-  border: 1px solid rgba(58, 155, 73, 1) !important;
+  border: 2px solid rgba(108, 108, 123, 0.15) !important;
 }
 
 .vaultFilters {
@@ -317,16 +326,11 @@
   position: relative;
   width: calc(100% + 10px);
   left: -10px;
-  padding: 45px 10px;
-  padding-left: 70px;
+  padding: 30px 70px 30px 70px;
   z-index: 9;
   top: 60px;
   border-bottom: 1px solid rgba(108,108,123, 0.2);
   border-radius: 0px !important;
-}
-
-.overviewTopPerformersContainer {
-  margin: 48px 0;
 }
 
 .separator {
@@ -337,15 +341,16 @@
   display: none;
 }
 
-.overviewCard {
+.overviewCard,
+.overviewCardLast {
   display: flex;
   align-items: center;
   justify-content: flex-start;
   flex: 1;
 }
 
-.overviewCard h2 {
-  color: rgba(108,108,123, 0.9);
+.overviewCard h2,
+.overviewCardLast h2 {  color: rgba(108,108,123, 0.9);
   background: rgba(108,108,123, 0.1);
   margin-bottom: 6px;
   padding: 4px 12px;
@@ -401,7 +406,9 @@
     padding-bottom: 12px;
     padding-top: 12px;
   }
-}
+  .overviewTopPerformersContainer {
+    margin: 30px 0 30px 0;
+  }
 
 @media screen and (max-width: 1200px) {
   .investContainer {
@@ -413,7 +420,7 @@
     margin: 0;
   }
   .overviewTopPerformersContainer {
-    margin: 10px 0 48px 0;
+    margin: 10px 0 30px 0;
   }
 
   .overviewContainer2 {
@@ -470,7 +477,8 @@
     margin: 12px 0px 12px 0px;
     height: 0px;
   }
-  .overviewCard {
+  .overviewCard,
+  .overviewCardLast {
     padding-bottom: 12px;
   }
   .searchContainer {
@@ -480,7 +488,7 @@
     display: none;
   }
   .investContainer {
-    padding: 12px;
+    padding: 20px;
   }
   .portfolioBalanceCombined {
     padding: 0px;
@@ -515,9 +523,35 @@
     display: none;
   }
 }
+@media screen and (max-width: 960px) {
 
+  .overviewContainer2 {
+    padding: 30px 10px;
+    padding-left: 70px;
+  }
+
+  .overviewText {
+    /* background: skyblue; */
+    margin-left: 20px;
+  }
+
+  .overviewCard,
+  .overviewCardLast {
+    /* background: red !important; */
+    margin: 0;
+    margin-right: 48px;
+    padding: 0 0 25px 0;
+    border-bottom: 1px solid rgba(108,108,123,0.2);
+  }
+
+  .overviewCardLast {
+    border-bottom: 1px solid rgba(108,108,123,0);
+    padding: 0;
+  }
+}
 .topVaultPerformersLink {
   cursor: pointer;
   font-size: 18px;
   font-weight: bold;
+}
 }

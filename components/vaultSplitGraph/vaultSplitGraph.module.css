@@ -9,6 +9,8 @@
   border: 1px solid #000;
   padding: 12px;
   color: #000;
+  margin-left: 65px;
+  margin-top: -2px;
 }
 
 .tooltipValue {

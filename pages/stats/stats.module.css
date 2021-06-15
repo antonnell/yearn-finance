@@ -27,6 +27,10 @@
   align-items: center;
   justify-content: space-between;
   margin: 48px 0px 48px 0px;
+  position: sticky;
+  top: 90px;
+  z-index: 10;
+  box-shadow: none !important;
 }
 
 .tableContainer {
@@ -122,7 +126,8 @@
   padding: 50px 10px;
   z-index: 9;
   top: 50px;
-  background-image: linear-gradient(-20deg, #2b5876 0%, #4e4376 100%);
+  /* background-image: linear-gradient(-20deg, #2b5876 0%, #4e4376 100%); */
+  background-image: linear-gradient(to right, #1c46f5 0%, #0005d3 100%);
   color: #FFF !important;
   border-radius: 0px !important;
   margin-bottom: 0px;
@@ -150,8 +155,6 @@
 
 .overviewCard h2 {
   color: rgba(255,255,255, 0.5);
-  border-bottom: 1px solid rgba(255,255,255, 0.1);
-  margin-bottom: 14px;
   padding: 0px;
   padding-bottom: 15px;
   text-transform: uppercase;
@@ -172,11 +175,21 @@
   .statsContainer {
     padding: 24px;
   }
+  .statsFilters {
+    top: 90px;
+    margin-top: 60px;
+    margin-bottom: 30px;
+  }
 }
 
 @media screen and (max-width: 1200px) {
   .overviewContainer2 {
     top: 0px;
+  }
+  .statsFilters {
+    top: 20px;
+    margin-top: 10px;
+    margin-bottom: 20px;
   }
 }
 
@@ -187,6 +200,11 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
+  }
+  .overviewContainer2 {
+    left: 0px;
+    padding: 20px 10px 30px 10px;
+    top: 0px;
   }
   .separator {
     border-bottom: 1px solid rgba(128, 128, 128, 0.25);

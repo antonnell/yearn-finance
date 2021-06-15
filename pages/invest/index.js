@@ -19,7 +19,7 @@ import HelpIcon from '@material-ui/icons/Help';
 
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
-import TrendingUpIcon from '@material-ui/icons/TrendingUp';
+import TrendingUpIcoethbtcn from '@material-ui/icons/TrendingUp';
 import StarIcon from '@material-ui/icons/Star';
 import SearchIcon from '@material-ui/icons/Search';
 import ListAltIcon from '@material-ui/icons/ListAlt';
@@ -391,7 +391,7 @@ function Invest({ changeTheme }) {
             <Grid item xs={12} sm={4}>
               <div className={classes.overviewCard}>
                 {porfolioBalance !== null ? <VaultSplitGraph vaults={vaults} /> : <Skeleton variant="circle" width={80} height={80} />}
-                <div>
+                <div className={classes.overviewText}>
                   <Typography variant="h2">Portfolio Balance</Typography>
                   <Typography variant="h1" className={classes.headAmount}>
                     {porfolioBalance === null ? <Skeleton style={{ minWidth: '200px ' }} /> : '$ ' + formatCurrency(porfolioBalance)}
@@ -409,7 +409,7 @@ function Invest({ changeTheme }) {
                 ) : (
                   <Skeleton variant="circle" width={80} height={80} />
                 )}
-                <div>
+                <div className={classes.overviewText}>
                   <Typography variant="h2">Yearly Growth</Typography>
                   <Typography variant="h1" className={classes.headAmount}>
                     {porfolioBalance === null ? (
@@ -422,7 +422,7 @@ function Invest({ changeTheme }) {
               </div>
             </Grid>
             <Grid item xs={12} sm={4}>
-              <div className={classes.overviewCard}>
+              <div className={classes.overviewCardLast}>
                 {porfolioBalance !== null ? (
                   <div className={classes.portfolioOutline}>
                     {' '}
@@ -431,7 +431,7 @@ function Invest({ changeTheme }) {
                 ) : (
                   <Skeleton variant="circle" width={80} height={80} />
                 )}
-                <div>
+                <div className={classes.overviewText}>
                   <Typography variant="h2">Highest Balance</Typography>
                   <Typography variant="h1" className={classes.headAmount}>
                     {highestHoldings === null ? (
@@ -530,7 +530,7 @@ function Invest({ changeTheme }) {
                   }}
                   style={{ cursor: 'pointer' }}
                 >
-                  <FilterListIcon />
+                  <FilterListIcon className={classes.filtericon} />
                   <Typography variant="h5">Top Stablecoins APYs</Typography>
                 </ToggleButton>
                 <Podium vaults={topVaultPerformers.stableCoinVaults} isStableCoin={true} handlePopoverOpen={handlePopoverOpen} handleNavigate={handleNavigate} />
@@ -547,7 +547,7 @@ function Invest({ changeTheme }) {
                   className={`${classes.vaultTypeButton} ${search === '_ethbtc_' ? classes.ethBTCSelected : classes.ethbtc}`}
                   value="Lockup"
                 >
-                  <FilterListIcon />
+                  <FilterListIcon className={classes.filtericon} />
                   <Typography variant="h5">Top BTC and ETH APYs</Typography>
                 </ToggleButton>
                 <Podium vaults={topVaultPerformers.ethBTCVaults} isStableCoin={false} handlePopoverOpen={handlePopoverOpen} handleNavigate={handleNavigate} />
@@ -566,7 +566,7 @@ function Invest({ changeTheme }) {
                   className={`${classes.vaultTypeButton} ${search === '_others_' ? classes.othersSelected : classes.others}`}
                   value="Lockup"
                 >
-                  <FilterListIcon />
+                  <FilterListIcon className={classes.filtericon} />
                   <Typography variant="h5">Other Top APYs</Typography>
                 </ToggleButton>
                 <Typography variant="h5">

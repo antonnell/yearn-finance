@@ -3,15 +3,15 @@
   border-radius: 10px;
   cursor: pointer;
   min-height: 202px;
-  border: 2px solid rgba(255,255,255, 0.05);
+  border: 1px solid rgba(255,255,255, 0.05);
   -webkit-box-shadow: 3px 3px 12px 0 rgba(0,0,0,0.05) !important;
 box-shadow: 3px 3px 12px 0 rgba(0,0,0,0.05) !important;
 }
 
 .vaultContainer:hover {
-  background-color: rgba(255,255,255, 1);
-  border: 2px solid #1b2cbf;
-  color: #000;
+  /* background-color: rgba(255,255,255, 1); */
+  border: 1px solid #374dfa;
+  /* color: #000; */
   -webkit-transition: all 200ms ease-out;
 -moz-transition: all 200ms ease-out;
 -ms-transition: all 200ms ease-out;
@@ -21,12 +21,21 @@ transition: all 200ms ease-out;
 
 .vaultContainerActive {
   width: 100%;
-  border-radius: 10px;
+  position: relative;
+  border-radius: 10px 6px 10px 10px !important;
   cursor: pointer;
-  background: rgb(63,94,251);
-  background: radial-gradient(circle, rgba(27,44,191,1) 0%, rgba(27,44,191,1) 48%) rgba(63,94,251,0.7) 100%;
+  background: rgb(63,94,251, 0);
+  border: 1px solid rgba(255,255,255, 0.05);
+  /* background: radial-gradient(circle, rgba(27,44,191,1) 0%, rgba(27,44,191,1) 48%) rgba(63,94,251,0.7) 100%; */
   height: 205px;
-  color: #FFF !important;
+  /* color: #FFF !important; */
+	@@ -58,14 +71,18 @@ transition: all 200ms ease-out;
+  -ms-transition: all 200ms ease-out;
+  -o-transition: all 200ms ease-out;
+  transition: all 200ms ease-out;
+
+  overflow: hidden;
+  position: relative;
 }
 
 .vaultContainerActive .vaultInfo {
@@ -36,6 +45,7 @@ transition: all 200ms ease-out;
 .vaultContainerActive:hover {
   background: rgb(63,94,251);
   background: radial-gradient(circle, rgba(63,94,251,1) 0%, rgba(63,94,251,1) 48%) rgba(63,94,251,1) 100%;
+  border: 1px solid #0ba360;
 }
 
 .vaultContainerActive .subinfofield {

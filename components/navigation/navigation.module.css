@@ -254,15 +254,16 @@ a.linkz { cursor: pointer !important; }
     flex-direction: column;
     justify-content: space-between;
     width: 100%;
-    padding: 24px 0px;
+    padding: 40px;
     height: 100vh;
     z-index: 999;
     align-items: center;
+    border-radius: 0 !important;
   }
   .menuIcon {
     position: absolute;
-    top: 24px;
-    right: 12px;
+    top: 35px;
+    right: 30px;
     display: flex;
   }
   .navigationHeading {
