@@ -205,6 +205,15 @@ export default function Withdraw({ vault }) {
                 Withdraw to
               </Typography>
             </div>
+            <div className={classes.balances}>
+              <Typography
+                variant="h5"
+                className={classes.value}
+                noWrap
+              >
+                Withdrawal Fee: {vault.type === 'v2' ? formatCurrency(0.00) : formatCurrency(BigNumber(amount === '' ? 0.00 : amount).times(5).div(1000))}
+              </Typography>
+          </div>
           </div>
           <Autocomplete
             disableClearable={true}
