@@ -434,7 +434,7 @@ export default function Deposit({ vault }) {
               <Typography variant="h5" className={ classes.flexInline }>
                 {loading ? (
                   <>
-                    <CircularProgress size={25} />
+                    <CircularProgress size={15} />
                     {depositStatus}
                   </>
                 ) : (
@@ -458,7 +458,7 @@ export default function Deposit({ vault }) {
                   disabled={loading || depositDisabled}
                   className={classes.marginRight}
                 >
-                  <Typography variant="h5">{loading ? <CircularProgress size={25} /> : 'Approve Exact'}</Typography>
+                  <Typography variant="h5">{loading ? <CircularProgress size={15} /> : 'Approve Exact'}</Typography>
                 </Button>
                 <Button
                   fullWidth
@@ -470,7 +470,7 @@ export default function Deposit({ vault }) {
                   disabled={loading || depositDisabled}
                   className={classes.marginLeft}
                 >
-                  <Typography variant="h5">{loading ? <CircularProgress size={25} /> : 'Approve Max'}</Typography>
+                  <Typography variant="h5">{loading ? <CircularProgress size={15} /> : 'Approve Max'}</Typography>
                 </Button>
               </React.Fragment>
             )}

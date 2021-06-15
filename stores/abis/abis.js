@@ -21,6 +21,7 @@ import { collateralRegistryABI } from './collateralRegistryABI';
 import { uniswapPairABI } from './uniswapPairABI';
 import { chainlinkOracleABI } from './chainlinkOracleABI';
 import { ironBankRegistryAdapterABI } from './ironBankRegistryAdapterABI';
+import { cdpManager01ABI } from './cdpManager01ABI';
 
 export const IRONBANKREGISTRYADAPTERABI = ironBankRegistryAdapterABI;
 export const ERC20ABI = erc20ABI;
@@ -45,3 +46,4 @@ export const VAULTMANAGERSTANDARDABI = vaultMangerStandardABI;
 export const COLLATERALREGISTRYABI = collateralRegistryABI;
 export const UNISWAPPAIRABI = uniswapPairABI;
 export const CHAINLINKORACLEABI = chainlinkOracleABI;
+export const CDPMANAGER01ABI = cdpManager01ABI;

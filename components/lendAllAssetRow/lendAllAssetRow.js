@@ -378,7 +378,7 @@ function LendAllAssetRowDetails({ lendingAsset, lendingBorrow, lendingBorrowLimi
                     disabled={loading}
                     className={classes.marginRight}
                   >
-                    <Typography variant="h5">{loading ? <CircularProgress size={25} /> : 'Approve Exact'}</Typography>
+                    <Typography variant="h5">{loading ? <CircularProgress size={15} /> : 'Approve Exact'}</Typography>
                   </Button>
                   <Button
                     fullWidth
@@ -390,7 +390,7 @@ function LendAllAssetRowDetails({ lendingAsset, lendingBorrow, lendingBorrowLimi
                     disabled={loading}
                     className={classes.marginLeft}
                   >
-                    <Typography variant="h5">{loading ? <CircularProgress size={25} /> : 'Approve Max'}</Typography>
+                    <Typography variant="h5">{loading ? <CircularProgress size={15} /> : 'Approve Max'}</Typography>
                   </Button>
                 </React.Fragment>
               )}

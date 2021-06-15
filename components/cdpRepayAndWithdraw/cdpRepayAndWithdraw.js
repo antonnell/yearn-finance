@@ -266,7 +266,7 @@ export default function CDPRepayAndWithdraw({ cdp, borrowAsset }) {
             disabled={loading}
           >
             <Typography variant="h5">
-              {loading ? <CircularProgress size={25} /> : "Repay AND Withdraw"}
+              {loading ? <CircularProgress size={15} /> : "Repay AND Withdraw"}
             </Typography>
           </Button>
         )}
@@ -287,7 +287,7 @@ export default function CDPRepayAndWithdraw({ cdp, borrowAsset }) {
                 className={classes.marginRight}
               >
                 <Typography variant="h5">
-                  {loading ? <CircularProgress size={25} /> : "Approve Exact"}
+                  {loading ? <CircularProgress size={15} /> : "Approve Exact"}
                 </Typography>
               </Button>
               <Button
@@ -301,7 +301,7 @@ export default function CDPRepayAndWithdraw({ cdp, borrowAsset }) {
                 className={classes.marginLeft}
               >
                 <Typography variant="h5">
-                  {loading ? <CircularProgress size={25} /> : "Approve Max"}
+                  {loading ? <CircularProgress size={15} /> : "Approve Max"}
                 </Typography>
               </Button>
             </React.Fragment>

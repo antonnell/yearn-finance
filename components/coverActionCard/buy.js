@@ -351,7 +351,7 @@ export default function Buy({ coverProtocol }) {
               disabled={loading}
             >
               <Typography variant="h5">
-                {loading ? <CircularProgress size={25} /> : "Buy"}
+                {loading ? <CircularProgress size={15} /> : "Buy"}
               </Typography>
             </Button>
           )}
@@ -375,7 +375,7 @@ export default function Buy({ coverProtocol }) {
                   className={classes.marginRight}
                 >
                   <Typography variant="h5">
-                    {loading ? <CircularProgress size={25} /> : "Approve Exact"}
+                    {loading ? <CircularProgress size={15} /> : "Approve Exact"}
                   </Typography>
                 </Button>
                 <Button
@@ -389,7 +389,7 @@ export default function Buy({ coverProtocol }) {
                   className={classes.marginLeft}
                 >
                   <Typography variant="h5">
-                    {loading ? <CircularProgress size={25} /> : "Approve Max"}
+                    {loading ? <CircularProgress size={15} /> : "Approve Max"}
                   </Typography>
                 </Button>
               </React.Fragment>

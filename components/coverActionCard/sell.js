@@ -353,7 +353,7 @@ export default function Sell({ coverProtocol }) {
               disabled={loading}
             >
               <Typography variant="h5">
-                {loading ? <CircularProgress size={25} /> : "Sell"}
+                {loading ? <CircularProgress size={15} /> : "Sell"}
               </Typography>
             </Button>
           )}
@@ -376,7 +376,7 @@ export default function Sell({ coverProtocol }) {
                   className={classes.marginRight}
                 >
                   <Typography variant="h5">
-                    {loading ? <CircularProgress size={25} /> : "Approve Exact"}
+                    {loading ? <CircularProgress size={15} /> : "Approve Exact"}
                   </Typography>
                 </Button>
                 <Button
@@ -390,7 +390,7 @@ export default function Sell({ coverProtocol }) {
                   className={classes.marginLeft}
                 >
                   <Typography variant="h5">
-                    {loading ? <CircularProgress size={25} /> : "Approve Max"}
+                    {loading ? <CircularProgress size={15} /> : "Approve Max"}
                   </Typography>
                 </Button>
               </React.Fragment>

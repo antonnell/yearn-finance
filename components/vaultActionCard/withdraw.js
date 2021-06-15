@@ -114,7 +114,7 @@ export default function Withdraw({ vault }) {
 
   let depositDisabled = false
   let depositDisabledMessage = null
-  
+
 
   return (
     <div className={classes.depositContainer}>
@@ -296,7 +296,7 @@ export default function Withdraw({ vault }) {
             <Typography variant="h5" className={classes.flexInline}>
               {loading ? (
                 <>
-                  <CircularProgress size={25} />
+                  <CircularProgress size={15} />
                   {withdrawalStatus}
                 </>
               ) : (
