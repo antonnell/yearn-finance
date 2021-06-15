@@ -115,7 +115,7 @@ function StatsData({ vault }) {
       </TableCell>
       <TableCell scope="row" align="right">
         <Typography variant="h5" align="right" className={classes.fontWeightBold}>
-          {vault.apy?.recommended ? formatCurrency(BigNumber(vault.apy.recommended).times(100)) : '0.00'}kiki%
+          {vault.apy?.recommended ? formatCurrency(BigNumber(vault.apy.recommended).times(100)) : '0.00'}%
         </Typography>
       </TableCell>
     </TableRow>
@@ -289,7 +289,7 @@ function Stats({ changeTheme }) {
             <Typography variant="h1">{!tvl ? <Skeleton style={{ minWidth: '200px ' }} /> : `$ ${formatCurrency(tvl.totalEarnHoldingsUSD, 0)}`}</Typography>
           </div>
         </div>
-        
+
         <div className={classes.overviewCard}>
           <div>
             <Typography variant="h2">Total Iron Bank Balance</Typography>
