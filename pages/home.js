@@ -1,4 +1,3 @@
-import Landing from "./landing";
 import Invest from "./invest";
 import Stats from "./stats";
 import Lend from "./lend";
