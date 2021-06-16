@@ -21,6 +21,7 @@ import {
   CONNECT_WALLET,
   UPDATE_DEPOSIT_STATUS,
   VAULTS_UPDATED,
+  YVBOOST_VAULT,
 } from '../../stores/constants';
 import Simulation from '../simulation/simulation';
 
@@ -198,6 +199,9 @@ export default function Deposit({ vault }) {
           });
           if (vault.tokenMetadata.balance > 0) {
             tmpTokens.unshift(vault.tokenMetadata);
+          }
+          if (vault?.address === YVBOOST_VAULT) {
+            tmpTokens = [vault?.tokenMetadata];
           }
           setZapperBalanceTokens(tmpTokens);
           if (!tmpHasVaultToken) {
