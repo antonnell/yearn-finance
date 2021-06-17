@@ -110,12 +110,12 @@ function StatsData({ vault }) {
       </TableCell>
       <TableCell scope="row" align="right">
         <Typography variant="h5" align="right" className={classes.fontWeightBold}>
-          $ {vault.tvl && vault.tvl.value ? formatCurrency(vault.tvl.value) : '0.00'}
+          $ {vault.tvl && vault.tvl.tvl ? formatCurrency(vault.tvl.tvl) : '0.00'}
         </Typography>
       </TableCell>
       <TableCell scope="row" align="right">
         <Typography variant="h5" align="right" className={classes.fontWeightBold}>
-          {vault.apy?.recommended ? formatCurrency(BigNumber(vault.apy.recommended).times(100)) : '0.00'}%
+          {vault.apy?.net_apy ? formatCurrency(BigNumber(vault.apy.net_apy).times(100)) : '0.00'}%
         </Typography>
       </TableCell>
     </TableRow>
@@ -222,16 +222,16 @@ function Stats({ changeTheme }) {
           return getOrderBy(-1);
         }
       } else if (orderBy.id === 'apy30Days') {
-        let oneMonthA = a.apy?.recommended;
-        let oneMonthB = b.apy?.recommended;
+        let oneMonthA = a.apy?.net_apy;
+        let oneMonthB = b.apy?.net_apy;
         if (BigNumber(oneMonthA).gt(BigNumber(oneMonthB))) {
           return getOrderBy(-1);
         } else if (BigNumber(oneMonthA).lt(BigNumber(oneMonthB))) {
           return getOrderBy(1);
         }
       } else if (orderBy.id === 'tvl') {
-        let tvlA = a.tvl?.value;
-        let tvlB = b.tvl?.value;
+        let tvlA = a.tvl?.tvl;
+        let tvlB = b.tvl?.tvl;
         if (BigNumber(tvlA).gt(BigNumber(tvlB))) {
           return getOrderBy(-1);
         } else if (BigNumber(tvlA).lt(BigNumber(tvlB))) {

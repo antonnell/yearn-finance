@@ -75,15 +75,15 @@ export default function SearchModal(props) {
     })
     .filter((vault) => {
       if (vault.supplyAPY) {
-        vault.apy = { recommended: vault.supplyAPY / 100 };
+        vault.apy = { net_apy: vault.supplyAPY / 100 };
         vault.type = 'Earn';
       }
 
-      return vault.apy?.recommended;
+      return vault.apy?.net_apy;
     })
     .sort((a, b) => {
-      let oneMonthA = a.apy?.recommended;
-      let oneMonthB = b.apy?.recommended;
+      let oneMonthA = a.apy?.net_apy;
+      let oneMonthB = b.apy?.net_apy;
       if (BigNumber(oneMonthA).gt(BigNumber(oneMonthB))) {
         return -1;
       } else if (BigNumber(oneMonthA).lt(BigNumber(oneMonthB))) {
@@ -103,7 +103,7 @@ export default function SearchModal(props) {
             groupBy={(option) => option.type}
             fullWidth={true}
             autoHighlight
-            getOptionLabel={(option) => `${option.displayName} (${BigNumber(option.apy?.recommended).times(100).toFixed(2)}% APY)`}
+            getOptionLabel={(option) => `${option.displayName} (${BigNumber(option.apy?.net_apy).times(100).toFixed(2)}% APY)`}
             renderInput={(params) => (
               <TextField {...params} fullWidth={true} label="Search vaults and assets through out yearn.fi" autoFocus={true} variant="outlined" />
             )}

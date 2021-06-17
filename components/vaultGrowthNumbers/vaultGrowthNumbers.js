@@ -47,8 +47,8 @@ export default function VaultGrowthNumbers({ vault }) {
                 {!vault ? (
                   <Skeleton />
                 ) : (
-                  vault.apy.recommended === 'New' ? 'New' :
-                  BigNumber(vault.apy.recommended)
+                  vault.apy.net_apy === 'New' ? 'New' :
+                  BigNumber(vault.apy.net_apy)
                     .times(100)
                     .toFixed(2) + "%"
                 )}
@@ -66,7 +66,7 @@ export default function VaultGrowthNumbers({ vault }) {
                 Total Locked in Vault
               </Typography>
               <Typography variant="h6">
-                {!vault ? <Skeleton /> : "$ " + formatCurrency(vault.tvl.value)}
+                {!vault ? <Skeleton /> : "$ " + formatCurrency(vault.tvl.tvl)}
               </Typography>
             </div>
           </div>

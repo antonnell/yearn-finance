@@ -223,7 +223,7 @@ export default function Deposit({ vault }) {
     }
   }, []);
 
-  let depositDisabled = false
+  let depositDisabled = vault?.emergency_shutdown
   let depositDisabledMessage = null
 
 

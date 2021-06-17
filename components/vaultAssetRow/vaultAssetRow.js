@@ -90,11 +90,11 @@ export default function VaultAssetRow({ vault, account }) {
         <Typography variant="h5" className={classes.fontWeightBold}>
           {!vault.apy ? (
             <Skeleton stlye={{ minWidth: '100px' }} />
-          ) : vault.apy.recommended ? (
-            vault.apy.recommended === 'New' ? (
+          ) : vault.apy.net_apy ? (
+            vault.apy.net_apy === 'New' ? (
               'New'
             ) : (
-              BigNumber(vault.apy.recommended).times(100).toFixed(2) + '%'
+              BigNumber(vault.apy.net_apy).times(100).toFixed(2) + '%'
             )
           ) : (
             'Unknown'
