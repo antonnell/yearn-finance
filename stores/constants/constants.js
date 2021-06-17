@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js';
 export const YEARN_API = 'https://api.yearn.tools/';
 export const YEARN_VAULTS_API = 'https://vaults.finance/all';
 export const GAS_PRICE_API = 'https://gasprice.poa.network/';
-export const ZAPPER_GAS_PRICE_API = 'https://api.zapper.fi/v1/gas-price?api_key=96e0cc51-a62e-42ca-acee-910ea7d2a241'
+export const ZAPPER_GAS_PRICE_API = 'https://api.zapper.fi/v1/gas-price?api_key=96e0cc51-a62e-42ca-acee-910ea7d2a241';
 export const ETHERSCAN_URL = 'https://etherscan.io/';
 export const COVER_API = 'https://api.coverprotocol.com/protocol_data/production';
 
@@ -159,3 +159,5 @@ export const APPROVE_CDP = 'APPROVE_CDP';
 export const APPROVE_CDP_RETURNED = 'APPROVE_CDP_RETURNED';
 
 export const MAX_UINT256 = new BigNumber(2).pow(256).minus(1).toFixed(0);
+
+export const YVBOOST_VAULT = '0x9d409a0A012CFbA9B15F6D4B36Ac57A46966Ab9a';
