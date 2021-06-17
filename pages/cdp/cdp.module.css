@@ -15,17 +15,13 @@
   margin-left: 0px !important;
 }
 
-.fixtop {
-  margin-top: 260px;
-}
-
 .cdpFilters {
   width: 100%;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  margin: 98px 0px 0px 0px;
+  margin: 300px 0px 0px 0px;
   position: sticky;
   top: 80px;
   border-radius: 12px !important;
@@ -51,7 +47,6 @@
   border: 1px solid rgba(108, 108, 123, 0.2);
   border-radius: 10px;
 }
-
 
 .overviewContainer2 {
   display: flex;
@@ -148,6 +143,11 @@
     margin-top: 200px;
   }
 
+  .cdpFilters {
+    top: 20px;
+    margin: 230px 0px 0px 0px;
+  }
+
 }
 
 @media screen and (max-width: 1000px) {
@@ -175,5 +175,19 @@
 
   .fixtop {
     margin-top: 357px;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .cdpFilters {
+    top: 20px;
+    margin: 320px 0px 0px 0px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .cdpFilters {
+    top: 20px;
+    margin: 420px 0px 0px 0px;
   }
 }

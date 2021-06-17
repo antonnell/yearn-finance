@@ -52,7 +52,7 @@ function LTV({ changeTheme }) {
       </Head>
         <div className={classes.ltvContainer}>
           <Grid className={classes.ltvgrid} container center spacing={0}>
-            <Grid item xs={4}>
+            <Grid item xl={4} lg={4} xs={12}>
               <div className={classes.copyContainer}>
                 <Typography variant="h1" className={classes.titleSpacing}>
                   LTV Lookup
@@ -63,7 +63,7 @@ function LTV({ changeTheme }) {
                 <Lottie className={classes.ltvanim} animationData={ltvsearchanim} />
               </div>
             </Grid>
-            <Grid item xs={8}>
+            <Grid item xl={8} lg={8} xs={12}>
               <Paper elevation={0} className={classes.searchContainer}>
                 <div className={classes.textField}>
                   <div className={classes.inputTitleContainer}>

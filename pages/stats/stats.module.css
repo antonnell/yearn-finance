@@ -126,7 +126,6 @@
   padding: 50px 10px;
   z-index: 9;
   top: 50px;
-  /* background-image: linear-gradient(-20deg, #2b5876 0%, #4e4376 100%); */
   background-image: linear-gradient(to right, #1c46f5 0%, #0005d3 100%);
   color: #FFF !important;
   border-radius: 0px !important;
@@ -172,6 +171,7 @@
     margin-left: 24px;
     margin-right: 24px;
   }
+
   .statsContainer {
     padding: 24px;
   }

@@ -26,6 +26,24 @@
   opacity: 0.6;
 }
 
+.overviewTopPerformersContainer {
+  margin: 30px 0;
+}
+
+.growthanimclass {
+  transform: scale(0.65);
+  margin-top: 3px;
+  margin-left: 1px;
+  opacity: 0.6;
+}
+
+.rocketanimclass {
+  transform: scale(0.7);
+  margin-top: 6px;
+  margin-left: 0px;
+  opacity: 0.6;
+}
+
 .portfolioStatsContainer {
   display: flex;
   flex-wrap: wrap;
@@ -137,16 +155,18 @@
   color: rgba(108,108,123, 0.8) !important;
   padding: 12px 12px !important;
 }
+
 .filtericon {
   color: #1c47f5;
   margin-right: 8px;
 }
+
 .stableCoins,
 .ethbtc,
 .others {
-  border: 1px solid rgba(58, 155, 73, 1) !important;
-  color: rgba(58, 155, 73, 1) !important;
+  border: 2px solid rgba(108, 108, 123, 0.15) !important;
 }
+
 .stableCoinsSelected,
 .ethBTCSelected,
 .othersSelected {
@@ -160,46 +180,51 @@
 .othersSelected .filtericon {
   color: #FFF !important;
 }
+
+.stableCoinsSelected .filtericon,
+.ethBTCSelected .filtericon,
+.othersSelected .filtericon {
+  color: #FFF !important;
+}
 .v1Selected {
-  background: rgba(229, 107, 115, 1) !important;
+  background: #BD1550 !important;
   color: #fff !important;
   padding: 12px 12px !important;
   border: 1px solid rgba(108,108,123, 0) !important;
 }
 
 .v2Selected {
-  background: rgba(27, 44, 191, 1) !important;
+  background: #0048FF !important;
   color: #fff !important;
   padding: 12px 12px !important;
   border: 1px solid rgba(108,108,123, 0) !important;
 }
 
 .expSelected {
-  background: rgba(255, 179, 71, 1) !important;
+  background: #703D6F !important;
   color: #fff !important;
   padding: 12px 12px !important;
   border: 1px solid rgba(108,108,123, 0) !important;
 }
 
 .earnSelected {
-  background: rgba(220, 107, 229, 1) !important;
-  color: #fff !important;
+  background: #77CCA4 !important;
+  color: #000 !important;
   padding: 12px 12px !important;
   border: 1px solid rgba(108,108,123, 0) !important;
 }
 
 .activeSelected {
-  background: radial-gradient(circle, rgba(63, 94, 251, 1) 0%, rgba(47, 128, 237, 0.7) 48%) rgba(63, 94, 251, 0.7) 100% !important;
-  color: #fff !important;
+  background: none !important;
   padding: 12px 12px !important;
-  border: 1px solid rgba(108,108,123, 0) !important;
+  border: 1px solid #374dfa !important;
 }
 
 .lockupSelected {
-  background: rgba(244, 220, 10, 1) !important;
+  background: #FFD000 !important;
   color: #22252e !important;
   padding: 12px 12px !important;
-  border: 2px solid rgba(108, 108, 123, 0.15) !important;
+  border: 1px solid rgba(108,108,123, 0) !important;
 }
 
 .vaultFilters {
@@ -350,7 +375,8 @@
 }
 
 .overviewCard h2,
-.overviewCardLast h2 {  color: rgba(108,108,123, 0.9);
+.overviewCardLast h2 {
+  color: rgba(108,108,123, 0.9);
   background: rgba(108,108,123, 0.1);
   margin-bottom: 6px;
   padding: 4px 12px;
@@ -409,11 +435,14 @@
   .overviewTopPerformersContainer {
     margin: 30px 0 30px 0;
   }
+}
 
 @media screen and (max-width: 1200px) {
   .investContainer {
     padding: 24px;
   }
+
+
   .portfolioBalanceCombined {
     max-height: 150px;
     padding: 0px;
@@ -447,10 +476,24 @@
     top: 0px;
   }
 
+  .searchContainer {
+    width: 50% !important;
+  }
+
+  .searchContainer {
+    margin-left: 0 !important;
+  }
+
+  .vaultFiltersInside {
+    padding-top: 0px !important;
+    padding-bottom: 10px !important;
+  }
+
   .vaultTypeButtons {
-    width: 480px;
+    width: 100%;
     padding-bottom: 12px;
     padding-top: 12px;
+    margin-bottom: 10px;
   }
 
   .vaultTypeButton {
@@ -481,9 +524,6 @@
   .overviewCardLast {
     padding-bottom: 12px;
   }
-  .searchContainer {
-    margin-left: 0px !important;
-  }
   .spllitContainer {
     display: none;
   }
@@ -505,16 +545,21 @@
     padding-top: 12px;
   }
   .vaultTypeButton {
-    margin: 0px !important;
+    margin: 0px 3px !important;
     padding: 5px 6px !important;
   }
   .searchContainer {
-    min-width: calc(100vw - 24px) !important;
-    margin-left: 0px;
-    margin-right: 0px !important;
+    min-width: auto !important;
+    margin-left: 0px !important;
+    margin-right: 20px !important;
   }
+
+  .overviewTopPerformersContainer {
+    display: none;
+  }
+
   .layoutToggleButtons {
-    margin-top: 12px;
+    margin-top: 0px;
   }
   .vaultVersionCell {
     display: none;
@@ -525,19 +570,19 @@
 }
 @media screen and (max-width: 960px) {
 
+@media screen and (max-width: 960px) {
+
   .overviewContainer2 {
     padding: 30px 10px;
     padding-left: 70px;
   }
 
   .overviewText {
-    /* background: skyblue; */
     margin-left: 20px;
   }
 
   .overviewCard,
   .overviewCardLast {
-    /* background: red !important; */
     margin: 0;
     margin-right: 48px;
     padding: 0 0 25px 0;

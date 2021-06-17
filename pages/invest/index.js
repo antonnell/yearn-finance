@@ -388,7 +388,7 @@ function Invest({ changeTheme }) {
 
         <Paper elevation={0} className={classes.overviewContainer2}>
           <Grid container spacing={3}>
-            <Grid item xs={12} sm={4}>
+            <Grid item lg={4} md={4} xs={12} sm={12}>
               <div className={classes.overviewCard}>
                 {porfolioBalance !== null ? <VaultSplitGraph vaults={vaults} /> : <Skeleton variant="circle" width={80} height={80} />}
                 <div className={classes.overviewText}>
@@ -399,7 +399,7 @@ function Invest({ changeTheme }) {
                 </div>
               </div>
             </Grid>
-            <Grid item xs={12} sm={4}>
+            <Grid item lg={4} md={4} xs={12} sm={12}>
               <div className={classes.overviewCard}>
                 {porfolioBalance !== null ? (
                   <div className={classes.portfolioOutline}>
@@ -421,7 +421,7 @@ function Invest({ changeTheme }) {
                 </div>
               </div>
             </Grid>
-            <Grid item xs={12} sm={4}>
+            <Grid item lg={4} md={4} xs={12} sm={12}>
               <div className={classes.overviewCardLast}>
                 {porfolioBalance !== null ? (
                   <div className={classes.portfolioOutline}>
