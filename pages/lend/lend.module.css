@@ -103,9 +103,8 @@
   justify-content: space-between;
   flex-wrap: wrap;
   position: relative;
-  width: calc(100% + 10px);
-  left: -10px;
-  padding: 45px 10px;
+  width: 100%;
+  padding: 45px 12px;
   padding-left: 70px;
   z-index: 9;
   top: 60px;
