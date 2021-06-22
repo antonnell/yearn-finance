@@ -159,8 +159,6 @@ class Store {
 
             const oracleType = await this._getORacleType(vaultParametersContract, asset.address);
 
-            console.log(oracleType)
-
             if (![5, 12].includes(oracleType)) {
               if (callback) {
                 callback(null, returnAsset);

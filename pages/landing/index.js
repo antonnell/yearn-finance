@@ -46,7 +46,7 @@ function Landing({ changeTheme }) {
                 </div>
                 <Typography variant="h6">Investment Vaults</Typography>
                 <Typography variant="body2">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.
+                  Vaults follow unique strategies that are designed to maximize the yield of the deposited asset and minimize risk.
                 </Typography>
               </Paper>
             </a>
@@ -59,7 +59,7 @@ function Landing({ changeTheme }) {
                 </div>
                 <Typography variant="h6">Lend &amp; Borrow</Typography>
                 <Typography variant="body2">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.
+                  Supply assets to the Iron Bank to get your share of the lending fees. Borrow against your provided collateral.
                 </Typography>
               </Paper>
             </a>
@@ -72,7 +72,7 @@ function Landing({ changeTheme }) {
                 </div>
                 <Typography variant="h6">Collateral Staking</Typography>
                 <Typography variant="body2">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.
+                  Unit Protocol is a decentralized protocol that allows you to mint stablecoin $USDP using a variety of tokens as collateral.
                 </Typography>
               </Paper>
             </a>
@@ -98,7 +98,7 @@ function Landing({ changeTheme }) {
                 </div>
                 <Typography variant="h6">Statistics</Typography>
                 <Typography variant="body2">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.
+                  An overview of the Yearn ecosystem. Get a quick glance at the performance of all of Yearn's vaults.
                 </Typography>
               </Paper>
             </a>

@@ -399,9 +399,9 @@ class Store {
             let price = 1; // this is not accurate for WBTC - used to get this from coingecko
             const totalSupply = await vaultContract.methods.totalSupply().call();
             vault.tvl = {
-              totalAssets: totalSupply,
+              total_assets: totalSupply,
               price: price,
-              value: BigNumber(totalSupply)
+              tvl: BigNumber(totalSupply)
                 .times(price)
                 .times(vault.pricePerFullShare)
                 .div(10 ** vault.decimals)
@@ -507,23 +507,26 @@ class Store {
             // console.log(current.tvl?.tvl);
             // console.log('-------------');
 
-            return BigNumber(acc).plus(current.tvl ? current.tvl.tvl : 0);
+            return BigNumber(acc).plus((current.tvl && current.tvl.tvl) ? current.tvl.tvl : 0);
           }, 0),
           totalVaultHoldingsUSD: vaultsBalanced
             .filter((vault) => {
               return vault.type !== 'Earn';
             })
             .reduce((acc, current) => {
-              return BigNumber(acc).plus(current.tvl ? current.tvl.tvl : 0);
+              return BigNumber(acc).plus((current.tvl && current.tvl.tvl) ? current.tvl.tvl : 0);
             }, 0),
           totalEarnHoldingsUSD: vaultsBalanced
             .filter((vault) => {
               return vault.type === 'Earn';
             })
             .reduce((acc, current) => {
-              return BigNumber(acc).plus(current.tvl ? current.tvl.tvl : 0);
+              console.log(current)
+              return BigNumber(acc).plus((current.tvl && current.tvl.tvl) ? current.tvl.tvl : 0);
             }, 0),
         };
+
+        console.log(tvlInfo)
 
         this.setStore({
           vaults: vaultsBalanced,
