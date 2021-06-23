@@ -40,6 +40,7 @@ export default function Deposit({ vault }) {
   const [zapperBalanceTokens, setZapperBalanceTokens] = useState([]);
   const [currentToken, setCurrentToken] = useState();
   const [zapperBalanceUpdated, setZapperBalanceUpdated] = useState(false);
+  const [sharesForAmount, setSharesForAmount] = useState(0.00); // vault tokens to receive upon deposit
 
   const handleZapperSlippage = (event, slippage) => {
     if (slippage === 0.01 || slippage === 0.02 || slippage === 0.03) setZapperSlippage(slippage);
@@ -222,6 +223,30 @@ export default function Deposit({ vault }) {
       fetchAccountBalanceFromZapper();
     }
   }, []);
+
+  useEffect(() => {
+    function setVaultTokenSharesForAmount() {
+      let tokenAmount;
+      // support for only v2 in the mean time
+      if (vault.type === 'v2') {
+        zapperVaults.map(zvault => {
+          if (zvault.address.toLowerCase() === vault.address.toLowerCase()) {
+            if (currentToken.address?.toLowerCase() !== vault.tokenMetadata?.address?.toLowerCase()) {
+              tokenAmount = (amount * currentToken.price) / zvault.pricePerToken;
+            } else {
+              tokenAmount = amount;
+            }
+          }
+        });
+        if (vault.pricePerFullShare > 0) {
+          setSharesForAmount(BigNumber(tokenAmount).div(vault.pricePerFullShare))
+        } else {
+          setSharesForAmount(tokenAmount);
+        }
+      }
+    }
+    setVaultTokenSharesForAmount();
+  }, [amount]);
 
   let depositDisabled = vault?.emergency_shutdown
   let depositDisabledMessage = null
@@ -422,6 +447,17 @@ export default function Deposit({ vault }) {
           </div>
         </div>
       )}
+      {
+        vault.type === 'v2' && amount !== '' && (
+          <div className={classes.inputTitleContainer}>
+            <div className={classes.depositSharesAmount}>
+              <Typography variant="h5" className={classes.value} noWrap>
+                {`To Receive: ${formatCurrency(sharesForAmount)} ${vault.symbol}`}
+              </Typography>
+            </div>
+          </div>
+        )
+      }
       {(!account || !account.address) && (
         <div className={classes.actionButton}>
           <Button fullWidth disableElevation variant="contained" color="primary" size="large" onClick={onConnectWallet} disabled={loading}>
