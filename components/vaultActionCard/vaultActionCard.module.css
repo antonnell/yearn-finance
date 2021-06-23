@@ -162,3 +162,12 @@
 .slippageText {
   width: 40px;
 }
+
+.depositSharesAmount {
+  margin-top: 25px;
+  margin-left: 12px;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
+}
