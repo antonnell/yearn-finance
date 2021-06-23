@@ -267,38 +267,51 @@ function Stats({ changeTheme }) {
         <title>Stats</title>
       </Head>
       <Paper elevation={0} className={classes.overviewContainer2}>
-        <div className={classes.overviewCard}>
-          <div>
-            <Typography variant="h2">Total Value Locked</Typography>
-            <Typography variant="h1">
-              {!tvl ? <Skeleton style={{ minWidth: '200px ' }} /> : `$ ${formatCurrency(BigNumber(tvl.tvlUSD).plus(ironBankTVL), 0)}`}
-            </Typography>
-          </div>
-        </div>
 
-        <div className={classes.overviewCard}>
-          <div>
-            <Typography variant="h2">Total Vault Balance</Typography>
-            <Typography variant="h1">{!tvl ? <Skeleton style={{ minWidth: '200px ' }} /> : `$ ${formatCurrency(tvl.totalVaultHoldingsUSD, 0)}`}</Typography>
-          </div>
-        </div>
+        <Grid container center spacing={0}>
 
-        <div className={classes.overviewCard}>
-          <div>
-            <Typography variant="h2">Total Earn Balance</Typography>
-            <Typography variant="h1">{!tvl ? <Skeleton style={{ minWidth: '200px ' }} /> : `$ ${formatCurrency(tvl.totalEarnHoldingsUSD, 0)}`}</Typography>
-          </div>
-        </div>
+          <Grid item xl={3} lg={3} md={6} sm={6} xs={12}>
+            <div className={classes.overviewCard}>
+              <div>
+                <Typography variant="h2">Total Value Locked</Typography>
+                <Typography variant="h1">
+                  {!tvl ? <Skeleton style={{ minWidth: '200px ' }} /> : `$ ${formatCurrency(BigNumber(tvl.tvlUSD).plus(ironBankTVL), 0)}`}
+                </Typography>
+              </div>
+            </div>
+          </Grid>
 
-        <div className={classes.overviewCard}>
-          <div>
-            <Typography variant="h2">Total Iron Bank Balance</Typography>
-            <Typography variant="h1">{!ironBankTVL ? <Skeleton style={{ minWidth: '200px ' }} /> : `$ ${formatCurrency(ironBankTVL, 0)}`}</Typography>
-          </div>
-        </div>
+          <Grid item xl={3} lg={3} md={6} sm={6} xs={12}>
+            <div className={classes.overviewCard}>
+              <div>
+                <Typography variant="h2">Total Vault Balance</Typography>
+                <Typography variant="h1">{!tvl ? <Skeleton style={{ minWidth: '200px ' }} /> : `$ ${formatCurrency(tvl.totalVaultHoldingsUSD, 0)}`}</Typography>
+              </div>
+            </div>
+          </Grid>
+
+          <Grid item xl={3} lg={3} md={6} sm={6} xs={12}>
+            <div className={classes.overviewCard}>
+              <div>
+                <Typography variant="h2">Total Earn Balance</Typography>
+                <Typography variant="h1">{!tvl ? <Skeleton style={{ minWidth: '200px ' }} /> : `$ ${formatCurrency(tvl.totalEarnHoldingsUSD, 0)}`}</Typography>
+              </div>
+            </div>
+          </Grid>
+
+          <Grid item xl={3} lg={3} md={6} sm={6} xs={12}>
+            <div className={classes.overviewCard}>
+              <div>
+                <Typography variant="h2">Total Iron Bank Balance</Typography>
+                <Typography variant="h1">{!ironBankTVL ? <Skeleton style={{ minWidth: '200px ' }} /> : `$ ${formatCurrency(ironBankTVL, 0)}`}</Typography>
+              </div>
+            </div>
+          </Grid>
+        </Grid>
+
       </Paper>
       <div className={classes.statsContainer}>
-        <div className={classes.statsFilters}>
+        <Paper className={classes.statsFilters}>
           <TextField
             className={classes.searchContainer}
             variant="outlined"
@@ -314,7 +327,7 @@ function Stats({ changeTheme }) {
               ),
             }}
           />
-        </div>
+        </Paper>
         <Grid item xs={12}>
           <Paper elevation={0} className={classes.tableContainer}>
             <TableContainer>

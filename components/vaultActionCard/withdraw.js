@@ -25,7 +25,7 @@ export default function Withdraw({ vault }) {
   const [gasSpeed, setGasSpeed] = useState('');
   const zapperImgUrl = 'https://zapper.fi/images/';
   const withdrawTokens = [
-    { label: vault.tokenMetadata.displayName, address: '0x0000000000000000000000000000000000000000', isVault: true, img: vault.icon },
+    { label: vault.tokenMetadata.displayName, address: '0x0000000000000000000000000000000000000000', isVault: true, img: vault.tokenMetadata.icon },
     { label: 'ETH', address: '0x0000000000000000000000000000000000000000', img: `${zapperImgUrl}ETH-icon.png` },
     { label: 'DAI', address: '0x6b175474e89094c44da98b954eedeac495271d0f', img: `${zapperImgUrl}DAI-icon.png` },
     { label: 'USDC', address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', img: `${zapperImgUrl}USDC-icon.png` },

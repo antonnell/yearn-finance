@@ -42,7 +42,7 @@ a.linkz { cursor: pointer !important; }
   box-shadow: none !important;
   border: 1px solid rgba(108,108,123, 0);
   height: 100%;
-  background-image: linear-gradient(-20deg, #2b5876 0%, #4e4376 100%);
+  background-image: linear-gradient(to top, #1c46f5 0%, #0005d3 100%);
 }
 
 .intro h1 {
@@ -97,3 +97,66 @@ a.linkz { cursor: pointer !important; }
 .iconcdp { background: url('../../public/uiIcons/icon-landing-cdp.svg'); }
 .iconltv { background: url('../../public/uiIcons/icon-landing-ltv.svg'); }
 .iconstats { background: url('../../public/uiIcons/icon-landing-stats.svg'); }
+
+@media screen and (max-width: 1200px) {
+  .landingContainer {
+    padding: 40px;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    flex-wrap: wrap;
+    min-height: calc(100vh - 140px);
+    margin-left: -10px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .iconvaults,
+  .iconlend,
+  .iconcdp,
+  .iconltv,
+  .iconstats {
+    width: 70px;
+    height: 70px;
+    background-size: contain;
+    border-radius: 100px;
+  }
+
+  .paper {
+    padding: 40px;
+    padding-top: 20px;
+    box-shadow: none !important;
+    border: 1px solid rgba(108,108,123, 0.2);
+    height: 100%;
+    min-height: inherit;
+    text-align: center;
+  }
+
+  .paper h6 {
+    margin-bottom: 10px;
+    font-size: 140%;
+    width: 100%;
+  }
+
+  .sublinks {
+    padding: 20px !important;
+    min-height: 80px;
+  }
+
+  .intro {
+    text-align: center;
+    padding: 40px;
+  }
+
+  .intro h1 {
+    margin-bottom: 20px;
+    font-size: 140%;
+    color: #FFF !important;
+  }
+
+  .intro p {
+    color: rgba(255,255,255, 0.6) !important;
+    line-height: 1.5em;
+    font-size: 100%;
+  }
+}

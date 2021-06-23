@@ -3,30 +3,57 @@
   border-radius: 10px;
   cursor: pointer;
   min-height: 202px;
-  border: 2px solid rgba(255,255,255, 0.05);
+  border: 1px solid rgba(255,255,255, 0.05);
   -webkit-box-shadow: 3px 3px 12px 0 rgba(0,0,0,0.05) !important;
-box-shadow: 3px 3px 12px 0 rgba(0,0,0,0.05) !important;
+  box-shadow: 3px 3px 12px 0 rgba(0,0,0,0.05) !important;
+}
+
+.ActiveBalance {
+  width: 10px;
+  height: 10px;
+  background: #0ba360;
+  border-radius: 20px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.balanceUSD {
+  color: #4aa166;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !important;
+  font-weight: 700 !important;
+  letter-spacing: -1px;
+  font-size: 130% !important;
+}
+
+.balanceToken {
+  font-size: 100% !important;
 }
 
 .vaultContainer:hover {
-  background-color: rgba(255,255,255, 1);
-  border: 2px solid #1b2cbf;
-  color: #000;
+  border: 1px solid #374dfa;
   -webkit-transition: all 200ms ease-out;
--moz-transition: all 200ms ease-out;
--ms-transition: all 200ms ease-out;
--o-transition: all 200ms ease-out;
-transition: all 200ms ease-out;
+  -moz-transition: all 200ms ease-out;
+  -ms-transition: all 200ms ease-out;
+  -o-transition: all 200ms ease-out;
+  transition: all 200ms ease-out;
 }
 
 .vaultContainerActive {
   width: 100%;
-  border-radius: 10px;
+  position: relative;
+  border-radius: 10px 6px 10px 10px !important;
   cursor: pointer;
-  background: rgb(63,94,251);
-  background: radial-gradient(circle, rgba(27,44,191,1) 0%, rgba(27,44,191,1) 48%) rgba(63,94,251,0.7) 100%;
+  background: rgb(63,94,251, 0);
+  border: 1px solid rgba(255,255,255, 0.05);
   height: 205px;
-  color: #FFF !important;
+  -webkit-transition: all 200ms ease-out;
+  -moz-transition: all 200ms ease-out;
+  -ms-transition: all 200ms ease-out;
+  -o-transition: all 200ms ease-out;
+  transition: all 200ms ease-out;
+  overflow: hidden;
+  position: relative;
 }
 
 .vaultContainerActive .vaultInfo {
@@ -34,13 +61,16 @@ transition: all 200ms ease-out;
 }
 
 .vaultContainerActive:hover {
-  background: rgb(63,94,251);
-  background: radial-gradient(circle, rgba(63,94,251,1) 0%, rgba(63,94,251,1) 48%) rgba(63,94,251,1) 100%;
+  border: 1px solid #0ba360;
+  -webkit-transition: all 200ms ease-out;
+  -moz-transition: all 200ms ease-out;
+  -ms-transition: all 200ms ease-out;
+  -o-transition: all 200ms ease-out;
+  transition: all 200ms ease-out;
 }
 
 .vaultContainerActive .subinfofield {
   font-weight: 400 !important;
-  color: rgba(255, 255, 255, 0.6);
   font-size: 14px !important;
   margin-top: 2px !important;
 }
@@ -87,29 +117,29 @@ transition: all 200ms ease-out;
 .vaultV1VersionContainer {
   border-radius: 24px;
   padding: 5px 12px;
-  background: rgba(229, 107, 115, 1);
+  background: #BD1550 !important;
   color: #FFF !important;
 }
 
 .vaultV2VersionContainer {
   border-radius: 24px;
   padding: 5px 12px;
-  background: rgba(55, 77, 250, 1);
+  background: #0048FF;
   color: #FFF !important;
 }
 
 .vaultExpVersionContainer {
   border-radius: 24px;
   padding: 5px 12px;
-  background: rgba(255, 179, 71, 1);
+  background: #703D6F !important;
   color: #FFF !important;
 }
 
 .vaultEarnVersionContainer {
   border-radius: 24px;
   padding: 5px 12px;
-  background: rgba(220, 107, 229, 1);
-  color: #FFF !important;
+  background: #77CCA4 !important;
+  color: #000 !important;
 }
 
 .vaultVersionText {
@@ -121,7 +151,7 @@ transition: all 200ms ease-out;
 .vaultLockupVersionContainer {
   border-radius: 24px;
   padding: 5px 12px;
-  background: rgba(244,220,10, 1);
+  background: #FFD000;
   color: rgba(0, 0, 0, 1) !important;
 }
 
@@ -136,12 +166,7 @@ transition: all 200ms ease-out;
   margin-top: 2px !important;
 }
 
-
 @media screen and (max-width: 1440px) {
-
-}
-
-@media screen and (max-width: 1000px) {
 
 }
 

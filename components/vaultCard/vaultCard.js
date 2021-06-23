@@ -42,6 +42,12 @@ export default function VaultCard({ vault, account }) {
   return (
     <Grid item xs={12} sm={6} md={4} lg={3}>
       <Paper elevation={0} className={activeVault ? classes.vaultContainerActive : classes.vaultContainer} onClick={handleNavigate}>
+
+      {activeVault && (
+      <div className={classes.ActiveBalance}>
+      </div>
+      )}
+
         <div className={classes.vaultTitle}>
           <div className={classes.vaultLogo}>
             <img src={vault.icon ? vault.icon : '/tokens/unknown-logo.png'} alt="" width={50} height={50} />
@@ -61,11 +67,11 @@ export default function VaultCard({ vault, account }) {
         <div className={classes.vaultInfo}>
           {activeVault && (
             <div className={classes.vaultInfoField}>
-              <Typography variant="h2" className={classes.fontWeightBold}>
+              <Typography variant="h2" className={classes.balanceUSD}>
                 {!(vault && vault.balance) && <Skeleton />}
                 {vault && vault.balanceUSD && vault.type !== 'Lockup' && '$ ' + formatCurrency(vault.balanceUSD)}
               </Typography>
-              <Typography variant="h2" className={classes.fontWeightBold}>
+              <Typography variant="h2" className={classes.balanceToken}>
                 {!(vault && vault.balance) && <Skeleton />}
                 {vault && vault.balanceInToken && formatCurrency(vault.balanceInToken) + ' ' + vault.displayName}
               </Typography>
@@ -74,6 +80,7 @@ export default function VaultCard({ vault, account }) {
           )}
           {!activeVault && account && account.address && (
             <div className={classes.vaultInfoField}>
+
               <Typography variant="h2" className={classes.fontWeightBold}>
                 {!(vault && vault.tokenMetadata && vault.tokenMetadata.balance) ? (
                   <Skeleton />

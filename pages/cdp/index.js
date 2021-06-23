@@ -87,7 +87,7 @@ function CDP({ changeTheme }) {
   const renderCDPs = () => {
     const status = getStatus(cdps);
     return (
-      <div className={classes.fixtop}>
+      <div>
         <Paper elevation={0} className={classes.overviewContainer2}>
           <div className={classes.overviewCard}>
             <CDPSuppliedGraph assets={cdps} />
@@ -164,7 +164,7 @@ function CDP({ changeTheme }) {
 
   const renderNoCDPs = () => {
     return (
-      <div className={classes.fixtop}>
+      <div>
       <Paper className={classes.cdpFilters}>
         <TextField
           className={classes.searchContainer}

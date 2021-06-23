@@ -51,15 +51,19 @@ export default function VaultSplitGraph({ vaults }) {
     });
 
   const COLORS = [
-    "#FFE8B0",
-    "#9748c0",
-    "#4bb46b",
-    "#C9FFCD",
-    "#AAEBFF",
-    "#004BBC",
-    "#4782ED",
-    "#BDE7FF",
-    "#8EC3FF"
+    "#0045ff",
+    "#1162df",
+    "#1d76ca",
+    "#2686b8",
+    "#2f96a7",
+    "#c57fa4",
+    "#fa6faa",
+    "#f5921d",
+    "#f8682f",
+    "#ff005e",
+    "#da0052",
+    "#b60046",
+    "#93003a"
   ];
   const onPieEnter = (data, index) => {
     setActiveIndex(index);
@@ -76,7 +80,7 @@ export default function VaultSplitGraph({ vaults }) {
             cy={25}
             innerRadius={15}
             outerRadius={30}
-            fill="#2F80ED"
+            fill="#FF0000"
             stroke="none"
             dataKey="value"
             onMouseMove={onPieEnter}

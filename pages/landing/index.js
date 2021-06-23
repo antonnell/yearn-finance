@@ -32,13 +32,13 @@ function Landing({ changeTheme }) {
       </Head>
         <div className={classes.landingContainer}>
         <Grid container spacing={3}>
-          <Grid item xs={4}>
+          <Grid item lg={4} md={12} xs={12}>
             <Paper elevation={0} className={classes.intro}>
               <Typography variant="h1">Welcome to Yearn.Fi</Typography>
               <Typography variant="body2">Yearn Finance is a suite of products in Decentralized Finance (DeFi) that provides lending aggregation, yield generation, and insurance on the Ethereum blockchain. The protocol is maintained by various independent developers and is governed by YFI holders.</Typography>
             </Paper>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item lg={4} md={6} sm={6} xs={12}>
             <a onClick={() => router.push('/invest')} className={classes.linkz}>
               <Paper elevation={0}  className={classes.paper}>
                 <div className={classes.icon}>
@@ -51,7 +51,7 @@ function Landing({ changeTheme }) {
               </Paper>
             </a>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item lg={4} md={6} sm={6} xs={12}>
             <a onClick={() => router.push('/lend')} className={classes.linkz}>
               <Paper elevation={0}  className={classes.paper}>
                 <div className={classes.icon}>
@@ -64,7 +64,7 @@ function Landing({ changeTheme }) {
               </Paper>
             </a>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item lg={4} md={6} sm={6} xs={12}>
             <a onClick={() => router.push('/cdp')} className={classes.linkz}>
               <Paper elevation={0}  className={classes.paper}>
                 <div className={classes.icon}>
@@ -77,7 +77,7 @@ function Landing({ changeTheme }) {
               </Paper>
             </a>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item lg={4} md={6} sm={6} xs={12}>
             <a onClick={() => router.push('/ltv')} className={classes.linkz}>
               <Paper elevation={0}  className={classes.paper}>
                 <div className={classes.icon}>
@@ -90,7 +90,7 @@ function Landing({ changeTheme }) {
               </Paper>
             </a>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item lg={4} md={6} sm={6} xs={12}>
             <a onClick={() => router.push('/stats')} className={classes.linkz}>
               <Paper elevation={0}  className={classes.paper}>
                 <div className={classes.icon}>
@@ -103,22 +103,22 @@ function Landing({ changeTheme }) {
               </Paper>
             </a>
           </Grid>
-          <Grid item xs={3} onClick={() => { window.open('https://multichain.xyz', '_blank') }}>
+          <Grid item lg={3} md={6} xs={12} onClick={() => { window.open('https://multichain.xyz', '_blank') }}>
             <Paper elevation={0}  className={classes.sublinks}>
               <Typography variant="h2">Multichain</Typography>
             </Paper>
           </Grid>
-          <Grid item xs={3} onClick={() => { window.open('https://chainlist.org/', '_blank') }}>
+          <Grid item lg={3} md={6} xs={12} onClick={() => { window.open('https://chainlist.org/', '_blank') }}>
             <Paper elevation={0}  className={classes.sublinks}>
               <Typography variant="h2">Chainlist</Typography>
             </Paper>
           </Grid>
-          <Grid item xs={3} onClick={() => { window.open('https://feeds.sushiquote.finance/', '_blank') }}>
+          <Grid item lg={3} md={6} xs={12} onClick={() => { window.open('https://feeds.sushiquote.finance/', '_blank') }}>
             <Paper elevation={0}  className={classes.sublinks}>
               <Typography variant="h2">Feeds</Typography>
             </Paper>
           </Grid>
-          <Grid item xs={3} onClick={() => { window.open('https://ve-token-voting.vercel.app/', '_blank') }}>
+          <Grid item lg={3} md={6} xs={12} onClick={() => { window.open('https://ve-token-voting.vercel.app/', '_blank') }}>
             <Paper elevation={0}  className={classes.sublinks}>
               <Typography variant="h2">veAssets</Typography>
             </Paper>
