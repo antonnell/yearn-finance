@@ -25,7 +25,7 @@ export default function Withdraw({ vault }) {
   const [gasSpeed, setGasSpeed] = useState('');
   const zapperImgUrl = 'https://zapper.fi/images/';
   const withdrawTokens = [
-    { label: vault.tokenMetadata.displayName, address: '0x0000000000000000000000000000000000000000', isVault: true, img: vault.icon },
+    { label: vault.tokenMetadata.displayName, address: '0x0000000000000000000000000000000000000000', isVault: true, img: vault.tokenMetadata.icon },
     { label: 'ETH', address: '0x0000000000000000000000000000000000000000', img: `${zapperImgUrl}ETH-icon.png` },
     { label: 'DAI', address: '0x6b175474e89094c44da98b954eedeac495271d0f', img: `${zapperImgUrl}DAI-icon.png` },
     { label: 'USDC', address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', img: `${zapperImgUrl}USDC-icon.png` },
@@ -112,9 +112,9 @@ export default function Withdraw({ vault }) {
     };
   });
 
-  let depositDisabled = false
+  let depositDisabled = vault?.emergency_shutdown
   let depositDisabledMessage = null
-  
+
 
   return (
     <div className={classes.depositContainer}>
@@ -205,6 +205,15 @@ export default function Withdraw({ vault }) {
                 Withdraw to
               </Typography>
             </div>
+            <div className={classes.balances}>
+              <Typography
+                variant="h5"
+                className={classes.value}
+                noWrap
+              >
+                Withdrawal Fee: {vault.type === 'v2' ? formatCurrency(0.00) : formatCurrency(BigNumber(amount === '' ? 0.00 : amount).times(5).div(1000))}
+              </Typography>
+          </div>
           </div>
           <Autocomplete
             disableClearable={true}
@@ -296,7 +305,7 @@ export default function Withdraw({ vault }) {
             <Typography variant="h5" className={classes.flexInline}>
               {loading ? (
                 <>
-                  <CircularProgress size={25} />
+                  <CircularProgress size={15} />
                   {withdrawalStatus}
                 </>
               ) : (

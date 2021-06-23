@@ -11,7 +11,7 @@ import classes from './simulation.module.css';
 import EditAttributesIcon from '@material-ui/icons/SettingsApplications';
 
 export default function Simulation({ tokenAmount, vault, currentToken, zapperVaults }) {
-  const [apy, setAPY] = useState(vault.apy.recommended);
+  const [apy, setAPY] = useState(vault.apy.net_apy);
   const [pricePerToken, setPricePerToken] = useState(1);
 
   const [years, setYears] = useState(1);

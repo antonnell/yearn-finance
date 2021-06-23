@@ -316,7 +316,7 @@ export default function CDPDepositAndBorrow({ cdp, borrowAsset }) {
           >
             <Typography variant="h5">
               {loading ? (
-                <CircularProgress size={25} />
+                <CircularProgress size={15} />
               ) : BigNumber(cdp.collateral).gt(0) ? (
                 "Supply And Borrow"
               ) : (
@@ -342,7 +342,7 @@ export default function CDPDepositAndBorrow({ cdp, borrowAsset }) {
                 className={classes.marginRight}
               >
                 <Typography variant="h5">
-                  {loading ? <CircularProgress size={25} /> : "Approve Exact"}
+                  {loading ? <CircularProgress size={15} /> : "Approve Exact"}
                 </Typography>
               </Button>
               <Button
@@ -356,7 +356,7 @@ export default function CDPDepositAndBorrow({ cdp, borrowAsset }) {
                 className={classes.marginLeft}
               >
                 <Typography variant="h5">
-                  {loading ? <CircularProgress size={25} /> : "Approve Max"}
+                  {loading ? <CircularProgress size={15} /> : "Approve Max"}
                 </Typography>
               </Button>
             </React.Fragment>

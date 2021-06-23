@@ -30,6 +30,8 @@ import {
   ENABLE_COLLATERAL_LEND_RETURNED,
   DISABLE_COLLATERAL_LEND,
   DISABLE_COLLATERAL_LEND_RETURNED,
+  LENDING_BORROW_RETURNED,
+  LENDING_REPAY_RETURNED
 } from "../../stores/constants";
 
 import classes from "./lendBorrowAssetRow.module.css";
@@ -500,7 +502,7 @@ function LendBorrowAssetDetails({
                   >
                     <Typography variant="h5">
                       {loading ? (
-                        <CircularProgress size={25} />
+                        <CircularProgress size={15} />
                       ) : (
                         "Approve Exact"
                       )}
@@ -517,7 +519,7 @@ function LendBorrowAssetDetails({
                     className={classes.marginLeft}
                   >
                     <Typography variant="h5">
-                      {loading ? <CircularProgress size={25} /> : "Approve Max"}
+                      {loading ? <CircularProgress size={15} /> : "Approve Max"}
                     </Typography>
                   </Button>
                 </React.Fragment>

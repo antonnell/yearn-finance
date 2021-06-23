@@ -1,36 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from "next/router";
-import { Typography, Paper, TextField, MenuItem, Grid, InputAdornment } from '@material-ui/core';
+import { Typography, Paper, Grid } from '@material-ui/core';
 
 import Head from 'next/head';
 import Layout from '../../components/layout/layout.js';
 import classes from './landing.module.css';
-import BigNumber from 'bignumber.js';
 
 import stores from '../../stores/index.js';
-import { GET_MAX, MAX_RETURNED, ERROR } from '../../stores/constants';
+import { MAX_RETURNED } from '../../stores/constants';
 
-import { formatCurrency, formatAddress } from '../../utils';
 
 function Landing({ changeTheme }) {
   const router = useRouter();
 
-  const [asset, setAsset] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [web3, setWeb3] = useState(null);
-  const [assets, setAssets] = useState([]);
-  const [assetDetails, setAssetDetails] = useState(null);
-
-  useEffect(async function () {
-    setWeb3(await stores.accountStore.getWeb3Provider());
-    setAssets(stores.ltvStore.getStore('assets'));
-  }, []);
-
   useEffect(function () {
     const maxReturned = (maxVals) => {
       console.log(maxVals);
-      setAssetDetails(maxVals);
-      setLoading(false);
     };
 
     stores.emitter.on(MAX_RETURNED, maxReturned);
@@ -39,34 +24,6 @@ function Landing({ changeTheme }) {
       stores.emitter.removeListener(MAX_RETURNED, maxReturned);
     };
   }, []);
-
-  const onPoolSelectChange = (event, theOption) => {
-    setAsset(theOption);
-
-    setLoading(true);
-    stores.dispatcher.dispatch({
-      type: GET_MAX,
-      content: { address: theOption.address },
-    });
-  };
-
-  const renderAssetOption = (web3, option) => {
-    return (
-      <MenuItem key={option.id} value={option.symbol} className={classes.assetSelectMenu}>
-        <div className={classes.poolSelectOption}>
-          <img
-            className={classes.poolIcon}
-            src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${web3.utils.toChecksumAddress(
-              option.address,
-            )}/logo.png`}
-            width={30}
-            height={30}
-          />
-          <Typography variant="h5">{option.symbol}</Typography>
-        </div>
-      </MenuItem>
-    );
-  };
 
   return (
     <Layout changeTheme={changeTheme}>
@@ -89,7 +46,7 @@ function Landing({ changeTheme }) {
                 </div>
                 <Typography variant="h6">Investment Vaults</Typography>
                 <Typography variant="body2">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.
+                  Vaults follow unique strategies that are designed to maximize the yield of the deposited asset and minimize risk.
                 </Typography>
               </Paper>
             </a>
@@ -102,7 +59,7 @@ function Landing({ changeTheme }) {
                 </div>
                 <Typography variant="h6">Lend &amp; Borrow</Typography>
                 <Typography variant="body2">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.
+                  Supply assets to the Iron Bank to get your share of the lending fees. Borrow against your provided collateral.
                 </Typography>
               </Paper>
             </a>
@@ -115,7 +72,7 @@ function Landing({ changeTheme }) {
                 </div>
                 <Typography variant="h6">Collateral Staking</Typography>
                 <Typography variant="body2">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.
+                  Unit Protocol is a decentralized protocol that allows you to mint stablecoin $USDP using a variety of tokens as collateral.
                 </Typography>
               </Paper>
             </a>
@@ -141,7 +98,7 @@ function Landing({ changeTheme }) {
                 </div>
                 <Typography variant="h6">Statistics</Typography>
                 <Typography variant="body2">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.
+                  An overview of the Yearn ecosystem. Get a quick glance at the performance of all of Yearn's vaults.
                 </Typography>
               </Paper>
             </a>

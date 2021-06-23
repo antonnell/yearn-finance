@@ -438,7 +438,7 @@ function LendSupplyAssetDetails({
                   >
                     <Typography variant="h5">
                       {loading ? (
-                        <CircularProgress size={25} />
+                        <CircularProgress size={15} />
                       ) : (
                         "Approve Exact"
                       )}
@@ -455,7 +455,7 @@ function LendSupplyAssetDetails({
                     className={classes.marginLeft}
                   >
                     <Typography variant="h5">
-                      {loading ? <CircularProgress size={25} /> : "Approve Max"}
+                      {loading ? <CircularProgress size={15} /> : "Approve Max"}
                     </Typography>
                   </Button>
                 </React.Fragment>

@@ -21,6 +21,7 @@ import {
   CONNECT_WALLET,
   UPDATE_DEPOSIT_STATUS,
   VAULTS_UPDATED,
+  YVBOOST_VAULT,
 } from '../../stores/constants';
 import Simulation from '../simulation/simulation';
 
@@ -199,6 +200,9 @@ export default function Deposit({ vault }) {
           if (vault.tokenMetadata.balance > 0) {
             tmpTokens.unshift(vault.tokenMetadata);
           }
+          if (vault?.address === YVBOOST_VAULT) {
+            tmpTokens = [vault?.tokenMetadata];
+          }
           setZapperBalanceTokens(tmpTokens);
           if (!tmpHasVaultToken) {
             if (tmpTokens?.length > 0) {
@@ -219,7 +223,7 @@ export default function Deposit({ vault }) {
     }
   }, []);
 
-  let depositDisabled = false
+  let depositDisabled = vault?.emergency_shutdown
   let depositDisabledMessage = null
 
 
@@ -434,7 +438,7 @@ export default function Deposit({ vault }) {
               <Typography variant="h5" className={ classes.flexInline }>
                 {loading ? (
                   <>
-                    <CircularProgress size={25} />
+                    <CircularProgress size={15} />
                     {depositStatus}
                   </>
                 ) : (
@@ -458,7 +462,7 @@ export default function Deposit({ vault }) {
                   disabled={loading || depositDisabled}
                   className={classes.marginRight}
                 >
-                  <Typography variant="h5">{loading ? <CircularProgress size={25} /> : 'Approve Exact'}</Typography>
+                  <Typography variant="h5">{loading ? <CircularProgress size={15} /> : 'Approve Exact'}</Typography>
                 </Button>
                 <Button
                   fullWidth
@@ -470,7 +474,7 @@ export default function Deposit({ vault }) {
                   disabled={loading || depositDisabled}
                   className={classes.marginLeft}
                 >
-                  <Typography variant="h5">{loading ? <CircularProgress size={25} /> : 'Approve Max'}</Typography>
+                  <Typography variant="h5">{loading ? <CircularProgress size={15} /> : 'Approve Max'}</Typography>
                 </Button>
               </React.Fragment>
             )}

@@ -228,7 +228,7 @@
 }
 
 .vaultFilters {
-  width: calc(100% + 10px);
+  width: 100%;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -237,7 +237,6 @@
   background: #111729;
   position: sticky;
   top: 60px;
-  margin-left: -10px;
   padding: 10px 0;
   z-index: 9;
   border-radius: 0 !important;
@@ -349,8 +348,7 @@
   justify-content: space-between;
   flex-wrap: wrap;
   position: relative;
-  width: calc(100% + 10px);
-  left: -10px;
+  width: 100%;
   padding: 30px 70px 30px 70px;
   z-index: 9;
   top: 60px;
@@ -453,9 +451,8 @@
   }
 
   .overviewContainer2 {
-    width: calc(100% + 10px);
-    left: -10px;
-    padding: 45px 10px;
+    width: 100%;
+    padding: 45px 12px;
     padding-left: 70px;
     z-index: 9;
     top: 0px;
@@ -465,7 +462,7 @@
   }
 
   .vaultFilters {
-    width: calc(100% + 10px);
+    width: 100%;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -598,5 +595,4 @@
   cursor: pointer;
   font-size: 18px;
   font-weight: bold;
-}
 }

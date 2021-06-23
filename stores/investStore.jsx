@@ -150,6 +150,9 @@ class Store {
         .filter((vault) => {
           return vault.type !== 'zap';
         })
+        .filter((vault) => {
+          return vault.address != '0xbD17B1ce622d73bD438b9E658acA5996dc394b0d' // excluding sushiswap LP pair vault. Doesn't work for now
+        })
         .map((vault) => {
           if (vault.address === '0xc5bDdf9843308380375a611c18B50Fb9341f502A') {
             vault.type = 'Lockup';
@@ -157,7 +160,11 @@ class Store {
           vault.tokenMetadata = vault.token;
 
           if(!vault.tokenMetadata.displayName) {
-            vault.tokenMetadata.displayName = vault.tokenMetadata.name
+            vault.tokenMetadata.displayName = vault.tokenMetadata.display_name
+          }
+
+          if(!vault.displayName) {
+            vault.displayName = vault.display_name
           }
 
           return vault;
@@ -236,7 +243,7 @@ class Store {
 
         if (!historicPrice || historicPrice.length === 0) {
           apyObj = {
-            recommended: 0,
+            net_apy: 0,
             type: 'Earn',
           };
         } else {
@@ -250,7 +257,7 @@ class Store {
           const inceptionAPY = (priceGrowthSinceInception * 2389090) / 1e18 / blocksSinceInception; // 2389090 = (60/13.2) * 60 * 24 * 365
 
           apyObj = {
-            recommended: oneMonthAPY,
+            net_apy: oneMonthAPY,
             type: 'Earn',
           };
         }
@@ -392,9 +399,9 @@ class Store {
             let price = 1; // this is not accurate for WBTC - used to get this from coingecko
             const totalSupply = await vaultContract.methods.totalSupply().call();
             vault.tvl = {
-              totalAssets: totalSupply,
+              total_assets: totalSupply,
               price: price,
-              value: BigNumber(totalSupply)
+              tvl: BigNumber(totalSupply)
                 .times(price)
                 .times(vault.pricePerFullShare)
                 .div(10 ** vault.decimals)
@@ -473,9 +480,9 @@ class Store {
             !currentValue.balanceUSD ||
             BigNumber(currentValue.balanceUSD).eq(0) ||
             !currentValue.apy ||
-            !currentValue.apy.recommended ||
-            currentValue.apy.recommended === 'New' ||
-            BigNumber(currentValue.apy.recommended).eq(0)
+            !currentValue.apy.net_apy ||
+            currentValue.apy.net_apy === 'New' ||
+            BigNumber(currentValue.apy.net_apy).eq(0)
           ) {
             return accumulator;
           }
@@ -484,7 +491,7 @@ class Store {
             .plus(
               BigNumber(currentValue.balanceUSD)
                 .div(portfolioBalanceUSD)
-                .times(currentValue.apy.recommended * 100),
+                .times(currentValue.apy.net_apy * 100),
             )
             .toNumber();
         }, 0);
@@ -497,26 +504,29 @@ class Store {
         const tvlInfo = {
           tvlUSD: vaultsBalanced.reduce((acc, current) => {
             // console.log(`${current.type} -> ${current.symbol}`);
-            // console.log(current.tvl?.value);
+            // console.log(current.tvl?.tvl);
             // console.log('-------------');
 
-            return BigNumber(acc).plus(current.tvl ? current.tvl.value : 0);
+            return BigNumber(acc).plus((current.tvl && current.tvl.tvl) ? current.tvl.tvl : 0);
           }, 0),
           totalVaultHoldingsUSD: vaultsBalanced
             .filter((vault) => {
               return vault.type !== 'Earn';
             })
             .reduce((acc, current) => {
-              return BigNumber(acc).plus(current.tvl ? current.tvl.value : 0);
+              return BigNumber(acc).plus((current.tvl && current.tvl.tvl) ? current.tvl.tvl : 0);
             }, 0),
           totalEarnHoldingsUSD: vaultsBalanced
             .filter((vault) => {
               return vault.type === 'Earn';
             })
             .reduce((acc, current) => {
-              return BigNumber(acc).plus(current.tvl ? current.tvl.value : 0);
+              console.log(current)
+              return BigNumber(acc).plus((current.tvl && current.tvl.tvl) ? current.tvl.tvl : 0);
             }, 0),
         };
+
+        console.log(tvlInfo)
 
         this.setStore({
           vaults: vaultsBalanced,

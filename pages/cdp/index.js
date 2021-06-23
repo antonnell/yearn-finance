@@ -127,36 +127,37 @@ function CDP({ changeTheme }) {
             </div>
           </div>
         </Paper>
-
-        <Typography variant="h6" className={classes.tableHeader}>
-          Your Active CDPs
-        </Typography>
-        <Paper elevation={0} className={classes.tableContainer}>
-          <CDPActiveTable cdps={cdps} borrowAsset={borrowAsset} />
-        </Paper>
-        <Paper className={classes.cdpFilters}>
-          <TextField
-            className={classes.searchContainer}
-            variant="outlined"
-            fullWidth
-            placeholder="ETH, CRV, ..."
-            value={search}
-            onChange={onSearchChanged}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            }}
-          />
-        </Paper>
-        <Typography variant="h6" className={classes.tableHeader}>
-          All CDP Options
-        </Typography>
-        <Paper elevation={0} className={classes.tableContainer}>
-          <CDPAllTable cdps={filteredCDPAssets} borrowAsset={borrowAsset} />
-        </Paper>
+        <div className={ classes.padded }>
+          <Typography variant="h6" className={classes.tableHeader}>
+            Your Active CDPs
+          </Typography>
+          <Paper elevation={0} className={classes.tableContainer}>
+            <CDPActiveTable cdps={cdps} borrowAsset={borrowAsset} />
+          </Paper>
+          <Paper className={classes.cdpFilters}>
+            <TextField
+              className={classes.searchContainer}
+              variant="outlined"
+              fullWidth
+              placeholder="ETH, CRV, ..."
+              value={search}
+              onChange={onSearchChanged}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Paper>
+          <Typography variant="h6" className={classes.tableHeader}>
+            All CDP Options
+          </Typography>
+          <Paper elevation={0} className={classes.tableContainer}>
+            <CDPAllTable cdps={filteredCDPAssets} borrowAsset={borrowAsset} />
+          </Paper>
+        </div>
       </div>
     );
   };

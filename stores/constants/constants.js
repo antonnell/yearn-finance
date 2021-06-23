@@ -2,9 +2,9 @@ import BigNumber from 'bignumber.js';
 
 // URLS
 export const YEARN_API = 'https://api.yearn.tools/';
-export const YEARN_VAULTS_API = 'https://vaults.finance/all';
+export const YEARN_VAULTS_API = 'https://yearn-static-api.s3.amazonaws.com/v1/chains/1/vaults/all';
 export const GAS_PRICE_API = 'https://gasprice.poa.network/';
-export const ZAPPER_GAS_PRICE_API = 'https://api.zapper.fi/v1/gas-price?api_key=96e0cc51-a62e-42ca-acee-910ea7d2a241'
+export const ZAPPER_GAS_PRICE_API = 'https://api.zapper.fi/v1/gas-price?api_key=96e0cc51-a62e-42ca-acee-910ea7d2a241';
 export const ETHERSCAN_URL = 'https://etherscan.io/';
 export const COVER_API = 'https://api.coverprotocol.com/protocol_data/production';
 
@@ -13,6 +13,7 @@ export const CREAM_PRICE_ORACLE_ADDRESS = '0x6B96c414ce762578c3E7930da9114CffC88
 export const COMPTROLLER_ADDRESS = '0xAB1c342C7bf5Ec5F02ADEA1c2270670bCa144CbB';
 export const IRON_BANK_REGISTRY_ADAPTER = '0xFF0bd2d0C7E9424ccB149ED3757155eEf41a793D';
 export const CDP_VAULT_ADDRESS = '0xb1cFF81b9305166ff1EFc49A129ad2AfCd7BCf19';
+export const CDP_MANAGER_ADDRESS = '0x0e13ab042eC5AB9Fc6F43979406088B9028F66fA';
 
 export const VAULT_MANAGER_KEYDONIX_ASSET = '0x78727A77028d9130D2772713d570780231E64ECf';
 export const VAULT_MANAGER_KEEP3R_ASSET = '0x211A6d4D4F49c0C5814451589d6378FdA614Adb9';
@@ -118,6 +119,7 @@ export const APPROVE_LEND_RETURNED = 'APPROVE_LEND_RETURNED';
 
 export const LENDING_SUPPLY_RETURNED = 'LENDING_SUPPLY_RETURNED';
 export const LENDING_BORROW_RETURNED = 'LENDING_BORROW_RETURNED';
+export const LENDING_REPAY_RETURNED = 'LENDING_REPAY_RETURNED';
 
 export const DEPOSIT_LEND = 'DEPOSIT_LEND';
 export const DEPOSIT_LEND_RETURNED = 'DEPOSIT_LEND_RETURNED';
@@ -157,3 +159,5 @@ export const APPROVE_CDP = 'APPROVE_CDP';
 export const APPROVE_CDP_RETURNED = 'APPROVE_CDP_RETURNED';
 
 export const MAX_UINT256 = new BigNumber(2).pow(256).minus(1).toFixed(0);
+
+export const YVBOOST_VAULT = '0x9d409a0A012CFbA9B15F6D4B36Ac57A46966Ab9a';

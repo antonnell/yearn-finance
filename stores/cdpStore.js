@@ -2,6 +2,7 @@ import async from 'async';
 import {
   MAX_UINT256,
   CDP_VAULT_ADDRESS,
+  CDP_MANAGER_ADDRESS,
   ERROR,
   TX_SUBMITTED,
   STORE_UPDATED,
@@ -44,6 +45,7 @@ import {
   COLLATERALREGISTRYABI,
   UNISWAPPAIRABI,
   CHAINLINKORACLEABI,
+  CDPMANAGER01ABI,
 } from './abis';
 import { bnDec, sqrt } from '../utils';
 import cdpJSON from './configurations/cdp';
@@ -395,34 +397,62 @@ class Store {
   };
 
   _getORacleType = async (vaultParams, address) => {
-    //only ever seen oracle types: 3, 4, 7, 8
-
-    // 5 is chainlink, which I believe they changed all their feeds to
+    // 5, 12 is chainlink, which I believe they changed all their feeds to
     const is5 = await vaultParams.methods.isOracleTypeEnabled(5, address).call();
     if (is5) {
       return 5;
     }
-    const is3 = await vaultParams.methods.isOracleTypeEnabled(3, address).call();
-    if (is3) {
-      return 3;
-    }
-    const is7 = await vaultParams.methods.isOracleTypeEnabled(7, address).call();
-    if (is7) {
-      return 7;
-    }
-
     const is12 = await vaultParams.methods.isOracleTypeEnabled(12, address).call();
     if (is12) {
       return 12;
     }
 
+    //3, 4 is keerp uniqueote
+    const is3 = await vaultParams.methods.isOracleTypeEnabled(3, address).call();
+    if (is3) {
+      return 3;
+    }
     const is4 = await vaultParams.methods.isOracleTypeEnabled(4, address).call();
     if (is4) {
       return 4;
     }
+
+    //7, 8 is keep3r susiquote
+    const is7 = await vaultParams.methods.isOracleTypeEnabled(7, address).call();
+    if (is7) {
+      return 7;
+    }
     const is8 = await vaultParams.methods.isOracleTypeEnabled(8, address).call();
     if (is8) {
       return 8;
+    }
+
+    //1, 2 is keydonix (don't know how these bad boys work)
+    const is1 = await vaultParams.methods.isOracleTypeEnabled(1, address).call();
+    if (is1) {
+      return 1;
+    }
+    const is2 = await vaultParams.methods.isOracleTypeEnabled(2, address).call();
+    if (is2) {
+      return 2;
+    }
+
+    // new oracles, need to figure out how to support them
+    const is9 = await vaultParams.methods.isOracleTypeEnabled(9, address).call();
+    if (is9) {
+      return 9;
+    }
+    const is11 = await vaultParams.methods.isOracleTypeEnabled(11, address).call();
+    if (is11) {
+      return 11;
+    }
+    const is13 = await vaultParams.methods.isOracleTypeEnabled(13, address).call();
+    if (is13) {
+      return 13;
+    }
+    const is14 = await vaultParams.methods.isOracleTypeEnabled(14, address).call();
+    if (is14) {
+      return 14;
     }
 
     return 0;
@@ -443,6 +473,8 @@ class Store {
   isChainlinkOracle = (oracleType) => {
     return [5, 12].includes(oracleType);
   };
+
+  // 9, 11, 13, 14 - new oracles
 
   _getDolarPrice = async (asset, ethPrice) => {
     try {
@@ -742,7 +774,7 @@ class Store {
 
     const gasPrice = await stores.accountStore.getGasPrice(gasSpeed);
 
-    this._callContract(web3, tokenContract, 'approve', [CDP_VAULT_ADDRESS, amountToSend], account, gasPrice, CONFIGURE_CDP, callback);
+    this._callContractWait(web3, tokenContract, 'approve', [CDP_VAULT_ADDRESS, amountToSend], account, gasPrice, CONFIGURE_CDP, callback);
   };
 
   depositCDP = async (payload) => {
@@ -760,75 +792,103 @@ class Store {
 
     const { cdp, depositAmount, borrowAmount, gasSpeed } = payload.content;
 
-    // all others for now
-    if (BigNumber(depositAmount).gt(0) && (!borrowAmount || borrowAmount === '' || BigNumber(borrowAmount).eq(0))) {
-      this._callDepositCDP(web3, cdp, account, depositAmount, borrowAmount, gasSpeed, (err, depositResult) => {
-        if (err) {
-          return this.emitter.emit(ERROR, err);
-        }
+    this._callJoinCDP(web3, cdp, account, depositAmount, borrowAmount, gasSpeed, (err, depositResult) => {
+      if (err) {
+        return this.emitter.emit(ERROR, err);
+      }
 
-        return this.emitter.emit(DEPOSIT_BORROW_CDP_RETURNED, depositResult);
-      });
-    } else {
-      this._callDepositAndBorrowCDP(web3, cdp, account, depositAmount, borrowAmount, gasSpeed, (err, depositResult) => {
-        if (err) {
-          return this.emitter.emit(ERROR, err);
-        }
+      return this.emitter.emit(DEPOSIT_BORROW_CDP_RETURNED, depositResult);
+    });
 
-        return this.emitter.emit(DEPOSIT_BORROW_CDP_RETURNED, depositResult);
-      });
-    }
+    // if (BigNumber(depositAmount).gt(0) && (!borrowAmount || borrowAmount === '' || BigNumber(borrowAmount).eq(0))) {
+    //   this._callDepositCDP(web3, cdp, account, depositAmount, borrowAmount, gasSpeed, (err, depositResult) => {
+    //     if (err) {
+    //       return this.emitter.emit(ERROR, err);
+    //     }
+    //
+    //     return this.emitter.emit(DEPOSIT_BORROW_CDP_RETURNED, depositResult);
+    //   });
+    // } else {
+    //   this._callDepositAndBorrowCDP(web3, cdp, account, depositAmount, borrowAmount, gasSpeed, (err, depositResult) => {
+    //     if (err) {
+    //       return this.emitter.emit(ERROR, err);
+    //     }
+    //
+    //     return this.emitter.emit(DEPOSIT_BORROW_CDP_RETURNED, depositResult);
+    //   });
+    // }
   };
 
-  _callDepositCDP = async (web3, asset, account, depositAmount, borrowAmount, gasSpeed, callback) => {
+  _callJoinCDP = async (web3, asset, account, depositAmount, borrowAmount, gasSpeed, callback) => {
     try {
-      let cdpContract = new web3.eth.Contract(VAULTMANAGERSTANDARDABI, VAULT_MANAGER_STANDARD);
+      let cdpContract = new web3.eth.Contract(CDPMANAGER01ABI, CDP_MANAGER_ADDRESS);
 
       const depositAmountToSend = BigNumber(depositAmount === '' ? 0 : depositAmount)
         .times(10 ** 18)
         .toFixed(0);
-      const gasPrice = await stores.accountStore.getGasPrice(gasSpeed);
 
-      this._callContract(web3, cdpContract, 'deposit', [asset.tokenMetadata.address, depositAmountToSend], account, gasPrice, CONFIGURE_CDP, callback);
-    } catch (ex) {
-      console.log(ex);
-      return this.emitter.emit(ERROR, ex);
-    }
-  };
-
-  _callDepositAndBorrowCDP = async (web3, asset, account, depositAmount, borrowAmount, gasSpeed, callback) => {
-    try {
-      const depositAmountToSend = BigNumber(depositAmount === '' ? 0 : depositAmount)
-        .times(bnDec(asset.tokenMetadata.decimals))
-        .toFixed(0);
       const borrowAmountToSend = BigNumber(borrowAmount === '' ? 0 : borrowAmount)
         .times(10 ** 18)
         .toFixed(0);
+
       const gasPrice = await stores.accountStore.getGasPrice(gasSpeed);
 
-      let cdpContract = null;
-      let params = null;
-
-      if (this.isKeydonixOracle(asset.defaultOracleType)) {
-        return;
-      } else if (this.isKeep3rOracle(asset.defaultOracleType)) {
-        cdpContract = new web3.eth.Contract(VAULTMANAGERKEEP3RABI, VAULT_MANAGER_KEEP3R_ASSET);
-        params = [asset.tokenMetadata.address, depositAmountToSend, '0', borrowAmountToSend];
-      } else if (this.isKeep3rSushiSwapOracle(asset.defaultOracleType)) {
-        cdpContract = new web3.eth.Contract(VAULTMANAGERKEEP3RSUSHIABI, VAULT_MANAGER_KEEP3R_SUSHI_ASSET);
-        params = [asset.tokenMetadata.address, depositAmountToSend, borrowAmountToSend];
-      }
-
-      if (BigNumber(asset.debt).gt(0)) {
-        this._callContract(web3, cdpContract, 'depositAndBorrow', params, account, gasPrice, CONFIGURE_CDP, callback);
-      } else {
-        this._callContract(web3, cdpContract, 'spawn', params, account, gasPrice, CONFIGURE_CDP, callback);
-      }
+      this._callContractWait(web3, cdpContract, 'join', [asset.tokenMetadata.address, depositAmountToSend, borrowAmountToSend], account, gasPrice, CONFIGURE_CDP, callback);
     } catch (ex) {
       console.log(ex);
       return this.emitter.emit(ERROR, ex);
     }
   };
+
+  // _callDepositCDP = async (web3, asset, account, depositAmount, borrowAmount, gasSpeed, callback) => {
+  //   try {
+  //     let cdpContract = new web3.eth.Contract(VAULTMANAGERSTANDARDABI, VAULT_MANAGER_STANDARD);
+  //
+  //     const depositAmountToSend = BigNumber(depositAmount === '' ? 0 : depositAmount)
+  //       .times(10 ** 18)
+  //       .toFixed(0);
+  //     const gasPrice = await stores.accountStore.getGasPrice(gasSpeed);
+  //
+  //     this._callContract(web3, cdpContract, 'deposit', [asset.tokenMetadata.address, depositAmountToSend], account, gasPrice, CONFIGURE_CDP, callback);
+  //   } catch (ex) {
+  //     console.log(ex);
+  //     return this.emitter.emit(ERROR, ex);
+  //   }
+  // };
+  //
+  // _callDepositAndBorrowCDP = async (web3, asset, account, depositAmount, borrowAmount, gasSpeed, callback) => {
+  //   try {
+  //     const depositAmountToSend = BigNumber(depositAmount === '' ? 0 : depositAmount)
+  //       .times(bnDec(asset.tokenMetadata.decimals))
+  //       .toFixed(0);
+  //     const borrowAmountToSend = BigNumber(borrowAmount === '' ? 0 : borrowAmount)
+  //       .times(10 ** 18)
+  //       .toFixed(0);
+  //     const gasPrice = await stores.accountStore.getGasPrice(gasSpeed);
+  //
+  //     let cdpContract = null;
+  //     let params = null;
+  //
+  //     if (this.isKeydonixOracle(asset.defaultOracleType)) {
+  //       return;
+  //     } else if (this.isKeep3rOracle(asset.defaultOracleType)) {
+  //       cdpContract = new web3.eth.Contract(VAULTMANAGERKEEP3RABI, VAULT_MANAGER_KEEP3R_ASSET);
+  //       params = [asset.tokenMetadata.address, depositAmountToSend, '0', borrowAmountToSend];
+  //     } else if (this.isKeep3rSushiSwapOracle(asset.defaultOracleType)) {
+  //       cdpContract = new web3.eth.Contract(VAULTMANAGERKEEP3RSUSHIABI, VAULT_MANAGER_KEEP3R_SUSHI_ASSET);
+  //       params = [asset.tokenMetadata.address, depositAmountToSend, borrowAmountToSend];
+  //     }
+  //
+  //     if (BigNumber(asset.debt).gt(0)) {
+  //       this._callContract(web3, cdpContract, 'depositAndBorrow', params, account, gasPrice, CONFIGURE_CDP, callback);
+  //     } else {
+  //       this._callContract(web3, cdpContract, 'spawn', params, account, gasPrice, CONFIGURE_CDP, callback);
+  //     }
+  //   } catch (ex) {
+  //     console.log(ex);
+  //     return this.emitter.emit(ERROR, ex);
+  //   }
+  // };
 
   withdrawCDP = async (payload) => {
     const account = stores.accountStore.getStore('account');
@@ -845,103 +905,131 @@ class Store {
 
     const { cdp, repayAmount, withdrawAmount, gasSpeed } = payload.content;
 
-    if (BigNumber(repayAmount).eq(cdp.debt) || ((!repayAmount || repayAmount === '' || BigNumber(repayAmount).eq(0)) && BigNumber(cdp.debt).eq(0))) {
-      this._callRepayAllAndWithdrawCDP(web3, cdp, account, repayAmount, withdrawAmount, gasSpeed, (err, depositResult) => {
-        if (err) {
-          return this.emitter.emit(ERROR, err);
-        }
-
-        return this.emitter.emit(WITHDRAW_REPAY_CDP_RETURNED, depositResult);
-      });
-    } else if (BigNumber(repayAmount).gt(0) && (!withdrawAmount || withdrawAmount === '' || BigNumber(withdrawAmount).eq(0))) {
-      this._callRepayCDP(web3, cdp, account, repayAmount, withdrawAmount, gasSpeed, (err, depositResult) => {
-        if (err) {
-          return this.emitter.emit(ERROR, err);
-        }
-
-        return this.emitter.emit(WITHDRAW_REPAY_CDP_RETURNED, depositResult);
-      });
-    } else {
-      this._callWithdrawCDP(web3, cdp, account, repayAmount, withdrawAmount, gasSpeed, (err, depositResult) => {
-        if (err) {
-          return this.emitter.emit(ERROR, err);
-        }
-
-        return this.emitter.emit(WITHDRAW_REPAY_CDP_RETURNED, depositResult);
-      });
-    }
-  };
-
-  _callRepayAllAndWithdrawCDP = async (web3, asset, account, repayAmount, withdrawAmount, gasSpeed, callback) => {
-    try {
-      let cdpContract = new web3.eth.Contract(VAULTMANAGERSTANDARDABI, VAULT_MANAGER_STANDARD);
-
-      const withdrawAmountToSend = BigNumber(withdrawAmount === '' ? 0 : withdrawAmount)
-        .times(bnDec(asset.tokenMetadata.decimals))
-        .toFixed(0);
-      const gasPrice = await stores.accountStore.getGasPrice(gasSpeed);
-
-      this._callContract(
-        web3,
-        cdpContract,
-        'repayAllAndWithdraw',
-        [asset.tokenMetadata.address, withdrawAmountToSend],
-        account,
-        gasPrice,
-        CONFIGURE_CDP,
-        callback,
-      );
-    } catch (ex) {
-      console.log(ex);
-      return this.emitter.emit(ERROR, ex);
-    }
-  };
-
-  _callRepayCDP = async (web3, asset, account, repayAmount, withdrawAmount, gasSpeed, callback) => {
-    try {
-      let cdpContract = new web3.eth.Contract(VAULTMANAGERSTANDARDABI, VAULT_MANAGER_STANDARD);
-
-      const repayAmountToSend = BigNumber(repayAmount === '' ? 0 : repayAmount)
-        .times(10 ** 18)
-        .toFixed(0);
-      const gasPrice = await stores.accountStore.getGasPrice(gasSpeed);
-
-      this._callContract(web3, cdpContract, 'repay', [asset.tokenMetadata.address, repayAmountToSend], account, gasPrice, CONFIGURE_CDP, callback);
-    } catch (ex) {
-      console.log(ex);
-      return this.emitter.emit(ERROR, ex);
-    }
-  };
-
-  _callWithdrawCDP = async (web3, asset, account, repayAmount, withdrawAmount, gasSpeed, callback) => {
-    try {
-      const repayAmountToSend = BigNumber(repayAmount === '' ? 0 : repayAmount)
-        .times(10 ** 18)
-        .toFixed(0);
-      const withdrawAmountToSend = BigNumber(withdrawAmount === '' ? 0 : withdrawAmount)
-        .times(bnDec(asset.tokenMetadata.decimals))
-        .toFixed(0);
-      const gasPrice = await stores.accountStore.getGasPrice(gasSpeed);
-
-      let cdpContract = null;
-      let params = null;
-
-      if (this.isKeydonixOracle(asset.defaultOracleType)) {
-        return;
-      } else if (this.isKeep3rOracle(asset.defaultOracleType)) {
-        cdpContract = new web3.eth.Contract(VAULTMANAGERKEEP3RABI, VAULT_MANAGER_KEEP3R_ASSET);
-        params = [asset.tokenMetadata.address, withdrawAmountToSend, '0', repayAmountToSend];
-      } else if (this.isKeep3rSushiSwapOracle(asset.defaultOracleType)) {
-        cdpContract = new web3.eth.Contract(VAULTMANAGERKEEP3RSUSHIABI, VAULT_MANAGER_KEEP3R_SUSHI_ASSET);
-        params = [asset.tokenMetadata.address, withdrawAmountToSend, repayAmountToSend];
+    this._callExitTargetRepaymentCDP(web3, cdp, account, repayAmount, withdrawAmount, gasSpeed, (err, depositResult) => {
+      if (err) {
+        return this.emitter.emit(ERROR, err);
       }
 
-      this._callContract(web3, cdpContract, 'withdrawAndRepay', params, account, gasPrice, CONFIGURE_CDP, callback);
+      return this.emitter.emit(WITHDRAW_REPAY_CDP_RETURNED, depositResult);
+    });
+
+    // if (BigNumber(repayAmount).eq(cdp.debt) || ((!repayAmount || repayAmount === '' || BigNumber(repayAmount).eq(0)) && BigNumber(cdp.debt).eq(0))) {
+    //   this._callRepayAllAndWithdrawCDP(web3, cdp, account, repayAmount, withdrawAmount, gasSpeed, (err, depositResult) => {
+    //     if (err) {
+    //       return this.emitter.emit(ERROR, err);
+    //     }
+    //
+    //     return this.emitter.emit(WITHDRAW_REPAY_CDP_RETURNED, depositResult);
+    //   });
+    // } else if (BigNumber(repayAmount).gt(0) && (!withdrawAmount || withdrawAmount === '' || BigNumber(withdrawAmount).eq(0))) {
+    //   this._callRepayCDP(web3, cdp, account, repayAmount, withdrawAmount, gasSpeed, (err, depositResult) => {
+    //     if (err) {
+    //       return this.emitter.emit(ERROR, err);
+    //     }
+    //
+    //     return this.emitter.emit(WITHDRAW_REPAY_CDP_RETURNED, depositResult);
+    //   });
+    // } else {
+    //   this._callWithdrawCDP(web3, cdp, account, repayAmount, withdrawAmount, gasSpeed, (err, depositResult) => {
+    //     if (err) {
+    //       return this.emitter.emit(ERROR, err);
+    //     }
+    //
+    //     return this.emitter.emit(WITHDRAW_REPAY_CDP_RETURNED, depositResult);
+    //   });
+    // }
+  };
+
+  _callExitTargetRepaymentCDP = async (web3, asset, account, repayAmount, withdrawAmount, gasSpeed, callback) => {
+    try {
+      let cdpContract = new web3.eth.Contract(CDPMANAGER01ABI, CDP_MANAGER_ADDRESS);
+
+      const repayAmountToSend = BigNumber(repayAmount === '' ? 0 : repayAmount)
+        .times(10 ** 18)
+        .toFixed(0);
+      const withdrawAmountToSend = BigNumber(withdrawAmount === '' ? 0 : withdrawAmount)
+        .times(bnDec(asset.tokenMetadata.decimals))
+        .toFixed(0);
+
+      const gasPrice = await stores.accountStore.getGasPrice(gasSpeed);
+
+      this._callContractWait(web3, cdpContract, 'exit_targetRepayment', [asset.tokenMetadata.address, withdrawAmountToSend, repayAmountToSend], account, gasPrice, CONFIGURE_CDP, callback);
     } catch (ex) {
       console.log(ex);
       return this.emitter.emit(ERROR, ex);
     }
   };
+
+  // _callRepayAllAndWithdrawCDP = async (web3, asset, account, repayAmount, withdrawAmount, gasSpeed, callback) => {
+  //   try {
+  //     let cdpContract = new web3.eth.Contract(VAULTMANAGERSTANDARDABI, VAULT_MANAGER_STANDARD);
+  //
+  //     const withdrawAmountToSend = BigNumber(withdrawAmount === '' ? 0 : withdrawAmount)
+  //       .times(bnDec(asset.tokenMetadata.decimals))
+  //       .toFixed(0);
+  //     const gasPrice = await stores.accountStore.getGasPrice(gasSpeed);
+  //
+  //     this._callContract(
+  //       web3,
+  //       cdpContract,
+  //       'repayAllAndWithdraw',
+  //       [asset.tokenMetadata.address, withdrawAmountToSend],
+  //       account,
+  //       gasPrice,
+  //       CONFIGURE_CDP,
+  //       callback,
+  //     );
+  //   } catch (ex) {
+  //     console.log(ex);
+  //     return this.emitter.emit(ERROR, ex);
+  //   }
+  // };
+  //
+  // _callRepayCDP = async (web3, asset, account, repayAmount, withdrawAmount, gasSpeed, callback) => {
+  //   try {
+  //     let cdpContract = new web3.eth.Contract(VAULTMANAGERSTANDARDABI, VAULT_MANAGER_STANDARD);
+  //
+  //     const repayAmountToSend = BigNumber(repayAmount === '' ? 0 : repayAmount)
+  //       .times(10 ** 18)
+  //       .toFixed(0);
+  //     const gasPrice = await stores.accountStore.getGasPrice(gasSpeed);
+  //
+  //     this._callContract(web3, cdpContract, 'repay', [asset.tokenMetadata.address, repayAmountToSend], account, gasPrice, CONFIGURE_CDP, callback);
+  //   } catch (ex) {
+  //     console.log(ex);
+  //     return this.emitter.emit(ERROR, ex);
+  //   }
+  // };
+  //
+  // _callWithdrawCDP = async (web3, asset, account, repayAmount, withdrawAmount, gasSpeed, callback) => {
+  //   try {
+  //     const repayAmountToSend = BigNumber(repayAmount === '' ? 0 : repayAmount)
+  //       .times(10 ** 18)
+  //       .toFixed(0);
+  //     const withdrawAmountToSend = BigNumber(withdrawAmount === '' ? 0 : withdrawAmount)
+  //       .times(bnDec(asset.tokenMetadata.decimals))
+  //       .toFixed(0);
+  //     const gasPrice = await stores.accountStore.getGasPrice(gasSpeed);
+  //
+  //     let cdpContract = null;
+  //     let params = null;
+  //
+  //     if (this.isKeydonixOracle(asset.defaultOracleType)) {
+  //       return;
+  //     } else if (this.isKeep3rOracle(asset.defaultOracleType)) {
+  //       cdpContract = new web3.eth.Contract(VAULTMANAGERKEEP3RABI, VAULT_MANAGER_KEEP3R_ASSET);
+  //       params = [asset.tokenMetadata.address, withdrawAmountToSend, '0', repayAmountToSend];
+  //     } else if (this.isKeep3rSushiSwapOracle(asset.defaultOracleType)) {
+  //       cdpContract = new web3.eth.Contract(VAULTMANAGERKEEP3RSUSHIABI, VAULT_MANAGER_KEEP3R_SUSHI_ASSET);
+  //       params = [asset.tokenMetadata.address, withdrawAmountToSend, repayAmountToSend];
+  //     }
+  //
+  //     this._callContract(web3, cdpContract, 'withdrawAndRepay', params, account, gasPrice, CONFIGURE_CDP, callback);
+  //   } catch (ex) {
+  //     console.log(ex);
+  //     return this.emitter.emit(ERROR, ex);
+  //   }
+  // };
 
   _callContract = (web3, contract, method, params, account, gasPrice, dispatchEvent, callback) => {
     const context = this;
@@ -957,6 +1045,40 @@ class Store {
       .on('confirmation', function (confirmationNumber, receipt) {
         if (dispatchEvent && confirmationNumber === 0) {
           context.dispatcher.dispatch({ type: dispatchEvent });
+        }
+      })
+      .on('error', function (error) {
+        if (!error.toString().includes('-32601')) {
+          if (error.message) {
+            return callback(error.message);
+          }
+          callback(error);
+        }
+      })
+      .catch((error) => {
+        if (!error.toString().includes('-32601')) {
+          if (error.message) {
+            return callback(error.message);
+          }
+          callback(error);
+        }
+      });
+  };
+
+  _callContractWait = (web3, contract, method, params, account, gasPrice, dispatchEvent, callback) => {
+    const context = this;
+    contract.methods[method](...params)
+      .send({
+        from: account.address,
+        gasPrice: web3.utils.toWei(gasPrice, 'gwei'),
+      })
+      .on('transactionHash', function (hash) {
+        context.emitter.emit(TX_SUBMITTED, hash);
+      })
+      .on('receipt', function (receipt) {
+        callback(null, receipt.transactionHash);
+        if (dispatchEvent) {
+          context.dispatcher.dispatch({ type: dispatchEvent, content: {} });
         }
       })
       .on('error', function (error) {

@@ -93,7 +93,7 @@ export default function VaultCard({ vault, account }) {
           )}
           <div className={classes.vaultInfoFieldSlim}>
             <Typography variant="h2" className={classes.fontWeightBold}>
-              {!vault.apy ? <Skeleton /> : vault.apy.recommended ? (vault.apy.recommended === 'New' ? 'New' : (BigNumber(vault.apy.recommended).times(100).toFixed(2) + '%')) : 'Unknown'}
+              {!vault.apy ? <Skeleton /> : vault.apy.net_apy ? (vault.apy.net_apy === 'New' ? 'New' : (BigNumber(vault.apy.net_apy).times(100).toFixed(2) + '%')) : 'Unknown'}
             </Typography>
             <Typography variant="h2" className={classes.subinfofield}>Yearly Growth</Typography>
           </div>
