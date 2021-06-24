@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="99" height="99" viewBox="0 0 99 99">
+  <g id="Group_5143" data-name="Group 5143" transform="translate(-18848.5 5593.5)">
+    <circle id="Ellipse_48" data-name="Ellipse 48" cx="49" cy="49" r="49" transform="translate(18849 -5593)" fill="#fff" stroke="#ebebeb" stroke-linecap="square" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1"/>
+    <g id="Group_5139" data-name="Group 5139" transform="translate(18882.086 -5557.508)">
+      <rect id="Rectangle_186" data-name="Rectangle 186" width="11" height="10" transform="translate(0.913 0.508)" fill="none" stroke="#374dfa" stroke-linecap="square" stroke-miterlimit="10" stroke-width="3.5"/>
+      <rect id="Rectangle_187" data-name="Rectangle 187" width="11" height="10" transform="translate(0.913 17.508)" fill="none" stroke="#374dfa" stroke-linecap="square" stroke-miterlimit="10" stroke-width="3.5"/>
+      <line id="Line_54" data-name="Line 54" x2="14" transform="translate(17.913 0.508)" fill="none" stroke="#374dfa" stroke-linecap="square" stroke-miterlimit="10" stroke-width="3.5"/>
+      <line id="Line_55" data-name="Line 55" x2="14" transform="translate(17.913 9.508)" fill="none" stroke="#374dfa" stroke-linecap="square" stroke-miterlimit="10" stroke-width="3.5"/>
+      <line id="Line_56" data-name="Line 56" x2="14" transform="translate(17.913 18.508)" fill="none" stroke="#374dfa" stroke-linecap="square" stroke-miterlimit="10" stroke-width="3.5"/>
+      <line id="Line_57" data-name="Line 57" x2="14" transform="translate(17.913 27.508)" fill="none" stroke="#374dfa" stroke-linecap="square" stroke-miterlimit="10" stroke-width="3.5"/>
+    </g>
+  </g>
+</svg>
