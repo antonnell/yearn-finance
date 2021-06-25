@@ -441,8 +441,7 @@ function Navigation(props) {
           handleNavigate("/" + link);
         }}
       >
-        {activePath.includes("/" + link) ||
-        (activePath === "/" && link === "invest") ? (
+        {activePath.includes("/" + link) ? (
           <div
             className={
               darkMode
@@ -453,8 +452,7 @@ function Navigation(props) {
         ) : (
           <div className={classes.navigationOptionNotSelected}></div>
         )}
-        {activePath.includes("/" + link) ||
-        (activePath === "/" && link === "invest")
+        {activePath.includes("/" + link)
           ? iconSelected
           : icon}
         <Typography variant="h2">{title}</Typography>
@@ -465,7 +463,7 @@ function Navigation(props) {
   return (
     <Paper elevation={0} className={classes.navigationContainer}>
       <div className={classes.navigationHeading}>
-        <a onClick={() => router.push('/about')} className={classes.linkz}>
+        <a onClick={() => router.push('/')} className={classes.linkz}>
         <YearnIcon
           color={darkMode ? "white" : "rgb(33, 37, 41)"}
           altColor={darkMode ? "rgb(255, 255, 255)" : "white"}
