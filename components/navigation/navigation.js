@@ -465,7 +465,7 @@ function Navigation(props) {
   return (
     <Paper elevation={0} className={classes.navigationContainer}>
       <div className={classes.navigationHeading}>
-        <a onClick={() => router.push('/landing')} className={classes.linkz}>
+        <a onClick={() => router.push('/about')} className={classes.linkz}>
         <YearnIcon
           color={darkMode ? "white" : "rgb(33, 37, 41)"}
           altColor={darkMode ? "rgb(255, 255, 255)" : "white"}
@@ -631,7 +631,7 @@ function Navigation(props) {
         </Grid>
         </Grid>
       </div>
-      <Typography className={classes.smallVersion}>Version 1.2.4</Typography>
+      <Typography className={classes.smallVersion}>Version 1.2.5</Typography>
     </Paper>
   );
 }

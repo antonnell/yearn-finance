@@ -4,13 +4,13 @@ import { Typography, Paper, Grid } from '@material-ui/core';
 
 import Head from 'next/head';
 import Layout from '../../components/layout/layout.js';
-import classes from './landing.module.css';
+import classes from './about.module.css';
 
 import stores from '../../stores/index.js';
 import { MAX_RETURNED } from '../../stores/constants';
 
 
-function Landing({ changeTheme }) {
+function About({ changeTheme }) {
   const router = useRouter();
 
   useEffect(function () {
@@ -129,4 +129,4 @@ function Landing({ changeTheme }) {
   );
 }
 
-export default Landing;
+export default About;
