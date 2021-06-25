@@ -1,0 +1,90 @@
+.ycdpQuickActionContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.25);
+  width: 100%;
+  border-radius: 0px !important;
+  position: sticky;
+  top: 60px;
+  z-index: 9;
+}
+
+.actionsContainer {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 12px;
+}
+
+.informationContainer {
+  width: 300px;
+  border-left: 1px solid rgba(128, 128, 128, 0.25);
+  min-height: 140px;
+  padding: 0px 12px;
+}
+
+.textField {
+  padding: 0px 24px;
+  flex: 1;
+}
+
+.inputTitleContainer {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.inputTitle {
+  padding-bottom: 6px;
+  margin-left: 12px;
+}
+
+.balances {
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 12px;
+  padding-bottom: 6px;
+}
+
+.value {
+  cursor: pointer;
+}
+
+.toggleButtons {
+  display: flex;
+  flex-direction: column;
+  min-height: 140px;
+  width: 200px;
+}
+
+.button {
+  border-radius: 0px !important;
+  flex: 1;
+  border-right: 1px solid rgba(128, 128, 128, 0.25) !important;
+  transition: none !important;
+}
+
+.buttonActive {
+  background-image: linear-gradient(15deg,#13547a,#80d0c7);
+  border-radius: 0px !important;
+  flex: 1;
+}
+
+.actionButtons {
+  padding: 0px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  min-height: inherit;
+}
+
+.actionButton {
+  height: 40px;
+}
+
+@media screen and (max-width: 576px) {
+
+}
