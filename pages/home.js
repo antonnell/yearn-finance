@@ -9,7 +9,9 @@ import { useRouter } from "next/router";
 function Home({ changeTheme, ...props }) {
   const router = useRouter();
   const activePath = router.asPath;
-  if (activePath.includes("/lend")) {
+  if (activePath.includes("/invest")) {
+    return <Invest props={props} changeTheme={changeTheme} />;
+  } else if (activePath.includes("/lend")) {
     return <Lend props={props} changeTheme={changeTheme} />;
   } else if (activePath.includes("/ltv")) {
     return <LTV props={props} changeTheme={changeTheme} />;
