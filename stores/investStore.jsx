@@ -503,10 +503,6 @@ class Store {
 
         const tvlInfo = {
           tvlUSD: vaultsBalanced.reduce((acc, current) => {
-            // console.log(`${current.type} -> ${current.symbol}`);
-            // console.log(current.tvl?.tvl);
-            // console.log('-------------');
-
             return BigNumber(acc).plus((current.tvl && current.tvl.tvl) ? current.tvl.tvl : 0);
           }, 0),
           totalVaultHoldingsUSD: vaultsBalanced
@@ -521,12 +517,9 @@ class Store {
               return vault.type === 'Earn';
             })
             .reduce((acc, current) => {
-              console.log(current)
               return BigNumber(acc).plus((current.tvl && current.tvl.tvl) ? current.tvl.tvl : 0);
             }, 0),
         };
-
-        console.log(tvlInfo)
 
         this.setStore({
           vaults: vaultsBalanced,

@@ -4,6 +4,8 @@ import Lend from "./lend";
 import LTV from "./ltv";
 import CDP from "./cdp";
 import About from './about'
+import System from './system'
+
 import { useRouter } from "next/router";
 
 function Home({ changeTheme, ...props }) {
@@ -19,6 +21,8 @@ function Home({ changeTheme, ...props }) {
     return <Stats props={props} changeTheme={changeTheme} />;
   } else if (activePath.includes("/cdp")) {
     return <CDP props={props} changeTheme={changeTheme} />;
+  } else if (activePath.includes("/system")) {
+    return <System props={props} changeTheme={changeTheme} />;
   } else {
     return <About props={props} changeTheme={changeTheme} />;
   }

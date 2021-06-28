@@ -1,0 +1,121 @@
+.vaultFilters {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  background: #111729;
+  position: sticky;
+  top: 60px;
+  padding: 10px 0;
+  z-index: 9;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  border-bottom: 1px solid rgba(108,108,123, 0.2)
+}
+
+.vaultFiltersInside {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 48px;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.vaultTypeButtons {
+  width: 680px;
+  padding-bottom: 12px;
+  padding-top: 12px;
+}
+
+.vaultTypeButton {
+  border: 0px !important;
+  padding: 5px 12px !important;
+  border-radius: 10px !important;
+  margin-right: 18px !important;
+  line-height: 1.167 !important;
+  text-transform: none !important;
+}
+
+.filtericon {
+  color: #1c47f5;
+  margin-right: 8px;
+}
+
+.v1,
+.v2,
+.exp,
+.earn,
+.active,
+.lockup {
+  border: 1px solid rgba(108,108,123, 0.3) !important;
+  color: rgba(108,108,123, 0.8) !important;
+  padding: 12px 12px !important;
+}
+
+.v1Selected {
+  background: #BD1550 !important;
+  color: #fff !important;
+  padding: 12px 12px !important;
+  border: 1px solid rgba(108,108,123, 0) !important;
+}
+
+.v2Selected {
+  background: #0048FF !important;
+  color: #fff !important;
+  padding: 12px 12px !important;
+  border: 1px solid rgba(108,108,123, 0) !important;
+}
+
+.expSelected {
+  background: #703D6F !important;
+  color: #fff !important;
+  padding: 12px 12px !important;
+  border: 1px solid rgba(108,108,123, 0) !important;
+}
+
+.earnSelected {
+  background: #77CCA4 !important;
+  color: #000 !important;
+  padding: 12px 12px !important;
+  border: 1px solid rgba(108,108,123, 0) !important;
+}
+
+.activeSelected {
+  background: none !important;
+  padding: 12px 12px !important;
+  border: 1px solid #374dfa !important;
+}
+
+.lockupSelected {
+  background: #FFD000 !important;
+  color: #22252e !important;
+  padding: 12px 12px !important;
+  border: 1px solid rgba(108,108,123, 0) !important;
+}
+
+.searchContainer {
+  flex: 1;
+  min-width: 300px !important;
+  margin-left: 30px !important;
+  margin-right: 40px !important;
+}
+
+.layoutToggleButton {
+  padding: 8px !important;
+  margin: 5px !important;
+  border-radius: 0 !important;
+}
+
+.layoutToggleButtons {
+  width: auto;
+  border: 1px solid rgba(108,108,123, 0.2);
+  border-radius: 50px !important;
+}
+
+.layoutToggleButton:hover, {
+  background: none !important;
+}
