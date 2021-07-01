@@ -166,16 +166,6 @@
   text-align: center;
 }
 
-.sectionContainer {
-  padding: 48px;
-}
-
-.sectionHeader {
-  width: 100%;
-  display: flex;
-  align-items: center;
-}
-
 @media screen and (max-width: 1600px) {
   .overviewContainer {
     margin: 0px 24px;

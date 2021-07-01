@@ -1,5 +1,4 @@
 .vaultPerformanceGraph {
-  display: flex;
   flex: 1;
 }
 
@@ -24,12 +23,32 @@
 }
 
 .val {
-  flex: 1
+  flex: 1;
+  margin-right: 12px !important;
 }
 
 .valBold {
   flex: 1;
   font-weight: bold !important;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  z-index: 8;
+  padding-left: 48px;
+}
+
+.actionsBar {
+  display: flex;
+  align-items: center;
+  z-index: 8;
+  justify-content: center;
+}
+
+.exploreButton {
+  height: 40px;
+  margin-left: 24px !important;
 }
 
 @media screen and (max-width: 1600px) {

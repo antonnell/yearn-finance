@@ -15,14 +15,26 @@ class Store {
     this.emitter = emitter;
 
     this.store = {
+      systemJson: systemJson,
       assets: systemJson
         .map((asset) => {
+          if(asset.token.isCurve) {
+            return asset.token.curveTokenSplit.map((token) => {
+              return {
+                name: token.symbol,
+                balance: BigNumber(token.balance).div(10**token.decimals).toNumber(),
+                type: asset.type
+              }
+            })
+          }
+
           return {
             name: asset.token.display_name,
             balance: BigNumber(asset.tvl.tvl).toNumber(),
             type: asset.type
           }
         })
+        .flat()
         .reduce((assets, asset) => {
           try {
             if(!assets) {

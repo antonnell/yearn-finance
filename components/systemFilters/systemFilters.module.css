@@ -26,7 +26,7 @@
 }
 
 .vaultTypeButtons {
-  width: 680px;
+  width: 480px;
   padding-bottom: 12px;
   padding-top: 12px;
 }
@@ -100,13 +100,26 @@
 .searchContainer {
   flex: 1;
   min-width: 300px !important;
-  margin-left: 30px !important;
-  margin-right: 40px !important;
+  padding-left: 30px !important;
+  padding-right: 40px !important;
+  border-radius: 50px !important;
+}
+
+.searchContainer > div > fieldset {
+  border-radius: 30px;
+}
+
+.searchContainer > div {
+  padding: 3px !important;
+}
+
+.flexIt {
+  flex: 1;
 }
 
 .layoutToggleButton {
-  padding: 8px !important;
-  margin: 5px !important;
+  padding: 5px !important;
+  margin: 4px !important;
   border-radius: 0 !important;
 }
 

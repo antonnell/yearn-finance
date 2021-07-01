@@ -1,13 +1,18 @@
 import React, { useState } from "react";
-import { Typography } from "@material-ui/core";
+import { Typography, Button } from "@material-ui/core";
 import {
   PieChart,
   Pie,
   ResponsiveContainer,
   Cell,
   Tooltip,
-  Legend
+  Legend,
+  BarChart,
+  Bar,
+  YAxis,
+  XAxis
 } from "recharts";
+
 import Skeleton from '@material-ui/lab/Skeleton';
 import { formatCurrency } from "../../utils";
 
@@ -34,9 +39,13 @@ function CustomTooltip({ payload, active }) {
   return null;
 }
 
-export default function SystemStrategiesGraph({ strategies, filters }) {
+export default function SystemStrategiesGraph({ strategies, filters, layout, handleNavigate }) {
 
   const [activeIndex, setActiveIndex] = useState(0);
+
+  const onExplore = () => {
+    handleNavigate('strategies');
+  }
 
   if(!strategies || strategies.length === 0) {
     return <Skeleton variant='circle' width={200} height={200} />
@@ -98,33 +107,75 @@ export default function SystemStrategiesGraph({ strategies, filters }) {
     setActiveIndex(index);
   };
 
-  return (
-    <div className={classes.vaultPerformanceGraph}>
-      <ResponsiveContainer width={700} height={400}>
-        <PieChart>
-          <Pie
-            activeIndex={activeIndex}
+  if(layout === 'pie') {
+    return (
+      <div className={classes.vaultPerformanceGraph}>
+        <div className={ classes.actions }>
+          <Typography variant='h6'>Strategies</Typography>
+          <Button variant='outlined' className={ classes.exploreButton } onClick={onExplore}>
+            <Typography variant='h5'>Explore</Typography>
+          </Button>
+        </div>
+        <ResponsiveContainer width={700} height={400}>
+          <PieChart>
+            <Pie
+              activeIndex={activeIndex}
+              data={data}
+              cx={150}
+              cy={180}
+              innerRadius={80}
+              outerRadius={100}
+              fill="#FF0000"
+              stroke="none"
+              dataKey="balance"
+              onMouseMove={onPieEnter}
+            >
+              {data.map((entry, index) => (
+                <Cell key={index} fill={COLORS[index % COLORS.length]} />
+              ))}
+            </Pie>
+            <Legend layout='vertical' align='right' verticalAlign='top' iconType='square' width={300} />
+            <Tooltip content={<CustomTooltip />} />
+            <text x={150} dx={-26} y={180} dy={10} fill="#999">
+              Strategies
+            </text>
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
+    );
+  } else {
+    return (
+      <div className={classes.vaultPerformanceGraph}>
+        <div className={ classes.actionsBar }>
+          <Typography variant='h6'>Strategies</Typography>
+          <Button variant='outlined' className={ classes.exploreButton } onClick={onExplore}>
+            <Typography variant='h5'>Explore</Typography>
+          </Button>
+        </div>
+        <ResponsiveContainer width={700} height={400}>
+          <BarChart
+            layout="vertical"
+            width={700}
+            height={400}
             data={data}
-            cx={150}
-            cy={180}
-            innerRadius={80}
-            outerRadius={100}
-            fill="#FF0000"
-            stroke="none"
-            dataKey="balance"
-            onMouseMove={onPieEnter}
+            margin={{
+              top: 5,
+              bottom: 5,
+            }}
+            barSize={12}
+            barGap={5}
           >
-            {data.map((entry, index) => (
-              <Cell key={index} fill={COLORS[index % COLORS.length]} />
-            ))}
-          </Pie>
-          <Legend layout='vertical' align='right' verticalAlign='top' iconType='square' width={300} />
-          <Tooltip content={<CustomTooltip />} />
-          <text x={150} dx={-26} y={180} dy={10} fill="#999">
-            Strategies
-          </text>
-        </PieChart>
-      </ResponsiveContainer>
-    </div>
-  );
+            <Bar dataKey="balance" fill="#8884d8">
+              {data.map((entry, index) => (
+                <Cell key={index} fill={COLORS[index % COLORS.length]} />
+              ))}
+            </Bar>
+            <XAxis type="number"/>
+            <YAxis type="category" dataKey="name" interval={0} width={120}/>
+            <Tooltip cursor={{fill: 'transparent'}}  content={<CustomTooltip />} />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+    );
+  }
 }
