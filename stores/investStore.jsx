@@ -37,7 +37,17 @@ import stores from './';
 import earnJSON from './configurations/earn';
 import lockupJSON from './configurations/lockup';
 
-import { ERC20ABI, VAULTV1ABI, VAULTV2ABI, EARNABI, LOCKUPABI, VOTINGESCROWABI } from './abis';
+import {
+  ERC20ABI,
+  VAULTV1ABI,
+  VAULTV2ABI,
+  EARNABI,
+  LOCKUPABI,
+  VOTINGESCROWABI,
+  IEARN_TOKENABI,
+  CURVE_POOLCONTRACTABI,
+  COMP_TOKENABI,
+} from './abis';
 import { bnDec } from '../utils';
 
 import BatchCall from 'web3-batch-call';
@@ -530,6 +540,8 @@ class Store {
         });
 
         this.emitter.emit(VAULTS_UPDATED);
+
+        this.calculateSystemOverview();
       },
     );
   };
@@ -1230,6 +1242,255 @@ class Store {
 
     this._callContract(web3, vaultContract, 'claim', [], account, gasPrice, GET_VAULT_BALANCES, callback);
   };
+
+
+  calculateSystemOverview = async () => {
+    const web3 = await stores.accountStore.getWeb3Provider();
+    if (!web3) {
+    }
+
+    const vaultData = this.getStore('vaults')
+
+    var size = 10;
+    var items = vaultData.slice(0, size).map(i => {
+      return i
+    })
+
+    console.log(items)
+
+    async.map(items, async (vault, callback) => {
+      const depositToken = await this.getTokenTree(web3, vault.tokenMetadata.address)
+      vault.depositToken = depositToken
+
+      const strategiesData = await this.getVaultStrategiesData(web3, vault)
+      vault.strategies = strategiesData
+
+      if(callback) {
+        callback(null, vault)
+      } else {
+        return vault
+      }
+
+    }, (err, vaults) => {
+      if(err) {
+        console.log(err)
+      }
+      console.log(vaults)
+    })
+  }
+
+  getTokenTree = async (web3, tokenAddress) => {
+    const curvePoolContract = this.mapCurveTokenToPool(tokenAddress)
+    const isCompoundToken = this.mapCompAssetToUnderlying(tokenAddress)
+    const isIEarnToken = this.mapIearnTokenToUnderlying(tokenAddress)
+
+    const assetContract = new web3.eth.Contract(ERC20ABI, tokenAddress)
+    const decimals = parseInt(await assetContract.methods.decimals().call())
+    const symbol = await assetContract.methods.symbol().call()
+
+    // this is a curve pool token, we need to get the underling assets
+    if(curvePoolContract !== false) {
+        try {
+          let tokens = []
+          const poolContract = new web3.eth.Contract(CURVE_POOLCONTRACTABI, curvePoolContract)
+          for(let i = 0; i < 4; i++) {
+            try {
+              const underlyingTokenAddress = await poolContract.methods.coins(i).call()
+              let underlyingToken = await this.getTokenTree(web3, underlyingTokenAddress)
+              tokens.push(underlyingToken)
+            } catch(ex) {
+              console.log(ex)
+              // there might not be 4 tokens, so this is very reasonable to expect. we just ignore it I guess
+            }
+          }
+
+          return {
+            address: tokenAddress,
+            // balance: BigNumber(balanceOf).div(10**decimals).toFixed(decimals),
+            decimals: decimals,
+            symbol: symbol,
+            isCompoundToken: false,
+            isIEarnToken: false,
+            isCurveToken: true,
+            curveUnderlyingTokens: tokens
+          }
+
+        } catch(ex) {
+          console.log('curvePoolContract')
+          console.log(curvePoolContract)
+          console.log(ex)
+        }
+    } else if (isCompoundToken !== false) {
+      const compoundContract = new web3.eth.Contract(COMP_TOKENABI, tokenAddress)
+
+      const underlying = await compoundContract.methods.underlying().call()
+      let underlyingToken = await this.getTokenTree(web3, underlying)
+
+      // const getCash = await compoundContract.methods.getCash().call()
+      // const totalBorrows = await compoundContract.methods.totalBorrows().call()
+      // const totalReserves = await compoundContract.methods.totalReserves().call()
+      // const totalSupply = await compoundContract.methods.totalSupply().call()
+      //
+      // const exchangeRate = BigNumber(BigNumber(getCash/(10**underlyingToken.decimals)).plus(totalBorrows/(10**underlyingToken.decimals)).minus(totalReserves/(10**underlyingToken.decimals))).div(totalSupply/(10**8)).toFixed(18)
+      // const balanceOf = await contract.methods.balances(index).call()
+      //
+      // balance = BigNumber(balanceOf).div(10**decimals).times(exchangeRate).toFixed(underlyingToken.decimals)
+      // underlyingToken.balance = balance
+
+      return {
+        address: tokenAddress,
+        // balance: BigNumber(balanceOf).div(10**decimals).toFixed(decimals),
+        decimals: decimals,
+        symbol: symbol,
+        isCompoundToken: true,
+        isIEarnToken: false,
+        isCurveToken: false,
+        compoundUnderlyingToken: underlyingToken
+      }
+    } else if (isIEarnToken !== false) {
+      const iearnContract = new web3.eth.Contract(IEARN_TOKENABI, tokenAddress)
+
+      const underlying = await iearnContract.methods.token().call()
+      let underlyingToken = await this.getTokenTree(web3, underlying)
+
+      // const exchangeRate = await iearnContract.methods.getPricePerFullShare().call()
+      //
+      // const balanceOf = await contract.methods.balances(index).call()
+      // balance = BigNumber(balanceOf).div(10**decimals).times(exchangeRate/(10**18)).toFixed(underlyingToken.decimals)
+      // underlyingToken.balance = balance
+
+      return {
+        address: tokenAddress,
+        // balance: BigNumber(balanceOf).div(10**decimals).toFixed(decimals),
+        decimals: decimals,
+        symbol: symbol,
+        isCompoundToken: false,
+        isIEarnToken: true,
+        isCurveToken: false,
+        iEarnUnderlingToken: underlyingToken
+      }
+    } else {
+      return {
+        address: tokenAddress,
+        // balance: BigNumber(balance).div(10**decimals).toFixed(decimals),
+        decimals: decimals,
+        symbol: symbol,
+        isCompoundToken: false,
+        isIEarnToken: false,
+        isCurveToken: false
+      }
+    }
+  }
+
+  mapCurveTokenToPool = (address) => {
+    switch (address) {
+      case '0x845838DF265Dcd2c412A1Dc9e959c7d08537f8a2':
+        return '0xA2B47E3D5c44877cca798226B7B8118F9BFb7A56';
+      case '0x9fC689CCaDa600B6DF723D9E47D84d76664a1F23':
+        return '0x52EA46506B9CC5Ef470C5bf89f17Dc28bB35D85C';
+      case '0xdF5e0e81Dff6FAF3A7e52BA697820c5e32D806A8':
+        return '0x45F783CCE6B7FF23B2ab2D70e416cdb7D6055f51';
+      case '0x3B3Ac5386837Dc563660FB6a0937DFAa5924333B':
+        return '0x79a8C46DeA5aDa233ABaFFD40F3A0A2B1e5A4F27';
+      case '0xC25a3A3b969415c80451098fa907EC722572917F':
+        return '0xA5407eAE9Ba41422680e2e00537571bcC53efBfD';
+      case '0xD905e2eaeBe188fc92179b6350807D8bd91Db0D8':
+        return '0x06364f10B501e868329afBc005b3492902d6C763';
+      case '0x49849C98ae39Fff122806C06791Fa73784FB3675':
+        return '0x93054188d876f558f4a66B2EF1d97d16eDf0895B';
+      case '0x075b1bb99792c9E1041bA13afEf80C91a1e70fB3':
+        return '0x7fC77b5c7614E1533320Ea6DDc2Eb61fa00A9714';
+      case '0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490':
+        return '0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7';
+      case '0xD2967f45c4f384DEEa880F807Be904762a3DeA07':
+        return '0x4f062658EaAF2C1ccf8C8e36D6824CDf41167956';
+      case '0x5B5CFE992AdAC0C9D48E05854B2d91C73a003858':
+        return '0x3eF6A01A0f81D6046290f3e2A8c5b843e738E604';
+      case '0x4f3E8F405CF5aFC05D68142F3783bDfE13811522':
+        return '0x0f9cb53Ebe405d49A0bbdBD291A65Ff571bC83e1';
+      case '0x6D65b498cb23deAba52db31c93Da9BFFb340FB8F':
+        return '0xE7a24EF0C5e95Ffb0f6684b813A78F2a3AD7D171';
+      case '0x1AEf73d49Dedc4b1778d0706583995958Dc862e6':
+        return '0x8474DdbE98F5aA3179B3B3F5942D724aFcdec9f6';
+      case '0xC2Ee6b0334C261ED60C72f6054450b61B8f18E35':
+        return '0xC18cC39da8b11dA8c3541C598eE022258F9744da';
+      case '0x64eda51d3Ad40D56b9dFc5554E06F94e1Dd786Fd':
+        return '0xC25099792E9349C7DD09759744ea681C7de2cb66';
+      case '0x3a664Ab939FD8482048609f652f9a0B0677337B9':
+        return '0x8038C01A0390a8c547446a0b2c18fc9aEFEcc10c';
+      case '0xDE5331AC4B3630f94853Ff322B66407e0D6331E8':
+        return '0x7F55DDe206dbAD629C080068923b36fe9D6bDBeF';
+      case '0x410e3E86ef427e30B9235497143881f717d93c2A':
+        return '0x071c661B4DeefB59E2a3DdB20Db036821eeE8F4b';
+      case '0x2fE94ea3d5d4a175184081439753DE15AeF9d614':
+        return '0xd81dA8D904b52208541Bade1bD6595D8a251F8dd';
+      case '0x94e131324b6054c0D789b190b2dAC504e4361b53':
+        return '0x890f4e345B1dAED0367A877a1612f86A1f86985f';
+      case '0x194eBd173F6cDacE046C53eACcE9B953F28411d1':
+        return '0x0Ce6a5fF5217e38315f87032CF90686C96627CAA';
+      case '0xA3D87FffcE63B53E0d54fAa1cc983B7eB0b74A9c':
+        return '0xc5424B857f758E906013F3555Dad202e4bdB4567';
+      case '0xFd2a8fA60Abd58Efe3EeE34dd494cD491dC14900':
+        return '0xDeBF20617708857ebe4F679508E7b7863a8A8EeE';
+      case '0x06325440D014e39736583c165C2963BA99fAf14E':
+        return '0xDC24316b9AE028F1497c275EB9192a3Ea0f67022';
+      case '0x02d341CcB60fAaf662bC0554d13778015d1b285C':
+        return '0xEB16Ae0052ed37f479f7fe63849198Df1765a733';
+      case '0xaA17A236F2bAdc98DDc0Cf999AbB47D47Fc0A6Cf':
+        return '0xA96A65c051bF88B4095Ee1f2451C2A9d43F53Ae2';
+      case '0x7Eb40E450b9655f4B3cC4259BCC731c63ff55ae6':
+        return '0x42d7025938bEc20B69cBae5A77421082407f053A';
+      case '0x5282a4eF67D9C33135340fB3289cc1711c13638C':
+        return '0x2dded6Da1BF5DBdF597C45fcFaa3194e53EcfeAF';
+      case '0xcee60cFa923170e4f8204AE08B4fA6A3F5656F3a':
+        return '0xF178C0b5Bb7e7aBF4e12A4838C7b7c5bA2C623c0';
+      case '0xEcd5e75AFb02eFa118AF914515D6521aaBd189F1':
+        return '0xEcd5e75AFb02eFa118AF914515D6521aaBd189F1';
+      case '0xd632f22692FaC7611d2AA1C0D552930D43CAEd3B':
+        return '0xd632f22692FaC7611d2AA1C0D552930D43CAEd3B';
+      case '0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA':
+        return '0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA';
+      case '0x4807862AA8b2bF68830e4C8dc86D0e9A998e085a':
+        return '0x4807862AA8b2bF68830e4C8dc86D0e9A998e085a';
+      case '0x53a901d48795C58f485cBB38df08FA96a24669D5':
+        return '0xF9440930043eb3997fc70e1339dBb11F341de7A8';
+      case '0xcA3d75aC011BF5aD07a98d02f18225F9bD9A6BDF':
+        return '0x80466c64868E1ab14a1Ddf27A676C3fcBE638Fe5';
+      case '0x43b4FdFD4Ff969587185cDB6f0BD875c5Fc83f8c':
+        return '0x43b4FdFD4Ff969587185cDB6f0BD875c5Fc83f8c';
+      case '0x5a6A4D54456819380173272A5E8E9B9904BdF41B':
+        return '0x5a6A4D54456819380173272A5E8E9B9904BdF41B';
+      default:
+        return false;
+    }
+  }
+
+  mapIearnTokenToUnderlying = (address) => {
+    switch (address) {
+      case '0x16de59092dAE5CcF4A1E6439D611fd0653f0Bd01':
+      case '0xd6aD7a6750A7593E092a9B218d66C0A814a3436e':
+      case '0x83f798e925BcD4017Eb265844FDDAbb448f1707D':
+      case '0x73a052500105205d34Daf004eAb301916DA8190f':
+      case '0x04bC0Ab673d88aE9dbC9DA2380cB6B79C4BCa9aE':
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  mapCompAssetToUnderlying = (address) => {
+    switch (address) {
+      case '0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643':
+      case '0x39AA39c021dfbaE8faC545936693aC917d5E7563':
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  getVaultStrategiesData = async (web3, vault) => {
+    return null
+  }
 }
 
 export default Store;
