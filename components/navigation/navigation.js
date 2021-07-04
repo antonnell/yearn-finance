@@ -557,7 +557,7 @@ function Navigation(props) {
       )}
 
       <div className={classes.socials}>
-      <Grid className={classes.socialgrid} container center spacing={1}>
+      <Grid className={classes.socialgrid} container spacing={1}>
         <Grid item xs={6}>
           <a
             className={`${classes.socialButton}`}

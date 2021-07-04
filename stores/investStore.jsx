@@ -4,6 +4,7 @@ import {
   MAX_UINT256,
   YEARN_API,
   YEARN_VAULTS_API,
+  COINGECKO_API,
   ERROR,
   TX_SUBMITTED,
   STORE_UPDATED,
@@ -31,11 +32,13 @@ import {
   ZAPPER_SLIPPAGE_PERCENTAGE,
   UPDATE_DEPOSIT_STATUS,
   UPDATE_WITHDRAWAL_STATUS,
+  SYSTEM_UPDATED,
 } from './constants';
 
 import stores from './';
 import earnJSON from './configurations/earn';
 import lockupJSON from './configurations/lockup';
+import systemAssetsJSON from './configurations/systemAssets';
 
 import {
   ERC20ABI,
@@ -47,6 +50,13 @@ import {
   IEARN_TOKENABI,
   CURVE_POOLCONTRACTABI,
   COMP_TOKENABI,
+  VAULT_StrategyLenderYieldOptimiserABI,
+  VAULT_StrategyPoolABI,
+  VAULT_AaveWETHLenderUSDTBorrowerABI,
+  VAULT_StrategyRookDaiStablecoinABI,
+  VAULT_StrategyVesperWBTCABI,
+  VAULT_StrategyIdleidleRAIYieldABI,
+  YEARNVAULT_0_3_3ABI
 } from './abis';
 import { bnDec } from '../utils';
 
@@ -64,6 +74,7 @@ class Store {
       portfolioGrowth: null,
       highestHoldings: null,
       vaults: [],
+      systemAssetInfo: systemAssetsJSON,
       tvlInfo: null,
       earn: earnJSON, //These values don't really ever change anymore, but still, should get them dynamically. For now, this will save on some calls for alchemy. (symbols, decimals, underlying tokens, their symbols and decimals etc)
       lockup: lockupJSON, // same
@@ -541,7 +552,7 @@ class Store {
 
         this.emitter.emit(VAULTS_UPDATED);
 
-        // this.calculateSystemOverview();
+        this.calculateSystemOverview();
       },
     );
   };
@@ -1251,18 +1262,18 @@ class Store {
 
     const vaultData = this.getStore('vaults')
 
-    var size = 10;
+    var size = 20;
     var items = vaultData.slice(0, size).map(i => {
       return i
     })
 
-    console.log(items)
+    const coingeckoCoinList = await this.getCoingeckoTokenList()
 
-    async.map(items, async (vault, callback) => {
-      const depositToken = await this.getTokenTree(web3, vault.tokenMetadata.address)
+    async.mapLimit(items, 3, async (vault, callback) => {
+      const depositToken = await this.getTokenTree(web3, vault.tokenMetadata.address, coingeckoCoinList)
       vault.depositToken = depositToken
 
-      const strategiesData = await this.getVaultStrategiesData(web3, vault)
+      const strategiesData = await this.getVaultStrategiesData(web3, vault, coingeckoCoinList)
       vault.strategies = strategiesData
 
       if(callback) {
@@ -1276,17 +1287,18 @@ class Store {
         console.log(err)
       }
       console.log(vaults)
+
+      this.setStore({ systemAssetInfo: vaults })
+      this.emitter.emit(SYSTEM_UPDATED)
     })
   }
 
-  getTokenTree = async (web3, tokenAddress) => {
+  getTokenTree = async (web3, tokenAddress, coingeckoCoinList) => {
     const curvePoolContract = this.mapCurveTokenToPool(tokenAddress)
     const isCompoundToken = this.mapCompAssetToUnderlying(tokenAddress)
     const isIEarnToken = this.mapIearnTokenToUnderlying(tokenAddress)
 
-    const assetContract = new web3.eth.Contract(ERC20ABI, tokenAddress)
-    const decimals = parseInt(await assetContract.methods.decimals().call())
-    const symbol = await assetContract.methods.symbol().call()
+    const assetInfo = await this.mapTokenAddressToInfo(tokenAddress, web3, coingeckoCoinList)
 
     // this is a curve pool token, we need to get the underling assets
     if(curvePoolContract !== false) {
@@ -1296,7 +1308,14 @@ class Store {
           for(let i = 0; i < 4; i++) {
             try {
               const underlyingTokenAddress = await poolContract.methods.coins(i).call()
-              let underlyingToken = await this.getTokenTree(web3, underlyingTokenAddress)
+              let underlyingToken = await this.getTokenTree(web3, underlyingTokenAddress, coingeckoCoinList)
+
+              const underlyingBalance = await poolContract.methods.balances(i).call()
+
+              underlyingToken = {
+                protocolBalance: BigNumber(underlyingBalance).div(10**underlyingToken.decimals).toFixed(underlyingToken.decimals)
+              }
+
               tokens.push(underlyingToken)
             } catch(ex) {
               console.log(ex)
@@ -1304,11 +1323,25 @@ class Store {
             }
           }
 
+          let total = tokens.reduce((acc, val) => {
+            if(!acc) {
+              acc = 0
+            }
+            return BigNumber(val.protocolBalance).plus(acc).toFixed(val.decimals)
+          }, 0)
+
+          //once we have ratios, we can get actualy balances
+          for(let i = 0; i < tokens.length; i++) {
+            tokens[i].protocolRatio = BigNumber(tokens[i].protocolBalance).times(100).div(total).toFixed(tokens[i].decimals)
+          }
+
           return {
             address: tokenAddress,
             // balance: BigNumber(balanceOf).div(10**decimals).toFixed(decimals),
-            decimals: decimals,
-            symbol: symbol,
+            decimals: assetInfo.decimals,
+            symbol: assetInfo.symbol,
+            price: assetInfo.price,
+            description: assetInfo.description,
             isCompoundToken: false,
             isIEarnToken: false,
             isCurveToken: true,
@@ -1316,22 +1349,20 @@ class Store {
           }
 
         } catch(ex) {
-          console.log('curvePoolContract')
-          console.log(curvePoolContract)
           console.log(ex)
         }
     } else if (isCompoundToken !== false) {
       const compoundContract = new web3.eth.Contract(COMP_TOKENABI, tokenAddress)
 
       const underlying = await compoundContract.methods.underlying().call()
-      let underlyingToken = await this.getTokenTree(web3, underlying)
+      let underlyingToken = await this.getTokenTree(web3, underlying, coingeckoCoinList)
 
-      // const getCash = await compoundContract.methods.getCash().call()
-      // const totalBorrows = await compoundContract.methods.totalBorrows().call()
-      // const totalReserves = await compoundContract.methods.totalReserves().call()
-      // const totalSupply = await compoundContract.methods.totalSupply().call()
-      //
-      // const exchangeRate = BigNumber(BigNumber(getCash/(10**underlyingToken.decimals)).plus(totalBorrows/(10**underlyingToken.decimals)).minus(totalReserves/(10**underlyingToken.decimals))).div(totalSupply/(10**8)).toFixed(18)
+      const getCash = await compoundContract.methods.getCash().call()
+      const totalBorrows = await compoundContract.methods.totalBorrows().call()
+      const totalReserves = await compoundContract.methods.totalReserves().call()
+      const totalSupply = await compoundContract.methods.totalSupply().call()
+
+      const exchangeRate = BigNumber(BigNumber(getCash/(10**underlyingToken.decimals)).plus(totalBorrows/(10**underlyingToken.decimals)).minus(totalReserves/(10**underlyingToken.decimals))).div(totalSupply/(10**8)).toFixed(18)
       // const balanceOf = await contract.methods.balances(index).call()
       //
       // balance = BigNumber(balanceOf).div(10**decimals).times(exchangeRate).toFixed(underlyingToken.decimals)
@@ -1340,8 +1371,11 @@ class Store {
       return {
         address: tokenAddress,
         // balance: BigNumber(balanceOf).div(10**decimals).toFixed(decimals),
-        decimals: decimals,
-        symbol: symbol,
+        decimals: assetInfo.decimals,
+        symbol: assetInfo.symbol,
+        price: assetInfo.price,
+        description: assetInfo.description,
+        exchangeRate: assetInfo.exchangeRate,
         isCompoundToken: true,
         isIEarnToken: false,
         isCurveToken: false,
@@ -1351,10 +1385,10 @@ class Store {
       const iearnContract = new web3.eth.Contract(IEARN_TOKENABI, tokenAddress)
 
       const underlying = await iearnContract.methods.token().call()
-      let underlyingToken = await this.getTokenTree(web3, underlying)
+      let underlyingToken = await this.getTokenTree(web3, underlying, coingeckoCoinList)
 
-      // const exchangeRate = await iearnContract.methods.getPricePerFullShare().call()
-      //
+      const exchangeRate = await iearnContract.methods.getPricePerFullShare().call()
+
       // const balanceOf = await contract.methods.balances(index).call()
       // balance = BigNumber(balanceOf).div(10**decimals).times(exchangeRate/(10**18)).toFixed(underlyingToken.decimals)
       // underlyingToken.balance = balance
@@ -1362,8 +1396,11 @@ class Store {
       return {
         address: tokenAddress,
         // balance: BigNumber(balanceOf).div(10**decimals).toFixed(decimals),
-        decimals: decimals,
-        symbol: symbol,
+        decimals: assetInfo.decimals,
+        symbol: assetInfo.symbol,
+        price: assetInfo.price,
+        description: assetInfo.description,
+        exchangeRate: assetInfo.exchangeRate,
         isCompoundToken: false,
         isIEarnToken: true,
         isCurveToken: false,
@@ -1373,13 +1410,107 @@ class Store {
       return {
         address: tokenAddress,
         // balance: BigNumber(balance).div(10**decimals).toFixed(decimals),
-        decimals: decimals,
-        symbol: symbol,
+        decimals: assetInfo.decimals,
+        symbol: assetInfo.symbol,
+        price: assetInfo.price,
+        description: assetInfo.description,
         isCompoundToken: false,
         isIEarnToken: false,
         isCurveToken: false
       }
     }
+  }
+
+  getCoingeckoTokenList = async () => {
+    try {
+      const url = `${COINGECKO_API}/coins/list`
+
+      const coinsApiResult = await fetch(url);
+      const coinsList = await coinsApiResult.json();
+
+      return coinsList
+    } catch(ex) {
+      console.log(ex)
+      return []
+    }
+  }
+
+  mapTokenAddressToInfo = async (tokenAddress, web3, coingeckoCoinList) => {
+    // search our local storage if asset objects.
+    // geuss we need to populate some storage info first.
+    const assetInfos = this.getStore('systemAssetInfo')
+    const assetInfo = assetInfos.find(asset => asset.address === tokenAddress)
+
+    let symbol = null
+    let decimals = null
+    let price = 1
+    let description = `I don't have a description for this asset at this moment.`
+    let priceUpdated = false
+    let shouldSearchPrice = true
+
+    if(assetInfo) {
+      symbol = assetInfo.symbol
+      decimals = assetInfo.decimals
+      if(assetInfo.description) {
+        description = assetInfo.description
+      }
+      if(assetInfo.price) {
+        price = assetInfo.price
+      }
+
+      if(assetInfo.priceUpdated) {
+        shouldSearchPrice = false
+      }
+    } else {
+      const erc20Contract = new web3.eth.Contract(ERC20ABI, tokenAddress);
+      symbol = await erc20Contract.methods.symbol().call()
+      decimals = parseInt(await erc20Contract.methods.decimals().call())
+    }
+
+    if(shouldSearchPrice) {
+      const coingeckoItem = coingeckoCoinList.find(coin => coin.symbol.toLowerCase() === symbol.toLowerCase())
+      if(coingeckoItem) {
+        try {
+          priceUpdated = true
+          const url = `${COINGECKO_API}/coins/${coingeckoItem.id}`
+
+          const coinsApiResult = await fetch(url);
+          const coinInfo = await coinsApiResult.json();
+
+          if(coinInfo && !coinInfo.error) {
+            if(coinInfo.description.en && coinInfo.description.en !== '') {
+              description = coinInfo.description.en
+            }
+            if(coinInfo.market_data.current_price.usd) {
+              price = coinInfo.market_data.current_price.usd
+            }
+          }
+        } catch(ex) {
+          console.log(ex)
+        }
+      }
+    }
+
+    const returnObj = {
+      address: tokenAddress,
+      symbol: symbol,
+      decimals: decimals,
+      description: description,
+      price: price,
+      priceUpdated: priceUpdated
+    }
+
+    const assetInfoIndex = assetInfos.findIndex(asset => asset.address === tokenAddress)
+
+    if(assetInfoIndex === -1) {
+      assetInfos.push(returnObj)
+    } else {
+      assetInfos[assetInfoIndex] = returnObj
+    }
+
+    this.setStore({ systemAssetInfo: assetInfos })
+
+    return returnObj
   }
 
   mapCurveTokenToPool = (address) => {
@@ -1488,8 +1619,246 @@ class Store {
     }
   }
 
-  getVaultStrategiesData = async (web3, vault) => {
-    return null
+  getVaultStrategiesData = async (web3, vault, coingeckoCoinList) => {
+
+    const promises = vault.strategies.map(strategy => {
+      return new Promise(async (resolve, reject) => {
+        try {
+          const token = await this.getTokenTree(web3, vault.tokenMetadata.address, coingeckoCoinList)
+
+          const balances = await this.mapStrategyToBalance(web3, strategy, vault)
+
+          strategy.token = token
+          strategy.balance = balances.strategyBalance
+          strategy.balanceUSD = balances.strategyBalanceUSD
+          strategy.protocols = await this.mapStrategyToProtocols(strategy, vault)
+        } catch(ex) {
+          strategy.balance = 0
+          strategy.balanceUSD = 0
+          strategy.protocols = []
+        }
+
+        resolve(strategy);
+      });
+    });
+
+    const strategiesPopulated = await Promise.all(promises);
+
+    return strategiesPopulated
+  }
+
+  mapStrategyToBalance = async (web3, strategy, vault) => {
+    try {
+
+      let strategyContract = null
+      let strategyBalance = 0
+      let strategyBalanceUSD = 0
+
+      if(['StrategyLenderYieldOptimiser'].includes(strategy.name)) {
+        strategyContract = new web3.eth.Contract(VAULT_StrategyLenderYieldOptimiserABI, strategy.address)
+        strategyBalance = await strategyContract.methods.lentTotalAssets().call()
+        strategyBalanceUSD = BigNumber(strategyBalance).div(10**vault.token.decimals).times(vault.tvl.price).toFixed(vault.token.decimals)
+      } else if (strategy.name.includes('StrategyCurve') && strategy.name.includes('VoterProxy') && strategy.name !== 'StrategyCurveIBVoterProxy') {
+        strategyContract = new web3.eth.Contract(VAULT_StrategyPoolABI, strategy.address)
+        strategyBalance = await strategyContract.methods.balanceOf().call()
+        strategyBalanceUSD = BigNumber(strategyBalance).div(10**vault.token.decimals).times(vault.tvl.price).toFixed(vault.token.decimals)
+      } else if (strategy.name.includes('StrategyAH2Earncy') || strategy.name.includes('SingleSided') || strategy.name.includes('Convex') || (strategy.name.includes('StrategyMaker') && strategy.name.includes('DAIDelegate')) || strategy.name.includes('VoterProxy') ||
+        ['AaveWETHLenderUSDTBorrower', 'AaveLenderLINKBorrowerSUSD', 'yvWBTCStratMMV1', 'IBLevComp', 'StrategyMasterchefGenericMod', 'StrategyGenericLevCompFarm', 'StrategySynthetixSusdMinter',
+        'StrategystETHCurve', 'Strategy1INCHGovernance', 'CurveeCRVVoterProxy', 'RescueMasterchef', 'StrategySynthetixRewardsGeneric', 'StrategyYearnVECRV'].includes(strategy.name)) {
+        strategyContract = new web3.eth.Contract(VAULT_AaveWETHLenderUSDTBorrowerABI, strategy.address)
+        strategyBalance = await strategyContract.methods.estimatedTotalAssets().call()
+        strategyBalanceUSD = BigNumber(strategyBalance).div(10**vault.token.decimals).times(vault.tvl.price).toFixed(vault.token.decimals)
+      } else if (strategy.name.includes('StrategyRook')) {
+        strategyContract = new web3.eth.Contract(VAULT_StrategyRookDaiStablecoinABI, strategy.address)
+        strategyBalance = await strategyContract.methods.balanceOfStaked().call()
+        strategyBalanceUSD = BigNumber(strategyBalance).div(10**vault.token.decimals).times(vault.tvl.price).toFixed(vault.token.decimals)
+      } else if (strategy.name.includes('Vesper')) {
+        strategyContract = new web3.eth.Contract(VAULT_StrategyVesperWBTCABI, strategy.address)
+        strategyBalance = await strategyContract.methods.calcWantHeldInVesper().call()
+        strategyBalanceUSD = BigNumber(strategyBalance).div(10**vault.token.decimals).times(vault.tvl.price).toFixed(vault.token.decimals)
+      } else if (strategy.name.includes('StrategyIdleidle')) {
+        strategyContract = new web3.eth.Contract(VAULT_StrategyIdleidleRAIYieldABI, strategy.address)
+        strategyBalance = await strategyContract.methods.balanceOnIdle().call()
+        strategyBalanceUSD = BigNumber(strategyBalance).div(10**vault.token.decimals).times(vault.tvl.price).toFixed(vault.token.decimals)
+      } else if (strategy.name.includes('PoolTogether')) {
+        strategyContract = new web3.eth.Contract(YEARNVAULT_0_3_3ABI, strategy.address)
+        strategyBalance = await strategyContract.methods.balanceOfPool().call()
+        strategyBalanceUSD = BigNumber(strategyBalance).div(10**vault.token.decimals).times(vault.tvl.price).toFixed(vault.token.decimals)
+      } else {
+        strategyContract = new web3.eth.Contract(VAULT_StrategyPoolABI, strategy.address)
+        strategyBalance = await strategyContract.methods.balanceOf().call()
+        strategyBalanceUSD = BigNumber(strategyBalance).div(10**vault.token.decimals).times(vault.tvl.price).toFixed(vault.token.decimals)
+      }
+
+      return { strategyBalance, strategyBalanceUSD}
+    } catch(ex) {
+      console.log(ex)
+      return 0
+    }
+  }
+
+  mapStrategyToProtocols = async (strategy, vault) => {
+    try {
+      let strategyContract = null
+      let protocols = []
+
+      if(['StrategyLenderYieldOptimiser'].includes(strategy.name)) {
+        strategyContract = new web3.eth.Contract(VAULT_StrategyLenderYieldOptimiserABI, strategy.address)
+        const protocolTuple = await strategyContract.methods.lendStatuses().call()
+        protocols = protocolTuple.map((pro) => {
+          return {
+            name: this.mapLenderNameToProtocol(pro.name),
+            balance: pro.assets,
+            balanceUSD: BigNumber(pro.assets).div(10**vault.token.decimals).times(vault.tvl.price).toFixed(vault.token.decimals),
+          }
+        })
+      } else if (strategy.name.includes('Convex')) {
+        protocols = [
+          {
+            name: 'Convex',
+            balance: strategy.balance,
+            balanceUSD: BigNumber(strategy.balance).div(10**vault.token.decimals).times(vault.tvl.price).toFixed(vault.token.decimals),
+          }
+        ]
+      } else if (strategy.name.includes('Maker') || strategy.name.includes('DAIDelegate')) {
+        protocols = [
+          {
+            name: 'Maker',
+            balance: strategy.balance,
+            balanceUSD: BigNumber(strategy.balance).div(10**vault.token.decimals).times(vault.tvl.price).toFixed(vault.token.decimals),
+          }
+        ]
+      } else if (strategy.name.includes('Vesper')) {
+        protocols = [
+          {
+            name: 'Vesper',
+            balance: strategy.balance,
+            balanceUSD: BigNumber(strategy.balance).div(10**vault.token.decimals).times(vault.tvl.price).toFixed(vault.token.decimals),
+          }
+        ]
+      } else if (strategy.name.includes('StrategyIdleidle')) {
+        protocols = [
+          {
+            name: 'Idle.Finance',
+            balance: strategy.balance,
+            balanceUSD: BigNumber(strategy.balance).div(10**vault.token.decimals).times(vault.tvl.price).toFixed(vault.token.decimals),
+          }
+        ]
+      } else if (strategy.name.includes('PoolTogether')) {
+        protocols = [
+          {
+            name: 'PoolTogether',
+            balance: strategy.balance,
+            balanceUSD: BigNumber(strategy.balance).div(10**vault.token.decimals).times(vault.tvl.price).toFixed(vault.token.decimals),
+          }
+        ]
+      } else if (strategy.name.includes('StrategyAH2Earncy')) {
+        protocols = [
+          {
+            name: 'Alpha Homora',
+            balance: strategy.balance,
+            balanceUSD: BigNumber(strategy.balance).div(10**vault.token.decimals).times(vault.tvl.price).toFixed(vault.token.decimals),
+          }
+        ]
+      } else if (strategy.name.includes('StrategyRook')) {
+        protocols = [
+          {
+            name: 'StrategyRook',
+            balance: strategy.balance,
+            balanceUSD: BigNumber(strategy.balance).div(10**vault.token.decimals).times(vault.tvl.price).toFixed(vault.token.decimals),
+          }
+        ]
+      } else if (strategy.name.includes('IBLevComp') || strategy.name.includes('StrategyGenericLevCompFarm')) {   // these do other things with assets. Iron Bank or DyDx. Get balances etc.
+        protocols = [
+          {
+            name: 'Compound',
+            balance: strategy.balance,
+            balanceUSD: BigNumber(strategy.balance).div(10**vault.token.decimals).times(vault.tvl.price).toFixed(vault.token.decimals),
+          }
+        ]
+      } else if (strategy.name.includes('Aave') || strategy.name.includes('StrategyVaultUSDC')) {
+        let balanceUSD = 0
+        if(strategy.name.includes('StrategyVaultUSDC')) {
+          balanceUSD = BigNumber(strategy.balance).div(10**6).toFixed(6)
+        } else {
+          balanceUSD = BigNumber(strategy.balance).div(10**vault.token.decimals).toFixed(vault.token.decimals)
+        }
+        protocols = [
+          {
+            name: 'Aave',
+            balance: strategy.balance,
+            balanceUSD: balanceUSD,
+          }
+        ]
+      } else if (strategy.name.includes('1INCH')) {
+        protocols = [
+          {
+            name: '1INCH',
+            balance: strategy.balance,
+            balanceUSD: BigNumber(strategy.balance).div(10**vault.token.decimals).times(vault.tvl.price).toFixed(vault.token.decimals),
+          }
+        ]
+      } else if (strategy.name.includes('Synthetix')) {
+        protocols = [
+          {
+            name: 'Synthetix',
+            balance: strategy.balance,
+            balanceUSD: BigNumber(strategy.balance).div(10**vault.token.decimals).times(vault.tvl.price).toFixed(vault.token.decimals),
+          }
+        ]
+      } else if (strategy.name.includes('yvWBTCStratMMV1')) {
+        protocols = [
+          {
+            name: 'Mushroom Finance',
+            balance: strategy.balance,
+            balanceUSD: BigNumber(strategy.balance).div(10**vault.token.decimals).times(vault.tvl.price).toFixed(vault.token.decimals),
+          }
+        ]
+      } else if (strategy.name.includes('StrategyYFIGovernance')) {
+        protocols = [
+          {
+            name: 'Yearn',
+            balance: strategy.balance,
+            balanceUSD: BigNumber(strategy.balance).div(10**vault.token.decimals).times(vault.tvl.price).toFixed(vault.token.decimals),
+          }
+        ]
+      } else if (strategy.name.includes('Curve') || strategy.name.includes('SingleSided') || strategy.name.includes('VoterProxy') || strategy.name.includes('pool') || strategy.name.includes('StrategyYearnVECRV') || strategy.name.includes('StrategyGUSDRescue')) {
+        protocols = [
+          {
+            name: 'Curve',
+            balance: strategy.balance,
+            balanceUSD: BigNumber(strategy.balance).div(10**vault.token.decimals).times(vault.tvl.price).toFixed(vault.token.decimals),
+          }
+        ]
+      } else {
+        protocols = [
+          {
+            name: 'Unknown',
+            balance: strategy.balance,
+            balanceUSD: BigNumber(strategy.balance).div(10**vault.token.decimals).times(vault.tvl.price).toFixed(vault.token.decimals),
+          }
+        ]
+      }
+
+      return protocols
+    } catch(ex) {
+      console.log(ex)
+      return null
+    }
+  }
+
+  mapLenderNameToProtocol = (name) => {
+    if(name.toLowerCase().includes('aave')) {
+      return 'Aave'
+    } else if(name.toLowerCase().includes('dydx')) {
+      return 'DyDx'
+    } else if(name.toLowerCase().includes('alphahomo')) {
+      return 'Alpha Homora'
+    } else if(name.toLowerCase().includes('cream')) {
+      return 'Cream'
+    } else if(name.toLowerCase().includes('ib') || name.toLowerCase().includes('ironbank')) {
+      return 'Iron Bank'
+    }
   }
 }
 

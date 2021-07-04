@@ -17,7 +17,7 @@ import SystemVaultsGraph from '../../components/systemVaultsGraph';
 import SystemAssetsGraph from '../../components/systemAssetsGraph';
 
 import stores from '../../stores/index.js';
-import { VAULTS_UPDATED, ETHERSCAN_URL, LEND_UPDATED } from '../../stores/constants';
+import { VAULTS_UPDATED, LEND_UPDATED, SYSTEM_UPDATED } from '../../stores/constants';
 
 import { formatCurrency } from '../../utils';
 
@@ -324,7 +324,7 @@ function System({ changeTheme, theme }) {
         <title>System</title>
       </Head>
       <Paper elevation={0} className={classes.overviewContainer2}>
-        <Grid container center spacing={0}>
+        <Grid container spacing={0}>
           <Grid item xl={3} lg={3} md={6} sm={6} xs={12}>
             <div className={classes.overviewCard}>
               <div>
