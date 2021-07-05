@@ -39,12 +39,6 @@ function CustomTooltip({ payload, active }) {
   return null;
 }
 
-function CustomizedTick(props) {
-  console.log(props)
-
-  return <Typography variant='h5'>props.payload.value</Typography>
-}
-
 export default function SystemStrategiesGraph({ vaults, filters, layout, handleNavigate }) {
 
   const [activeIndex, setActiveIndex] = useState(0);
@@ -117,7 +111,7 @@ export default function SystemStrategiesGraph({ vaults, filters, layout, handleN
     return (
       <div className={classes.vaultPerformanceGraph}>
         <div className={ classes.actions }>
-          <Typography variant='h6'>Vaults</Typography>
+          <Typography variant='h6'>Vaults In System</Typography>
           <Button variant='outlined' className={ classes.exploreButton } onClick={onExplore}>
             <Typography variant='h5'>Explore</Typography>
           </Button>

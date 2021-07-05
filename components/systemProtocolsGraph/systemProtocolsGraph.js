@@ -29,7 +29,7 @@ function CustomTooltip({ payload, active }) {
             {payload[0].payload.name}
           </Typography>
           <Typography className={classes.valBold}>
-            ${formatCurrency(payload[0].payload.balance)}
+            {formatCurrency(payload[0].payload.balance)}%
           </Typography>
         </div>
       </div>
@@ -83,6 +83,15 @@ export default function SystemProtocolsGraph({ protocols, filters, layout, handl
     }
   }
 
+  const total = data.reduce((acc, current) => {
+    return BigNumber(acc).plus(current.balance).toNumber()
+  }, 0)
+
+  data = data.map((d) => {
+    d.balance = BigNumber(d.balance).times(100).div(total).toNumber()
+    return d
+  })
+
   const COLORS = [
     "#0045ff",
     "#1162df",
@@ -110,7 +119,7 @@ export default function SystemProtocolsGraph({ protocols, filters, layout, handl
     return (
       <div className={classes.vaultPerformanceGraph}>
         <div className={ classes.actions }>
-          <Typography variant='h6'>Protocols</Typography>
+          <Typography variant='h6'>Protocol Exposure</Typography>
           <Button variant='outlined' className={ classes.exploreButton } onClick={onExplore}>
             <Typography variant='h5'>Explore</Typography>
           </Button>

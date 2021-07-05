@@ -37,6 +37,11 @@ import { vault_StrategyRookDaiStablecoinABI } from './vault_StrategyRookDaiStabl
 import { vault_StrategysteCurveWETHSingleSidedABI } from './vault_StrategysteCurveWETHSingleSidedABI';
 import { vault_StrategyVesperWBTCABI } from './vault_StrategyVesperWBTCABI';
 import { yearnVault0_3_3ABI } from './yearnVault0_3_3ABI';
+import { veCurveVaultABI } from './veCurveVaultABI';
+import { aaveTokenABI } from './aaveTokenABI';
+import { CRV3TokenABI } from './CRV3TokenABI';
+import { vault_USDCABI } from './vault_USDCABI';
+import { vault_StrategyMKRVaultDAIDelegateABI } from './vault_StrategyMKRVaultDAIDelegateABI';
 
 export const COMP_TOKENABI = comp_tokenABI;
 export const CURVE_POOLCONTRACTABI = curve_poolContractABI;
@@ -52,6 +57,11 @@ export const VAULT_StrategyRookDaiStablecoinABI = vault_StrategyRookDaiStablecoi
 export const VAULT_StrategysteCurveWETHSingleSidedABI = vault_StrategysteCurveWETHSingleSidedABI;
 export const VAULT_StrategyVesperWBTCABI = vault_StrategyVesperWBTCABI;
 export const YEARNVAULT_0_3_3ABI = yearnVault0_3_3ABI;
+export const VECURVEVAULTABI = veCurveVaultABI;
+export const AAVETOKENABI = aaveTokenABI;
+export const CRV3TOKENABI = CRV3TokenABI;
+export const VAULT_USDCABI = vault_USDCABI;
+export const VAULT_StrategyMKRVaultDAIDelegateABI = vault_StrategyMKRVaultDAIDelegateABI;
 
 export const IRONBANKREGISTRYADAPTERABI = ironBankRegistryAdapterABI;
 export const ERC20ABI = erc20ABI;

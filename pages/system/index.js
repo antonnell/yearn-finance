@@ -28,26 +28,84 @@ const mapSystemJsonToAssets = (json) => {
   }
   return json
     .map((asset) => {
-      if(asset.token.isCurve) {
-        return asset.token.curveTokenSplit.map((token) => {
+      return asset.strategies
+    })
+    .flat()
+    .map((strategy) => {
+
+      if(strategy.token.isYVaultToken) {
+        if(strategy.token.yVaultUnderlingToken.isCurveToken) {
+          // return all curveUnderlyingTokens
+          return strategy.token.yVaultUnderlingToken.curveUnderlyingTokens.map((token) => {
+            if (token.isIEarnToken) {
+              return {
+                balance: BigNumber(strategy.balance).times(strategy.token.price).times(token.protocolRatio).div(100).times(strategy.token.yVaultUnderlingToken.exchangeRate).times(token.iEarnUnderlingToken.exchangeRate).toNumber(),
+                name: token.iEarnUnderlingToken.symbol
+              }
+
+            } else {
+              return {
+                balance: BigNumber(strategy.balance).times(strategy.token.price).times(strategy.token.yVaultUnderlingToken.exchangeRate).times(token.protocolRatio).div(100).toNumber(),
+                name: token.symbol
+              }
+            }
+          })
+
+        } else {
           return {
-            name: token.symbol,
-            balance: BigNumber(token.balance).div(10**token.decimals).toNumber(),
-            type: asset.type
+            balance: BigNumber(strategy.balance).times(strategy.token.price).times(strategy.token.yVaultUnderlingToken.exchangeRate).toNumber(),
+            name: strategy.token.yVaultUnderlingToken.symbol
           }
-        })
-      }
-      if(asset.token.isCompoundToken) {
-        return asset.token.compoundUnderlyingToken
-      }
-      if(asset.token.isIEarnToken) {
-        return asset.token.iEarnUnderlingToken
+        }
       }
 
-      return {
-        name: asset.token.display_name,
-        balance: BigNumber(asset.tvl.tvl).toNumber(),
-        type: asset.type
+      if(strategy.token.isCurveToken) {
+        // return all curveUnderlyingTokens
+        return strategy.token.curveUnderlyingTokens.map((token) => {
+          if (token.isIEarnToken) {
+            return {
+              balance: BigNumber(strategy.balance).times(strategy.token.price).times(token.protocolRatio).div(100).times(token.iEarnUnderlingToken.exchangeRate).toNumber(),
+              name: token.iEarnUnderlingToken.symbol
+            }
+
+          } else if (token.isCompoundToken) {
+            return {
+              balance: BigNumber(strategy.balance).times(strategy.token.price).times(token.protocolRatio).div(100).times(token.compoundUnderlyingToken.exchangeRate).toNumber(),
+              name: token.compoundUnderlyingToken.symbol
+            }
+
+          } else {
+            return {
+              balance: BigNumber(strategy.balance).times(strategy.token.price).times(token.protocolRatio).div(100).toNumber(),
+              name: token.symbol
+            }
+          }
+        })
+
+      } else if (strategy.token.isIEarnToken) {
+        //return iEarnUnderlingToken
+        return {
+          balance: BigNumber(strategy.balance).times(strategy.token.price).times(strategy.token.iEarnUnderlingToken.exchangeRate).toNumber(),
+          name: strategy.token.iEarnUnderlingToken.symbol
+        }
+
+      } else if (strategy.token.isCompoundToken) {
+        //return compoundUnderlyingToken
+        return {
+          balance: BigNumber(strategy.balance).times(strategy.token.price).times(strategy.token.compoundUnderlyingToken.exchangeRate).toNumber(),
+          name: strategy.token.compoundUnderlyingToken.symbol
+        }
+
+      } else if (strategy.token.isAaveToken) {
+        return {
+          balance: BigNumber(strategy.balance).times(strategy.token.price).times(strategy.token.aaveUnderlyingToken.exchangeRate).toNumber(),
+          name: strategy.token.aaveUnderlyingToken.symbol
+        }
+      } else {
+        return {
+          balance: BigNumber(strategy.balance).times(strategy.token.price).toNumber(),
+          name: strategy.token.symbol
+        }
       }
     })
     .flat()
@@ -131,8 +189,7 @@ const mapSystemJsonToVaults = (json) => {
     .map((asset) => {
       return {
         name: asset.display_name,
-        balance: BigNumber(asset.tvl.tvl).toNumber(),
-        type: asset.type
+        balance: BigNumber(asset.tvl.tvl).toNumber()
       }
     })
     .sort((firstEl, secondEl) => {
@@ -209,22 +266,30 @@ function System({ changeTheme, theme }) {
       setIronBankTVL(stores.lendStore.getStore('ironBankTVL'));
     };
 
+    const systemUpdated = () => {
+      const systemJson = stores.investStore.getStore('systemJSON')
+
+      console.log(systemJson)
+
+      setAssets(mapSystemJsonToAssets(systemJson));
+      setProtocols(mapSystemJsonToProtocols(systemJson));
+      setStrategies(mapSystemJsonToStrategies(systemJson));
+      setVaults(mapSystemJsonToVaults(systemJson));
+    };
+
     setTvl(stores.investStore.getStore('tvlInfo'));
     setIronBankTVL(stores.lendStore.getStore('ironBankTVL'));
 
-    const systemJson = stores.systemStore.getStore('systemJson')
-
-    setAssets(mapSystemJsonToAssets(systemJson));
-    setProtocols(mapSystemJsonToProtocols(systemJson));
-    setStrategies(mapSystemJsonToStrategies(systemJson));
-    setVaults(mapSystemJsonToVaults(systemJson));
+    systemUpdated()
 
     stores.emitter.on(VAULTS_UPDATED, vaultsUpdated);
     stores.emitter.on(LEND_UPDATED, lendUpdated);
+    stores.emitter.on(SYSTEM_UPDATED, systemUpdated);
 
     return () => {
       stores.emitter.removeListener(VAULTS_UPDATED, vaultsUpdated);
       stores.emitter.removeListener(LEND_UPDATED, lendUpdated);
+      stores.emitter.removeListener(SYSTEM_UPDATED, systemUpdated);
     };
   }, []);
 
@@ -242,9 +307,9 @@ function System({ changeTheme, theme }) {
 
   const renderOverview = () => {
     return (<div className={classes.graphsContainer}>
-      <SystemProtocolsGraph protocols={ protocols } filters={ filters } layout={ filters.layout } handleNavigate={handleNavigate} />
-      <SystemStrategiesGraph strategies={ strategies } filters={ filters } layout={ filters.layout } handleNavigate={handleNavigate} />
       <SystemVaultsGraph vaults={ vaults } filters={ filters } layout={ filters.layout } handleNavigate={handleNavigate} />
+      <SystemStrategiesGraph strategies={ strategies } filters={ filters } layout={ filters.layout } handleNavigate={handleNavigate} />
+      <SystemProtocolsGraph protocols={ protocols } filters={ filters } layout={ filters.layout } handleNavigate={handleNavigate} />
       <SystemAssetsGraph assets={ assets } filters={ filters } layout={ filters.layout } handleNavigate={handleNavigate} />
     </div>)
 

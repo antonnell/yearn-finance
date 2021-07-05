@@ -111,7 +111,7 @@ export default function SystemStrategiesGraph({ strategies, filters, layout, han
     return (
       <div className={classes.vaultPerformanceGraph}>
         <div className={ classes.actions }>
-          <Typography variant='h6'>Strategies</Typography>
+          <Typography variant='h6'>Strategies In Use</Typography>
           <Button variant='outlined' className={ classes.exploreButton } onClick={onExplore}>
             <Typography variant='h5'>Explore</Typography>
           </Button>

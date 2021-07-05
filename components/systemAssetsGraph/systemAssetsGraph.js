@@ -110,7 +110,7 @@ export default function SystemProtocolsGraph({ assets, filters, layout, handleNa
     return (
       <div className={classes.vaultPerformanceGraph}>
         <div className={ classes.actions }>
-          <Typography variant='h6'>Assets</Typography>
+          <Typography variant='h6'>Asset Exposure</Typography>
           <Button variant='outlined' className={ classes.exploreButton } onClick={onExplore}>
             <Typography variant='h5'>Explore</Typography>
           </Button>
