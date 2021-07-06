@@ -56,7 +56,7 @@ export default function SystemFilters({ onFiltersChanged, vaults }) {
         </ToggleButtonGroup>
         <Autocomplete
           id="q"
-          options={vaults.sort((a, b) => -a.type.localeCompare(b.type))}
+          options={vaults}
           groupBy={(option) => option.type}
           autoHighlight
           getOptionLabel={(option) => `${option.name}`}

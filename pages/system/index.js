@@ -20,7 +20,134 @@ import stores from '../../stores/index.js';
 import { VAULTS_UPDATED, LEND_UPDATED, SYSTEM_UPDATED } from '../../stores/constants';
 
 import { formatCurrency } from '../../utils';
+//
+// const mapTokenToBalanceTree = (token) => {
+//   if(token.isYVaultToken) {
+//     return mapTokenToBalanceTree(token.yVaultUnderlingToken)
+//   } else if (token.isCurveToken) {
+//     return token.curveUnderlyingTokens.map((underlyingToken) => {
+//       return mapTokenToBalanceTree(underlyingToken)
+//     })
+//   } else if (token.isIEarnToken) {
+//     return {
+//       balance: BigNumber(token.balance).times(token.price).times(token.iEarnUnderlingToken.exchangeRate).toNumber(),
+//       name: token.iEarnUnderlingToken.symbol
+//     }
+//   } else if (token.isCompoundToken) {
+//     return {
+//       balance: BigNumber(token.balance).times(token.price).toNumber(),
+//       name: token.compoundUnderlyingToken.symbol
+//     }
+//   } else if (token.isAaveToken) {
+//     return {
+//       balance: BigNumber(token.balance).times(token.price).times(token.aaveUnderlyingToken.exchangeRate).toNumber(),
+//       name: token.aaveUnderlyingToken.symbol
+//     }
+//   } else {
+//     return {
+//       balance: BigNumber(token.balance).times(token.price).toNumber(),
+//       name: token.symbol
+//     }
+//   }
+// }
 
+
+const mapTokenToBalance = (token) => {
+  if(token.isYVaultToken) {
+    if(token.yVaultUnderlingToken.isCurveToken) {
+      // return all curveUnderlyingTokens
+      return token.yVaultUnderlingToken.curveUnderlyingTokens.map((underlyingToken) => {
+        if (underlyingToken.isIEarnToken) {
+          return {
+            balance: BigNumber(token.balance).times(token.price).times(underlyingToken.protocolRatio).div(100).times(token.yVaultUnderlingToken.exchangeRate).times(underlyingToken.iEarnUnderlingToken.exchangeRate).toNumber(),
+            name: underlyingToken.iEarnUnderlingToken.symbol
+          }
+
+        } else {
+          return {
+            balance: BigNumber(token.balance).times(token.price).times(token.yVaultUnderlingToken.exchangeRate).times(underlyingToken.protocolRatio).div(100).toNumber(),
+            name: underlyingToken.symbol
+          }
+        }
+      })
+
+    } else {
+      return {
+        balance: BigNumber(token.balance).times(token.price).times(token.yVaultUnderlingToken.exchangeRate).toNumber(),
+        name: token.yVaultUnderlingToken.symbol
+      }
+    }
+  } else if(token.isCurveToken) {
+    // return all curveUnderlyingTokens
+    return token.curveUnderlyingTokens.map((underlyingToken) => {
+      if(underlyingToken.isCurveToken) {
+        // return all curveUnderlyingTokens
+        return underlyingToken.curveUnderlyingTokens.map((underlyingToken1) => {
+          if (underlyingToken1.isIEarnToken) {
+            return {
+              balance: BigNumber(token.balance).times(underlyingToken.protocolRatio).div(100).times(token.price).times(underlyingToken1.protocolRatio).div(100).times(underlyingToken1.iEarnUnderlingToken.exchangeRate).toNumber(),
+              name: underlyingToken1.iEarnUnderlingToken.symbol
+            }
+
+          } else if (underlyingToken1.isCompoundToken) {
+            return {
+              balance: BigNumber(token.balance).times(underlyingToken.protocolRatio).div(100).times(token.price).times(underlyingToken1.protocolRatio).div(100).toNumber(),
+              name: underlyingToken1.compoundUnderlyingToken.symbol
+            }
+
+          } else {
+            return {
+              balance: BigNumber(token.balance).times(underlyingToken.protocolRatio).div(100).times(token.price).times(underlyingToken1.protocolRatio).div(100).toNumber(),
+              name: underlyingToken1.symbol
+            }
+          }
+        })
+      } else if (underlyingToken.isIEarnToken) {
+        return {
+          balance: BigNumber(token.balance).times(token.price).times(underlyingToken.protocolRatio).div(100).times(underlyingToken.iEarnUnderlingToken.exchangeRate).toNumber(),
+          name: underlyingToken.iEarnUnderlingToken.symbol
+        }
+
+      } else if (underlyingToken.isCompoundToken) {
+        return {
+          balance: BigNumber(token.balance).times(token.price).times(underlyingToken.protocolRatio).div(100).toNumber(),
+          name: underlyingToken.compoundUnderlyingToken.symbol
+        }
+
+      } else {
+        return {
+          balance: BigNumber(token.balance).times(token.price).times(underlyingToken.protocolRatio).div(100).toNumber(),
+          name: underlyingToken.symbol
+        }
+      }
+    })
+
+  } else if (token.isIEarnToken) {
+    //return iEarnUnderlingToken
+    return {
+      balance: BigNumber(token.balance).times(token.price).times(token.iEarnUnderlingToken.exchangeRate).toNumber(),
+      name: token.iEarnUnderlingToken.symbol
+    }
+
+  } else if (token.isCompoundToken) {
+    //return compoundUnderlyingToken
+    return {
+      balance: BigNumber(token.balance).times(token.price).toNumber(),
+      name: token.compoundUnderlyingToken.symbol
+    }
+
+  } else if (token.isAaveToken) {
+    return {
+      balance: BigNumber(token.balance).times(token.price).times(token.aaveUnderlyingToken.exchangeRate).toNumber(),
+      name: token.aaveUnderlyingToken.symbol
+    }
+  } else {
+    return {
+      balance: BigNumber(token.balance).times(token.price).toNumber(),
+      name: token.symbol
+    }
+  }
+}
 
 const mapSystemJsonToAssets = (json) => {
   if(!json) {
@@ -32,83 +159,15 @@ const mapSystemJsonToAssets = (json) => {
     })
     .flat()
     .map((strategy) => {
-
-      if(strategy.token.isYVaultToken) {
-        if(strategy.token.yVaultUnderlingToken.isCurveToken) {
-          // return all curveUnderlyingTokens
-          return strategy.token.yVaultUnderlingToken.curveUnderlyingTokens.map((token) => {
-            if (token.isIEarnToken) {
-              return {
-                balance: BigNumber(strategy.balance).times(strategy.token.price).times(token.protocolRatio).div(100).times(strategy.token.yVaultUnderlingToken.exchangeRate).times(token.iEarnUnderlingToken.exchangeRate).toNumber(),
-                name: token.iEarnUnderlingToken.symbol
-              }
-
-            } else {
-              return {
-                balance: BigNumber(strategy.balance).times(strategy.token.price).times(strategy.token.yVaultUnderlingToken.exchangeRate).times(token.protocolRatio).div(100).toNumber(),
-                name: token.symbol
-              }
-            }
-          })
-
-        } else {
-          return {
-            balance: BigNumber(strategy.balance).times(strategy.token.price).times(strategy.token.yVaultUnderlingToken.exchangeRate).toNumber(),
-            name: strategy.token.yVaultUnderlingToken.symbol
-          }
-        }
-      }
-
-      if(strategy.token.isCurveToken) {
-        // return all curveUnderlyingTokens
-        return strategy.token.curveUnderlyingTokens.map((token) => {
-          if (token.isIEarnToken) {
-            return {
-              balance: BigNumber(strategy.balance).times(strategy.token.price).times(token.protocolRatio).div(100).times(token.iEarnUnderlingToken.exchangeRate).toNumber(),
-              name: token.iEarnUnderlingToken.symbol
-            }
-
-          } else if (token.isCompoundToken) {
-            return {
-              balance: BigNumber(strategy.balance).times(strategy.token.price).times(token.protocolRatio).div(100).times(token.compoundUnderlyingToken.exchangeRate).toNumber(),
-              name: token.compoundUnderlyingToken.symbol
-            }
-
-          } else {
-            return {
-              balance: BigNumber(strategy.balance).times(strategy.token.price).times(token.protocolRatio).div(100).toNumber(),
-              name: token.symbol
-            }
-          }
-        })
-
-      } else if (strategy.token.isIEarnToken) {
-        //return iEarnUnderlingToken
-        return {
-          balance: BigNumber(strategy.balance).times(strategy.token.price).times(strategy.token.iEarnUnderlingToken.exchangeRate).toNumber(),
-          name: strategy.token.iEarnUnderlingToken.symbol
-        }
-
-      } else if (strategy.token.isCompoundToken) {
-        //return compoundUnderlyingToken
-        return {
-          balance: BigNumber(strategy.balance).times(strategy.token.price).times(strategy.token.compoundUnderlyingToken.exchangeRate).toNumber(),
-          name: strategy.token.compoundUnderlyingToken.symbol
-        }
-
-      } else if (strategy.token.isAaveToken) {
-        return {
-          balance: BigNumber(strategy.balance).times(strategy.token.price).times(strategy.token.aaveUnderlyingToken.exchangeRate).toNumber(),
-          name: strategy.token.aaveUnderlyingToken.symbol
-        }
-      } else {
-        return {
-          balance: BigNumber(strategy.balance).times(strategy.token.price).toNumber(),
-          name: strategy.token.symbol
-        }
-      }
+      return strategy.protocols
     })
     .flat()
+    .map((protocol) => {
+      return protocol.tokens
+    })
+    .flat()
+    .map(mapTokenToBalance)
+    .flat(2)
     .reduce((assets, asset) => {
       try {
         if(!assets) {
@@ -181,25 +240,6 @@ const mapSystemJsonToProtocols = (json) => {
       }
     })
 }
-const mapSystemJsonToVaults = (json) => {
-  if(!json) {
-    return []
-  }
-  return json
-    .map((asset) => {
-      return {
-        name: asset.display_name,
-        balance: BigNumber(asset.tvl.tvl).toNumber()
-      }
-    })
-    .sort((firstEl, secondEl) => {
-      if(BigNumber(secondEl.balance).gt(firstEl.balance)) {
-        return 1
-      } else {
-        return -1
-      }
-    })
-}
 const mapSystemJsonToStrategies = (json) => {
   if(!json) {
     return []
@@ -218,7 +258,18 @@ const mapSystemJsonToStrategies = (json) => {
         if(index === -1) {
           strategies.push({
             name: strategy.name,
-            balance: BigNumber(strategy.balanceUSD).toNumber(),
+            balance: strategy.protocols
+              .flat()
+              .map((protocol) => {
+                return protocol.tokens
+              })
+              .flat()
+              .map(mapTokenToBalance)
+              .flat(2)
+              .reduce((acc, token) => {
+                console.log(token)
+                return BigNumber(acc).plus(token.balance).toNumber()
+              }, 0),
             type: strategy.type
           })
         } else {
@@ -230,6 +281,25 @@ const mapSystemJsonToStrategies = (json) => {
         console.log(ex)
       }
     }, [])
+    .sort((firstEl, secondEl) => {
+      if(BigNumber(secondEl.balance).gt(firstEl.balance)) {
+        return 1
+      } else {
+        return -1
+      }
+    })
+}
+const mapSystemJsonToVaults = (json) => {
+  if(!json) {
+    return []
+  }
+  return json
+    .map((asset) => {
+      return {
+        name: asset.display_name,
+        balance: BigNumber(asset.tvl.tvl).toNumber()
+      }
+    })
     .sort((firstEl, secondEl) => {
       if(BigNumber(secondEl.balance).gt(firstEl.balance)) {
         return 1
