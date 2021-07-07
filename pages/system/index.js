@@ -32,6 +32,12 @@ const mapTokenToBalance = (token) => {
             name: underlyingToken.iEarnUnderlingToken.symbol
           }
 
+        } else if (underlyingToken.isCreamToken) {
+          return {
+            balance: BigNumber(token.balance).times(token.price).times(underlyingToken.protocolRatio).div(100).times(token.yVaultUnderlingToken.exchangeRate).times(underlyingToken.creamUnderlyingToken.exchangeRate).toNumber(),
+            name: underlyingToken.creamUnderlyingToken.symbol
+          }
+
         } else {
           return {
             balance: BigNumber(token.balance).times(token.price).times(token.yVaultUnderlingToken.exchangeRate).times(underlyingToken.protocolRatio).div(100).toNumber(),
@@ -58,9 +64,15 @@ const mapTokenToBalance = (token) => {
               name: underlyingToken1.iEarnUnderlingToken.symbol
             }
 
+          } else if (underlyingToken1.isCreamToken) {
+            return {
+              balance: BigNumber(token.balance).times(underlyingToken.protocolRatio).div(100).times(token.price).times(underlyingToken1.protocolRatio).div(100).times(underlyingToken1.creamUnderlyingToken.exchangeRate).toNumber(),
+              name: underlyingToken1.creamUnderlyingToken.symbol
+            }
+
           } else if (underlyingToken1.isCompoundToken) {
             return {
-              balance: BigNumber(token.balance).times(underlyingToken.protocolRatio).div(100).times(token.price).times(underlyingToken1.protocolRatio).div(100).toNumber(),
+              balance: BigNumber(token.balance).times(underlyingToken.protocolRatio).div(100).times(token.price).times(underlyingToken1.protocolRatio).div(100).times(underlyingToken1.compoundUnderlyingToken.exchangeRate).toNumber(),
               name: underlyingToken1.compoundUnderlyingToken.symbol
             }
 
@@ -81,6 +93,12 @@ const mapTokenToBalance = (token) => {
         return {
           balance: BigNumber(token.balance).times(token.price).times(underlyingToken.protocolRatio).div(100).toNumber(),
           name: underlyingToken.compoundUnderlyingToken.symbol
+        }
+
+      } else if (underlyingToken.isCreamToken) {
+        return {
+          balance: BigNumber(token.balance).times(token.price).times(underlyingToken.protocolRatio).div(100).toNumber(),
+          name: underlyingToken.creamUnderlyingToken.symbol
         }
 
       } else {
