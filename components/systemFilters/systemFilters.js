@@ -20,9 +20,9 @@ export default function SystemFilters({ onFiltersChanged, vaults }) {
   const [ search, setSearch ] = useState('')
   const [ layout, setLayout ] = useState('pie')
 
-  const onSearchChanged = (event) => {
+  const onSearchChanged = (event, val) => {
     setSearch(event.target.value);
-    onFiltersChanged(versions, event.target.value, layout)
+    onFiltersChanged(versions, val, layout)
   };
 
   const handleLayoutChanged = (event, newVal) => {

@@ -54,21 +54,6 @@ export default function SystemStrategiesGraph({ strategies, filters, layout, han
   const limit = 16
   let data = []
 
-  strategies = strategies.filter((vault) => {
-    let { versions, search } = filters
-
-    let returnValue = true;
-    if (versions && versions.length > 0) {
-      returnValue = versions.includes(vault.type);
-    }
-
-    if (returnValue === true && search && search !== '') {
-      returnValue = vault.name.toLowerCase().includes(search.toLowerCase())
-    }
-
-    return returnValue;
-  })
-
   for(let i = 0; i < strategies.length; i++) {
     if(i < limit) {
       data.push(strategies[i])

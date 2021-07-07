@@ -43,6 +43,8 @@ import { CRV3TokenABI } from './CRV3TokenABI';
 import { vault_USDCABI } from './vault_USDCABI';
 import { vault_StrategyMKRVaultDAIDelegateABI } from './vault_StrategyMKRVaultDAIDelegateABI';
 import { vault_StrategyYPoolABI } from './vault_StrategyYPoolABI';
+import { vault_StrategyGenericLevCompFarmABI } from './vault_StrategyGenericLevCompFarmABI';
+import { vault_StrategySingleSidedCrvABI } from './vault_StrategySingleSidedCrvABI'
 
 export const COMP_TOKENABI = comp_tokenABI;
 export const CURVE_POOLCONTRACTABI = curve_poolContractABI;
@@ -64,6 +66,8 @@ export const CRV3TOKENABI = CRV3TokenABI;
 export const VAULT_USDCABI = vault_USDCABI;
 export const VAULT_StrategyMKRVaultDAIDelegateABI = vault_StrategyMKRVaultDAIDelegateABI;
 export const VAULT_StrategyYPoolABI = vault_StrategyYPoolABI
+export const VAULT_StrategyGenericLevCompFarmABI = vault_StrategyGenericLevCompFarmABI;
+export const VAULT_StrategySingleSidedCrvABI = vault_StrategySingleSidedCrvABI
 
 export const IRONBANKREGISTRYADAPTERABI = ironBankRegistryAdapterABI;
 export const ERC20ABI = erc20ABI;

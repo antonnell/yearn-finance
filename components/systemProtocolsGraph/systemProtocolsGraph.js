@@ -53,21 +53,6 @@ export default function SystemProtocolsGraph({ protocols, filters, layout, handl
   const limit = 16
   let data = []
 
-  protocols = protocols.filter((vault) => {
-    let { versions, search } = filters
-
-    let returnValue = true;
-    if (versions && versions.length > 0) {
-      returnValue = versions.includes(vault.type);
-    }
-
-    if (returnValue === true && search && search !== '') {
-      returnValue = vault.name.toLowerCase().includes(search.toLowerCase())
-    }
-
-    return returnValue;
-  })
-
   for(let i = 0; i < protocols.length; i++) {
     if(i < limit) {
       data.push(protocols[i])

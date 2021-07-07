@@ -51,21 +51,6 @@ export default function SystemStrategiesGraph({ vaults, filters, layout, handleN
     return <Skeleton variant='circle' width={200} height={200} />
   }
 
-  vaults = vaults.filter((vault) => {
-    let { versions, search } = filters
-
-    let returnValue = true;
-    if (versions && versions.length > 0) {
-      returnValue = versions.includes(vault.type);
-    }
-
-    if (returnValue === true && search && search !== '') {
-      returnValue = vault.name.toLowerCase().includes(search.toLowerCase())
-    }
-
-    return returnValue;
-  })
-
   const limit = 16
   let data = []
 

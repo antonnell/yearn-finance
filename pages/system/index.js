@@ -20,37 +20,6 @@ import stores from '../../stores/index.js';
 import { VAULTS_UPDATED, LEND_UPDATED, SYSTEM_UPDATED } from '../../stores/constants';
 
 import { formatCurrency } from '../../utils';
-//
-// const mapTokenToBalanceTree = (token) => {
-//   if(token.isYVaultToken) {
-//     return mapTokenToBalanceTree(token.yVaultUnderlingToken)
-//   } else if (token.isCurveToken) {
-//     return token.curveUnderlyingTokens.map((underlyingToken) => {
-//       return mapTokenToBalanceTree(underlyingToken)
-//     })
-//   } else if (token.isIEarnToken) {
-//     return {
-//       balance: BigNumber(token.balance).times(token.price).times(token.iEarnUnderlingToken.exchangeRate).toNumber(),
-//       name: token.iEarnUnderlingToken.symbol
-//     }
-//   } else if (token.isCompoundToken) {
-//     return {
-//       balance: BigNumber(token.balance).times(token.price).toNumber(),
-//       name: token.compoundUnderlyingToken.symbol
-//     }
-//   } else if (token.isAaveToken) {
-//     return {
-//       balance: BigNumber(token.balance).times(token.price).times(token.aaveUnderlyingToken.exchangeRate).toNumber(),
-//       name: token.aaveUnderlyingToken.symbol
-//     }
-//   } else {
-//     return {
-//       balance: BigNumber(token.balance).times(token.price).toNumber(),
-//       name: token.symbol
-//     }
-//   }
-// }
-
 
 const mapTokenToBalance = (token) => {
   if(token.isYVaultToken) {
@@ -149,11 +118,19 @@ const mapTokenToBalance = (token) => {
   }
 }
 
-const mapSystemJsonToAssets = (json) => {
+const mapSystemJsonToAssets = (json, filters) => {
+  console.log(filters)
   if(!json) {
     return []
   }
   return json
+    .filter((asset) => {
+      if(!filters || !filters.search || !filters.search || filters.search.address === '') {
+        return true
+      }
+
+      return filters.search.address === asset.address
+    })
     .map((asset) => {
       return asset.strategies
     })
@@ -178,7 +155,6 @@ const mapSystemJsonToAssets = (json) => {
           assets.push({
             name: asset.name,
             balance: BigNumber(asset.balance).toNumber(),
-            type: asset.type
           })
         } else {
           assets[index].balance = BigNumber(assets[index].balance).plus(asset.balance).toNumber()
@@ -198,11 +174,18 @@ const mapSystemJsonToAssets = (json) => {
       }
     })
 }
-const mapSystemJsonToProtocols = (json) => {
+const mapSystemJsonToProtocols = (json, filters) => {
   if(!json) {
     return []
   }
   return json
+    .filter((asset) => {
+      if(!filters || !filters.search || !filters.search || filters.search.address === '') {
+        return true
+      }
+
+      return filters.search.address === asset.address
+    })
     .map((asset) => {
       return asset.strategies
     })
@@ -221,7 +204,6 @@ const mapSystemJsonToProtocols = (json) => {
           protocols.push({
             name: protocol.name,
             balance: BigNumber(protocol.balanceUSD).toNumber(),
-            type: protocol.type
           })
         } else {
           protocols[index].balance = BigNumber(protocols[index].balance).plus(protocol.balanceUSD).toNumber()
@@ -240,11 +222,18 @@ const mapSystemJsonToProtocols = (json) => {
       }
     })
 }
-const mapSystemJsonToStrategies = (json) => {
+const mapSystemJsonToStrategies = (json, filters) => {
   if(!json) {
     return []
   }
   return json
+    .filter((asset) => {
+      if(!filters || !filters.search || !filters.search || filters.search.address === '') {
+        return true
+      }
+
+      return filters.search.address === asset.address
+    })
     .map((asset) => {
       return asset.strategies
     })
@@ -267,7 +256,6 @@ const mapSystemJsonToStrategies = (json) => {
               .map(mapTokenToBalance)
               .flat(2)
               .reduce((acc, token) => {
-                console.log(token)
                 return BigNumber(acc).plus(token.balance).toNumber()
               }, 0),
             type: strategy.type
@@ -289,13 +277,21 @@ const mapSystemJsonToStrategies = (json) => {
       }
     })
 }
-const mapSystemJsonToVaults = (json) => {
+const mapSystemJsonToVaults = (json, filters) => {
   if(!json) {
     return []
   }
   return json
+    .filter((asset) => {
+      if(!filters || !filters.search || !filters.search || filters.search.address === '') {
+        return true
+      }
+
+      return filters.search.address === asset.address
+    })
     .map((asset) => {
       return {
+        address: asset.address,
         name: asset.display_name,
         balance: BigNumber(asset.tvl.tvl).toNumber()
       }
@@ -322,6 +318,8 @@ function System({ changeTheme, theme }) {
     layout: 'pie'
   });
 
+  const [ allVaults, setAllVaults ] = useState([]);
+
   const [ assets, setAssets ] = useState([]);
   const [ protocols, setProtocols] = useState([]);
   const [ strategies, setStrategies] = useState([]);
@@ -339,12 +337,11 @@ function System({ changeTheme, theme }) {
     const systemUpdated = () => {
       const systemJson = stores.investStore.getStore('systemJSON')
 
-      console.log(systemJson)
-
-      setAssets(mapSystemJsonToAssets(systemJson));
-      setProtocols(mapSystemJsonToProtocols(systemJson));
-      setStrategies(mapSystemJsonToStrategies(systemJson));
-      setVaults(mapSystemJsonToVaults(systemJson));
+      setAssets(mapSystemJsonToAssets(systemJson, filters));
+      setProtocols(mapSystemJsonToProtocols(systemJson, filters));
+      setStrategies(mapSystemJsonToStrategies(systemJson, filters));
+      setVaults(mapSystemJsonToVaults(systemJson, filters));
+      setAllVaults(systemJson)
     };
 
     setTvl(stores.investStore.getStore('tvlInfo'));
@@ -364,11 +361,19 @@ function System({ changeTheme, theme }) {
   }, []);
 
   const onFiltersChanged = (versions, search, layout) => {
-    setFilters({
+    let fil = {
       versions,
       search,
       layout
-    })
+    }
+    setFilters(fil)
+
+    const systemJson = stores.investStore.getStore('systemJSON')
+
+    setAssets(mapSystemJsonToAssets(systemJson, fil));
+    setProtocols(mapSystemJsonToProtocols(systemJson, fil));
+    setStrategies(mapSystemJsonToStrategies(systemJson, fil));
+    setVaults(mapSystemJsonToVaults(systemJson, fil));
   }
 
   const handleNavigate = (screen) => {
@@ -499,7 +504,7 @@ function System({ changeTheme, theme }) {
           </Grid>
         </Grid>
       </Paper>
-      <SystemFilters onFiltersChanged={ onFiltersChanged } vaults={ vaults } />
+      <SystemFilters onFiltersChanged={ onFiltersChanged } vaults={ allVaults } />
       { view === 'overview' && renderOverview() }
       { view === 'protocols' && renderProtocols() }
       { view === 'strategies' && renderStrategies() }
