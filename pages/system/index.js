@@ -91,16 +91,21 @@ const mapTokenToBalance = (token) => {
 
       } else if (underlyingToken.isCompoundToken) {
         return {
-          balance: BigNumber(token.balance).times(token.price).times(underlyingToken.protocolRatio).div(100).toNumber(),
+          balance: BigNumber(token.balance).times(token.price).times(underlyingToken.protocolRatio).div(100).times(underlyingToken.compoundUnderlyingToken.exchangeRate).toNumber(),
           name: underlyingToken.compoundUnderlyingToken.symbol
         }
 
       } else if (underlyingToken.isCreamToken) {
         return {
-          balance: BigNumber(token.balance).times(token.price).times(underlyingToken.protocolRatio).div(100).toNumber(),
+          balance: BigNumber(token.balance).times(token.price).times(underlyingToken.protocolRatio).div(100).times(underlyingToken.creamUnderlyingToken.exchangeRate).toNumber(),
           name: underlyingToken.creamUnderlyingToken.symbol
         }
 
+      } else if (underlyingToken.isAaveToken) {
+        return {
+          balance: BigNumber(token.balance).times(token.price).times(underlyingToken.protocolRatio).div(100).times(underlyingToken.aaveUnderlyingToken.exchangeRate).toNumber(),
+          name: underlyingToken.aaveUnderlyingToken.symbol
+        }
       } else {
         return {
           balance: BigNumber(token.balance).times(token.price).times(underlyingToken.protocolRatio).div(100).toNumber(),

@@ -1,4 +1,11 @@
-export default [{
+export default [
+{
+	"address": "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+	"symbol": "ETH",
+	"decimals": 18,
+	"description": "Ethereum is a global, open-source platform for decentralized applications. In other words, the vision is to create a world computer that anyone can build applications in a decentralized manner; while all states and data are distributed and publicly accessible. Ethereum supports smart contracts in which developers can write code in order to program digital value. Examples of decentralized apps (dapps) that are built on Ethereum includes token, non-fungible tokens, decentralized finance apps, lending protocol, decentralized exchanges, and much more."
+},
+{
 	"address": "0xD533a949740bb3306d119CC777fa900bA034cd52",
 	"symbol": "CRV",
 	"decimals": 18,
@@ -159,10 +166,10 @@ export default [{
 	"decimals": 18,
 	"description": "I don't have a description for this asset at this moment.",
 }, {
-	"address": "0xe2f2a5C287993345a840Db3B0845fbC70f5935a5",
+	"address": "0xe2f2a5c287993345a840db3b0845fbc70f5935a5",
 	"symbol": "mUSD",
 	"decimals": 18,
-	"description": "MUSD is decentralized peer-to-peer, based on Ethereum blockchain.\r\nShop and pay your services and products using MUSD.\r\nAnyone who owns MUSD will find a variety of fields to use them, not only trading and exchanges but also it can be use to shop and pay your services and products.",
+	"description": "mUSD is a stablecoin that is backed by USDT, USDC, sUSD, and DAI. It is designed by mStable to address both the fragmentation of USD-pegged stablecoins and the lack of native yield by uniting stablecoin swapping and lending.",
 }, {
 	"address": "0x49849C98ae39Fff122806C06791Fa73784FB3675",
 	"symbol": "crvRenWBTC",
@@ -287,7 +294,7 @@ export default [{
 	"address": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
 	"symbol": "UNI",
 	"decimals": 18,
-	"description": "UNI is committed to building a non-probable cross-chain hub, and its unique TPOS➕RAFT multi-function consensus algorithm implements user account management, cross-chain asset flashing, multi-chain wallet management, and one-click flash multi-chain assets; The cross-chain interface service system Phoenix enters the application environment of the cross-chain service through the RPC remote call protocol; the UNI platform will provide an optimized smart contract library to reduce the difficulty of developing DAPP, enabling the local and third-party DAPP ecosystem to rapidly expand and more Fast improvement; at the same time, using IPFS technology, HDFS distributed storage and big data AI algorithm to provide basic services such as data storage and big data artificial intelligence to the UNI main chain, empowering DApp. UNI will realize the free flow of assets between different chains, release the potential of different chains, allow more users to participate, and enable more chains to connect, eventually forming a truly big ecology, a network of inter-connected blockchains.",
+	"description": "UNI is the governance token for Uniswap. UNI was introduced on 16th September 2020 through a retrospective airdrop to users who have interacted with the protocol either by swapping tokens or by providing liquidity.",
 }, {
 	"address": "0xEcd5e75AFb02eFa118AF914515D6521aaBd189F1",
 	"symbol": "TUSD3CRV-f",
