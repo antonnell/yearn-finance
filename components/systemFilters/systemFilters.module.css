@@ -4,25 +4,24 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  background: #111729;
   position: sticky;
   top: 60px;
   padding: 10px 0;
   z-index: 9;
   border-radius: 0 !important;
   box-shadow: none !important;
-  border-bottom: 1px solid rgba(108,108,123, 0.2)
 }
 
 .vaultFiltersInside {
   width: 100%;
-  display: flex;
-  flex-wrap: wrap;
   padding: 0 48px;
   align-items: center;
   justify-content: space-between;
   border-radius: 0 !important;
   box-shadow: none !important;
+  display: grid;
+  grid-gap: 24px;
+  grid-template-columns: repeat(3, 1fr)
 }
 
 .vaultTypeButtons {
@@ -100,13 +99,11 @@
 .searchContainer {
   flex: 1;
   min-width: 300px !important;
-  padding-left: 30px !important;
-  padding-right: 40px !important;
-  border-radius: 50px !important;
+  border-radius: 10px !important;
 }
 
 .searchContainer > div > fieldset {
-  border-radius: 30px;
+  border-radius: 10px;
 }
 
 .searchContainer > div {

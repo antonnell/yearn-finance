@@ -10,7 +10,8 @@ import {
   BarChart,
   Bar,
   YAxis,
-  XAxis
+  XAxis,
+  Sector
 } from "recharts";
 
 import Skeleton from '@material-ui/lab/Skeleton';
@@ -38,6 +39,24 @@ function CustomTooltip({ payload, active }) {
 
   return null;
 }
+
+const renderActiveShape = (props) => {
+  const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill } = props;
+
+  return (
+    <g>
+      <Sector
+        cx={cx}
+        cy={cy}
+        innerRadius={innerRadius-2}
+        outerRadius={outerRadius+2}
+        startAngle={startAngle}
+        endAngle={endAngle}
+        fill={fill}
+      />
+    </g>
+  );
+};
 
 export default function SystemProtocolsGraph({ protocols, filters, layout, handleNavigate }) {
 
@@ -113,10 +132,11 @@ export default function SystemProtocolsGraph({ protocols, filters, layout, handl
           <PieChart>
             <Pie
               activeIndex={activeIndex}
+              activeShape={ renderActiveShape }
               data={data}
               cx={150}
               cy={180}
-              innerRadius={80}
+              innerRadius={50}
               outerRadius={100}
               fill="#FF0000"
               stroke="none"
@@ -129,9 +149,6 @@ export default function SystemProtocolsGraph({ protocols, filters, layout, handl
             </Pie>
             <Legend layout='vertical' align='right' verticalAlign='top' iconType='square' width={300} />
             <Tooltip content={<CustomTooltip />} />
-            <text x={150} dx={-26} y={180} dy={10} fill="#999">
-              Protocols
-            </text>
           </PieChart>
         </ResponsiveContainer>
       </div>

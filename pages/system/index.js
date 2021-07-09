@@ -142,22 +142,41 @@ const mapTokenToBalance = (token) => {
 }
 
 const mapSystemJsonToAssets = (json, filters) => {
-  console.log(filters)
   if(!json) {
     return []
   }
   return json
     .filter((asset) => {
-      if(!filters || !filters.search || !filters.search || filters.search.address === '') {
-        return true
-      }
+      let returnVal = true
 
-      return filters.search.address === asset.address
+      if(filters) {
+        if(filters.version && filters.version !== '') {
+          if(filters.version.val === 'mine') {
+            returnVal = BigNumber(asset.balanceUSD).gt(0)
+          } else {
+            returnVal = asset.type === filters.version.val
+          }
+        }
+
+        if(filters.vault && filters.vault.address) {
+          returnVal = filters.vault.address === asset.address
+        }
+      }
+      return returnVal
     })
     .map((asset) => {
       return asset.strategies
     })
     .flat()
+    .filter((strategy) => {
+      if(filters) {
+        if(filters.strategy && filters.strategy !== '') {
+          return filters.strategy.name === strategy.name
+        }
+      }
+
+      return true
+    })
     .map((strategy) => {
       return strategy.protocols
     })
@@ -203,16 +222,36 @@ const mapSystemJsonToProtocols = (json, filters) => {
   }
   return json
     .filter((asset) => {
-      if(!filters || !filters.search || !filters.search || filters.search.address === '') {
-        return true
-      }
+      let returnVal = true
 
-      return filters.search.address === asset.address
+      if(filters) {
+        if(filters.version && filters.version !== '') {
+          if(filters.version.val === 'mine') {
+            returnVal = BigNumber(asset.balanceUSD).gt(0)
+          } else {
+            returnVal = asset.type === filters.version.val
+          }
+        }
+
+        if(filters.vault && filters.vault.address) {
+          returnVal = filters.vault.address === asset.address
+        }
+      }
+      return returnVal
     })
     .map((asset) => {
       return asset.strategies
     })
     .flat()
+    .filter((strategy) => {
+      if(filters) {
+        if(filters.strategy && filters.strategy !== '') {
+          return filters.strategy.name === strategy.name
+        }
+      }
+
+      return true
+    })
     .map((strategy) => {
       return strategy.protocols
     })
@@ -251,16 +290,36 @@ const mapSystemJsonToStrategies = (json, filters) => {
   }
   return json
     .filter((asset) => {
-      if(!filters || !filters.search || !filters.search || filters.search.address === '') {
-        return true
-      }
+      let returnVal = true
 
-      return filters.search.address === asset.address
+      if(filters) {
+        if(filters.version && filters.version !== '') {
+          if(filters.version.val === 'mine') {
+            returnVal = BigNumber(asset.balanceUSD).gt(0)
+          } else {
+            returnVal = asset.type === filters.version.val
+          }
+        }
+
+        if(filters.vault && filters.vault.address) {
+          returnVal = filters.vault.address === asset.address
+        }
+      }
+      return returnVal
     })
     .map((asset) => {
       return asset.strategies
     })
     .flat()
+    .filter((strategy) => {
+      if(filters) {
+        if(filters.strategy && filters.strategy !== '') {
+          return filters.strategy.name === strategy.name
+        }
+      }
+
+      return true
+    })
     .reduce((strategies, strategy) => {
       try {
         if(!strategies) {
@@ -306,11 +365,22 @@ const mapSystemJsonToVaults = (json, filters) => {
   }
   return json
     .filter((asset) => {
-      if(!filters || !filters.search || !filters.search || filters.search.address === '') {
-        return true
-      }
+      let returnVal = true
 
-      return filters.search.address === asset.address
+      if(filters) {
+        if(filters.version && filters.version !== '') {
+          if(filters.version.val === 'mine') {
+            returnVal = BigNumber(asset.balanceUSD).gt(0)
+          } else {
+            returnVal = asset.type === filters.version.val
+          }
+        }
+
+        if(filters.vault && filters.vault.address) {
+          returnVal = filters.vault.address === asset.address
+        }
+      }
+      return returnVal
     })
     .map((asset) => {
       return {
@@ -336,8 +406,9 @@ function System({ changeTheme, theme }) {
   const [ironBankTVL, setIronBankTVL] = useState(null);
 
   const [ filters, setFilters ] = useState({
-    versions: [],
+    versions: '',
     search: '',
+    strategy: '',
     layout: 'pie'
   });
 
@@ -383,10 +454,11 @@ function System({ changeTheme, theme }) {
     };
   }, []);
 
-  const onFiltersChanged = (versions, search, layout) => {
+  const onFiltersChanged = (version, vault, strategy, layout) => {
     let fil = {
-      versions,
-      search,
+      version,
+      vault,
+      strategy,
       layout
     }
     setFilters(fil)
@@ -397,6 +469,25 @@ function System({ changeTheme, theme }) {
     setProtocols(mapSystemJsonToProtocols(systemJson, fil));
     setStrategies(mapSystemJsonToStrategies(systemJson, fil));
     setVaults(mapSystemJsonToVaults(systemJson, fil));
+
+    //set allVaults based on version that came in.
+
+    if(version && version !== '') {
+      setAllVaults(systemJson.filter((asset) => {
+        let returnVal = true
+        if(version && version !== '') {
+          if(version.val === 'mine') {
+            returnVal = BigNumber(asset.balanceUSD).gt(0)
+          } else {
+            returnVal = asset.type === version.val
+          }
+        }
+
+        return returnVal
+      }))
+    } else {
+      setAllVaults(systemJson)
+    }
   }
 
   const handleNavigate = (screen) => {
@@ -527,7 +618,11 @@ function System({ changeTheme, theme }) {
           </Grid>
         </Grid>
       </Paper>
-      <SystemFilters onFiltersChanged={ onFiltersChanged } vaults={ allVaults } />
+      <div className={ classes.systemTitle }>
+        <Typography variant='h1' className={ classes.systemTitleTitle }>Yearn Statistics</Typography>
+        <Typography variant='h2' className={ classes.systemTitleDescription }>View all of the protocols and assets involved with the Yearn system or just a specific vault type or vault and even down to an individual strategy.</Typography>
+      </div>
+      <SystemFilters onFiltersChanged={ onFiltersChanged } vaults={ allVaults } strategies={ strategies } />
       { view === 'overview' && renderOverview() }
       { view === 'protocols' && renderProtocols() }
       { view === 'strategies' && renderStrategies() }
