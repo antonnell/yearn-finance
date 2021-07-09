@@ -1810,10 +1810,12 @@ class Store {
           strategy.balance = strat.strategyBalance
           strategy.balanceUSD = strat.strategyBalanceUSD
           strategy.protocols = strat.protocols
+          strategy.description = strat.description
         } catch(ex) {
           strategy.balance = 0
           strategy.balanceUSD = 0
           strategy.protocols = []
+          strategy.description = ''
         }
 
         resolve(strategy);
@@ -1835,6 +1837,8 @@ class Store {
       let protocols = []
       let strategyBalance = 0
       let strategyBalanceUSD = 0
+
+      const strategyDescription = this.mapStrategyToDescription(strategy.name, vault.tokenMetadata.symbol)
 
       if (strategy.name.includes('SingleSided') || strategy.name.includes('VoterProxy') ||
         ['StrategyTUSDypool', 'StrategyUSDC3pool', 'StrategyDAI3pool', 'StrategyUSDT3pool', 'StrategystETHCurve', 'StrategyYearnVECRV', 'yvWBTCStratMMV1', 'StrategyGUSDRescue', 'StrategymUSDCurve'].includes(strategy.name)) {
@@ -1888,7 +1892,8 @@ class Store {
             name: 'Curve',
             balance: strategyBalance,
             balanceUSD: strategyBalanceUSD,
-            tokens: [token]
+            tokens: [token],
+            description: this.mapProtocolToDescription('Curve')
           }
         ]
 
@@ -1910,7 +1915,8 @@ class Store {
             name: 'Yearn',
             balance: strategyBalance,
             balanceUSD: strategyBalanceUSD,
-            tokens: [token]
+            tokens: [token],
+            description: this.mapProtocolToDescription('Yearn')
           }
         ]
       } else if (strategy.name === 'StrategyMKRVaultDAIDelegate' || (strategy.name.includes('Maker') && strategy.name.includes('DAIDelegate'))) {
@@ -1934,7 +1940,8 @@ class Store {
             name: 'Maker',
             balance: BigNumber(collateral).div(10**18).toFixed(18),
             balanceUSD: BigNumber(collateral).div(10**18).times(vault.tvl.price).toFixed(vault.token.decimals),
-            tokens: [collateralToken, debtToken]
+            tokens: [collateralToken, debtToken],
+            description: this.mapProtocolToDescription('Maker')
           }
         ]
 
@@ -1967,7 +1974,8 @@ class Store {
             name: 'Compound',
             balance: BigNumber(collateralToken.balance).minus(debtToken.balance).toFixed(vault.token.decimals),
             balanceUSD: BigNumber(collateralToken.balance).minus(debtToken.balance).times(vault.tvl.price).toFixed(vault.token.decimals),
-            tokens: [collateralToken, debtToken]
+            tokens: [collateralToken, debtToken],
+            description: this.mapProtocolToDescription('Compound')
           },
           // {
           //   name: 'DyDx',  //understand how it uses dydx better, then add this
@@ -2001,7 +2009,8 @@ class Store {
             name: 'Alpha Homora',
             balance: strategyBalance,
             balanceUSD: strategyBalanceUSD,
-            tokens: [token]
+            tokens: [token],
+            description: this.mapProtocolToDescription('Alpha Homora')
           }
         ]
       } else if(['StrategyLenderYieldOptimiser'].includes(strategy.name)) {
@@ -2020,7 +2029,8 @@ class Store {
             name: this.mapLenderNameToProtocol(pro.name),
             balance: tok.balance,
             balanceUSD: tok.balanceUSD,
-            tokens: [tok]
+            tokens: [tok],
+            description: this.mapProtocolToDescription(this.mapLenderNameToProtocol(pro.name))
           }
         })
 
@@ -2048,7 +2058,8 @@ class Store {
             name: 'Idle.Finance',
             balance: strategyBalance,
             balanceUSD: strategyBalanceUSD,
-            tokens: [token]
+            tokens: [token],
+            description: this.mapProtocolToDescription('Idle.Finance')
           }
         ]
       } else if (strategy.name.includes('PoolTogether')) {
@@ -2068,7 +2079,8 @@ class Store {
             name: 'PoolTogether',
             balance: strategyBalance,
             balanceUSD: strategyBalanceUSD,
-            tokens: [token]
+            tokens: [token],
+            description: this.mapProtocolToDescription('PoolTogether')
           }
         ]
       } else if (strategy.name.includes('StrategyRook')) {
@@ -2085,10 +2097,11 @@ class Store {
 
         protocols = [
           {
-            name: 'StrategyRook',
+            name: 'KeeperDAO',
             balance: strategyBalance,
             balanceUSD: strategyBalanceUSD,
-            tokens: [token]
+            tokens: [token],
+            description: this.mapProtocolToDescription('KeeperDAO')
           }
         ]
       } else if (strategy.name.includes('Convex')) {
@@ -2109,13 +2122,15 @@ class Store {
             name: 'Convex',
             balance: strategyBalance,
             balanceUSD: strategyBalanceUSD,
-            tokens: [token]
+            tokens: [token],
+            description: this.mapProtocolToDescription('Convex')
           },
           {
             name: 'Curve',
             balance: strategyBalance,
             balanceUSD: strategyBalanceUSD,
-            tokens: [token]
+            tokens: [token],
+            description: this.mapProtocolToDescription('Curve')
           }
         ]
       } else if (strategy.name.includes('Strategy1INCHGovernance')) {
@@ -2135,7 +2150,8 @@ class Store {
             name: '1INCH',
             balance: strategyBalance,
             balanceUSD: strategyBalanceUSD,
-            tokens: [token]
+            tokens: [token],
+            description: this.mapProtocolToDescription('1INCH')
           }
         ]
       } else if (strategy.name.includes('Vesper')) {
@@ -2155,7 +2171,8 @@ class Store {
             name: 'Vesper',
             balance: strategyBalance,
             balanceUSD: strategyBalanceUSD,
-            tokens: [token]
+            tokens: [token],
+            description: this.mapProtocolToDescription('Vesper')
           }
         ]
       } else if (strategy.name.includes('Synthetix')) {
@@ -2179,7 +2196,8 @@ class Store {
             name: 'Synthetix',
             balance: BigNumber(collateralToken.balance).minus(debtToken.balance).toFixed(vault.token.decimals),
             balanceUSD: BigNumber(collateralToken.balanceUSD).minus(debtToken.balanceUSD).toFixed(vault.token.decimals),
-            tokens: [collateralToken, debtToken]
+            tokens: [collateralToken, debtToken],
+            description: this.mapProtocolToDescription('Synthetix')
           }
         ]
 
@@ -2210,7 +2228,8 @@ class Store {
             name: 'Aave',
             balance: strategyBalance,
             balanceUSD: strategyBalanceUSD,
-            tokens: [token]
+            tokens: [token],
+            description: this.mapProtocolToDescription('Aave')
           }
         ]
       } else if (strategy.name.includes('LPProfitSwitching')) {
@@ -2245,25 +2264,29 @@ class Store {
             name: 'Aave',
             balance: aaveToken.balance,
             balanceUSD: aaveToken.balanceUSD,
-            tokens: [aaveToken]
+            tokens: [aaveToken],
+            description: this.mapProtocolToDescription('Aave')
           },
           {
             name: 'DyDx',
             balance: dydxToken.balance,
             balanceUSD: dydxToken.balanceUSD,
-            tokens: [dydxToken]
+            tokens: [dydxToken],
+            description: this.mapProtocolToDescription('DyDx')
           },
           {
             name: 'Fulcrum',
             balance: fulcrumToken.balance,
             balanceUSD: fulcrumToken.balanceUSD,
-            tokens: [fulcrumToken]
+            tokens: [fulcrumToken],
+            description: this.mapProtocolToDescription('Fulcrum')
           },
           {
             name: 'Compound',
             balance: compoundToken.balance,
             balanceUSD: compoundToken.balanceUSD,
-            tokens: [compoundToken]
+            tokens: [compoundToken],
+            description: this.mapProtocolToDescription('Compound')
           }
         ]
 
@@ -2277,7 +2300,7 @@ class Store {
 
 
 
-      return { strategyBalance, strategyBalanceUSD, protocols }
+      return { strategyBalance, strategyBalanceUSD, protocols, description: strategyDescription }
     } catch(ex) {
       console.log(ex)
     }
@@ -2288,78 +2311,8 @@ class Store {
       protocols: [],
       balance: 0,
       balanceUSD: 0,
+      description: ''
     }
-
-
-    // try {
-    //
-    //   let strategyContract = null
-    //   let strategyBalance = 0
-    //   let strategyBalanceUSD = 0
-    //
-    //   const asset = await this.mapStrategyAddressToAsset(web3, strategy.address)
-    //   let token = await this.getTokenTree(web3, asset, coingeckoCoinList, vault)
-    //
-    //   if(['StrategyLenderYieldOptimiser'].includes(strategy.name)) {
-    //     strategyContract = new web3.eth.Contract(VAULT_StrategyLenderYieldOptimiserABI, strategy.address)
-    //     strategyBalance = await strategyContract.methods.lentTotalAssets().call()
-    //     strategyBalance = BigNumber(strategyBalance).div(10**token.decimals).toFixed(token.decimals)
-    //     strategyBalanceUSD = BigNumber(strategyBalance).times(vault.tvl.price).toFixed(token.decimals)
-    //   } else if (strategy.name.includes('StrategyCurve') && strategy.name.includes('VoterProxy') && strategy.name !== 'StrategyCurveIBVoterProxy') {
-    //     strategyContract = new web3.eth.Contract(VAULT_StrategyPoolABI, strategy.address)
-    //     strategyBalance = await strategyContract.methods.balanceOf().call()
-    //     strategyBalance = BigNumber(strategyBalance).div(10**token.decimals).toFixed(token.decimals)
-    //     strategyBalanceUSD = BigNumber(strategyBalance).times(vault.tvl.price).toFixed(token.decimals)
-    //   } else if (strategy.name.includes('StrategyAH2Earncy') || strategy.name.includes('SingleSided') || strategy.name.includes('Convex') || (strategy.name.includes('StrategyMaker') && strategy.name.includes('DAIDelegate')) || strategy.name.includes('VoterProxy') ||
-    //     ['AaveWETHLenderUSDTBorrower', 'AaveLenderLINKBorrowerSUSD', 'yvWBTCStratMMV1', 'IBLevComp', 'StrategyMasterchefGenericMod', 'StrategyGenericLevCompFarm', 'StrategySynthetixSusdMinter',
-    //     'StrategystETHCurve', 'Strategy1INCHGovernance', 'CurveeCRVVoterProxy', 'RescueMasterchef', 'StrategySynthetixRewardsGeneric', 'StrategyYearnVECRV'].includes(strategy.name)) {
-    //     strategyContract = new web3.eth.Contract(VAULT_AaveWETHLenderUSDTBorrowerABI, strategy.address)
-    //     strategyBalance = await strategyContract.methods.estimatedTotalAssets().call()
-    //     strategyBalance = BigNumber(strategyBalance).div(10**token.decimals).toFixed(token.decimals)
-    //     strategyBalanceUSD = BigNumber(strategyBalance).times(vault.tvl.price).toFixed(token.decimals)
-    //   } else if (strategy.name.includes('StrategyRook')) {
-    //     strategyContract = new web3.eth.Contract(VAULT_StrategyRookDaiStablecoinABI, strategy.address)
-    //     strategyBalance = await strategyContract.methods.balanceOfStaked().call()
-    //     strategyBalance = BigNumber(strategyBalance).div(10**token.decimals).toFixed(token.decimals)
-    //     strategyBalanceUSD = BigNumber(strategyBalance).times(vault.tvl.price).toFixed(token.decimals)
-    //   } else if (strategy.name.includes('Vesper')) {
-    //     strategyContract = new web3.eth.Contract(VAULT_StrategyVesperWBTCABI, strategy.address)
-    //     strategyBalance = await strategyContract.methods.calcWantHeldInVesper().call()
-    //     strategyBalance = BigNumber(strategyBalance).div(10**token.decimals).toFixed(token.decimals)
-    //     strategyBalanceUSD = BigNumber(strategyBalance).times(vault.tvl.price).toFixed(token.decimals)
-    //   } else if (strategy.name.includes('StrategyIdleidle')) {
-    //     strategyContract = new web3.eth.Contract(VAULT_StrategyIdleidleRAIYieldABI, strategy.address)
-    //     strategyBalance = await strategyContract.methods.balanceOnIdle().call()
-    //     strategyBalance = BigNumber(strategyBalance).div(10**token.decimals).toFixed(token.decimals)
-    //     strategyBalanceUSD = BigNumber(strategyBalance).times(vault.tvl.price).toFixed(token.decimals)
-    //   } else if (strategy.name.includes('PoolTogether')) {
-    //     strategyContract = new web3.eth.Contract(YEARNVAULT_0_3_3ABI, strategy.address)
-    //     strategyBalance = await strategyContract.methods.balanceOfPool().call()
-    //     strategyBalance = BigNumber(strategyBalance).div(10**token.decimals).toFixed(token.decimals)
-    //     strategyBalanceUSD = BigNumber(strategyBalance).times(vault.tvl.price).toFixed(token.decimals)
-    //   } else if (strategy.name.includes('DAOFeeClaim')) {
-    //     strategyContract = new web3.eth.Contract(VECURVEVAULTABI, strategy.address)
-    //     strategyBalance = await strategyContract.methods.totalSupply().call()
-    //     strategyBalance = BigNumber(strategyBalance).div(10**token.decimals).toFixed(token.decimals)
-    //     strategyBalanceUSD = BigNumber(strategyBalance).times(vault.tvl.price).toFixed(token.decimals)
-    //   } else if (['StrategyUSDC3pool', 'StrategyDAI3pool', 'StrategyUSDT3pool'].includes(strategy.name)) {
-    //     strategyContract = new web3.eth.Contract(VAULT_StrategyPoolABI, strategy.address)
-    //     strategyBalance = await strategyContract.methods.balanceOfy3CRV().call()
-    //     strategyBalance = BigNumber(strategyBalance).div(10**token.decimals).toFixed(token.decimals)
-    //     strategyBalanceUSD = BigNumber(strategyBalance).times(token.price).toFixed(token.decimals)
-    //
-    //   } else {
-    //     strategyContract = new web3.eth.Contract(VAULT_StrategyPoolABI, strategy.address)
-    //     strategyBalance = await strategyContract.methods.balanceOf().call()
-    //     strategyBalance = BigNumber(strategyBalance).div(10**token.decimals).toFixed(token.decimals)
-    //     strategyBalanceUSD = BigNumber(strategyBalance).times(token.price).toFixed(token.decimals)
-    //   }
-    //
-    //   return { strategyBalance, strategyBalanceUSD, token }
-    // } catch(ex) {
-    //   console.log(ex)
-    //   return 0
-    // }
   }
 
   // gets the exposure asset that is used by the strategy
@@ -2444,218 +2397,6 @@ class Store {
     }
   }
 
-  // gets the protocol/s that the strategy uses
-  // mapStrategyToProtocols = async (web3, strategy, vault) => {
-  //   try {
-  //     let strategyContract = null
-  //     let protocols = []
-  //
-  //     if(['StrategyLenderYieldOptimiser'].includes(strategy.name)) {
-  //       strategyContract = new web3.eth.Contract(VAULT_StrategyLenderYieldOptimiserABI, strategy.address)
-  //       const protocolTuple = await strategyContract.methods.lendStatuses().call()
-  //       protocols = protocolTuple.map((pro) => {
-  //         return {
-  //           name: this.mapLenderNameToProtocol(pro.name),
-  //           balance: pro.assets,
-  //           balanceUSD: BigNumber(pro.assets).div(10**vault.token.decimals).times(vault.tvl.price).toFixed(vault.token.decimals),
-  //         }
-  //       })
-  //     } else if (['StrategyTUSDypool', 'StrategyUSDC3pool', 'StrategyDAI3pool', 'StrategyUSDT3pool'].includes(strategy.name)) {
-  //       protocols = [
-  //         {
-  //           name: 'Yearn',
-  //           balance: strategy.balance,
-  //           balanceUSD: BigNumber(strategy.balance).times(vault.tvl.price).toFixed(vault.token.decimals),
-  //         },
-  //         {
-  //           name: 'Curve',
-  //           balance: strategy.balance,
-  //           balanceUSD: BigNumber(strategy.balance).times(vault.tvl.price).toFixed(vault.token.decimals),
-  //         }
-  //       ]
-  //     } else if (strategy.name.includes('StrategyVaultUSDC')) {
-  //
-  //       // this is wrong. but do we care about the link vault?
-  //
-  //       strategyContract = new web3.eth.Contract(VAULT_USDCABI, strategy.address)
-  //       const collateral = await strategyContract.methods.balanceSavingsInToken().call()
-  //       const debt = await strategyContract.methods.debt().call()
-  //
-  //       protocols = [
-  //         {
-  //           name: 'Aave',
-  //           balance: BigNumber(collateral).div(10**18).toFixed(6),
-  //           balanceUSD: BigNumber(collateral).div(10**18).toFixed(vault.token.decimals),
-  //         },
-  //         {
-  //           name: 'Yearn',
-  //           balance: BigNumber(debt).div(10**18).toFixed(6),
-  //           balanceUSD: BigNumber(debt).div(10**18).toFixed(vault.token.decimals),
-  //         },
-  //         {
-  //           name: 'Curve',
-  //           balance: BigNumber(debt).div(10**18).toFixed(6),
-  //           balanceUSD: BigNumber(debt).div(10**18).toFixed(vault.token.decimals),
-  //         }
-  //       ]
-  //     } else if (strategy.name.includes('Convex')) {
-  //       protocols = [
-  //         {
-  //           name: 'Convex',
-  //           balance: strategy.balance,
-  //           balanceUSD: BigNumber(strategy.balance).times(vault.tvl.price).toFixed(vault.token.decimals),
-  //         },
-  //         {
-  //           name: 'Curve',
-  //           balance: strategy.balance,
-  //           balanceUSD: BigNumber(strategy.balance).times(vault.tvl.price).toFixed(vault.token.decimals),
-  //         }
-  //       ]
-  //     } else if (strategy.name === 'StrategyMKRVaultDAIDelegate') {
-  //
-  //       strategyContract = new web3.eth.Contract(VAULT_StrategyMKRVaultDAIDelegateABI, strategy.address)
-  //       const debt = await strategyContract.methods.getTotalDebtAmount().call()
-  //       const collateral = await strategyContract.methods.balanceOfmVault().call()
-  //
-  //       protocols = [
-  //         {
-  //           name: 'Maker',
-  //           balance: BigNumber(collateral).div(10**18).toFixed(18),
-  //           balanceUSD: BigNumber(collateral).div(10**18).times(vault.tvl.price).toFixed(vault.token.decimals),
-  //         },
-  //         {
-  //           name: 'Yearn',
-  //           balance: BigNumber(debt).div(10**18).toFixed(18),
-  //           balanceUSD: BigNumber(debt).div(10**18).toFixed(vault.token.decimals),
-  //         }
-  //       ]
-  //     } else if (strategy.name.includes('Maker') || strategy.name.includes('DAIDelegate')) {
-  //       protocols = [
-  //         {
-  //           name: 'Maker',
-  //           balance: strategy.balance,
-  //           balanceUSD: BigNumber(strategy.balance).times(vault.tvl.price).toFixed(vault.token.decimals),
-  //         }
-  //       ]
-  //     } else if (strategy.name.includes('Vesper')) {
-  //       protocols = [
-  //         {
-  //           name: 'Vesper',
-  //           balance: strategy.balance,
-  //           balanceUSD: BigNumber(strategy.balance).times(vault.tvl.price).toFixed(vault.token.decimals),
-  //         }
-  //       ]
-  //     } else if (strategy.name.includes('StrategyIdleidle')) {
-  //       protocols = [
-  //         {
-  //           name: 'Idle.Finance',
-  //           balance: strategy.balance,
-  //           balanceUSD: BigNumber(strategy.balance).times(vault.tvl.price).toFixed(vault.token.decimals),
-  //         }
-  //       ]
-  //     } else if (strategy.name.includes('PoolTogether')) {
-  //       protocols = [
-  //         {
-  //           name: 'PoolTogether',
-  //           balance: strategy.balance,
-  //           balanceUSD: BigNumber(strategy.balance).times(vault.tvl.price).toFixed(vault.token.decimals),
-  //         }
-  //       ]
-  //     } else if (strategy.name.includes('StrategyAH2Earncy')) {
-  //       protocols = [
-  //         {
-  //           name: 'Alpha Homora',
-  //           balance: strategy.balance,
-  //           balanceUSD: BigNumber(strategy.balance).times(vault.tvl.price).toFixed(vault.token.decimals),
-  //         }
-  //       ]
-  //     } else if (strategy.name.includes('StrategyRook')) {
-  //       protocols = [
-  //         {
-  //           name: 'StrategyRook',
-  //           balance: strategy.balance,
-  //           balanceUSD: BigNumber(strategy.balance).times(vault.tvl.price).toFixed(vault.token.decimals),
-  //         }
-  //       ]
-  //     } else if (strategy.name.includes('IBLevComp') || strategy.name.includes('StrategyGenericLevCompFarm')) {   // these do other things with assets. Iron Bank or DyDx. Get balances etc.
-  //       protocols = [
-  //         {
-  //           name: 'Compound',
-  //           balance: strategy.balance,
-  //           balanceUSD: BigNumber(strategy.balance).times(vault.tvl.price).toFixed(vault.token.decimals),
-  //         }
-  //       ]
-  //     } else if (strategy.name.includes('Aave')) {
-  //       let balanceUSD = 0
-  //       if(strategy.name.includes('StrategyVaultUSDC')) {
-  //         balanceUSD = BigNumber(strategy.balance).toFixed(6)
-  //       } else {
-  //         balanceUSD = BigNumber(strategy.balance).toFixed(vault.token.decimals)
-  //       }
-  //       protocols = [
-  //         {
-  //           name: 'Aave',
-  //           balance: strategy.balance,
-  //           balanceUSD: balanceUSD,
-  //         }
-  //       ]
-  //     } else if (strategy.name.includes('1INCH')) {
-  //       protocols = [
-  //         {
-  //           name: '1INCH',
-  //           balance: strategy.balance,
-  //           balanceUSD: BigNumber(strategy.balance).times(vault.tvl.price).toFixed(vault.token.decimals),
-  //         }
-  //       ]
-  //     } else if (strategy.name.includes('Synthetix')) {
-  //       protocols = [
-  //         {
-  //           name: 'Synthetix',
-  //           balance: strategy.balance,
-  //           balanceUSD: BigNumber(strategy.balance).times(vault.tvl.price).toFixed(vault.token.decimals),
-  //         }
-  //       ]
-  //     } else if (strategy.name.includes('yvWBTCStratMMV1')) {
-  //       protocols = [
-  //         {
-  //           name: 'Mushroom Finance',
-  //           balance: strategy.balance,
-  //           balanceUSD: BigNumber(strategy.balance).times(vault.tvl.price).toFixed(vault.token.decimals),
-  //         }
-  //       ]
-  //     } else if (strategy.name.includes('StrategyYFIGovernance')) {
-  //       protocols = [
-  //         {
-  //           name: 'Yearn',
-  //           balance: strategy.balance,
-  //           balanceUSD: BigNumber(strategy.balance).times(vault.tvl.price).toFixed(vault.token.decimals),
-  //         }
-  //       ]
-  //     } else if (strategy.name.includes('Curve') || strategy.name.includes('SingleSided') || strategy.name.includes('VoterProxy') || strategy.name.includes('pool') || strategy.name.includes('StrategyYearnVECRV') || strategy.name.includes('StrategyGUSDRescue') || strategy.name.includes('DAOFeeClaim')) {
-  //       protocols = [
-  //         {
-  //           name: 'Curve',
-  //           balance: strategy.balance,
-  //           balanceUSD: BigNumber(strategy.balance).times(vault.tvl.price).toFixed(vault.token.decimals),
-  //         }
-  //       ]
-  //     } else {
-  //       protocols = [
-  //         {
-  //           name: 'Unknown',
-  //           balance: strategy.balance,
-  //           balanceUSD: BigNumber(strategy.balance).times(vault.tvl.price).toFixed(vault.token.decimals),
-  //         }
-  //       ]
-  //     }
-  //
-  //     return protocols
-  //   } catch(ex) {
-  //     console.log(ex)
-  //     return null
-  //   }
-  // }
-
   // standardises the lender's name. different strates display them in different ways.
   mapLenderNameToProtocol = (name) => {
     if(name.toLowerCase().includes('aave')) {
@@ -2668,6 +2409,128 @@ class Store {
       return 'Cream'
     } else if(name.toLowerCase().includes('ib') || name.toLowerCase().includes('ironbank')) {
       return 'Iron Bank'
+    }
+  }
+
+  mapStrategyToDescription = (name, tokens) => {
+    // generic farms
+    if (name.includes('StrategyLenderYieldOptimiser')) {
+      return `This strategy lends the ${tokens} on various lending platforms such as CREAM, AAVE or ALPHA HOMORA to gain yield.`;
+    } else if (name.includes('StrategyGenericLevCompFarm')) {
+      return `This strategy supplies the ${tokens} on Compound and borrows an additional amount of the ${tokens} to maximize COMP farming. Flashloans are used to obtain additional ${tokens} from dYdX in order to gain additional leverage and boost the APY. Earned COMP is harvested and sold for more ${tokens} and re-deposited into the vault.`;
+    } else if (name.includes('StrategyAH2Earncy')) {
+      return `Lends ${tokens} on Alpha Homora v2 to generate interest. Users of Alpha Homora borrow ${tokens} to perform leveraged yield-farming on Alpha’s platform.`;
+    } else if (name.includes('StrategyIdle')) {
+      return `This strategy supplies ${tokens} on IDLE.finance to farm COMP and IDLE. Rewards are harvested, sold for more ${tokens}, and deposited back to the vault.`;
+    } else if (name.includes('StrategyCurve') && name.includes('VoterProxy')) {
+      return `This vault accepts deposits of ${tokens} tokens obtained by supplying either aDai, aUSDC or aUSDT to the liquidity pool on Curve.fi. ${tokens} tokens are staked in the gauge on Curve.fi to earn CRV rewards. Rewards are swapped for one of the underlying assets and resupplied to the liquidity pool to obtain more ${tokens}.`;
+    } else if (name.includes('StrategyDAI3pool')) {
+      return `This vault deposits ${tokens} into the 3pool on Curve.fi. The 3Crv tokens are then deposited into the Curve 3Pool yVault.`;
+    } else if (name.includes('StrategyHegicETH') || name.includes('StrategyHegicWBTC')) {
+      return `These three strategies work together to alternatively use HEGIC to buy ETH or WBTC lots on HEGIC.co. While the vault is building up the required 888,000 HEGIC needed to buy a lot, it lends it out on C.R.E.A.M to earn interest. The vault also keeps a buffer of HEGIC in reserve for withdrawals earning interest in CREAM.`;
+    } else if (name.includes('StrategyMKRVaultDAIDelegate')) {
+      return `Users deposit ETH, which is used to mint DAI from MakerDAO. DAI is then deposited into our v1 yDAI vault, which earns CRV. CRV is periodically harvested, sold for more ETH and re-deposited into the vault.`;
+    } else if (name === 'IBLevComp') {
+      return 'Supplies DAI on Compound and opens a long-term debt for an additional amount of DAI from Ironbank without the need for collateral, to maximize COMP farming. Earned COMP is harvested and sold for more DAI and re-deposited into the vault.';
+    } else if (name.includes('StrategysteCurveWETHSingleSided')) {
+      return 'Supplies WETH to the liquidity pool on Curve here to obtain steCRV tokens which it then puts into the v2 Curve stETH Pool yVault (yvsteCRV)to gain yield.';
+    } else if (name.includes('StrategyeCurveWETHSingleSided')) {
+      return 'Supplies WETH to the liquidity pool on Curve here to obtain eCRV tokens which it then puts into the v2 Curve sETH Pool yVault (yveCRV) to gain yield.';
+    } else if (name.includes('DAOFeeClaim')) {
+      return 'This vault converts your CRV into yveCRV, earning you a continuous share of Curve fees. The more converted, the greater the rewards. Every Friday, these can be claimed from the vault as 3Crv (Curve’s 3pool LP token).';
+    } else if (name.includes('LPProfitSwitching')) {
+      return 'Earn is a lending aggregator that strives to attain the highest yield for supported coins (DAI, USDC, USDT, TUSD, sUSD, or wBTC) at all times. It does this by programmatically shifting these coins between several lending protocols (AAVE, dYdX, and Compound) operating on the Ethereum blockchain.';
+    } else if (name.includes('StrategyDAI3Pool')) {
+      return 'This vault deposits DAI into the 3Pool on Curve.fi. The 3Crv tokens are then deposited into the Curve 3Pool yVault.';
+    } else if (name.includes('StrategyUSDC3pool')) {
+      return 'This vault deposits USDC into the 3pool on Curve.fi. The 3Crv tokens are then deposited into the Curve 3Pool yVault.';
+    } else if (name.includes('StrategyUSDT3pool')) {
+      return 'This vault deposits USDT into the 3pool on Curve.fi. The 3Crv tokens are then deposited into the Curve 3Pool yVault.';
+    } else if (name.includes('StrategyTUSDypool')) {
+      return 'Thıs vault deposits TUSD into the YPool on Curve.fi. The yCRV are then deposited into the Curve YPool yVault.';
+    } else if (name.includes('StrategyVaultUSDC')) {
+      return 'This vault deposits aLINK as collateral on Aave to borrow USDC. The USDC is deposited into the v1 USDC yVault. Profits are harvested and used to buy additional LINK, supplied as collateral on Aave in exchange for aLINK and re-deposited into the vault.';
+    } else if (name.includes('StrategymUSDCurve')) {
+      return 'This vault deposits mUSD into the mUSD/3Crv pool on Curve.fi. The crvMUSD is then deposited into the Curve mUSD Pool yVault.';
+    } else if (name.includes('StrategyMakerYFIDAIDelegate')) {
+      return 'This debt-based strategy opens a Maker Vault, locks up YFI, draws DAI and earns yield by depositing into Yearn DAI Vault.';
+    } else if (name.includes('StrategySynthetixRewardsGeneric')) {
+      return 'This universal strategy harvests farm of the week and can be easily refashioned for new farms as they appear.';
+    } else if (name.includes('StrategyYearnVECRV')) {
+      return 'This strategy claims weekly 3CRV rewards and uses them to acquire more yveCRV via market-buy or mint, depending on which is most efficient at time of harvest.';
+    } else if (name.includes('Strategy1INCHGovernance')) {
+      return 'Stakes 1INCH token on 1INCH DAO to collect governance rewards. Rewards are harvested and deposited back into the vault.';
+    }
+
+    else if (name.includes('StrategyMakerETHDAIDelegate')) {
+      return 'This strategy uses ETH to mint DAI at MakerDAO. This newly minted DAI is then deposited into the v2 DAI yVault.';
+    } else if (name.includes('PoolTogether')) {
+      return `Supplies ${tokens} to the PoolTogether protocol to farm POOL. Rewards are harvested, sold for more ${tokens}, and deposited back into the vault. If it gets the prize of the week it will also be added to the vault.`;
+    } else if (name.includes('StrategyAH2Earncy')) {
+      return `Lends ${tokens} on Alpha Homora v2 to generate interest. Users of Alpha Homora borrow ${tokens} to perform leveraged yield-farming on Alpha Homora’s platform.`;
+    } else if (name.includes('SingleSidedCrv')) {
+      return `Deposits ${tokens} to a ${tokens} curve pool on curve.fi, and switches to the most profitable curve pool.`;
+    } else if (name.includes('StrategyCurveIBVoterProxy')) {
+      return `This vault accepts deposits of ib3CRV tokens obtained by supplying either cyDAI, cyUSDC, or cyUSDT to the liquidity pool on Curve in exchange for ib3CRV tokens. ib3CRV are staked in the gauge on Curve Finance to earn CRV rewards. Rewards are swapped for one of the underlying assets and resupplied to the liquidity pool to obtain more ib3CRV.`;
+    } else if (name.includes('Curve') && name.includes('VoterProxy')) {
+      return `This vault accepts deposits of ${tokens} tokens obtained by supplying supported tokens to the liquidity pool on Curve. ${tokens} tokens are staked in the gauge on Curve to earn CRV rewards. Rewards are swapped for one of the underlying assets and resupplied to the liquidity pool to obtain more ${tokens}.`;
+    } else if (name.includes('StrategystETHCurve')) {
+      return 'This vault accepts deposits of steCRV tokens obtained by supplying either ETH or stETH to the liquidity pool on Curve here. steCRV are staked in the gauge on curve.finance to earn CRV and LDO rewards. Rewards are swapped for WETH and resupplied to the liquidity pool to obtain more steCRV.';
+    } else if (name.includes('StrategyRook')) {
+      return `Supplies ${tokens} to KeeperDAO to farm ROOK. Rewards are harvested, sold for more ${tokens}, and deposited back into the vault.`
+    } else if (name.includes('StrategySynthetixSusdMinter')) {
+      return `Stakes SNX at Synthetix to mint sUSD. The newly minted sUSD is then deposited into the v2 sUSD yVault to earn yield. Yield from sUSD and rewards from weekly fees plus vested rewards (when claimable) are swapped for more SNX and re-deposited into the vault.`
+    } else if (name.includes('Convex')) {
+      return `Supplies ${tokens} to Convex Finance to farm CVX. Rewards are harvested, sold for more ${tokens}, and deposited back into the vault.`
+    } else if (name === 'Strategy Vesper WBTC') {
+      return 'Supplies wBTC to Vesper Finance vWBTC Pool to earn VSP. Rewards are harvested, sold for more wBTC, and re-deposited into the vault.'
+    } else if (name === 'Vesper LINK') {
+      return 'Supplies LINK to Vesper Finance LINK Pool to earn VSP. Rewards are harvested, sold for more LINK, and re-deposited into the vault.'
+    } else if (name === 'AaveWETHLenderUSDTBorrower') {
+      return 'Lends WETH on AAVE to gain interest and accumulate staked AAVE as rewards. Also borrows USDT which it then deposits into the USDT yVault for yield. Rewards from vested AAVE and yvUSDT are harvested, sold for more WETH, and re-deposited into the vault.'
+    }
+
+    else {
+      return "I don't have a description for this strategy yet.";
+    }
+  }
+
+  mapProtocolToDescription = (name) => {
+    switch (name) {
+      case 'Curve':
+        return `Curve Finance is an automated market maker protocol designed for swapping between stablecoins with low fees and slippage. It's a decentralized liquidity aggregator where anyone can add their assets to several different liquidity pools and earn fees.`
+      case 'Convex':
+        return `Convex Finance, a platform built to boost rewards for CRV stakers and liquidity providers alike, all in a simple and easy to use interface. Convex aims to simplify staking on Curve, as well as the CRV-locking system with the help of its native fee-earning token: CVX.`
+      case 'Maker':
+        return `Maker is a smart contract lending platform that enables users to take out loans by locking-in collateral in exchange for Dai. It was founded by the Maker Foundation in 2015 as an open-source project to offer economic freedom and opportunities to anyone, anywhere.`
+      case 'Aave':
+        return `Aave is a decentralized money market running on the Ethereum blockchain that enables users to lend and borrow a range of crypto assets.`
+      case 'Idle.Finance':
+        return `Idle is a decentralized rebalancing protocol that allows users to automatically and algorithmically manage their digital asset allocation among different third-party DeFi protocols. You can choose to maximize your interest rate returns through our MaxYield strategy or minimize your risk exposure through our RiskAdjusted allocation strategy.`
+      case 'Compound':
+        return `Compound is a decentralized, blockchain-based protocol that allows you to lend and borrow crypto — and have a say in its governance with its native COMP token.`
+      case 'Vesper':
+        return `Vesper Finance is a DeFi ecosystem and growth engine for crypto assets, providing a suite of yield-generating products focused on accessibility, optimization, and longevity.`
+      case 'Alpha Homora':
+        return `Alpha Homora is the first leveraged yield farming and leveraged liquidity providing product in DeFi and the first product by Alpha Finance Lab`
+      case 'PoolTogether':
+        return `PoolTogether is a deceptively simple DeFi app that incentivizes users to deposit funds with the opportunity to win prizes. In PoolTogether, there are two types of prize pools: those set up by the PoolTogether project and community prize pools that anyone can set up.`
+      case 'KeeperDAO':
+        return `KeeperDAO is a mining pool for Keepers. By incentivizing a game theory optimal strategy for cooperation among on-chain arbitrageurs, KeeperDAO provides an efficient mechanism for large scale arbitrage and liquidation trades on all DeFi protocols.`
+      case 'Synthetix':
+        return `Synthetix is a decentralized synthetic asset issuance protocol founded by Kain Warwick and the Synthetix Foundation. Initially, it was known as Havven when it first launched in September 2017.`
+      case '1INCH':
+        return `1inch exchange is a decentralized exchange (DEX) aggregator to help users discover the best trade prices for tokens. Instead of swapping tokens from a single liquidity pool of a DEX, 1inch will aggregate across different pools and suggest the most efficient way to trade tokens.`
+      case 'Cream':
+        return `C.R.E.A.M. Finance is a decentralized lending protocol for individuals, institutions and protocols to access financial services. Part of the yearn finance ecosystem, it is a permissionless, open source and blockchain agnostic protocol serving users on Ethereum, Binance Smart Chain and Fantom. Users who are passively holding Ethereum or Bitcoin can deposit their assets on C.R.E.A.M. to earn yield, similar to a traditional savings account.`
+      case 'DyDx':
+        return `dYdX is a decentralized margin trading platform based on Ethereum. dYdX allows users to borrow lend and make bets on the future prices of popular cryptocurrencies.`
+      case 'Fulcrum':
+        return `Fulcrum is a powerful DeFi platform for tokenized lending and margin trading.`
+      case 'Yearn':
+        return `Yearn Finance is a suite of products in Decentralized Finance (DeFi) that provides lending aggregation, yield generation, and insurance on the Ethereum blockchain.`
+          default:
+
     }
   }
 }

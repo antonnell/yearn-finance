@@ -29,19 +29,22 @@ const mapTokenToBalance = (token) => {
         if (underlyingToken.isIEarnToken) {
           return {
             balance: BigNumber(token.balance).times(token.price).times(underlyingToken.protocolRatio).div(100).times(token.yVaultUnderlingToken.exchangeRate).times(underlyingToken.iEarnUnderlingToken.exchangeRate).toNumber(),
-            name: underlyingToken.iEarnUnderlingToken.symbol
+            name: underlyingToken.iEarnUnderlingToken.symbol,
+            description: underlyingToken.iEarnUnderlingToken.description
           }
 
         } else if (underlyingToken.isCreamToken) {
           return {
             balance: BigNumber(token.balance).times(token.price).times(underlyingToken.protocolRatio).div(100).times(token.yVaultUnderlingToken.exchangeRate).times(underlyingToken.creamUnderlyingToken.exchangeRate).toNumber(),
-            name: underlyingToken.creamUnderlyingToken.symbol
+            name: underlyingToken.creamUnderlyingToken.symbol,
+            description: underlyingToken.creamUnderlyingToken.description
           }
 
         } else {
           return {
             balance: BigNumber(token.balance).times(token.price).times(token.yVaultUnderlingToken.exchangeRate).times(underlyingToken.protocolRatio).div(100).toNumber(),
-            name: underlyingToken.symbol
+            name: underlyingToken.symbol,
+            description: underlyingToken.description
           }
         }
       })
@@ -49,7 +52,8 @@ const mapTokenToBalance = (token) => {
     } else {
       return {
         balance: BigNumber(token.balance).times(token.price).times(token.yVaultUnderlingToken.exchangeRate).toNumber(),
-        name: token.yVaultUnderlingToken.symbol
+        name: token.yVaultUnderlingToken.symbol,
+        description: token.yVaultUnderlingToken.description
       }
     }
   } else if(token.isCurveToken) {
@@ -61,55 +65,64 @@ const mapTokenToBalance = (token) => {
           if (underlyingToken1.isIEarnToken) {
             return {
               balance: BigNumber(token.balance).times(underlyingToken.protocolRatio).div(100).times(token.price).times(underlyingToken1.protocolRatio).div(100).times(underlyingToken1.iEarnUnderlingToken.exchangeRate).toNumber(),
-              name: underlyingToken1.iEarnUnderlingToken.symbol
+              name: underlyingToken1.iEarnUnderlingToken.symbol,
+              description: underlyingToken1.iEarnUnderlingToken.description
             }
 
           } else if (underlyingToken1.isCreamToken) {
             return {
               balance: BigNumber(token.balance).times(underlyingToken.protocolRatio).div(100).times(token.price).times(underlyingToken1.protocolRatio).div(100).times(underlyingToken1.creamUnderlyingToken.exchangeRate).toNumber(),
-              name: underlyingToken1.creamUnderlyingToken.symbol
+              name: underlyingToken1.creamUnderlyingToken.symbol,
+              description: underlyingToken1.creamUnderlyingToken.description
             }
 
           } else if (underlyingToken1.isCompoundToken) {
             return {
               balance: BigNumber(token.balance).times(underlyingToken.protocolRatio).div(100).times(token.price).times(underlyingToken1.protocolRatio).div(100).times(underlyingToken1.compoundUnderlyingToken.exchangeRate).toNumber(),
-              name: underlyingToken1.compoundUnderlyingToken.symbol
+              name: underlyingToken1.compoundUnderlyingToken.symbol,
+              description: underlyingToken1.compoundUnderlyingToken.description
             }
 
           } else {
             return {
               balance: BigNumber(token.balance).times(underlyingToken.protocolRatio).div(100).times(token.price).times(underlyingToken1.protocolRatio).div(100).toNumber(),
-              name: underlyingToken1.symbol
+              name: underlyingToken1.symbol,
+              description: underlyingToken1.description
             }
           }
         })
       } else if (underlyingToken.isIEarnToken) {
         return {
           balance: BigNumber(token.balance).times(token.price).times(underlyingToken.protocolRatio).div(100).times(underlyingToken.iEarnUnderlingToken.exchangeRate).toNumber(),
-          name: underlyingToken.iEarnUnderlingToken.symbol
+          name: underlyingToken.iEarnUnderlingToken.symbol,
+          description: underlyingToken.iEarnUnderlingToken.description
         }
 
       } else if (underlyingToken.isCompoundToken) {
         return {
           balance: BigNumber(token.balance).times(token.price).times(underlyingToken.protocolRatio).div(100).times(underlyingToken.compoundUnderlyingToken.exchangeRate).toNumber(),
-          name: underlyingToken.compoundUnderlyingToken.symbol
+          name: underlyingToken.compoundUnderlyingToken.symbol,
+          description: underlyingToken.compoundUnderlyingToken.description
         }
 
       } else if (underlyingToken.isCreamToken) {
         return {
           balance: BigNumber(token.balance).times(token.price).times(underlyingToken.protocolRatio).div(100).times(underlyingToken.creamUnderlyingToken.exchangeRate).toNumber(),
-          name: underlyingToken.creamUnderlyingToken.symbol
+          name: underlyingToken.creamUnderlyingToken.symbol,
+          description: underlyingToken.creamUnderlyingToken.description
         }
 
       } else if (underlyingToken.isAaveToken) {
         return {
           balance: BigNumber(token.balance).times(token.price).times(underlyingToken.protocolRatio).div(100).times(underlyingToken.aaveUnderlyingToken.exchangeRate).toNumber(),
-          name: underlyingToken.aaveUnderlyingToken.symbol
+          name: underlyingToken.aaveUnderlyingToken.symbol,
+          description: underlyingToken.aaveUnderlyingToken.description
         }
       } else {
         return {
           balance: BigNumber(token.balance).times(token.price).times(underlyingToken.protocolRatio).div(100).toNumber(),
-          name: underlyingToken.symbol
+          name: underlyingToken.symbol,
+          description: underlyingToken.description
         }
       }
     })
@@ -118,25 +131,29 @@ const mapTokenToBalance = (token) => {
     //return iEarnUnderlingToken
     return {
       balance: BigNumber(token.balance).times(token.price).times(token.iEarnUnderlingToken.exchangeRate).toNumber(),
-      name: token.iEarnUnderlingToken.symbol
+      name: token.iEarnUnderlingToken.symbol,
+      description: token.iEarnUnderlingToken.description
     }
 
   } else if (token.isCompoundToken) {
     //return compoundUnderlyingToken
     return {
       balance: BigNumber(token.balance).times(token.price).toNumber(),
-      name: token.compoundUnderlyingToken.symbol
+      name: token.compoundUnderlyingToken.symbol,
+      description: token.compoundUnderlyingToken.description
     }
 
   } else if (token.isAaveToken) {
     return {
       balance: BigNumber(token.balance).times(token.price).times(token.aaveUnderlyingToken.exchangeRate).toNumber(),
-      name: token.aaveUnderlyingToken.symbol
+      name: token.aaveUnderlyingToken.symbol,
+      description: token.aaveUnderlyingToken.description
     }
   } else {
     return {
       balance: BigNumber(token.balance).times(token.price).toNumber(),
-      name: token.symbol
+      name: token.symbol,
+      description: token.description
     }
   }
 }
@@ -197,6 +214,7 @@ const mapSystemJsonToAssets = (json, filters) => {
           assets.push({
             name: asset.name,
             balance: BigNumber(asset.balance).toNumber(),
+            description: asset.description
           })
         } else {
           assets[index].balance = BigNumber(assets[index].balance).plus(asset.balance).toNumber()
@@ -266,6 +284,7 @@ const mapSystemJsonToProtocols = (json, filters) => {
           protocols.push({
             name: protocol.name,
             balance: BigNumber(protocol.balanceUSD).toNumber(),
+            description: protocol.description
           })
         } else {
           protocols[index].balance = BigNumber(protocols[index].balance).plus(protocol.balanceUSD).toNumber()
@@ -340,7 +359,7 @@ const mapSystemJsonToStrategies = (json, filters) => {
               .reduce((acc, token) => {
                 return BigNumber(acc).plus(token.balance).toNumber()
               }, 0),
-            type: strategy.type
+            description: strategy.description
           })
         } else {
           strategies[index].balance = BigNumber(strategies[index].balance).plus(strategy.balanceUSD).toNumber()
@@ -386,7 +405,9 @@ const mapSystemJsonToVaults = (json, filters) => {
       return {
         address: asset.address,
         name: asset.display_name,
-        balance: BigNumber(asset.tvl.tvl).toNumber()
+        symbol: asset.depositToken.symbol,
+        balance: BigNumber(asset.tvl.tvl).toNumber(),
+        type: asset.type
       }
     })
     .sort((firstEl, secondEl) => {

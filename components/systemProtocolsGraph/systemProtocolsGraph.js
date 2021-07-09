@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Typography, Button } from "@material-ui/core";
 import {
   PieChart,
@@ -59,16 +59,35 @@ const renderActiveShape = (props) => {
 };
 
 export default function SystemProtocolsGraph({ protocols, filters, layout, handleNavigate }) {
-
   const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    if(activeIndex > protocols.length) {
+      setActiveIndex(0)
+    }
+  }, [protocols.length])
 
   const onExplore = () => {
     handleNavigate('protocols');
   }
 
   if(!protocols || protocols.length === 0) {
-    return <Skeleton variant='circle' width={200} height={200} />
+    return (
+      <div className={classes.vaultPerformanceGraph}>
+        <div className={ classes.actions }>
+          <Typography variant='h6'>Protocol Exposure</Typography>
+        </div>
+        <div className={ classes.piePlusHover }>
+          <Skeleton variant='circle' width={200} height={200} className={ classes.pieSkelly }/>
+          <div>
+            <Skeleton width={ 200 } height={ 40 } className={ classes.pieInfoSkelly }/>
+            <Skeleton width={ 200 } height={ 70 } className={ classes.pieInfoSkelly }/>
+            <Skeleton width={ 200 } height={ 70 } className={ classes.pieInfoSkelly }/>
+          </div>
+        </div>
+      </div>)
   }
+
   const limit = 16
   let data = []
 
@@ -124,33 +143,42 @@ export default function SystemProtocolsGraph({ protocols, filters, layout, handl
       <div className={classes.vaultPerformanceGraph}>
         <div className={ classes.actions }>
           <Typography variant='h6'>Protocol Exposure</Typography>
-          <Button variant='outlined' className={ classes.exploreButton } onClick={onExplore}>
-            <Typography variant='h5'>Explore</Typography>
-          </Button>
         </div>
-        <ResponsiveContainer width={700} height={400}>
-          <PieChart>
-            <Pie
-              activeIndex={activeIndex}
-              activeShape={ renderActiveShape }
-              data={data}
-              cx={150}
-              cy={180}
-              innerRadius={50}
-              outerRadius={100}
-              fill="#FF0000"
-              stroke="none"
-              dataKey="balance"
-              onMouseMove={onPieEnter}
-            >
-              {data.map((entry, index) => (
-                <Cell key={index} fill={COLORS[index % COLORS.length]} />
-              ))}
-            </Pie>
-            <Legend layout='vertical' align='right' verticalAlign='top' iconType='square' width={300} />
-            <Tooltip content={<CustomTooltip />} />
-          </PieChart>
-        </ResponsiveContainer>
+        <div className={ classes.piePlusHover }>
+          <ResponsiveContainer width={300} height={260}>
+            <PieChart>
+              <Pie
+                activeIndex={activeIndex}
+                activeShape={ renderActiveShape }
+                data={data}
+                cx={150}
+                cy={130}
+                innerRadius={50}
+                outerRadius={100}
+                fill="#FF0000"
+                stroke="none"
+                dataKey="balance"
+                onMouseMove={onPieEnter}
+              >
+                {data.map((entry, index) => (
+                  <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+            </PieChart>
+          </ResponsiveContainer>
+          <div className={ classes.hoveredText }>
+            <Typography className={ classes.title }>{ `${data[activeIndex] ? data[activeIndex].name : ''}` }</Typography>
+            <Typography className={ classes.subTitle }>{ (data[activeIndex] && data[activeIndex].description) ? data[activeIndex].description : 'You can filter by vault type Earn, Version 1, Version 2 or your invested vaults to drill down deeper into the vaults.' }</Typography>
+            <div className={ classes.value }>
+              <Typography className={ classes.valueTitle }>Total Share</Typography>
+              <Typography className={ classes.valueValue }>33%</Typography>
+            </div>
+            <div className={ classes.value }>
+              <Typography className={ classes.valueTitle }>Total Value</Typography>
+              <Typography className={ classes.valueValue }>$542 212</Typography>
+            </div>
+          </div>
+        </div>
       </div>
     );
   } else {
@@ -158,9 +186,6 @@ export default function SystemProtocolsGraph({ protocols, filters, layout, handl
       <div className={classes.vaultPerformanceGraph}>
         <div className={ classes.actionsBar }>
           <Typography variant='h6'>Protocols</Typography>
-          <Button variant='outlined' className={ classes.exploreButton } onClick={onExplore}>
-            <Typography variant='h5'>Explore</Typography>
-          </Button>
         </div>
         <ResponsiveContainer width={700} height={400}>
           <BarChart
