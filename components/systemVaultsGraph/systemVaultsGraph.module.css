@@ -58,6 +58,16 @@
   min-width: 800px;
 }
 
+.displayInline {
+  display: flex;
+  align-items: center;
+}
+
+.displayInline > .title {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
 .hoveredText {
 
 }
@@ -101,7 +111,6 @@
 .pieInfoSkelly {
   margin-bottom: -16px !important;
 }
-
 
 @media screen and (max-width: 1600px) {
   .vaultPerformanceGraph {

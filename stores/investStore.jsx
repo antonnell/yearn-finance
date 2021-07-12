@@ -436,7 +436,7 @@ class Store {
             let price = 1; // this is not accurate for WBTC - used to get this from coingecko
             const totalSupply = await vaultContract.methods.totalSupply().call();
             vault.tvl = {
-              total_assets: totalSupply,
+              total_assets: BigNumber(totalSupply).div(10 ** vault.decimals),
               price: vault.pricePerFullShare,
               tvl: BigNumber(totalSupply)
                 .times(price)
@@ -1383,7 +1383,7 @@ class Store {
             isAaveToken: false,
             isYVaultToken: false,
             isCreamToken: false,
-            curveUnderlyingTokens: tokens
+            curveUnderlyingTokens: tokens,
           }
 
         } catch(ex) {
@@ -1415,7 +1415,7 @@ class Store {
         isAaveToken: false,
         isYVaultToken: false,
         isCreamToken: false,
-        compoundUnderlyingToken: underlyingToken
+        compoundUnderlyingToken: underlyingToken,
       }
     } else if (isIEarnToken !== false) {
       const iearnContract = new web3.eth.Contract(IEARN_TOKENABI, tokenAddress)
@@ -1438,7 +1438,7 @@ class Store {
         isAaveToken: false,
         isYVaultToken: false,
         isCreamToken: false,
-        iEarnUnderlingToken: underlyingToken
+        iEarnUnderlingToken: underlyingToken,
       }
     } else if (isAToken !== false) {
       let underlying = null
@@ -1465,7 +1465,7 @@ class Store {
         isAaveToken: true,
         isYVaultToken: false,
         isCreamToken: false,
-        aaveUnderlyingToken: underlyingToken
+        aaveUnderlyingToken: underlyingToken,
       }
     } else if (isCreamToken !== false) {
       const cyTokenContract = new web3.eth.Contract(CERC20DELEGATORABI, tokenAddress)
@@ -1493,7 +1493,7 @@ class Store {
         isAaveToken: false,
         isYVaultToken: false,
         isCreamToken: true,
-        creamUnderlyingToken: underlyingToken
+        creamUnderlyingToken: underlyingToken,
       }
     } else if (isYearnVault !== false) {  // probably need to split this into v1 vs v2 contracts. (getPricePerFullShare vs pricePerFullShare)
       const yVaultContract = new web3.eth.Contract(VAULTV1ABI, tokenAddress)
@@ -1516,7 +1516,7 @@ class Store {
         isAaveToken: false,
         isYVaultToken: true,
         isCreamToken: false,
-        yVaultUnderlingToken: underlyingToken
+        yVaultUnderlyingToken: underlyingToken,
       }
 
     } else {
@@ -1588,8 +1588,6 @@ class Store {
     }
 
     // get a different price oracle somewhere. sushiQuote or something.
-
-
     if(shouldSearchPrice) {
       const coingeckoItem = coingeckoCoinList.find((coin) => {
         if(symbol.toLowerCase() === 'musd') {

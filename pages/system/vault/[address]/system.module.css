@@ -1,0 +1,89 @@
+.vaultContainer {
+  margin-top: 60px;
+  padding: 48px;
+}
+
+.vaultInfoContainer {
+  width: 100%;
+  display: flex;
+  padding: 32px 48px;
+  border: 1px solid rgba(108,108,123,.25);
+  margin-bottom: 24px;
+}
+
+.vaultIcon {
+  width: 80px;
+  height: 80px;
+  margin-right: 15px;
+}
+
+.vaultTitle {
+  min-width: 100px;
+}
+
+.vaultVersionText {
+  font-size: 0.5rem;
+}
+
+.vaultVersionContainer {
+  width: fit-content;
+  border-radius: 12px;
+  padding: 3px 12px;
+  border: 1px solid rgba(25, 101, 233, 1);
+  color: rgba(25, 101, 233, 1);
+}
+
+.vaultV1VersionContainer {
+  width: fit-content;
+  border-radius: 12px;
+  padding: 3px 12px;
+  background: #BD1550;
+  color: #FFFFFF;
+  margin-top: 10px;
+}
+
+.vaultV2VersionContainer {
+  width: fit-content;
+  border-radius: 22px;
+  padding: 5px 12px;
+  background: #0048FF;
+  color: #FFFFFF;
+  margin-top: 10px;
+}
+
+.vaultExpVersionContainer {
+  width: fit-content;
+  border-radius: 22px;
+  padding: 5px 12px;
+  background: #703D6F;
+  color: #FFF;
+}
+
+.vaultEarnVersionContainer {
+  width: fit-content;
+  border-radius: 22px;
+  padding: 5px 12px;
+  background: #77CCA4;
+  color: #000;
+  margin-top: 10px;
+}
+
+.vaultLockupVersionContainer {
+  width: fit-content;
+  border-radius: 22px;
+  padding: 5px 12px;
+  background: #FFD000;
+  color: #000000;
+  margin-top: 10px;
+}
+
+.depositTokenContainer {
+  padding: 32px 48px;
+  border: 1px solid rgba(108,108,123,.25);
+}
+
+.strategiesContainer {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 24px;
+}

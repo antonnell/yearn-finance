@@ -84,8 +84,8 @@ export default function SystemStrategiesGraph({ vaults, filters, layout, handleN
     }
   }, [vaults.length])
 
-  const onExplore = () => {
-    handleNavigate('strategies');
+  const onExplore = (vault) => {
+    handleNavigate('vault', vault);
   }
 
   if(!vaults || vaults.length === 0) {
@@ -182,7 +182,13 @@ export default function SystemStrategiesGraph({ vaults, filters, layout, handleN
             </PieChart>
           </ResponsiveContainer>
           <div className={ classes.hoveredText }>
-            <Typography className={ classes.title }>{ `${ data[activeIndex] ? data[activeIndex].name : ''} Vault` }</Typography>
+            <div className={ classes.displayInline }>
+              <Typography className={ classes.title }>{ `${ data[activeIndex] ? data[activeIndex].name : ''} Vault` }</Typography>
+              {
+                data[activeIndex].name !== 'Other' &&
+                <Button size='small' variant='outlined' onClick={ () => { onExplore(data[activeIndex]) } } className={ classes.exploreButton }>Explore</Button>
+              }
+            </div>
             <Typography className={ classes.subTitle }>{ getVaultTypeDescription(data[activeIndex]) }</Typography>
             <div className={ classes.value }>
               <Typography className={ classes.valueTitle }>Total Share</Typography>

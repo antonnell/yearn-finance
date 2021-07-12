@@ -20,8 +20,12 @@
 
 
 
-improve loader for system overview
+map myInvestment filter to only return your investment balance/total vault * exposure.
+improve mapTokenAddressToInfo() in investStore
+improve loader information for system overview
 'epxlore' - drill down into 1 vault.
+asset descriptions - get more
+
 
 ## Getting started
 - Make sure to have nodejs installed. This app is built using [Next.js](https://nextjs.org/learn/basics/create-nextjs-app) and [react](https://reactjs.org/docs/getting-started.html).

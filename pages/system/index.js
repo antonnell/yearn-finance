@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useRouter } from "next/router";
 
 import { Typography, Paper, TextField, InputAdornment, Grid, Button } from '@material-ui/core';
 import Skeleton from '@material-ui/lab/Skeleton';
@@ -23,26 +24,26 @@ import { formatCurrency } from '../../utils';
 
 const mapTokenToBalance = (token) => {
   if(token.isYVaultToken) {
-    if(token.yVaultUnderlingToken.isCurveToken) {
+    if(token.yVaultUnderlyingToken.isCurveToken) {
       // return all curveUnderlyingTokens
-      return token.yVaultUnderlingToken.curveUnderlyingTokens.map((underlyingToken) => {
+      return token.yVaultUnderlyingToken.curveUnderlyingTokens.map((underlyingToken) => {
         if (underlyingToken.isIEarnToken) {
           return {
-            balance: BigNumber(token.balance).times(token.price).times(underlyingToken.protocolRatio).div(100).times(token.yVaultUnderlingToken.exchangeRate).times(underlyingToken.iEarnUnderlingToken.exchangeRate).toNumber(),
+            balance: BigNumber(token.balance).times(token.price).times(underlyingToken.protocolRatio).div(100).times(token.yVaultUnderlyingToken.exchangeRate).times(underlyingToken.iEarnUnderlingToken.exchangeRate).toNumber(),
             name: underlyingToken.iEarnUnderlingToken.symbol,
             description: underlyingToken.iEarnUnderlingToken.description
           }
 
         } else if (underlyingToken.isCreamToken) {
           return {
-            balance: BigNumber(token.balance).times(token.price).times(underlyingToken.protocolRatio).div(100).times(token.yVaultUnderlingToken.exchangeRate).times(underlyingToken.creamUnderlyingToken.exchangeRate).toNumber(),
+            balance: BigNumber(token.balance).times(token.price).times(underlyingToken.protocolRatio).div(100).times(token.yVaultUnderlyingToken.exchangeRate).times(underlyingToken.creamUnderlyingToken.exchangeRate).toNumber(),
             name: underlyingToken.creamUnderlyingToken.symbol,
             description: underlyingToken.creamUnderlyingToken.description
           }
 
         } else {
           return {
-            balance: BigNumber(token.balance).times(token.price).times(token.yVaultUnderlingToken.exchangeRate).times(underlyingToken.protocolRatio).div(100).toNumber(),
+            balance: BigNumber(token.balance).times(token.price).times(token.yVaultUnderlyingToken.exchangeRate).times(underlyingToken.protocolRatio).div(100).toNumber(),
             name: underlyingToken.symbol,
             description: underlyingToken.description
           }
@@ -51,9 +52,9 @@ const mapTokenToBalance = (token) => {
 
     } else {
       return {
-        balance: BigNumber(token.balance).times(token.price).times(token.yVaultUnderlingToken.exchangeRate).toNumber(),
-        name: token.yVaultUnderlingToken.symbol,
-        description: token.yVaultUnderlingToken.description
+        balance: BigNumber(token.balance).times(token.price).times(token.yVaultUnderlyingToken.exchangeRate).toNumber(),
+        name: token.yVaultUnderlyingToken.symbol,
+        description: token.yVaultUnderlyingToken.description
       }
     }
   } else if(token.isCurveToken) {
@@ -421,10 +422,13 @@ const mapSystemJsonToVaults = (json, filters) => {
 
 function System({ changeTheme, theme }) {
 
-  const [view, setView] = useState('overview')
+  const router = useRouter();
 
-  const [tvl, setTvl] = useState(null);
-  const [ironBankTVL, setIronBankTVL] = useState(null);
+  const [ view, setView ] = useState('overview')
+  const [ exploreVault, setExploreVault ] = useState(null)
+
+  const [ tvl, setTvl ] = useState(null);
+  const [ ironBankTVL, setIronBankTVL ] = useState(null);
 
   const [ filters, setFilters ] = useState({
     versions: '',
@@ -511,8 +515,8 @@ function System({ changeTheme, theme }) {
     }
   }
 
-  const handleNavigate = (screen) => {
-    setView(screen)
+  const handleNavigate = (screen, vv) => {
+    router.push(`system/vault/${vv.address}`);
   }
 
   const renderOverview = () => {
@@ -524,24 +528,8 @@ function System({ changeTheme, theme }) {
     </div>)
 
   }
-  const renderProtocols = () => {
-    return (
-      <div className={classes.sectionContainer}>
-        <div className={ classes.sectionHeader }>
-          <div className={classes.backButton}>
-            <Button color={theme.palette.type === 'light' ? 'primary' : 'secondary'} onClick={() => { handleNavigate('overview') }} disableElevation>
-              <ArrowBackIcon fontSize={'medium'} />
-            </Button>
-          </div>
-          <Typography variant='h1'>Protocols</Typography>
-        </div>
-        <div>
 
-        </div>
-      </div>
-    )
-  }
-  const renderStrategies = () => {
+  const renderVault = () => {
     return (
       <div className={classes.sectionContainer}>
         <div className={ classes.sectionHeader }>
@@ -550,41 +538,7 @@ function System({ changeTheme, theme }) {
               <ArrowBackIcon fontSize={'medium'} />
             </Button>
           </div>
-          <Typography variant='h1'>Strategies</Typography>
-        </div>
-        <div>
-
-        </div>
-      </div>
-    )
-  }
-  const renderVaults = () => {
-    return (
-      <div className={classes.sectionContainer}>
-        <div className={ classes.sectionHeader }>
-          <div className={classes.backButton}>
-            <Button color={theme.palette.type === 'light' ? 'primary' : 'secondary'} onClick={() => { handleNavigate('overview') }} disableElevation>
-              <ArrowBackIcon fontSize={'medium'} />
-            </Button>
-          </div>
-          <Typography variant='h1'>Vaults</Typography>
-        </div>
-        <div>
-
-        </div>
-      </div>
-    )
-  }
-  const renderAssets = () => {
-    return (
-      <div className={classes.sectionContainer}>
-        <div className={ classes.sectionHeader }>
-          <div className={classes.backButton}>
-            <Button color={theme.palette.type === 'light' ? 'primary' : 'secondary'} onClick={() => { handleNavigate('overview') }} disableElevation>
-              <ArrowBackIcon fontSize={'medium'} />
-            </Button>
-          </div>
-          <Typography variant='h1'>Assets</Typography>
+          <Typography variant='h1'>Vault</Typography>
         </div>
         <div>
 
@@ -645,10 +599,7 @@ function System({ changeTheme, theme }) {
       </div>
       <SystemFilters onFiltersChanged={ onFiltersChanged } vaults={ allVaults } strategies={ strategies } />
       { view === 'overview' && renderOverview() }
-      { view === 'protocols' && renderProtocols() }
-      { view === 'strategies' && renderStrategies() }
-      { view === 'vaults' && renderVaults() }
-      { view === 'assets' && renderAssets() }
+      { view === 'vault' && renderVault() }
     </Layout>
   );
 }

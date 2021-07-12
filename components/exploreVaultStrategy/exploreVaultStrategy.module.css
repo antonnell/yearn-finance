@@ -1,0 +1,56 @@
+.strategyContainer {
+  padding: 16px 24px;
+  border: 1px solid rgba(108,108,123,.25);
+}
+
+.strategyTitleSection {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.strategyTitle {
+  cursor: pointer;
+}
+
+.strategyDescription {
+  font-size: 12px;
+}
+
+.tokenContainer {
+  padding: 16px 24px;
+  border: 1px solid rgba(108,108,123,.25);
+}
+
+.strategyOutline {
+  border: 1px solid rgba(108,108,123,0.4);
+  border-radius: 30px;
+  height: 60px;
+  min-width: 60px;
+  width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 24px;
+}
+
+.strategyIcon {
+  color: rgba(108,108,123,0.4);
+  font-size: 1.5rem !important;
+}
+
+.protocolLogo {
+  margin-right: 24px;
+  border-radius: 30px;
+}
+
+.curveTokenContainer {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 12px;
+}
+
+.tokenLogo {
+  margin-right: 12px;
+  border-radius: 30px;
+}
