@@ -142,7 +142,7 @@ class Store {
 
   setStore = (obj) => {
     this.store = { ...this.store, ...obj };
-    // console.log(this.store);
+    console.log(this.store);
     return this.emitter.emit(STORE_UPDATED);
   };
 
@@ -1566,7 +1566,7 @@ class Store {
     let price = 1
     let description = `I don't have a description for this asset at this moment.`
     let priceUpdated = false
-    let shouldSearchPrice = true
+    let shouldSearchPrice = false
 
     if(assetInfo) {
       symbol = assetInfo.symbol
@@ -1586,6 +1586,9 @@ class Store {
       symbol = await erc20Contract.methods.symbol().call()
       decimals = parseInt(await erc20Contract.methods.decimals().call())
     }
+
+    // get a different price oracle somewhere. sushiQuote or something.
+
 
     if(shouldSearchPrice) {
       const coingeckoItem = coingeckoCoinList.find((coin) => {
@@ -1617,10 +1620,10 @@ class Store {
           console.log(ex)
         }
       }
+    }
 
-      if (vault && vault.tokenMetadata && symbol === vault.tokenMetadata.symbol && price === 1 && vault.tvl && vault.tvl.price) {
-        price = vault.tvl.price
-      }
+    if (vault && vault.tokenMetadata && symbol === vault.tokenMetadata.symbol && price === 1 && vault.tvl && vault.tvl.price) {
+      price = vault.tvl.price
     }
 
     const returnObj = {
@@ -2335,7 +2338,7 @@ class Store {
         collateral: '0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e',
         debt: '0x6b175474e89094c44da98b954eedeac495271d0f'
       }
-    } else if (['0x4031afd3B0F71Bace9181E554A9E680Ee4AbE7dF', '0x77b7CD137Dd9d94e7056f78308D7F65D2Ce68910', '0x55ec3771376b6E1E4cA88D0eEa5e42A448f51C7F'].includes(address)) { //dai collat, dai debt
+    } else if (['0x4031afd3B0F71Bace9181E554A9E680Ee4AbE7dF', '0x77b7CD137Dd9d94e7056f78308D7F65D2Ce68910', '0x55ec3771376b6E1E4cA88D0eEa5e42A448f51C7F', '0x4d069f267DaAb537c4ff135556F711c0A6538496'].includes(address)) { //dai collat, dai debt
       return {
         collateral: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
         debt: '0x6B175474E89094C44Da98b954EedeAC495271d0F'
@@ -2530,7 +2533,7 @@ class Store {
       case 'Yearn':
         return `Yearn Finance is a suite of products in Decentralized Finance (DeFi) that provides lending aggregation, yield generation, and insurance on the Ethereum blockchain.`
           default:
-
+        return `I don't have a description for this yet.`
     }
   }
 }

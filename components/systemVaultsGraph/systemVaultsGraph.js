@@ -59,6 +59,10 @@ const renderActiveShape = (props) => {
 };
 
 const getVaultTypeDescription = (vault) => {
+  if(!vault) {
+    return ''
+  }
+
   switch (vault.type) {
     case 'Earn':
       return `Before vaults, iEarn was the only product. This vault takes ${vault.symbol} and supplies it to different lending protocols to generate yield.`
@@ -119,6 +123,13 @@ export default function SystemStrategiesGraph({ vaults, filters, layout, handleN
     }
   }
 
+  const total = data.reduce((acc, current) => {
+    if(isNaN(current.balance)) {
+      return acc
+    }
+    return BigNumber(acc).plus(current.balance).toNumber()
+  }, 0)
+
   const COLORS = [
     "#0045ff",
     "#1162df",
@@ -175,11 +186,11 @@ export default function SystemStrategiesGraph({ vaults, filters, layout, handleN
             <Typography className={ classes.subTitle }>{ getVaultTypeDescription(data[activeIndex]) }</Typography>
             <div className={ classes.value }>
               <Typography className={ classes.valueTitle }>Total Share</Typography>
-              <Typography className={ classes.valueValue }>33%</Typography>
+              <Typography className={ classes.valueValue }>{ data[activeIndex] ? formatCurrency(BigNumber(data[activeIndex].balance).times(100).div(total).toFixed(2)) : "0" } %</Typography>
             </div>
             <div className={ classes.value }>
               <Typography className={ classes.valueTitle }>Total Value</Typography>
-              <Typography className={ classes.valueValue }>$542 212</Typography>
+              <Typography className={ classes.valueValue }>$ { data[activeIndex] ? formatCurrency(data[activeIndex].balance) : "0" }</Typography>
             </div>
           </div>
         </div>

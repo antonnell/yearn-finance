@@ -105,6 +105,13 @@ export default function SystemProtocolsGraph({ assets, filters, layout, handleNa
     }
   }
 
+  const total = data.reduce((acc, current) => {
+    if(isNaN(current.balance)) {
+      return acc
+    }
+    return BigNumber(acc).plus(current.balance).toNumber()
+  }, 0)
+
   const COLORS = [
     "#0045ff",
     "#1162df",
@@ -156,16 +163,16 @@ export default function SystemProtocolsGraph({ assets, filters, layout, handleNa
               </Pie>
             </PieChart>
           </ResponsiveContainer>
-          <div className={ classes.hoveredText }> 
+          <div className={ classes.hoveredText }>
             <Typography className={ classes.title }>{ `${data[activeIndex] ? data[activeIndex].name : ''}` }</Typography>
             <Typography className={ classes.subTitle }>{ (data[activeIndex] && data[activeIndex].description) ? data[activeIndex].description : 'You can filter by vault type Earn, Version 1, Version 2 or your invested vaults to drill down deeper into the vaults.' }</Typography>
             <div className={ classes.value }>
               <Typography className={ classes.valueTitle }>Total Share</Typography>
-              <Typography className={ classes.valueValue }>33%</Typography>
+              <Typography className={ classes.valueValue }>{ data[activeIndex] ? formatCurrency(BigNumber(data[activeIndex].balance).times(100).div(total).toFixed(2)) : "0" } %</Typography>
             </div>
             <div className={ classes.value }>
               <Typography className={ classes.valueTitle }>Total Value</Typography>
-              <Typography className={ classes.valueValue }>$542 212</Typography>
+              <Typography className={ classes.valueValue }>$ { data[activeIndex] ? formatCurrency(data[activeIndex].balance) : "0" }</Typography>
             </div>
           </div>
         </div>

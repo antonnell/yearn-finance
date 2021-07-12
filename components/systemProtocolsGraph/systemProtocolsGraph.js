@@ -107,13 +107,11 @@ export default function SystemProtocolsGraph({ protocols, filters, layout, handl
   }
 
   const total = data.reduce((acc, current) => {
+    if(isNaN(current.balance)) {
+      return acc
+    }
     return BigNumber(acc).plus(current.balance).toNumber()
   }, 0)
-
-  data = data.map((d) => {
-    d.balance = BigNumber(d.balance).times(100).div(total).toNumber()
-    return d
-  })
 
   const COLORS = [
     "#0045ff",
@@ -171,11 +169,11 @@ export default function SystemProtocolsGraph({ protocols, filters, layout, handl
             <Typography className={ classes.subTitle }>{ (data[activeIndex] && data[activeIndex].description) ? data[activeIndex].description : 'You can filter by vault type Earn, Version 1, Version 2 or your invested vaults to drill down deeper into the vaults.' }</Typography>
             <div className={ classes.value }>
               <Typography className={ classes.valueTitle }>Total Share</Typography>
-              <Typography className={ classes.valueValue }>33%</Typography>
+              <Typography className={ classes.valueValue }>{ data[activeIndex] ? formatCurrency(BigNumber(data[activeIndex].balance).times(100).div(total).toFixed(2)) : "0" } %</Typography>
             </div>
             <div className={ classes.value }>
               <Typography className={ classes.valueTitle }>Total Value</Typography>
-              <Typography className={ classes.valueValue }>$542 212</Typography>
+              <Typography className={ classes.valueValue }>$ { data[activeIndex] ? formatCurrency(data[activeIndex].balance) : "0" }</Typography>
             </div>
           </div>
         </div>
