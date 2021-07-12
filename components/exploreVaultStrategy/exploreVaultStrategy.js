@@ -73,7 +73,12 @@ export default function exploreVaultStrategy({ strategy }) {
       return (
         <Paper elevation={0} className={ classes.protocolContainer} >
           <div className={ classes.strategyTitleSection }>
-            <img src={ mapProtocolToIcon(protocol.name) } alt={ protocol.name } width='60px' height='60px' className={ classes.protocolLogo } />
+            <div className={ classes.iconContainer }>
+              <div className={ classes.protocolLabel }>
+                <Typography className={ classes.text }>Protocol</Typography>
+              </div>
+              <img src={ mapProtocolToIcon(protocol.name) } alt={ protocol.name } width='60px' height='60px' className={ classes.protocolLogo } />
+            </div>
             <div>
               <Typography variant='h2'>{protocol.name}</Typography>
               <Typography variant='subTitle' color='textSecondary' className={ classes.strategyDescription }>{protocol.description}</Typography>
@@ -88,8 +93,13 @@ export default function exploreVaultStrategy({ strategy }) {
   return (
     <Paper elevation={0} className={classes.strategyContainer}>
       <div className={ classes.strategyTitleSection }>
-        <div className={ classes.strategyOutline} >
-          <DescriptionIcon className={ classes.strategyIcon } />
+        <div className={ classes.iconContainer }>
+          <div className={ classes.strategyLabel }>
+            <Typography className={ classes.text }>Strategy</Typography>
+          </div>
+          <div className={ classes.strategyOutline} >
+            <DescriptionIcon className={ classes.strategyIcon } />
+          </div>
         </div>
         <div>
           <Typography variant='h2' onClick={ openContract } className={ classes.strategyTitle}>

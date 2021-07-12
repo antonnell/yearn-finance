@@ -63,3 +63,37 @@
 .tokenChild {
   margin-top: 12px;
 }
+
+.iconContainer {
+  position: relative;
+}
+
+.protocolLabel {
+  background: #bd1550;
+  border-radius: 10px;
+  padding: 3px;
+  width: 60px;
+  text-align: center;
+  position: absolute;
+  top: 50px;
+}
+
+.protocolLabel > .text {
+  font-size: 10px;
+  color: #fff !important;
+}
+
+.strategyLabel {
+  background: #0048FF;
+  border-radius: 10px;
+  padding: 3px;
+  width: 60px;
+  text-align: center;
+  position: absolute;
+  top: 50px;
+}
+
+.strategyLabel > .text {
+  font-size: 10px;
+  color: #fff !important;
+}
