@@ -1,6 +1,9 @@
 import { Typography, Paper } from '@material-ui/core';
 
 
+import { formatCurrency, formatAddress } from "../../utils";
+import classes from './exploreVaultStrategy.module.css';
+
 export default function Token({ token, web3 }) {
 
   let icon = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${web3 && web3.utils ? web3.utils.toChecksumAddress(token.address) : token.address}/logo.png`
@@ -20,24 +23,29 @@ export default function Token({ token, web3 }) {
 
   return (
     <Paper elevation={0} className={ classes.tokenContainer} >
-      <div className={ classes.strategyTitleSection }>
+      <div className={ classes.tokenTitleSection }>
         <img src={ icon } alt={ token.symbol } width='40px' height='40px' className={ classes.tokenLogo } />
         <div>
           <Typography variant='h2'>{token.symbol}</Typography>
-          <Typography>$ {formatCurrency(token.balance)}</Typography>
+          <Typography variant='subTitle' color='textSecondary' className={ classes.strategyDescription }>$ {formatCurrency(token.balance)}</Typography>
         </div>
       </div>
-      { token.isCreamToken && <Token token={ token.creamUnderlyingToken } web3={web3} /> }
-      { token.isCompoundToken && <Token token={ token.compoundUnderlyingToken } web3={web3} /> }
-      { token.isAaveToken && <Token token={ token.aaveUnderlyingToken } web3={web3} /> }
-      { token.isIEarnToken && <Token token={ token.iEarnUnderlingToken } web3={web3} /> }
-      { token.isYVaultToken && <Token token={ token.yVaultUnderlyingToken } web3={web3} /> }
-      { token.isCurveToken &&
-        <div className={ classes.curveTokenContainer }>
-          {
-            token.curveUnderlyingTokens.map((curveUnderlyingToken) => {
-              return <Token token={ curveUnderlyingToken } web3={web3} />
-            })
+      {
+        ( token.isCreamToken || token.isCompoundToken || token.isAaveToken || token.isIEarnToken || token.isYVaultToken || token.isCurveToken ) &&
+        <div className={ classes.tokenChild }>
+          { token.isCreamToken && <Token token={ token.creamUnderlyingToken } web3={web3} /> }
+          { token.isCompoundToken && <Token token={ token.compoundUnderlyingToken } web3={web3} /> }
+          { token.isAaveToken && <Token token={ token.aaveUnderlyingToken } web3={web3} /> }
+          { token.isIEarnToken && <Token token={ token.iEarnUnderlingToken } web3={web3} /> }
+          { token.isYVaultToken && <Token token={ token.yVaultUnderlyingToken } web3={web3} /> }
+          { token.isCurveToken &&
+            <div className={ classes.curveTokenContainer }>
+              {
+                token.curveUnderlyingTokens.map((curveUnderlyingToken) => {
+                  return <Token token={ curveUnderlyingToken } web3={web3} />
+                })
+              }
+            </div>
           }
         </div>
       }

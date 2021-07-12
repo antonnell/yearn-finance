@@ -6,6 +6,7 @@
 .vaultInfoContainer {
   width: 100%;
   display: flex;
+  align-items: center;
   padding: 32px 48px;
   border: 1px solid rgba(108,108,123,.25);
   margin-bottom: 24px;
@@ -18,7 +19,7 @@
 }
 
 .vaultTitle {
-  min-width: 100px;
+  min-width: 300px;
 }
 
 .vaultVersionText {
@@ -78,8 +79,7 @@
 }
 
 .depositTokenContainer {
-  padding: 32px 48px;
-  border: 1px solid rgba(108,108,123,.25);
+  flex: 1;
 }
 
 .strategiesContainer {

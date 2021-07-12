@@ -50,7 +50,16 @@
   grid-gap: 12px;
 }
 
+.tokenTitleSection {
+  display: flex;
+  align-items: center;
+}
+
 .tokenLogo {
   margin-right: 12px;
   border-radius: 30px;
+}
+
+.tokenChild {
+  margin-top: 12px;
 }
