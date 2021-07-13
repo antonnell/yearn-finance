@@ -8,7 +8,9 @@ import classes from './exploreVaultStrategy.module.css';
 export default function Token({ token, web3, parentType, parentBalance }) {
 
   let icon = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${web3 && web3.utils ? web3.utils.toChecksumAddress(token.address) : token.address}/logo.png`
-  if(token.isCurveToken) {
+  if(token.address === '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE') {
+    icon = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png`
+  } else if(token.isCurveToken) {
     icon = '/protocols/curve.png'
   } else if (token.isCreamToken) {
     icon = '/protocols/Cream.png'
@@ -30,7 +32,7 @@ export default function Token({ token, web3, parentType, parentBalance }) {
   }
 
   return (
-    <Paper elevation={0} className={ classes.tokenContainer} >
+    <Paper elevation={0} className={ classes.tokenContainer} key={ token.address } >
       <div className={ classes.tokenTitleSection }>
         <img src={ icon } alt={ token.symbol } width='40px' height='40px' className={ classes.tokenLogo } />
         <div>

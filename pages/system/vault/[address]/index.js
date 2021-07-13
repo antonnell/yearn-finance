@@ -82,7 +82,7 @@ function System({ changeTheme }) {
     if(vault && vault.strategies) {
       return vault.strategies.filter((strat) => {
         if(activeOnly) {
-          return BigNumber(strat.balanceUSD).gt(0)
+          return BigNumber(strat.balanceUSD).gt(100)
         }
 
         return true

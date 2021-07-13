@@ -1850,7 +1850,7 @@ class Store {
       if (strategy.name.includes('SingleSided') || strategy.name.includes('VoterProxy') ||
         ['StrategyTUSDypool', 'StrategyUSDC3pool', 'StrategyDAI3pool', 'StrategyUSDT3pool', 'StrategystETHCurve', 'StrategyYearnVECRV', 'yvWBTCStratMMV1', 'StrategyGUSDRescue', 'StrategymUSDCurve'].includes(strategy.name)) {
 
-        asset = await this.mapStrategyAddressToAsset(web3, strategy.address)
+        asset = await this.mapStrategyAddressToAsset(web3, strategy.address, strategy.name.includes('SingleSided'))
         token = await this.getTokenTree(web3, asset, coingeckoCoinList, vault)
 
         let isThatContract = ['yvWBTCStratMMV1', 'StrategystETHCurve', 'CurveeCRVVoterProxy', 'StrategyYearnVECRV', 'StrategyCurveIBVoterProxy', 'CurvehCRVVoterProxy',
@@ -2323,7 +2323,7 @@ class Store {
   }
 
   // gets the exposure asset that is used by the strategy
-  mapStrategyAddressToAsset = async (web3, address) => {
+  mapStrategyAddressToAsset = async (web3, address, isSingleSided) => {
     if(['0x4f2fdebE0dF5C92EEe77Ff902512d725F6dfE65c', '0x2F90c531857a2086669520e772E9d433BbfD5496', '0xAa12d6c9d680EAfA48D8c1ECba3FCF1753940A12'].includes(address)) {  // y3CRV
       return '0x9cA85572E6A3EbF24dEDd195623F188735A5179f'
     } else if (address === '0x07DB4B9b3951094B9E278D336aDf46a036295DE7') {
@@ -2382,21 +2382,44 @@ class Store {
     } else if (address === '0xd28b508EA08f14A473a5F332631eA1972cFd7cC0') {
       return '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
     } else if (address == '0x2886971eCAF2610236b4869f58cD42c115DFb47A') {
-      return '0x06325440d014e39736583c165c2963ba99faf14e'
+      return '0x06325440D014e39736583c165C2963BA99fAf14E'
     } else if (address == '0xda988eBb26F505246C59Ba26514340B634F9a7a2') {
       return '0x986b4aff588a109c09b50a03f42e4110e29d353f'
     } else if ([''].includes(address)) { //usdc
       return '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
-    } else if (['0x30010039Ea4a0c4fa1Ac051E8aF948239678353d', '0x80af28cb1e44C44662F144475d7667C9C0aaB3C3'].includes(address)) {
-      const strategyContract = new web3.eth.Contract(VAULT_StrategySingleSidedCrvABI, address)
-      const curveToken = await strategyContract.methods.curveToken().call()
-      return curveToken
     } else if (['0xC2cB1040220768554cf699b0d863A3cd4324ce32', '0x26EA744E5B887E5205727f55dFBE8685e3b21951', '0xE6354ed5bC4b393a5Aad09f21c46E101e692d447', '0x04bC0Ab673d88aE9dbC9DA2380cB6B79C4BCa9aE',
       '0x16de59092dAE5CcF4A1E6439D611fd0653f0Bd01', '0xd6aD7a6750A7593E092a9B218d66C0A814a3436e', '0x83f798e925BcD4017Eb265844FDDAbb448f1707D', '0x73a052500105205d34Daf004eAb301916DA8190f',
       '0xF61718057901F84C4eEC4339EF8f0D86D2B45600', '0x04Aa51bbcB46541455cCF1B8bef2ebc5d3787EC9'].includes(address)) {
       const strategyContract = new web3.eth.Contract(IEARN_TOKENABI, address)
       const token = await strategyContract.methods.token().call()
       return token
+    } else if (isSingleSided === true) {
+      const strategyContract = new web3.eth.Contract(VAULT_StrategySingleSidedCrvABI, address)
+      const apiVersion = await strategyContract.methods.apiVersion().call()
+
+      if(apiVersion === '0.3.5') {
+        const curveToken = await strategyContract.methods.curveToken().call()
+        return curveToken
+      } else if (apiVersion === '0.3.3.Edited') {
+        const curveToken = await strategyContract.methods.yvToken().call()
+        return curveToken
+      } else if (apiVersion === '0.4.2') {
+        if(address === '0xCdC3d3A18c9d83Ee6E10E91B48b1fcb5268C97B5') {
+          return '0xA3D87FffcE63B53E0d54fAa1cc983B7eB0b74A9c'
+        } else if (address === '0x8c44Cc5c0f5CD2f7f17B9Aca85d456df25a61Ae8') {
+          return '0x06325440D014e39736583c165C2963BA99fAf14E'
+        } else if (address === '0x95eA1643699F8DE347975F31CA8d03eCC507616c') {
+          const curveToken = await strategyContract.methods.curveToken().call()
+          return curveToken
+        }
+      } else if (apiVersion === '0.3.2') {
+        if(address === '0x148f64a2BeD9c815EDcD43754d3323283830070c') {
+          return '0xb19059ebb43466C323583928285a49f558E572Fd'
+        }
+      } else {
+        const wantAddress = await strategyContract.methods.want().call()
+        return wantAddress
+      }
     } else {
       const strategyContract = new web3.eth.Contract(VAULT_StrategyPoolABI, address)
       const wantAddress = await strategyContract.methods.want().call()

@@ -97,7 +97,7 @@ export default function exploreVaultStrategy({ strategy }) {
   const renderProtocols = () => {
     return strategy.protocols.map((protocol) => {
       return (
-        <Paper elevation={0} className={ classes.protocolContainer} >
+        <Paper elevation={0} className={ classes.protocolContainer} key={protocol.name} >
           <div className={ classes.strategyTitleSection }>
             <div className={ classes.iconContainer }>
               <div className={ classes.protocolLabel }>
