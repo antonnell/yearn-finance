@@ -185,7 +185,7 @@ export default function SystemStrategiesGraph({ vaults, filters, layout, handleN
             <div className={ classes.displayInline }>
               <Typography className={ classes.title }>{ `${ data[activeIndex] ? data[activeIndex].name : ''} Vault` }</Typography>
               {
-                data[activeIndex].name !== 'Other' &&
+                data[activeIndex] && data[activeIndex].name !== 'Other' &&
                 <Button size='small' variant='outlined' onClick={ () => { onExplore(data[activeIndex]) } } className={ classes.exploreButton }>Explore</Button>
               }
             </div>

@@ -1,19 +1,18 @@
-export default [
-{
+export default [{
 	"address": "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
 	"symbol": "ETH",
 	"decimals": 18,
-	"description": "Ethereum is a global, open-source platform for decentralized applications. In other words, the vision is to create a world computer that anyone can build applications in a decentralized manner; while all states and data are distributed and publicly accessible. Ethereum supports smart contracts in which developers can write code in order to program digital value."
+	"description": "Ethereum is a global, open-source platform for decentralized applications. In other words, the vision is to create a world computer that anyone can build applications in a decentralized manner; while all states and data are distributed and publicly accessible. Ethereum supports smart contracts in which developers can write code in order to program digital value.",
 }, {
 	"address": "0xD533a949740bb3306d119CC777fa900bA034cd52",
 	"symbol": "CRV",
 	"decimals": 18,
-	"description": "Similar to Uniswap, Curve Finance is an Automated Market Maker (AMM) based Decentralised Exchange (DEX). Unlike Uniswap, its main focus is only to swap between assets that are supposed to have the same value. This is useful in the DeFi ecosystem as there are plenty of wrapped tokens and synthetic tokens that aim to mimic the price of the real underlying asset.",
+	"description": "Similar to Uniswap, Curve Finance is an Automated Market Maker (AMM) based Decentralised Exchange (DEX). Unlike Uniswap, its main focus is only to swap between assets that are supposed to have the same value. This is useful in the DeFi ecosystem as there are plenty of wrapped tokens and synthetic tokens that aim to mimic the price of the real underlying asset."
 }, {
 	"address": "0xA64BD6C70Cb9051F6A9ba1F163Fdc07E0DfB5F84",
 	"symbol": "aLINK",
 	"decimals": 18,
-	"description": "Aave LINK is an interest bearing token minted upon deposit and burned when redeemed. The aLINK is pegged 1:1 to the value of the underlying LINK that is deposited in Aave protocol. aLINK, can be freely stored, transferred, and traded. While the underlying asset is loaned out to borrowers, aLINK accrue interest in real time, directly in your wallet!",
+	"description": "Aave LINK is an interest bearing token minted upon deposit and burned when redeemed. The aLINK is pegged 1:1 to the value of the underlying LINK that is deposited in Aave protocol. aLINK, can be freely stored, transferred, and traded. While the underlying asset is loaned out to borrowers, aLINK accrue interest in real time, directly in your wallet!"
 }, {
 	"address": "0x514910771AF9Ca656af840dff83E8264EcF986CA",
 	"symbol": "LINK",
@@ -168,7 +167,7 @@ export default [
 	"address": "0xe2f2a5c287993345a840db3b0845fbc70f5935a5",
 	"symbol": "mUSD",
 	"decimals": 18,
-	"description": "mUSD is a stablecoin that is backed by USDT, USDC, sUSD, and DAI. It is designed by mStable to address both the fragmentation of USD-pegged stablecoins and the lack of native yield by uniting stablecoin swapping and lending.",
+	"description": "mUSD is a stablecoin that is backed by USDT, USDC, sUSD, and DAI. It is designed by mStable to address both the fragmentation of USD-pegged stablecoins and the lack of native yield by uniting stablecoin swapping and lending."
 }, {
 	"address": "0x49849C98ae39Fff122806C06791Fa73784FB3675",
 	"symbol": "crvRenWBTC",
@@ -327,6 +326,246 @@ export default [
 }, {
 	"address": "0xcA3d75aC011BF5aD07a98d02f18225F9bD9A6BDF",
 	"symbol": "crvTricrypto",
+	"decimals": 18,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0x6b175474e89094c44da98b954eedeac495271d0f",
+	"symbol": "DAI",
+	"decimals": 18,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0x9cA85572E6A3EbF24dEDd195623F188735A5179f",
+	"symbol": "y3Crv",
+	"decimals": 18,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0x5dbcF33D8c2E976c6b560249878e6F1491Bca25c",
+	"symbol": "yyDAI+yUSDC+yUSDT+yTUSD",
+	"decimals": 18,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0xe2f2a5C287993345a840Db3B0845fbC70f5935a5",
+	"symbol": "mUSD",
+	"decimals": 18,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0xdB25f211AB05b1c97D595516F45794528a807ad8",
+	"symbol": "EURS",
+	"decimals": 2,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0x0FCDAeDFb8A7DfDa2e9838564c5A1665d856AFDF",
+	"symbol": "yvmusd3CRV",
+	"decimals": 18,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0x674C6Ad92Fd080e4004b2312b45f796a192D27a0",
+	"symbol": "USDN",
+	"decimals": 18,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0xD71eCFF9342A5Ced620049e616c5035F1dB98620",
+	"symbol": "sEUR",
+	"decimals": 18,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0xa47c8bf37f92aBed4A126BDA807A7b7498661acD",
+	"symbol": "UST",
+	"decimals": 18,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0x9BE89D2a4cd102D8Fecc6BF9dA793be995C22541",
+	"symbol": "BBTC",
+	"decimals": 8,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0x8dAEBADE922dF735c38C80C7eBD708Af50815fAa",
+	"symbol": "TBTC",
+	"decimals": 18,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0x8064d9Ae6cDf087b1bcd5BDf3531bD5d8C537a68",
+	"symbol": "oBTC",
+	"decimals": 18,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0x5228a22e72ccC52d415EcFd199F99D0665E7733b",
+	"symbol": "pBTC",
+	"decimals": 18,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0x0316EB71485b0Ab14103307bf65a021042c6d380",
+	"symbol": "HBTC",
+	"decimals": 18,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0xdF574c24545E5FfEcb9a659c229253D4111d87e1",
+	"symbol": "HUSD",
+	"decimals": 8,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0x5BC25f649fc4e26069dDF4cF4010F9f706c23831",
+	"symbol": "DUSD",
+	"decimals": 18,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0x028171bCA77440897B824Ca71D1c56caC55b68A3",
+	"symbol": "aDAI",
+	"decimals": 18,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0x1456688345527bE1f37E9e627DA0837D6f08C925",
+	"symbol": "USDP",
+	"decimals": 18,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0x584bC13c7D411c00c01A62e8019472dE68768430",
+	"symbol": "HEGIC",
+	"decimals": 18,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0xbBC455cb4F1B9e4bFC4B73970d360c8f032EfEE6",
+	"symbol": "sLINK",
+	"decimals": 18,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0xBcca60bB61934080951369a648Fb03DF4F96263C",
+	"symbol": "aUSDC",
+	"decimals": 6,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0x6C5024Cd4F8A59110119C56f8933403A539555EB",
+	"symbol": "aSUSD",
+	"decimals": 18,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+	"symbol": "USDC",
+	"decimals": 6,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0x8e595470Ed749b85C6F7669de83EAe304C2ec68F",
+	"symbol": "cyDAI",
+	"decimals": 8,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0x3Ed3B47Dd13EC9a98b44e6204A523E766B225811",
+	"symbol": "aUSDT",
+	"decimals": 6,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84",
+	"symbol": "stETH",
+	"decimals": 18,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0x76Eb2FE28b36B3ee97F3Adae0C69606eeDB2A37c",
+	"symbol": "cyUSDC",
+	"decimals": 8,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0x5e74C9036fb86BD7eCdcb084a0673EFc32eA31cb",
+	"symbol": "sETH",
+	"decimals": 18,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0x48759F220ED983dB51fA7A8C0D2AAb8f3ce4166a",
+	"symbol": "cyUSDT",
+	"decimals": 8,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0x5f98805A4E8be255a32880FDeC7F6728C6568bA0",
+	"symbol": "LUSD",
+	"decimals": 18,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+	"symbol": "WBTC",
+	"decimals": 8,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0x853d955aCEf822Db058eb8505911ED77F175b99e",
+	"symbol": "FRAX",
+	"decimals": 18,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0x57ab1ec28d129707052df4df418d58a2d46d5f51",
+	"symbol": "sUSD",
+	"decimals": 18,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0xBC6DA0FE9aD5f3b0d58160288917AA56653660E9",
+	"symbol": "alUSD",
+	"decimals": 18,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0x9559Aaa82d9649C7A7b220E7c461d2E74c9a3593",
+	"symbol": "rETH",
+	"decimals": 18,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0xE95A203B1a91a908F9B9CE46459d101078c2c3cb",
+	"symbol": "aETHc",
+	"decimals": 18,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0x514910771af9ca656af840dff83e8264ecf986ca",
+	"symbol": "LINK",
+	"decimals": 18,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+	"symbol": "WETH",
+	"decimals": 18,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0xD905e2eaeBe188fc92179b6350807D8bd91Db0D8",
+	"symbol": "ypaxCrv",
+	"decimals": 18,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0x9fC689CCaDa600B6DF723D9E47D84d76664a1F23",
+	"symbol": "cDAI+cUSDC+USDT",
+	"decimals": 18,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0xC2Ee6b0334C261ED60C72f6054450b61B8f18E35",
+	"symbol": "rsv3CRV",
+	"decimals": 18,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0x97E2768e8E73511cA874545DC5Ff8067eB19B787",
+	"symbol": "usdk3CRV",
+	"decimals": 18,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0x99d1Fa417f94dcD62BfE781a1213c092a47041Bc",
+	"symbol": "ycDAI",
+	"decimals": 18,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0x196f4727526eA7FB1e17b2071B3d8eAA38486988",
+	"symbol": "RSV",
+	"decimals": 18,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0x1c48f86ae57291F7686349F12601910BD8D470bb",
+	"symbol": "USDK",
+	"decimals": 18,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0x9777d7E2b60bB01759D0E2f8be2095df444cb07E",
+	"symbol": "ycUSDC",
+	"decimals": 6,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0x1bE5d71F2dA660BFdee8012dDc58D024448A0A59",
+	"symbol": "ycUSDT",
+	"decimals": 6,
+	"description": "I don't have a description for this asset at this moment.",
+}, {
+	"address": "0x8E870D67F660D95d5be530380D0eC0bd388289E1",
+	"symbol": "PAX",
 	"decimals": 18,
 	"description": "I don't have a description for this asset at this moment.",
 }]

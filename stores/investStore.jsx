@@ -1207,7 +1207,7 @@ class Store {
             }),
           );
           array.push(
-            ...txs[0].transfersIn.map((tx) => {
+          ...txs[0].transfersIn.map((tx) => {
               tx.description = 'Transfer into vault';
               return tx;
             }),
@@ -1284,7 +1284,11 @@ class Store {
 
     const coingeckoCoinList = await this.getCoingeckoTokenList()
 
-    async.mapLimit(vaultData, 5, async (vault, callback) => {
+    // let da = vaultData.filter((vault) => {
+    //   return vault.address === '0x5f18C75AbDAe578b483E5F43f12a39cF75b973a9'
+    // })
+
+    async.mapLimit(vaultData, 10, async (vault, callback) => {
 
       let depositToken = await this.getTokenTree(web3, vault.tokenMetadata.address, coingeckoCoinList, vault)
 
@@ -1309,6 +1313,8 @@ class Store {
         console.log(err)
       }
       console.log(vaults)
+
+      console.log(JSON.stringify(this.getStore('systemAssetInfo')))
 
       this.setStore({ systemJSON: vaults })
       this.emitter.emit(SYSTEM_UPDATED)
