@@ -21,6 +21,7 @@ function System({ changeTheme }) {
   const router = useRouter();
 
   const [ vault, setVault ] = useState(null);
+  const [ activeOnly, setActiveOnoly ] = useState(false);
 
   useEffect(function () {
 
@@ -49,6 +50,10 @@ function System({ changeTheme }) {
     router.push('/system')
   }
 
+  const toggleActiveOnly = () => {
+    setActiveOnoly(!activeOnly)
+  }
+
   const vaultType = vault ? (vault.type === 'v2' && !vault.endorsed ? 'Exp' : vault.type) : '';
 
   let vaultTypeClass = null;
@@ -75,13 +80,21 @@ function System({ changeTheme }) {
 
   const renderStrategies = () => {
     if(vault && vault.strategies) {
-      return vault.strategies.map((strat) => {
+      return vault.strategies.filter((strat) => {
+        if(activeOnly) {
+          return BigNumber(strat.balanceUSD).gt(0)
+        }
+
+        return true
+      }).map((strat) => {
         return <ExploreVaultStrategy strategy={ strat } />
       })
     }
 
     return null
   }
+
+  console.log(vault)
 
   return (
     <Layout changeTheme={changeTheme} backClicked={ backClicked }>
@@ -105,7 +118,10 @@ function System({ changeTheme }) {
               </div>
               <div className={ classes.depositTokenContainer }>
                 <Typography>Strategies in play</Typography>
-                <Typography variant='h1'>{ vault.strategies.length }</Typography>
+                <div className={ classes.stratsInPlay }>
+                  <Typography variant='h1'>{ vault.strategies.length }</Typography>
+                  <Typography variant='h1' color='textSecondary' className={ classes.statsInPlayActive } onClick={ toggleActiveOnly } >({ vault.strategies.filter((strat) => { return BigNumber(strat.balanceUSD).gt(0) }).length })</Typography>
+                </div>
               </div>
             </>
           }

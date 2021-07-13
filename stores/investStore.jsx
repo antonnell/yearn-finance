@@ -1979,8 +1979,8 @@ class Store {
         protocols = [
           {
             name: 'Compound',
-            balance: BigNumber(collateralToken.balance).minus(debtToken.balance).toFixed(vault.token.decimals),
-            balanceUSD: BigNumber(collateralToken.balance).minus(debtToken.balance).times(vault.tvl.price).toFixed(vault.token.decimals),
+            balance: BigNumber(collateralToken.balance).plus(debtToken.balance).toFixed(vault.token.decimals),
+            balanceUSD: BigNumber(collateralToken.balance).plus(debtToken.balance).times(vault.tvl.price).toFixed(vault.token.decimals),
             tokens: [collateralToken, debtToken],
             description: this.mapProtocolToDescription('Compound')
           },
@@ -2201,8 +2201,8 @@ class Store {
         protocols = [
           {
             name: 'Synthetix',
-            balance: BigNumber(collateralToken.balance).minus(debtToken.balance).toFixed(vault.token.decimals),
-            balanceUSD: BigNumber(collateralToken.balanceUSD).minus(debtToken.balanceUSD).toFixed(vault.token.decimals),
+            balance: BigNumber(collateralToken.balance).plus(debtToken.balance).toFixed(vault.token.decimals),
+            balanceUSD: BigNumber(collateralToken.balanceUSD).plus(debtToken.balanceUSD).toFixed(vault.token.decimals),
             tokens: [collateralToken, debtToken],
             description: this.mapProtocolToDescription('Synthetix')
           }

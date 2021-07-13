@@ -20,6 +20,7 @@
 .tokenContainer {
   padding: 16px 24px;
   border: 1px solid rgba(108,108,123,.25);
+  flex: 1;
 }
 
 .strategyOutline {
@@ -45,9 +46,8 @@
 }
 
 .curveTokenContainer {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: 12px;
+  display: flex;
+  align-items: center;
 }
 
 .tokenTitleSection {
@@ -96,4 +96,33 @@
 .strategyLabel > .text {
   font-size: 10px;
   color: #fff !important;
+}
+
+.lenderField {
+  position: relative;
+}
+
+.lenderLabel {
+  background: #77cca4;
+  border-radius: 10px;
+  padding: 3px;
+  width: 60px;
+  text-align: center;
+  position: absolute;
+  top: 50px;
+  left: 15px;
+}
+
+.lenderLabel > .text {
+  font-size: 10px;
+  color: #000 !important;
+}
+
+.arrowDownIcon {
+  min-width: 100%;
+  text-align: center;
+}
+
+.plusIcon {
+
 }

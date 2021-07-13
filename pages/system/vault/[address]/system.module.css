@@ -87,3 +87,13 @@
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 24px;
 }
+
+.stratsInPlay {
+  display: flex;
+  align-items: center;
+}
+
+.statsInPlayActive {
+  cursor: pointer;
+  margin-left: 6px !important;
+}

@@ -9,6 +9,7 @@ import stores from '../../stores/index.js';
 import classes from './exploreVaultStrategy.module.css';
 
 import DescriptionIcon from '@material-ui/icons/Description';
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import Token from './exploreVaultToken';
 
 export default function exploreVaultStrategy({ strategy }) {
@@ -63,7 +64,32 @@ export default function exploreVaultStrategy({ strategy }) {
   }
 
   const renderProtocolTokens = (protocol) => {
-    return protocol.tokens.map((token) => {
+
+    let isLender = false
+    if(['Aave', 'Compound'].includes(protocol.name)) {
+      isLender = true
+    }
+
+    return protocol.tokens.map((token, index) => {
+
+      if(isLender) {
+        return (
+          <>
+            <div className={ classes.lenderField }>
+              <div className={ classes.lenderLabel }>
+                <Typography className={ classes.text }>{ index === 0 ? 'Collateral' : 'Debt' }</Typography>
+              </div>
+              <Token token={ token } web3={web3} />
+            </div>
+            { index === 0 &&
+              <div className={ classes.arrowDownIcon }>
+                <ArrowDownwardIcon />
+              </div>
+            }
+          </>
+        )
+      }
+
       return <Token token={ token } web3={web3} />
     })
   }
