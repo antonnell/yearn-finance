@@ -11,7 +11,7 @@ export default function Token({ token, web3, parentType, parentBalance }) {
   if(token.address === '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE') {
     icon = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png`
   } else if(token.isCurveToken) {
-    icon = '/protocols/curve.png'
+    icon = '/protocols/Curve.png'
   } else if (token.isCreamToken) {
     icon = '/protocols/Cream.png'
   } else if (token.isAaveToken) {
