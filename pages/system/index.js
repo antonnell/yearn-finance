@@ -554,7 +554,7 @@ function System({ changeTheme, theme }) {
       </Head>
       <Paper elevation={0} className={classes.overviewContainer2}>
         <div className={ classes.headerGridContainer }>
-          <div className={classes.overviewCard}>
+          <div className={`${classes.overviewCard} ${classes.overviewDescription}`}>
             <div>
               <Typography variant='h6' className={ classes.systemTitleTitle }>Yearn Stats</Typography>
               <Typography variant='h2' className={ classes.systemTitleDescription }>View all of the protocols and assets involved with the Yearn system or just a specific vault type or vault and even down to an individual strategy.</Typography>

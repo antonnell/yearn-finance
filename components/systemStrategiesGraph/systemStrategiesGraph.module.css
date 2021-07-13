@@ -55,7 +55,7 @@
 .piePlusHover {
   display: flex;
   align-items: center;
-  min-width: 800px;
+  min-width: 650px;
 }
 
 .hoveredText {
@@ -105,5 +105,16 @@
 @media screen and (max-width: 1600px) {
   .vaultPerformanceGraph {
     margin-right: 12px;
+  }
+
+  .piePlusHover {
+    min-width: auto;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .piePlusHover {
+    flex-wrap: wrap;
+    justify-content: center;
   }
 }

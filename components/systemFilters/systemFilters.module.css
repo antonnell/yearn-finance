@@ -129,3 +129,19 @@
 .layoutToggleButton:hover, {
   background: none !important;
 }
+
+@media screen and (max-width: 1200px) {
+  .vaultFilters {
+    top: 0px;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+
+  .vaultFiltersInside {
+    grid-template-columns: 1fr;
+    padding: 0 12px;
+    grid-gap: 12px;
+  }
+
+}

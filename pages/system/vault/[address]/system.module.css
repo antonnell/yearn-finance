@@ -97,3 +97,24 @@
   cursor: pointer;
   margin-left: 6px !important;
 }
+
+
+@media screen and (max-width: 1600px) {
+  .strategiesContainer {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .vaultInfoContainer {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr)
+  }
+  .depositTokenContainer {
+    padding-top: 24px;
+  }
+  .vaultContainer {
+    margin-top: 0px;
+    padding: 12px;
+  }
+}

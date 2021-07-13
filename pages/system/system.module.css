@@ -215,11 +215,24 @@
     margin-top: 60px;
     margin-bottom: 30px;
   }
+
+  .headerGridContainer {
+    display: grid;
+    grid-template-columns: 320px repeat(2, 1fr);
+    width: 100%;
+    grid-row-gap: 24px;
+  }
+
+  .overviewDescription {
+    grid-row-start: 1;
+    grid-row-end: 3;
+  }
 }
 
 @media screen and (max-width: 1200px) {
   .overviewContainer2 {
     top: 0px;
+    margin-top: 0px;
   }
   .statsFilters {
     top: 20px;
@@ -229,6 +242,11 @@
 }
 
 @media screen and (max-width: 1000px) {
+
+  .graphsContainer {
+    padding: 12px;
+  }
+
   .overviewContainer {
     margin: 0px 12px;
     padding: 24px;
@@ -266,5 +284,8 @@
   }
   .subTitle {
     display: none;
+  }
+  .headerGridContainer {
+    grid-template-columns: 1fr;
   }
 }
