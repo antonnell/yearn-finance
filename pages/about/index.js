@@ -91,7 +91,7 @@ function About({ changeTheme }) {
             </a>
           </Grid>
           <Grid item lg={4} md={6} sm={6} xs={12}>
-            <a onClick={() => router.push('/stats')} className={classes.linkz}>
+            <a onClick={() => router.push('/system')} className={classes.linkz}>
               <Paper elevation={0}  className={classes.paper}>
                 <div className={classes.icon}>
                   <div className={classes.iconstats}></div>

@@ -27,7 +27,7 @@ export default function exploreVaultStrategy({ strategy }) {
   const mapProtocolToIcon = (name) => {
     switch (name) {
       case 'Curve':
-        return `/protocols/curve.png`
+        return `/protocols/Curve.png`
       case 'Convex':
         return `/protocols/convex.png`
       case 'Maker':
@@ -55,11 +55,11 @@ export default function exploreVaultStrategy({ strategy }) {
       case 'DyDx':
         return `/protocols/dydx-exchange.jpeg`
       case 'Fulcrum':
-        return `/protocols/curve.png`
+        return `/protocols/Fulcrum.png`
       case 'Yearn':
         return `/protocols/yfi-192x192.png`
       default:
-        return `/protocols/curve.png`
+        return `/protocols/yfi-192x192.png`
     }
   }
 
