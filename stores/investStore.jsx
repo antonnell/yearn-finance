@@ -39,6 +39,7 @@ import stores from './';
 import earnJSON from './configurations/earn';
 import lockupJSON from './configurations/lockup';
 import systemAssetsJSON from './configurations/systemAssets';
+import systemJSON from './configurations/system';
 
 import {
   ERC20ABI,
@@ -90,7 +91,7 @@ class Store {
       highestHoldings: null,
       vaults: [],
       systemAssetInfo: systemAssetsJSON,
-      systemJSON: [],
+      systemJSON: systemJSON,
       tvlInfo: null,
       earn: earnJSON, //These values don't really ever change anymore, but still, should get them dynamically. For now, this will save on some calls for alchemy. (symbols, decimals, underlying tokens, their symbols and decimals etc)
       lockup: lockupJSON, // same
@@ -1312,9 +1313,7 @@ class Store {
       if(err) {
         console.log(err)
       }
-      console.log(vaults)
-
-      console.log(JSON.stringify(this.getStore('systemAssetInfo')))
+      // console.log(JSON.stringify(vaults))
 
       this.setStore({ systemJSON: vaults })
       this.emitter.emit(SYSTEM_UPDATED)
@@ -1858,7 +1857,8 @@ class Store {
           'CurveFRAX3CRV-fVoterProxy', 'CurveyDAI+yUSDC+yUSDT+yBUSDVoterProxy', 'CurvecDAI+cUSDCVoterProxy', 'Curvegusd3CRVVoterProxy', 'CurveyDAI+yUSDC+yUSDT+yTUSDVoterProxy', 'Curve3CrvVoterProxy',
           'CurveTUSD3CRV-fVoterProxy', 'CurveBUSD3CRV-fVoterProxy', 'Curvedusd3CRVVoterProxy', 'Curveust3CRVVoterProxy', 'Curvemusd3CRVVoterProxy', 'CurvecrvPlain3andSUSDVoterProxy',
           'CurvelinkCRVVoterProxy', 'Curveusdn3CRVVoterProxy', 'Curveusdp3CRVVoterProxy', 'CurvealUSD3CRV-fVoterProxy', 'CurverCRVVoterProxy', 'Curvea3CRVVoterProxy', 'Curvehusd3CRVVoterProxy',
-          'CurveeursCRVVoterProxy', 'CurvecrvTricryptoVoterProxy', 'CurveypaxCrvVoterProxy', 'CurvecDAI+cUSDC+USDTVoterProxy', 'CurveankrCRVVoterProxy', 'Curveusdk3CRVVoterProxy', 'Curversv3CRVVoterProxy'].includes(strategy.name)
+          'CurveeursCRVVoterProxy', 'CurvecrvTricryptoVoterProxy', 'CurveypaxCrvVoterProxy', 'CurvecDAI+cUSDC+USDTVoterProxy', 'CurveankrCRVVoterProxy', 'Curveusdk3CRVVoterProxy', 'Curversv3CRVVoterProxy',
+          'CurvebBTC/sbtcCRVVoterProxy', 'CurveLUSD3CRV-fVoterProxy'].includes(strategy.name)
 
         let abi = VAULT_StrategyPoolABI
         if (['StrategyTUSDypool'].includes(strategy.name)) {

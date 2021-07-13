@@ -417,7 +417,7 @@ function Navigation(props) {
           )}
         {renderNav(
           "Stats",
-          "stats",
+          "system",
           <StatsIcon
             className={classes.icon}
             color={darkMode ? "white" : "rgb(33, 37, 41)"}
@@ -629,7 +629,7 @@ function Navigation(props) {
         </Grid>
         </Grid>
       </div>
-      <Typography className={classes.smallVersion}>Version 1.2.6</Typography>
+      <Typography className={classes.smallVersion}>Version 1.3.0</Typography>
     </Paper>
   );
 }

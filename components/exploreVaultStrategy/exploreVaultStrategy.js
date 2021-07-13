@@ -66,7 +66,7 @@ export default function exploreVaultStrategy({ strategy }) {
   const renderProtocolTokens = (protocol) => {
 
     let isLender = false
-    if(['Aave', 'Compound'].includes(protocol.name)) {
+    if(['Aave', 'Compound', 'Maker'].includes(protocol.name)) {
       isLender = true
     }
 
@@ -81,7 +81,7 @@ export default function exploreVaultStrategy({ strategy }) {
               </div>
               <Token token={ token } web3={web3} />
             </div>
-            { index === 0 &&
+            { (index === 0 && protocol.tokens.length > 1) &&
               <div className={ classes.arrowDownIcon }>
                 <ArrowDownwardIcon />
               </div>

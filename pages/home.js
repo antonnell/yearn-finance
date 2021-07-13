@@ -18,11 +18,9 @@ function Home({ changeTheme, ...props }) {
   } else if (activePath.includes("/ltv")) {
     return <LTV props={props} changeTheme={changeTheme} />;
   } else if (activePath.includes("/stats")) {
-    return <Stats props={props} changeTheme={changeTheme} />;
+    return <System props={props} changeTheme={changeTheme} />;
   } else if (activePath.includes("/cdp")) {
     return <CDP props={props} changeTheme={changeTheme} />;
-  } else if (activePath.includes("/system")) {
-    return <System props={props} changeTheme={changeTheme} />;
   } else {
     return <About props={props} changeTheme={changeTheme} />;
   }

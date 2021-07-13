@@ -128,7 +128,7 @@
   flex-wrap: wrap;
   position: relative;
   width: 100%;
-  padding: 37px 70px 37px 70px;
+  padding: 30px 48px;
   z-index: 9;
   border-radius: 0px !important;
   margin-bottom: 0px;
@@ -181,11 +181,20 @@
 
 .systemTitleTitle {
   width: 300px;
+  padding-bottom: 6px;
 }
 
 .systemTitleDescription {
   max-width: 600px;
   font-weight: 400 !important;
+  text-transform: none !important;
+  text-align: left !important;
+}
+
+.headerGridContainer {
+  display: grid;
+  grid-template-columns: 320px repeat(4, 1fr);
+  width: 100%;
 }
 
 @media screen and (max-width: 1600px) {

@@ -120,7 +120,7 @@ function System({ changeTheme }) {
                 <Typography>Strategies in play</Typography>
                 <div className={ classes.stratsInPlay }>
                   <Typography variant='h1'>{ vault.strategies.length }</Typography>
-                  <Typography variant='h1' color='textSecondary' className={ classes.statsInPlayActive } onClick={ toggleActiveOnly } >({ vault.strategies.filter((strat) => { return BigNumber(strat.balanceUSD).gt(0) }).length })</Typography>
+                  <Typography variant='h1' color='textSecondary' className={ classes.statsInPlayActive } onClick={ toggleActiveOnly } >({ vault.strategies.filter((strat) => { return BigNumber(strat.balanceUSD).gt(100) }).length })</Typography>
                 </div>
               </div>
             </>

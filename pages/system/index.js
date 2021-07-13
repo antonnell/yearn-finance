@@ -553,50 +553,41 @@ function System({ changeTheme, theme }) {
         <title>System</title>
       </Head>
       <Paper elevation={0} className={classes.overviewContainer2}>
-        <Grid container spacing={0}>
-          <Grid item xl={3} lg={3} md={6} sm={6} xs={12}>
-            <div className={classes.overviewCard}>
-              <div>
-                <Typography variant="h2">Total Value Locked</Typography>
-                <Typography variant="h1">
-                  {!tvl ? <Skeleton style={{ minWidth: '200px ' }} /> : `$ ${formatCurrency(BigNumber(tvl.tvlUSD).plus(ironBankTVL), 0)}`}
-                </Typography>
-              </div>
+        <div className={ classes.headerGridContainer }>
+          <div className={classes.overviewCard}>
+            <div>
+              <Typography variant='h6' className={ classes.systemTitleTitle }>Yearn Stats</Typography>
+              <Typography variant='h2' className={ classes.systemTitleDescription }>View all of the protocols and assets involved with the Yearn system or just a specific vault type or vault and even down to an individual strategy.</Typography>
             </div>
-          </Grid>
-
-          <Grid item xl={3} lg={3} md={6} sm={6} xs={12}>
-            <div className={classes.overviewCard}>
-              <div>
-                <Typography variant="h2">Total Vault Balance</Typography>
-                <Typography variant="h1">{!tvl ? <Skeleton style={{ minWidth: '200px ' }} /> : `$ ${formatCurrency(tvl.totalVaultHoldingsUSD, 0)}`}</Typography>
-              </div>
+          </div>
+          <div className={classes.overviewCard}>
+            <div>
+              <Typography variant="h2">Total Value Locked</Typography>
+              <Typography variant="h1">
+                {!tvl ? <Skeleton style={{ minWidth: '200px ' }} /> : `$ ${formatCurrency(BigNumber(tvl.tvlUSD).plus(ironBankTVL), 0)}`}
+              </Typography>
             </div>
-          </Grid>
-
-          <Grid item xl={3} lg={3} md={6} sm={6} xs={12}>
-            <div className={classes.overviewCard}>
-              <div>
-                <Typography variant="h2">Total Earn Balance</Typography>
-                <Typography variant="h1">{!tvl ? <Skeleton style={{ minWidth: '200px ' }} /> : `$ ${formatCurrency(tvl.totalEarnHoldingsUSD, 0)}`}</Typography>
-              </div>
+          </div>
+          <div className={classes.overviewCard}>
+            <div>
+              <Typography variant="h2">Total Vault Balance</Typography>
+              <Typography variant="h1">{!tvl ? <Skeleton style={{ minWidth: '200px ' }} /> : `$ ${formatCurrency(tvl.totalVaultHoldingsUSD, 0)}`}</Typography>
             </div>
-          </Grid>
-
-          <Grid item xl={3} lg={3} md={6} sm={6} xs={12}>
-            <div className={classes.overviewCard}>
-              <div>
-                <Typography variant="h2">Total Iron Bank Balance</Typography>
-                <Typography variant="h1">{!ironBankTVL ? <Skeleton style={{ minWidth: '200px ' }} /> : `$ ${formatCurrency(ironBankTVL, 0)}`}</Typography>
-              </div>
+          </div>
+          <div className={classes.overviewCard}>
+            <div>
+              <Typography variant="h2">Total Earn Balance</Typography>
+              <Typography variant="h1">{!tvl ? <Skeleton style={{ minWidth: '200px ' }} /> : `$ ${formatCurrency(tvl.totalEarnHoldingsUSD, 0)}`}</Typography>
             </div>
-          </Grid>
-        </Grid>
+          </div>
+          <div className={classes.overviewCard}>
+            <div>
+              <Typography variant="h2">Total Iron Bank Balance</Typography>
+              <Typography variant="h1">{!ironBankTVL ? <Skeleton style={{ minWidth: '200px ' }} /> : `$ ${formatCurrency(ironBankTVL, 0)}`}</Typography>
+            </div>
+          </div>
+        </div>
       </Paper>
-      <div className={ classes.systemTitle }>
-        <Typography variant='h1' className={ classes.systemTitleTitle }>Yearn Statistics</Typography>
-        <Typography variant='h2' className={ classes.systemTitleDescription }>View all of the protocols and assets involved with the Yearn system or just a specific vault type or vault and even down to an individual strategy.</Typography>
-      </div>
       <SystemFilters onFiltersChanged={ onFiltersChanged } vaults={ allVaults } strategies={ strategies } />
       { view === 'overview' && renderOverview() }
       { view === 'vault' && renderVault() }
