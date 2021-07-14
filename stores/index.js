@@ -4,6 +4,7 @@ import CoverStore from './coverStore';
 import LendStore from './lendStore';
 import CDPStore from './cdpStore';
 import LTVStore from './ltvStore';
+// import SystemStore from './systemStore';
 
 const Dispatcher = require('flux').Dispatcher;
 const Emitter = require('events').EventEmitter;
@@ -17,6 +18,7 @@ const coverStore = new CoverStore(dispatcher, emitter);
 const lendStore = new LendStore(dispatcher, emitter);
 const cdpStore = new CDPStore(dispatcher, emitter);
 const ltvStore = new LTVStore(dispatcher, emitter);
+// const systemStore = new SystemStore(dispatcher, emitter);
 
 export default {
   ltvStore: ltvStore,
@@ -25,6 +27,7 @@ export default {
   coverStore: coverStore,
   lendStore: lendStore,
   cdpStore: cdpStore,
+  // systemStore: systemStore,
   dispatcher: dispatcher,
   emitter: emitter,
 };

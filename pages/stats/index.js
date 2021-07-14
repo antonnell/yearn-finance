@@ -268,7 +268,7 @@ function Stats({ changeTheme }) {
       </Head>
       <Paper elevation={0} className={classes.overviewContainer2}>
 
-        <Grid container center spacing={0}>
+        <Grid container spacing={0}>
 
           <Grid item xl={3} lg={3} md={6} sm={6} xs={12}>
             <div className={classes.overviewCard}>

@@ -10,6 +10,7 @@ export default [
     balanceUSD: 0,
     decimals: 18,
     displayName: "yDAI",
+    display_name: "yDAI",
     icon:
       "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0xC2cB1040220768554cf699b0d863A3cd4324ce32/logo-128.png",
     name: "iearn DAI",
@@ -23,6 +24,7 @@ export default [
       balance: 0,
       decimals: 18,
       displayName: "DAI",
+      display_name: "DAI",
       icon:
         "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo-128.png",
       name: "Dai Stablecoin",
@@ -49,6 +51,7 @@ export default [
     balanceUSD: 0,
     decimals: 6,
     displayName: "yUSDC",
+    display_name: "yUSDC",
     icon:
       "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0x26EA744E5B887E5205727f55dFBE8685e3b21951/logo-128.png",
     name: "iearn USDC",
@@ -62,6 +65,7 @@ export default [
       balance: 0,
       decimals: 6,
       displayName: "USDC",
+      display_name: "USDC",
       icon:
         "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo-128.png",
       name: "USD Coin",
@@ -88,6 +92,7 @@ export default [
     balanceUSD: 0,
     decimals: 6,
     displayName: "yUSDT",
+    display_name: "yUSDT",
     icon:
       "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0xE6354ed5bC4b393a5Aad09f21c46E101e692d447/logo-128.png",
     name: "iearn USDT",
@@ -101,6 +106,7 @@ export default [
       balance: 0,
       decimals: 6,
       displayName: "USDT",
+      display_name: "USDT",
       icon:
         "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo-128.png",
       name: "Tether",
@@ -127,6 +133,7 @@ export default [
     balanceUSD: 0,
     decimals: 18,
     displayName: "yBUSD",
+    display_name: "yBUSD",
     icon:
       "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0x04bC0Ab673d88aE9dbC9DA2380cB6B79C4BCa9aE/logo-128.png",
     name: "iearn BUSD",
@@ -140,6 +147,7 @@ export default [
       balance: 0,
       decimals: 18,
       displayName: "BUSD",
+      display_name: "BUSD",
       icon:
         "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0x4Fabb145d64652a948d72533023f6E7A623C7C53/logo-128.png",
       name: "Binance USD",
@@ -166,6 +174,7 @@ export default [
     balanceUSD: 0,
     decimals: 18,
     displayName: "yDAI",
+    display_name: "yDAI",
     icon:
       "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0x16de59092dAE5CcF4A1E6439D611fd0653f0Bd01/logo-128.png",
     name: "iearn DAI",
@@ -179,6 +188,7 @@ export default [
       balance: 0,
       decimals: 18,
       displayName: "DAI",
+      display_name: "DAI",
       icon:
         "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo-128.png",
       name: "Dai Stablecoin",
@@ -205,6 +215,7 @@ export default [
     balanceUSD: 0,
     decimals: 6,
     displayName: "yUSDC",
+    display_name: "yUSDC",
     icon:
       "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0xd6aD7a6750A7593E092a9B218d66C0A814a3436e/logo-128.png",
     name: "iearn USDC",
@@ -218,6 +229,7 @@ export default [
       balance: 0,
       decimals: 6,
       displayName: "USDC",
+      display_name: "USDC",
       icon:
         "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo-128.png",
       name: "USD Coin",
@@ -244,6 +256,7 @@ export default [
     balanceUSD: 0,
     decimals: 6,
     displayName: "yUSDT",
+    display_name: "yUSDT",
     icon:
       "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0x83f798e925BcD4017Eb265844FDDAbb448f1707D/logo-128.png",
     name: "iearn USDT",
@@ -257,6 +270,7 @@ export default [
       balance: 0,
       decimals: 6,
       displayName: "USDT",
+      display_name: "USDT",
       icon:
         "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo-128.png",
       name: "Tether",
@@ -283,6 +297,7 @@ export default [
     balanceUSD: 0,
     decimals: 18,
     displayName: "yTUSD",
+    display_name: "yTUSD",
     icon:
       "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0x73a052500105205d34Daf004eAb301916DA8190f/logo-128.png",
     name: "iearn TUSD",
@@ -296,6 +311,7 @@ export default [
       balance: 0,
       decimals: 18,
       displayName: "TUSD",
+      display_name: "TUSD",
       icon:
         "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0x0000000000085d4780B73119b644AE5ecd22b376/logo-128.png",
       name: "TrueUSD",
@@ -322,6 +338,7 @@ export default [
     balanceUSD: 0,
     decimals: 18,
     displayName: "ySUSD",
+    display_name: "ySUSD",
     icon:
       "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0xF61718057901F84C4eEC4339EF8f0D86D2B45600/logo-128.png",
     name: "iearn SUSD",
@@ -335,6 +352,7 @@ export default [
       balance: 0,
       decimals: 18,
       displayName: "SUSD",
+      display_name: "SUSD",
       icon:
         "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0x57Ab1ec28D129707052df4dF418D58a2D46d5f51/logo-128.png",
       name: "Synth USD",
@@ -361,6 +379,7 @@ export default [
     balanceUSD: 0,
     decimals: 8,
     displayName: "yWBTC",
+    display_name: "yWBTC",
     icon:
       "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0x04Aa51bbcB46541455cCF1B8bef2ebc5d3787EC9/logo-128.png",
     name: "iearn WBTC",
@@ -374,6 +393,7 @@ export default [
       balance: 0,
       decimals: 8,
       displayName: "WBTC",
+      display_name: "WBTC",
       icon:
         "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo-128.png",
       name: "Wrapped BTC",

@@ -1,0 +1,291 @@
+.statsTVLContainer {
+  padding: 0px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.tvlCardContainer {
+  width: 420px;
+  border-radius: 10px;
+  padding: 48px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.graphsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 48px;
+}
+
+.statsTable {
+  width: 100%;
+  cursor: pointer;
+}
+
+.statsFilters {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  margin: 48px 0px 48px 0px;
+  position: sticky;
+  top: 90px;
+  z-index: 10;
+  box-shadow: none !important;
+}
+
+.tableContainer {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  border: 1px solid rgba(128, 128, 128, 0.25);
+  border-radius: 10px;
+  width: 100%;
+}
+
+.statsTableRow {
+  cursor: pointer;
+}
+
+.statsTable {
+  width: 100%;
+  cursor: pointer;
+}
+
+.vaultTitleCell {
+  flex: 2;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 18px 6px;
+}
+
+.statsContainer {
+  padding: 48px;
+}
+
+.txRow {
+  border-bottom: 1px solid rgba(128, 128, 128, 0.32);
+  display: flex;
+  align-items: center;
+}
+
+.txCellDescription {
+  padding: 22px 0px;
+  flex: 2;
+  cursor: pointer;
+}
+
+.txCellAddress {
+  padding: 22px 0px;
+  flex: 1;
+  cursor: pointer;
+}
+
+.txCell {
+  padding: 22px 0px;
+  flex: 1;
+}
+
+.strategy {
+  padding: 6px 0px;
+}
+
+.descriptionCell {
+  display: flex;
+  align-items: center;
+}
+
+.vaultLogo {
+  margin-right: 12px;
+}
+
+.fontWeightBold {
+  font-weight: bold !important;
+}
+
+.overviewContainer {
+  padding: 32px 48px;
+  margin: 0px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  border: 1px solid rgba(128, 128, 128, 0.25);
+  border-radius: 10px;
+  margin-top: 110px;
+}
+
+.overviewContainer2 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  position: relative;
+  width: 100%;
+  padding: 30px 48px;
+  z-index: 9;
+  border-radius: 0px !important;
+  margin-bottom: 0px;
+  margin-top: 60px;
+  border-bottom: 1px solid rgba(108,108,123, 0.2);
+}
+
+.separator {
+  border-right: 1px solid rgba(128, 128, 128, 0.25);
+  height: 100px;
+  margin-right: 48px;
+  margin-left: 48px;
+}
+
+.overviewCard {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+.overviewCard h1 {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !important;
+  font-weight: 700 !important;
+}
+
+.overviewCard h2 {
+  padding: 0px;
+  text-transform: uppercase;
+  font-size: 12px !important;
+  border-radius: 0px;
+  text-align: center;
+}
+
+.sectionContainer {
+  padding: 48px;
+}
+
+.sectionHeader {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.systemTitle {
+  padding: 48px;
+  display: flex;
+  align-items: center;
+}
+
+.systemTitleTitle {
+  width: 300px;
+  padding-bottom: 6px;
+}
+
+.systemTitleDescription {
+  max-width: 600px;
+  font-weight: 400 !important;
+  text-transform: none !important;
+  text-align: left !important;
+}
+
+.headerGridContainer {
+  display: grid;
+  grid-template-columns: 320px repeat(4, 1fr);
+  width: 100%;
+}
+
+@media screen and (max-width: 1600px) {
+  .overviewContainer {
+    margin: 0px 24px;
+    padding: 24px 24px;
+  }
+  .separator {
+    margin-left: 24px;
+    margin-right: 24px;
+  }
+
+  .statsContainer {
+    padding: 24px;
+  }
+  .statsFilters {
+    top: 90px;
+    margin-top: 60px;
+    margin-bottom: 30px;
+  }
+
+  .headerGridContainer {
+    display: grid;
+    grid-template-columns: 320px repeat(2, 1fr);
+    width: 100%;
+    grid-row-gap: 24px;
+  }
+
+  .overviewDescription {
+    grid-row-start: 1;
+    grid-row-end: 3;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .overviewContainer2 {
+    top: 0px;
+    margin-top: 0px;
+  }
+  .statsFilters {
+    top: 20px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+
+  .graphsContainer {
+    padding: 12px;
+  }
+
+  .overviewContainer {
+    margin: 0px 12px;
+    padding: 24px;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+  .overviewContainer2 {
+    left: 0px;
+    padding: 20px 10px 30px 10px;
+    top: 0px;
+  }
+  .separator {
+    border-bottom: 1px solid rgba(128, 128, 128, 0.25);
+    width: calc(100%);
+    margin: 12px 0px 12px 0px;
+    height: 0px;
+  }
+  .overviewCard {
+    padding-bottom: 12px;
+  }
+  .statsContainer {
+    padding: 12px;
+  }
+  .statsTVLContainer {
+    padding: 12px;
+  }
+  .tvlCardContainer {
+    width: 100%;
+    padding: 24px 24px;
+    margin-bottom: 12px;
+  }
+  .txCellAddress {
+    display: none;
+  }
+  .subTitle {
+    display: none;
+  }
+  .headerGridContainer {
+    grid-template-columns: 1fr;
+  }
+}

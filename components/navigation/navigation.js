@@ -417,7 +417,7 @@ function Navigation(props) {
           )}
         {renderNav(
           "Stats",
-          "stats",
+          "system",
           <StatsIcon
             className={classes.icon}
             color={darkMode ? "white" : "rgb(33, 37, 41)"}
@@ -441,8 +441,7 @@ function Navigation(props) {
           handleNavigate("/" + link);
         }}
       >
-        {activePath.includes("/" + link) ||
-        (activePath === "/" && link === "invest") ? (
+        {activePath.includes("/" + link) ? (
           <div
             className={
               darkMode
@@ -453,8 +452,7 @@ function Navigation(props) {
         ) : (
           <div className={classes.navigationOptionNotSelected}></div>
         )}
-        {activePath.includes("/" + link) ||
-        (activePath === "/" && link === "invest")
+        {activePath.includes("/" + link)
           ? iconSelected
           : icon}
         <Typography variant="h2">{title}</Typography>
@@ -465,7 +463,7 @@ function Navigation(props) {
   return (
     <Paper elevation={0} className={classes.navigationContainer}>
       <div className={classes.navigationHeading}>
-        <a onClick={() => router.push('/landing')} className={classes.linkz}>
+        <a onClick={() => router.push('/')} className={classes.linkz}>
         <YearnIcon
           color={darkMode ? "white" : "rgb(33, 37, 41)"}
           altColor={darkMode ? "rgb(255, 255, 255)" : "white"}
@@ -559,7 +557,7 @@ function Navigation(props) {
       )}
 
       <div className={classes.socials}>
-      <Grid className={classes.socialgrid} container center spacing={1}>
+      <Grid className={classes.socialgrid} container spacing={1}>
         <Grid item xs={6}>
           <a
             className={`${classes.socialButton}`}
@@ -631,7 +629,7 @@ function Navigation(props) {
         </Grid>
         </Grid>
       </div>
-      <Typography className={classes.smallVersion}>Version 1.2.4</Typography>
+      <Typography className={classes.smallVersion}>Version 1.3.0</Typography>
     </Paper>
   );
 }

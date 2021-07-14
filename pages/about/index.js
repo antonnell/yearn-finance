@@ -4,13 +4,13 @@ import { Typography, Paper, Grid } from '@material-ui/core';
 
 import Head from 'next/head';
 import Layout from '../../components/layout/layout.js';
-import classes from './landing.module.css';
+import classes from './about.module.css';
 
 import stores from '../../stores/index.js';
 import { MAX_RETURNED } from '../../stores/constants';
 
 
-function Landing({ changeTheme }) {
+function About({ changeTheme }) {
   const router = useRouter();
 
   useEffect(function () {
@@ -91,7 +91,7 @@ function Landing({ changeTheme }) {
             </a>
           </Grid>
           <Grid item lg={4} md={6} sm={6} xs={12}>
-            <a onClick={() => router.push('/stats')} className={classes.linkz}>
+            <a onClick={() => router.push('/system')} className={classes.linkz}>
               <Paper elevation={0}  className={classes.paper}>
                 <div className={classes.icon}>
                   <div className={classes.iconstats}></div>
@@ -129,4 +129,4 @@ function Landing({ changeTheme }) {
   );
 }
 
-export default Landing;
+export default About;

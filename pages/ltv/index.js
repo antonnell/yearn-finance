@@ -51,7 +51,7 @@ function LTV({ changeTheme }) {
         <title>LTV</title>
       </Head>
         <div className={classes.ltvContainer}>
-          <Grid className={classes.ltvgrid} container center spacing={0}>
+          <Grid className={classes.ltvgrid} container spacing={0}>
             <Grid item xl={4} lg={4} xs={12}>
               <div className={classes.copyContainer}>
                 <Typography variant="h1" className={classes.titleSpacing}>

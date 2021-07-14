@@ -97,7 +97,7 @@ class Store {
 
   setStore = (obj) => {
     this.store = { ...this.store, ...obj };
-    console.log(this.store);
+    // console.log(this.store);
     return this.emitter.emit(STORE_UPDATED);
   };
 
@@ -562,7 +562,7 @@ class Store {
             dolar = BigNumber(BigNumber(pricePerShare0).plus(pricePerShare1)).div(totalSupply).toNumber();
           }
         } catch (ex) {
-          console.log(ex);
+          // console.log(ex);
         }
       } else if (this.isKeep3rOracle(asset.defaultOracleType)) {
         const keep3rContract = new web3.eth.Contract(KEEP3RV1ORACLEABI, KEEP3R_ORACLE_ADDRESS);

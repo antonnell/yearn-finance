@@ -1,0 +1,120 @@
+.vaultPerformanceGraph {
+  flex: 1;
+  padding-bottom: 80px;
+}
+
+.tooltipContainer {
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #000;
+  padding: 12px;
+  color: #000;
+  margin-left: 65px;
+  margin-top: -2px;
+}
+
+.tooltipValue {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  min-width: 240px;
+}
+
+.val {
+  flex: 1;
+  margin-right: 12px !important;
+}
+
+.valBold {
+  flex: 1;
+  font-weight: bold !important;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  z-index: 8;
+  padding-left: 48px;
+}
+
+.actionsBar {
+  display: flex;
+  align-items: center;
+  z-index: 8;
+  justify-content: center;
+}
+
+.exploreButton {
+  height: 40px;
+  margin-left: 24px !important;
+}
+
+.piePlusHover {
+  display: flex;
+  align-items: center;
+  min-width: 650px;
+}
+
+.hoveredText {
+
+}
+
+.hoveredText > .title {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.hoveredText > .subTitle {
+  font-size: 10px;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  min-width: 240px;
+  max-width: 300px;
+  width: 100%;
+  color: rgba(128, 128, 128, 0.80);
+  border-bottom: 1px solid rgba(128, 128, 128, 0.25);
+}
+
+.hoveredText > .value  {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 10px;
+}
+
+.hoveredText > .value > .valueTitle  {
+  font-size: 10px;
+}
+
+.hoveredText > .value > .valueValue  {
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.pieSkelly {
+  margin: 30px 50px;
+}
+
+.pieInfoSkelly {
+  margin-bottom: -16px !important;
+}
+
+@media screen and (max-width: 1600px) {
+  .vaultPerformanceGraph {
+    margin-right: 12px;
+  }
+
+  .piePlusHover {
+    min-width: auto;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .piePlusHover {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
