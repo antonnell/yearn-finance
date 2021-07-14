@@ -98,7 +98,7 @@ export default function exploreVaultStrategy({ strategy }) {
     return strategy.protocols.map((protocol) => {
       return (
         <Paper elevation={0} className={ classes.protocolContainer} key={protocol.name} >
-          <div className={ classes.strategyTitleSection }>
+          <div className={ classes.protocolTitleSection }>
             <div className={ classes.iconContainer }>
               <div className={ classes.protocolLabel }>
                 <Typography className={ classes.text }>Protocol</Typography>
@@ -128,11 +128,13 @@ export default function exploreVaultStrategy({ strategy }) {
           </div>
         </div>
         <div>
+          <Tooltip title="View on Etherscan" placement="bottom">
           <Typography variant='h2' onClick={ openContract } className={ classes.strategyTitle}>
-            { strategy ? strategy.name : "Where is your name?"} ({ formatAddress(strategy.address) })
+            { strategy ? strategy.name : "Where is your name?"} <span className={classes.strategyAddress}>({ formatAddress(strategy.address) })</span>
           </Typography>
+          </Tooltip>
           <Typography variant='subTitle' color='textSecondary' className={ classes.strategyDescription }>{strategy.description}</Typography>
-          <Typography variant='h1'>
+          <Typography variant='h1' className={classes.vaultAmount}>
              $ { formatCurrency(strategy.balanceUSD) }
           </Typography>
         </div>

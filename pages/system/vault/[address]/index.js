@@ -102,6 +102,7 @@ function System({ changeTheme }) {
         <title>System</title>
       </Head>
       <div className={ classes.vaultContainer }>
+
         <Paper elevation={0} className={ classes.vaultInfoContainer }>
           <img src={(vault && vault.icon) ? vault.icon : '/tokens/unknown-logo.png'} className={classes.vaultIcon} alt="" width={50} height={50} />
           <div className={classes.vaultTitle}>
@@ -113,14 +114,14 @@ function System({ changeTheme }) {
           { vault &&
             <>
               <div className={ classes.depositTokenContainer }>
-                <Typography>Total Value Locked</Typography>
+                <Typography className={classes.SecTitle}>Total Value Locked</Typography>
                 <Typography variant='h1'>${ formatCurrency(vault.tvl.tvl) }</Typography>
               </div>
               <div className={ classes.depositTokenContainer }>
-                <Typography>Strategies in play</Typography>
+                <Typography className={classes.SecTitle}>Strategies in play</Typography>
                 <div className={ classes.stratsInPlay }>
                   <Typography variant='h1'>{ vault.strategies.length }</Typography>
-                  <Typography variant='h1' color='textSecondary' className={ classes.statsInPlayActive } onClick={ toggleActiveOnly } >({ vault.strategies.filter((strat) => { return BigNumber(strat.balanceUSD).gt(100) }).length })</Typography>
+                  <Typography variant='h1' color='textSecondary' className={ classes.statsInPlayActive } onClick={ toggleActiveOnly } >({ vault.strategies.filter((strat) => { return BigNumber(strat.balanceUSD).gt(100) }).length } Active)</Typography>
                 </div>
               </div>
             </>

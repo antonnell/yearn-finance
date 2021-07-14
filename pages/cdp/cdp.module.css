@@ -3,9 +3,11 @@
   width: 100%;
   display: flex;
   flex-direction: column;
+  padding: 0px 48px;
   margin-top: 0px;
   padding-bottom: 48px;
   position: relative;
+  padding-top: 240px;
 }
 
 .tableHeader {
@@ -53,7 +55,8 @@
   justify-content: space-between;
   flex-wrap: wrap;
   position: absolute;
-  width: 100%;
+  width: calc(100% + 10px);
+  left: 0px;
   padding: 40px 70px;
   z-index: 9;
   top: 60px;
