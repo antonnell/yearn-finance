@@ -1,5 +1,5 @@
 import Invest from "./invest";
-import Stats from "./stats";
+// import Stats from "./stats";
 import Lend from "./lend";
 import LTV from "./ltv";
 import CDP from "./cdp";

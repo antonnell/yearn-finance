@@ -2,7 +2,7 @@ import { Typography, Paper } from '@material-ui/core';
 import BigNumber from "bignumber.js";
 
 import AddIcon from '@material-ui/icons/Add';
-import { formatCurrency, formatAddress } from "../../utils";
+import { formatCurrency } from "../../utils";
 import classes from './exploreVaultStrategy.module.css';
 
 export default function Token({ token, web3, parentType, parentBalance }) {

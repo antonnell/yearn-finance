@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from "next/router";
 
-import { Typography, Paper, TextField, InputAdornment, Grid, Button } from '@material-ui/core';
+import { Typography, Paper, Button } from '@material-ui/core';
 import Skeleton from '@material-ui/lab/Skeleton';
 import Head from 'next/head';
 import Layout from '../../components/layout/layout.js';
@@ -424,9 +424,6 @@ function System({ changeTheme, theme }) {
 
   const router = useRouter();
 
-  const [ view, setView ] = useState('overview')
-  const [ exploreVault, setExploreVault ] = useState(null)
-
   const [ tvl, setTvl ] = useState(null);
   const [ ironBankTVL, setIronBankTVL ] = useState(null);
 
@@ -589,8 +586,7 @@ function System({ changeTheme, theme }) {
         </div>
       </Paper>
       <SystemFilters onFiltersChanged={ onFiltersChanged } vaults={ allVaults } strategies={ strategies } />
-      { view === 'overview' && renderOverview() }
-      { view === 'vault' && renderVault() }
+      { renderOverview() }
     </Layout>
   );
 }
