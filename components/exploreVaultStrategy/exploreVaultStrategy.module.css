@@ -1,24 +1,53 @@
 .strategyContainer {
-  padding: 16px 24px;
+  padding: 20px;
+  padding-top: 0px;
   border: 1px solid rgba(108,108,123,.25);
+}
+
+.tokenContainer {
+  padding-top: 20px !important;
 }
 
 .strategyTitleSection {
   display: flex;
-  align-items: center;
-  margin-bottom: 24px;
+  align-items: flex-start;
+  margin: 20px 0 24px 0;
+}
+
+.protocolContainer {
+  padding-top: 0px !important;
+  margin-bottom: 20px;
+}
+
+.protocolTitleSection {
+  display: flex;
+  align-items: flex-start;
+  margin: 0px 0 20px 0;
 }
 
 .strategyTitle {
   cursor: pointer;
+  margin-bottom: 10px !important;
+}
+
+.strategyAddress {
+  color: rgba(128,128,128,1);
+  font-weight: 400;
 }
 
 .strategyDescription {
-  font-size: 12px;
+  font-size: 13px;
+  color: rgba(128,128,128,1) !important;
+}
+
+.vaultAmount {
+  font-size: 28px !important;
+  margin-top: 10px !important;
 }
 
 .tokenContainer {
-  padding: 16px 24px;
+  padding: 20px;
+  padding-top: 0px;
   border: 1px solid rgba(108,108,123,.25);
   flex: 1;
 }
@@ -34,6 +63,7 @@
   justify-content: center;
   margin-right: 24px;
 }
+
 
 .strategyIcon {
   color: rgba(108,108,123,0.4);
@@ -57,7 +87,7 @@
 }
 
 .tokenLogo {
-  margin-right: 12px;
+  margin-right: 20px;
   border-radius: 30px;
 }
 

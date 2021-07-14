@@ -22,6 +22,15 @@
   min-width: 300px;
 }
 
+.SecTitle {
+  color: rgba(128,128,128,0.8);
+  text-transform: uppercase;
+  font-size: 12px !important;
+  margin-bottom: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: 1px;
+}
+
 .vaultVersionText {
   font-size: 0.5rem;
 }
