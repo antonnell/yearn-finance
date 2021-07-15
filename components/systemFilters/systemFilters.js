@@ -28,21 +28,20 @@ export default function SystemFilters({ onFiltersChanged, vaults, strategies }) 
   const [ version, setVersion ] = useState('')
   const [ vault, setVault ] = useState('')
   const [ strategy, setStrategy ] = useState('')
-  const [ layout, setLayout ] = useState('pie')
 
   const onVersionOptionChanged = (event, val) => {
     setVersion(val);
-    onFiltersChanged(val, vault, strategy, layout)
+    onFiltersChanged(val, vault, strategy, 'pie')
   }
 
   const onVaultChanged = (event, val) => {
     setVault(val);
-    onFiltersChanged(version, val, strategy, layout)
+    onFiltersChanged(version, val, strategy, 'pie')
   };
 
   const onStrategyChanged = (event, val) => {
     setStrategy(val);
-    onFiltersChanged(version, vault, val, layout)
+    onFiltersChanged(version, vault, val, 'pie')
   };
 
   return (

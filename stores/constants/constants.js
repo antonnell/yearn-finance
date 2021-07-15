@@ -29,6 +29,8 @@ export const VAULT_PARAMETERS_ADDRESS = '0xb46f8cf42e504efe8bef895f848741daa55e9
 export const VAULT_MANAGER_STANDARD = '0x3e7f1d12a7893Ba8eb9478b779b648DA2bD38ae6';
 export const COLLATERAL_REGISTRY_ADDRESS = '0x3db39b538db1123389c77f888a213f1a6dd22ef3';
 
+export const FUSD_ADDRESS = 'FUSD_ADDRESS'
+
 // GENERAL
 export const ERROR = 'ERROR';
 export const STORE_UPDATED = 'STORE_UPDATED';
@@ -163,4 +165,22 @@ export const MAX_UINT256 = new BigNumber(2).pow(256).minus(1).toFixed(0);
 
 export const YVBOOST_VAULT = '0x9d409a0A012CFbA9B15F6D4B36Ac57A46966Ab9a';
 
-export const SYSTEM_UPDATED = 'SYSTEM_UPDATED'
+export const SYSTEM_UPDATED = 'SYSTEM_UPDATED';
+
+//FUSD
+export const FUSD_UPDATED = 'FUSD_UPDATED';
+
+export const CONFIGURE_FUSD = 'CONFIGURE_FUSD';
+export const FUSD_CONFIGURED = 'FUSD_CONFIGURED';
+
+export const GET_FUSD_BALANCES = 'GET_FUSD_BALANCES';
+export const FUSD_BALANCES_RETURNED = 'FUSD_BALANCES_RETURNED';
+
+export const APPROVE_FUSD = 'APPROVE_FUSD'
+export const FUSD_APPROVED = 'FUSD_APPROVED'
+
+export const MINT_FUSD = 'MINT_FUSD'
+export const FUSD_MINTED = 'FUSD_MINTED'
+
+export const BURN_FUSD = 'BURN_FUSD'
+export const FUSD_BURNT = 'FUSD_BURNT'

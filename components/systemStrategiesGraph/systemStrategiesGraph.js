@@ -57,7 +57,7 @@ const renderActiveShape = (props) => {
   );
 };
 
-export default function SystemStrategiesGraph({ strategies, layout, handleNavigate }) {
+export default function SystemStrategiesGraph({ strategies, layout }) {
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {

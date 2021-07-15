@@ -57,7 +57,7 @@ const renderActiveShape = (props) => {
   );
 };
 
-export default function SystemProtocolsGraph({ protocols, layout, handleNavigate }) {
+export default function SystemProtocolsGraph({ protocols, layout }) {
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
