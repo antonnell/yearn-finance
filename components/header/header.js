@@ -184,7 +184,7 @@ function Header(props) {
           startIcon={<HelpIcon />}
           onClick={() => setToggleAboutModal(!toggleAboutModal)}
         >
-          <Typography>Need help?</Typography>
+          <Typography className={classes.headBtnTxt}>Need help?</Typography>
         </Button>
         <Button
           disableElevation
@@ -193,7 +193,7 @@ function Header(props) {
           color={props.theme.palette.type === 'dark' ? 'primary' : 'secondary'}
           onClick={onAddressClicked}>
           {account && account.address && <div className={`${classes.accountIcon} ${classes.metamask}`}></div>}
-          <Typography>{account && account.address ? formatAddress(account.address) : 'Connect Wallet'}</Typography>
+          <Typography className={classes.headBtnTxt}>{account && account.address ? formatAddress(account.address) : 'Connect Wallet'}</Typography>
         </Button>
         {unlockOpen && <Unlock modalOpen={unlockOpen} closeModal={closeUnlock} />}
         {toggleAboutModal && <AboutModal setToggleAboutModal={setToggleAboutModal} />}

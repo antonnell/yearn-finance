@@ -1,6 +1,6 @@
 .vaultPerformanceGraph {
   flex: 1;
-  padding-bottom: 80px;
+  padding-bottom: 40px;
 }
 
 .tooltipContainer {
@@ -48,8 +48,12 @@
 }
 
 .exploreButton {
-  height: 40px;
+  height: 30px;
   margin-left: 24px !important;
+  margin-bottom: 10px !important;
+  border: 2px solid #0148FF !important;
+  border-radius: 50px !important;
+  padding: 0 15px !important;
 }
 
 .piePlusHover {
@@ -66,6 +70,7 @@
 .displayInline > .title {
   font-size: 20px;
   margin-bottom: 10px;
+  font-weight: 700 !important;
 }
 
 .hoveredText {
@@ -75,16 +80,18 @@
 .hoveredText > .title {
   font-size: 20px;
   margin-bottom: 10px;
+  font-weight: 700 !important;
 }
 
 .hoveredText > .subTitle {
-  font-size: 10px;
-  padding-bottom: 10px;
-  margin-bottom: 10px;
+  font-size: 13px;
+  line-height: 1.3em;
+  padding-bottom: 15px;
+  margin-bottom: 15px;
   min-width: 240px;
   max-width: 300px;
   width: 100%;
-  color: rgba(128, 128, 128, 0.80);
+  color: rgba(128, 128, 128, 1);
   border-bottom: 1px solid rgba(128, 128, 128, 0.25);
 }
 
@@ -96,11 +103,11 @@
 }
 
 .hoveredText > .value > .valueTitle  {
-  font-size: 10px;
+  font-size: 13px;
 }
 
 .hoveredText > .value > .valueValue  {
-  font-size: 10px;
+  font-size: 13px;
   font-weight: 600;
 }
 
