@@ -75,6 +75,11 @@
   margin-right: 12px;
 }
 
+.headBtnTxt {
+  font-size: 13px !important;
+  font-weight: 700 !important;
+}
+
 .metamask {
   background-image: url('/connectors/icn-metamask.svg');
 }
