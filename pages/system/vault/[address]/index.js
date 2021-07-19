@@ -5,7 +5,6 @@ import { Typography, Paper } from '@material-ui/core';
 import Skeleton from '@material-ui/lab/Skeleton';
 import Head from 'next/head';
 import Layout from '../../../../components/layout/layout.js';
-import Token from '../../../../components/exploreVaultStrategy/exploreVaultToken.js'
 import classes from './system.module.css';
 import BigNumber from 'bignumber.js';
 

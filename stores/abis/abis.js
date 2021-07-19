@@ -22,7 +22,6 @@ import { uniswapPairABI } from './uniswapPairABI';
 import { chainlinkOracleABI } from './chainlinkOracleABI';
 import { ironBankRegistryAdapterABI } from './ironBankRegistryAdapterABI';
 import { cdpManager01ABI } from './cdpManager01ABI';
-
 import { comp_tokenABI } from './comp_tokenABI';
 import { curve_poolContractABI } from './curve_poolContractABI';
 import { iearn_tokenABI } from './iearn_tokenABI';
@@ -50,6 +49,7 @@ import { vault_StrategySingleSidedCrvABI } from './vault_StrategySingleSidedCrvA
 import { curve_stePoolContractABI } from './curve_stePoolContractABI';
 import { curve_saPoolContractABI } from './curve_saPoolContractABI';
 import { vault_StrategySynthetixSusdMinterABI } from './vault_StrategySynthetixSusdMinterABI';
+import { fixedUSDABI } from './fixedUSDABI';
 
 export const COMP_TOKENABI = comp_tokenABI;
 export const CURVE_POOLCONTRACTABI = curve_poolContractABI;
@@ -78,7 +78,6 @@ export const VAULT_StrategySingleSidedCrvABI = vault_StrategySingleSidedCrvABI
 export const CURVE_STEPOOLCONTRACTABI = curve_stePoolContractABI
 export const CURVE_SAPOOLCONTRACTABI = curve_saPoolContractABI
 export const VAULT_StrategySynthetixSusdMinterABI = vault_StrategySynthetixSusdMinterABI
-
 export const IRONBANKREGISTRYADAPTERABI = ironBankRegistryAdapterABI;
 export const ERC20ABI = erc20ABI;
 export const VAULTV1ABI = vaultV1ABI;
@@ -103,3 +102,4 @@ export const COLLATERALREGISTRYABI = collateralRegistryABI;
 export const UNISWAPPAIRABI = uniswapPairABI;
 export const CHAINLINKORACLEABI = chainlinkOracleABI;
 export const CDPMANAGER01ABI = cdpManager01ABI;
+export const FIXEDUSDABI = fixedUSDABI;

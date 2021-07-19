@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Typography, Button } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 import {
   PieChart,
   Pie,
   ResponsiveContainer,
   Cell,
   Tooltip,
-  Legend,
   BarChart,
   Bar,
   YAxis,
@@ -58,7 +57,7 @@ const renderActiveShape = (props) => {
   );
 };
 
-export default function SystemStrategiesGraph({ strategies, filters, layout, handleNavigate }) {
+export default function SystemStrategiesGraph({ strategies, layout }) {
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
@@ -66,10 +65,6 @@ export default function SystemStrategiesGraph({ strategies, filters, layout, han
       setActiveIndex(0)
     }
   }, [strategies.length])
-
-  const onExplore = () => {
-    handleNavigate('strategies');
-  }
 
   if(!strategies || strategies.length === 0) {
     return (

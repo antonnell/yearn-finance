@@ -1,16 +1,6 @@
 import React, { useState } from "react";
-import { Paper, Typography, TextField, InputAdornment } from "@material-ui/core";
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import Skeleton from '@material-ui/lab/Skeleton';
+import { Paper, TextField } from "@material-ui/core";
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { formatCurrency } from "../../utils";
-
-import ReorderIcon from '@material-ui/icons/Reorder';
-import PieChartIcon from '@material-ui/icons/PieChart';
-import SearchIcon from '@material-ui/icons/Search';
-
-import BigNumber from "bignumber.js";
 
 import classes from "./systemFilters.module.css";
 
@@ -38,34 +28,21 @@ export default function SystemFilters({ onFiltersChanged, vaults, strategies }) 
   const [ version, setVersion ] = useState('')
   const [ vault, setVault ] = useState('')
   const [ strategy, setStrategy ] = useState('')
-  const [ layout, setLayout ] = useState('pie')
 
   const onVersionOptionChanged = (event, val) => {
     setVersion(val);
-    onFiltersChanged(val, vault, strategy, layout)
+    onFiltersChanged(val, vault, strategy, 'pie')
   }
 
   const onVaultChanged = (event, val) => {
     setVault(val);
-    onFiltersChanged(version, val, strategy, layout)
+    onFiltersChanged(version, val, strategy, 'pie')
   };
 
   const onStrategyChanged = (event, val) => {
     setStrategy(val);
-    onFiltersChanged(version, vault, val, layout)
+    onFiltersChanged(version, vault, val, 'pie')
   };
-
-  const handleLayoutChanged = (event, newVal) => {
-    if (newVal !== null) {
-      setLayout(newVal);
-      onFiltersChanged(version, vault, strategy, newVal)
-    }
-  };
-
-  // const handleVersionsChanged = (event, newVals) => {
-  //   setVersions(newVals);
-  //   onFiltersChanged(newVals, search, layout)
-  // };
 
   return (
     <div className={classes.vaultFilters}>

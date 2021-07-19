@@ -6,7 +6,6 @@ import {
   ResponsiveContainer,
   Cell,
   Tooltip,
-  Legend,
   BarChart,
   Bar,
   YAxis,
@@ -75,7 +74,7 @@ const getVaultTypeDescription = (vault) => {
   }
 }
 
-export default function SystemStrategiesGraph({ vaults, filters, layout, handleNavigate }) {
+export default function SystemStrategiesGraph({ vaults, layout, handleNavigate }) {
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {

@@ -1,0 +1,25 @@
+.cdpContainer {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-top: 0px;
+  padding-top: 60px;
+  position: relative;
+}
+
+.cdpTableContainer {
+  padding: 48px;
+}
+
+@media screen and (max-width: 1600px) {
+
+}
+
+@media screen and (max-width: 1200px) {
+
+}
+
+@media screen and (max-width: 1000px) {
+
+}
