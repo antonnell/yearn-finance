@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { Typography, Paper } from '@material-ui/core';
+import { Typography, Paper, Tooltip } from '@material-ui/core';
 import { ETHERSCAN_URL } from '../../stores/constants';
 import { formatCurrency, formatAddress } from "../../utils";
 import stores from '../../stores/index.js';

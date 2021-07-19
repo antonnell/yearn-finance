@@ -1313,7 +1313,7 @@ class Store {
       if(err) {
         console.log(err)
       }
-      // console.log(JSON.stringify(vaults))
+      console.log(JSON.stringify(vaults))
 
       this.setStore({ systemJSON: vaults })
       this.emitter.emit(SYSTEM_UPDATED)
