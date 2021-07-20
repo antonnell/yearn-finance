@@ -1,0 +1,85 @@
+.usermenu {
+  background: rgba(0, 0, 0, 0.3);
+  width: auto;
+  height: auto;
+}
+
+.userBtn {
+  background: blue !important;
+  color: #FFF !important;
+  margin-left: 10px !important;
+  border-radius: 40px !important;
+  font-weight: 700 !important;
+  border: 1px solid rgba(108,108,123, 0.2) !important;
+}
+
+.menuheader {
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0x;
+}
+
+.userGrid {
+  min-height: 70px;
+}
+
+.userMenuItem {
+  color: rgba(128,128,128,1) !important;
+  font-size: 12px !important;
+  padding: 10px 20px !important;
+  border-top: 1px solid rgba(128,128,128,0.2) !important;
+  margin: 0 !important;
+}
+
+.walletTitle {
+  height: 30px;
+  width: auto;
+  font-weight: 700;
+  font-size: 16px;
+  position: absolute;
+  top: 20px;
+}
+
+.walletProvider {
+  color: #666666;
+  width: auto !important;
+  margin: 0 !important;
+  position: absolute;
+  top: 46px;
+}
+
+.walletActionIcon {
+  padding: 10px;
+  min-width: 40px;
+  min-height: 40px;
+  border-radius: 100px;
+  border: 1px solid rgba(128, 128, 128, 0.3);
+}
+
+.one,
+.two,
+.three,
+.four,
+.five {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.one {
+}
+
+.two {
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding-left: 10px;
+}
+.three {
+}
+.four {
+}
+.five {
+}
