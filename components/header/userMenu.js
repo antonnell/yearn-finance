@@ -86,7 +86,7 @@ export default function CustomizedMenus(props) {
     if (account && account.address) {
       setAnchorEl(event.currentTarget);
     } else {
-      loginClicked;
+      loginClicked()
     }
   };
 
