@@ -7,8 +7,67 @@
   margin-top: 0px;
   padding-bottom: 48px;
   position: relative;
-  padding-top: 240px;
+  /* padding-top: 240px; */
 }
+
+/* Holding Page Styling */
+
+.cdpHoldingPage {
+  height: calc(99vh - 140px) !important;
+  margin-top: 100px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  padding: 30px;
+  border: 1px solid rgba(108,108,123, 0.25);
+}
+
+.cdpHoldingIcon {
+  font-size: 6em !important;
+  margin-bottom: 20px;
+  opacity: 0.1;
+}
+
+.cdpHoldingTitle,
+.cdpHoldingTxt {
+  width: 100%;
+  text-align: center;
+  max-width: 280px;
+}
+
+.cdpHoldingTitle {
+  font-size: 1.42em !important;
+  margin-bottom: 20px !important;
+}
+
+.cdpHoldingTxt {
+  font-size: 1.1em !important;
+  margin-bottom: 30px !important;
+  color: rgba(128,128,128,0.8) !important;
+}
+
+.cdpHoldingLink {
+  cursor: pointer;
+  color: #db8fe1 !important;
+  opacity: 1 !important;
+}
+
+.cdpHoldingBtn {
+  background: #f2acf8 !important;
+  padding: 10px 20px !important;
+  border-radius: 60px !important;
+  color: #000 !important;
+}
+
+.cdpHoldingBtn:hover {
+  text-decoration: none !important;
+  background: #df97e5 !important;
+}
+
+/* End Holding Page Styling */
 
 .tableHeader {
   margin-top: 48px !important;
@@ -154,6 +213,13 @@
     margin: 24px 0px 0px 0px;
   }
 
+}
+
+@media screen and (max-width: 1200px) {
+  .cdpHoldingPage {
+    height: calc(99vh - 200px) !important;
+    margin-top: 40px;
+  }
 }
 
 @media screen and (max-width: 1000px) {
