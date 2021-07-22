@@ -185,6 +185,13 @@ function Invest({ changeTheme }) {
   }, []);
   const filteredVaults = vaults
     .filter((vault) => {
+      if(vault.type === 'v1' && !BigNumber(vault.balance).gt(0)) {
+        return false
+      }
+
+      return true
+    })
+    .filter((vault) => {
       let returnValue = true;
       if (versions && versions.length > 0) {
         if (versions.includes('Active')) {
