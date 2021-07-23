@@ -49,6 +49,21 @@ function CDP({ changeTheme }) {
     };
   }, []);
 
+  const getStatus = (cdps) => {
+    const cdpStatuses = cdps.map((cdp) => {
+      return cdp.status;
+    });
+    return cdpStatuses.includes('Liquidatable')
+      ? 'Liquidatable'
+      : cdpStatuses.includes('Dangerous')
+      ? 'Dangerous'
+      : cdpStatuses.includes('Moderate')
+      ? 'Moderate'
+      : cdpStatuses.includes('Unknown')
+      ? 'Unknown'
+      : 'Safe';
+  };
+
   const renderCDPs = () => {
     const status = getStatus(cdps);
     return (
