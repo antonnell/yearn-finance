@@ -88,11 +88,11 @@
 }
 
 .hoveredText > .value > .valueTitle  {
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .hoveredText > .value > .valueValue  {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
 }
 
