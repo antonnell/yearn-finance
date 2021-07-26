@@ -146,6 +146,7 @@ function Header(props) {
   }, []);
 
   return (
+    <div>
     <Paper elevation={0} className={classes.headerContainer}>
         {props.backClicked && (
           <div className={classes.backButton}>
@@ -210,12 +211,19 @@ function Header(props) {
         {toggleAboutModal && <AboutModal setToggleAboutModal={setToggleAboutModal} />}
         {toggleSearchModal && <SearchModal setToggleSearchModal={setToggleSearchModal} />}
 
-        {chainInvalid ? (
-          <div className={classes.chainInvalidError}>
-            The chain you're connected to isn't supported. Please check that your wallet is connected to Ethereum Mainnet.
-          </div>
-        ) : null}
+
     </Paper>
+    {chainInvalid ? (
+      <div className={classes.chainInvalidError}>
+        <div className={classes.ErrorContent}>
+          <div className={classes.unitato}></div>
+          <Typography className={classes.ErrorTxt}>
+            The chain you're connected to isn't supported. Please check that your wallet is connected to Ethereum Mainnet.
+          </Typography>
+        </div>
+      </div>
+    ) : null}
+    </div>
   );
 }
 

@@ -97,6 +97,10 @@ class Store {
       const { chainId = 1 } = window.ethereum || {};
       const parsedChainId = parseInt(chainId, 16);
       const isChainSupported = supportedChainIds.includes(parsedChainId);
+      if (!isChainSupported) {
+        this.setStore({ chainInvalid: true });
+        this.emitter.emit(ACCOUNT_CHANGED);
+      }
 
       if (isAuthorized && isChainSupported) {
         injected
@@ -148,10 +152,6 @@ class Store {
           type: CONFIGURE_VAULTS,
           content: { connected: false },
         });
-
-        if (!isChainSupported) {
-          this.setStore({ chainInvalid: true });
-        }
       }
     });
 
@@ -193,10 +193,11 @@ class Store {
       const supportedChainIds = [1];
       const parsedChainId = parseInt(chainId, 16);
       const isChainSupported = supportedChainIds.includes(parsedChainId);
-      console.log(chainId);
       that.setStore({ chainInvalid: !isChainSupported });
-
       that.emitter.emit(ACCOUNT_CHANGED);
+      that.emitter.emit(ACCOUNT_CONFIGURED);
+
+      that.configure()
     });
   };
 

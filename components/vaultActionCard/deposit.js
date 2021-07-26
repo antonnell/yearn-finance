@@ -251,6 +251,11 @@ export default function Deposit({ vault }) {
   let depositDisabled = vault?.emergency_shutdown
   let depositDisabledMessage = null
 
+  if(vault.type === 'v1') {
+    depositDisabled = true
+    depositDisabledMessage = 'Deposits for V1 vaults have been disabled. V1 vaults will stop earning yield in the near future, so be sure to move your funds to a V2 vault.'
+  }
+
 
   return selectedZapBalanceToken?.address && zapperBalanceUpdated ? (
     <div className={classes.depositContainer}>
