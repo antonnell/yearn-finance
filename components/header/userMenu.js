@@ -1,5 +1,5 @@
 import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, withTheme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 // Customisation
 import Grid from '@material-ui/core/Grid';
@@ -67,17 +67,11 @@ const StyledMenuItem = withStyles((theme) => ({
   },
 }))(MenuItem);
 
-export default function CustomizedMenus(props) {
+function CustomizedMenus(props) {
 
-  const { loginClicked, account } = props;
+  const { loginClicked, account, switchProvider } = props;
 
 
-  const context = useWeb3React();
-
-  const {
-    connector,
-    deactivate,
-  } = context;
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -90,13 +84,14 @@ export default function CustomizedMenus(props) {
     }
   };
 
-  const disconnectWallet = () => {
-    if (connector && connector.close) {
-      connector.close();
-    }
+  const switchP = () => {
+    switchProvider()
+  }
 
-    stores.accountStore.setStore({ account: {}, web3context: null });
-    stores.emitter.emit(CONNECTION_DISCONNECTED);
+  const disconnectWallet = () => {
+
+    stores.accountStore.disconnectAccount();
+
   };
 
   const handleClose = () => {
@@ -105,8 +100,11 @@ export default function CustomizedMenus(props) {
 
   return (
     <div className={classes.root}>
-      <Button disableElevation className={classes.userBtn} aria-controls="user-menu" aria-haspopup="true" variant="contained" onClick={handleClick}>
-        {account && account.address ? formatAddress(account.address) : 'Connect Wallet'}
+      <Button disableElevation      className={classes.accountButton}
+          variant="contained"
+          color={props.theme.palette.type === 'dark' ? 'primary' : 'secondary'} aria-controls="user-menu" aria-haspopup="true"  onClick={handleClick}>
+            {account && account.address && <div className={`${classes.accountIcon} ${classes.metamask}`}></div>}
+            <Typography className={classes.headBtnTxt}>{account && account.address ? formatAddress(account.address) : 'Connect Wallet'}</Typography>
       </Button>
       <StyledMenu className={classes.usermenu} id="user-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
         <div className={classes.menuheader}>
@@ -137,18 +135,18 @@ export default function CustomizedMenus(props) {
             </Grid>
           </Grid>
         </div>
-        <StyledMenuItem className={classes.userMenuItem}>
+        <StyledMenuItem className={classes.userMenuItem}  onClick={switchP}>
           <ListItemIcon>
             <SwapHorizOutlinedIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText primary="Switch Wallet Provider" />
         </StyledMenuItem>
-        <StyledMenuItem className={classes.userMenuItem}>
+        {/* <StyledMenuItem className={classes.userMenuItem}>
           <ListItemIcon>
             <AccountBalanceWalletOutlinedIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText primary="Manage Addresses" />
-        </StyledMenuItem>
+        </StyledMenuItem> */}
         <StyledMenuItem className={classes.userMenuItem} onClick={disconnectWallet}>
           <ListItemIcon>
             <ExitToAppIcon fontSize="small" />
@@ -159,3 +157,4 @@ export default function CustomizedMenus(props) {
     </div>
   );
 }
+export default  withTheme(CustomizedMenus)
