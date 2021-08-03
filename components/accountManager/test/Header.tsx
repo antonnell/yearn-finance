@@ -3,8 +3,8 @@ import styled from "styled-components";
 import * as PropTypes from "prop-types";
 import Blockie from "./Blockie";
 import Banner from "./Banner";
-import { ellipseAddress, getChainData } from "../helpers/utilities";
-import { transitions } from "../styles";
+import { ellipseAddress, getChainData } from "../../../utils/helpers/utilities";
+import { transitions } from "../../../utils/helpers/styles";
 
 const SHeader = styled.div`
   margin-top: -1px;

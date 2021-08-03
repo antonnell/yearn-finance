@@ -3,6 +3,8 @@ import classes from "./layout.module.css";
 import Header from "../header";
 import Navigation from "../navigation";
 import SnackbarController from "../snackbar";
+
+import AccountManager from "../../stores/accountManager";
 export const siteTitle = "Yearn";
 
 export default function Layout({
