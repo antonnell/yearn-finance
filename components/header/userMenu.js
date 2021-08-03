@@ -24,9 +24,7 @@ import { formatAddress } from '../../utils';
 import { Web3ReactProvider, useWeb3React } from "@web3-react/core";
 
 import stores from '../../stores';
-import {
-  CONNECTION_DISCONNECTED,
-} from "../../stores/constants";
+
 import classes from './userMenu.module.css';
 
 const StyledMenu = withStyles({
@@ -72,6 +70,12 @@ function CustomizedMenus(props) {
   const { loginClicked, account, switchProvider } = props;
 
 
+  const context = useWeb3React();
+
+  const {
+    connector,
+    deactivate,
+  } = context;
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -89,7 +93,8 @@ function CustomizedMenus(props) {
   }
 
   const disconnectWallet = () => {
-
+  // console.log('account store in user menu');
+    // console.log(stores.accountStore, '---ad: ', stores.accountStore.store.account.address);
     stores.accountStore.disconnectAccount();
 
   };
@@ -135,7 +140,7 @@ function CustomizedMenus(props) {
             </Grid>
           </Grid>
         </div>
-        <StyledMenuItem className={classes.userMenuItem}  onClick={switchP}>
+        <StyledMenuItem className={classes.userMenuItem}  onClick={switchProvider}>
           <ListItemIcon>
             <SwapHorizOutlinedIcon fontSize="small" />
           </ListItemIcon>

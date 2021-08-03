@@ -3,7 +3,6 @@ import classes from "./layout.module.css";
 import Header from "../header";
 import Navigation from "../navigation";
 import SnackbarController from "../snackbar";
-
 export const siteTitle = "Yearn";
 
 export default function Layout({
@@ -35,6 +34,7 @@ export default function Layout({
       {!configure && (
         <Navigation backClicked={backClicked} changeTheme={changeTheme} />
       )}
+      <AccountManager />
       <div className={classes.content}>
         {!configure && (
           <Header backClicked={backClicked} changeTheme={changeTheme} />
