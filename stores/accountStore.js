@@ -116,7 +116,6 @@ class Store {
     this.getGasPrices();
     this.getCurrentBlock();
     injected.isAuthorized().then((isAuthorized) => {
-      console.log(injected)
     if(this.store.account === null){
       this.emitter.emit(ACCOUNT_CONFIGURED);
       this.emitter.emit(LENDING_CONFIGURED);

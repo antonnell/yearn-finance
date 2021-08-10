@@ -108,12 +108,19 @@ const INITIAL_STATE: IAppState = {
 
 function Layout(props: Props){
 
+  const RPC_URLS = {
+    1: process.env.NEXT_PUBLIC_PROVIDER,
+    4: "https://rinkeby.infura.io/v3/bd80ce1ca1f94da48e151bb6868bb150"
+  };
+
  const getProviderOptions = () => {
     const providerOptions = {
       walletconnect: {
         package: WalletConnectProvider,
         options: {
           infuraId: process.env.REACT_APP_INFURA_ID
+          // rpc: { 1: RPC_URLS[1] },
+
         }
       },
     //   torus: {
@@ -160,7 +167,7 @@ function Layout(props: Props){
 
       await setState({...state, fetching: false, assets });
     } catch (error) {
-      console.error(error); // tslint:disable-line
+      // console.error(error); // tslint:disable-line
       await setState({...state,  fetching: false });
     }
   };
@@ -250,18 +257,6 @@ function Layout(props: Props){
   };
 
 
-  if(!web3Init){
-    console.log('running',web3Modal,state);
-    if(web3Modal.cachedProvider){
-      // onConnect();
-      setWeb3Init(true);
-    }else{
-
-    }
-   
-
-    // setWeb3Modal(web3Modal_temp)
-  }
 
 
   const toggleModal = () =>
@@ -291,6 +286,23 @@ function Layout(props: Props){
     pendingRequest,
     result
   } = state;
+
+
+
+
+
+  if(!web3Init){
+    console.log('running',web3Modal,state);
+    if(web3Modal.cachedProvider){
+       onConnect();
+      setWeb3Init(true);
+    }else{
+
+    }
+   
+
+    // setWeb3Modal(web3Modal_temp)
+  }
   return (
     <div className={classes.container}>
       <Head>

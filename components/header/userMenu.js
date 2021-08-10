@@ -79,7 +79,7 @@ function CustomizedMenus(props) {
 
   const handleClick = (event) => {
     console.log(account);
-    if (account && account.address) {
+    if (accountStore && accountStore.address) {
       setAnchorEl(event.currentTarget);
     } else {
       loginClicked()
@@ -101,14 +101,14 @@ function CustomizedMenus(props) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-console.log(account)
+console.log(account, accountStore)
   return (
     <div className={classes.root}>
       <Button disableElevation      className={classes.accountButton}
           variant="contained"
           color={props.theme.palette.type === 'dark' ? 'primary' : 'secondary'} aria-controls="user-menu" aria-haspopup="true"  onClick={handleClick}>
-            {account && account.address && <div className={`${classes.accountIcon} ${classes.metamask}`}></div>}
-            <Typography className={classes.headBtnTxt}>{account && account.address ? formatAddress(account.address) : 'Connect Wallet'}</Typography>
+            {accountStore && accountStore.address && <div className={`${classes.accountIcon} ${classes.metamask}`}></div>}
+            <Typography className={classes.headBtnTxt}>{accountStore && accountStore.address ? formatAddress(accountStore.address) : 'Connect Wallet'}</Typography>
       </Button>
       <StyledMenu className={classes.usermenu} id="user-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
         <div className={classes.menuheader}>
@@ -117,7 +117,7 @@ console.log(account)
               <UserMenuAvatar />
             </Grid>
             <Grid className={classes.two} item sm={6}>
-              <div className={classes.walletTitle}>{account  ? formatAddress(account.address) : 'Connect Wallet'}</div>
+              <div className={classes.walletTitle}>{accountStore  ? formatAddress(accountStore.address) : 'Connect Wallet'}</div>
               <div className={classes.walletProvider}>Metamask</div>
             </Grid>
             <Grid container spacing={4} sm={4}>
