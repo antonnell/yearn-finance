@@ -4,7 +4,7 @@ import { Typography, Paper, TextField, InputAdornment, Tooltip } from '@material
 import SearchIcon from '@material-ui/icons/Search';
 
 import Head from 'next/head';
-import Layout from '../../components/layout/layout.js';
+import Layout from '../../components/layout/layout';
 import CDPAllTable from '../../components/cdpAllTable';
 import CDPActiveTable from '../../components/cdpActiveTable';
 import CDPSuppliedGraph from '../../components/cdpSuppliedGraph';

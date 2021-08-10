@@ -25,19 +25,27 @@ import { bnDec } from '../utils';
 import stores from './';
 
 import { injected, walletconnect, walletlink, fortmatic, portis, network } from './connectors';
+import { getChainData } from "../utils/helpers/utilities";
 
 import BigNumber from 'bignumber.js';
 import Web3 from 'web3';
 
+import Web3Modal from "web3modal";
+import WalletConnectProvider from "@walletconnect/web3-provider";
+import Fortmatic from "fortmatic";
+
+
 class Store {
+
   constructor(dispatcher, emitter) {
     this.dispatcher = dispatcher;
     this.emitter = emitter;
-
+ 
     this.store = {
       account: null,
       chainInvalid: false,
       web3context: null,
+      accountManager: null,
       tokens: [],
       connectorsByName: {
         MetaMask: injected,
@@ -76,85 +84,63 @@ class Store {
         }
       }.bind(this),
     );
-  }
 
+
+  
+  }
   getStore(index) {
     return this.store[index];
   }
-
   setStore(obj) {
     this.store = { ...this.store, ...obj };
     // console.log(this.store);
     return this.emitter.emit(STORE_UPDATED);
   }
 
-  configure = async () => {
+  configure = async (p) => {
+    console.log('running configure',  injected,'store info',this.store)
+    // if (this.web3Modal.cachedProvider) {
+      // this.onConnect();
+    // }
+
     this.getGasPrices();
     this.getCurrentBlock();
     injected.isAuthorized().then((isAuthorized) => {
-      const { supportedChainIds } = injected;
-      // fall back to ethereum mainnet if chainId undefined
-      const { chainId = 1 } = window.ethereum || {};
-      const parsedChainId = parseInt(chainId, 16);
-      const isChainSupported = supportedChainIds.includes(parsedChainId);
-      if (!isChainSupported) {
-        this.setStore({ chainInvalid: true });
-        this.emitter.emit(ACCOUNT_CHANGED);
-      }
+      console.log(injected)
+    if(this.store.account === null && !this.store.accountManager){
+      this.emitter.emit(ACCOUNT_CONFIGURED);
+      this.emitter.emit(LENDING_CONFIGURED);
+      this.emitter.emit(CDP_CONFIGURED);
 
-      if (isAuthorized && isChainSupported) {
-        injected
-          .activate()
-          .then((a) => {
-            this.setStore({
-              account: { address: a.account },
-              web3context: { library: { provider: a.provider } },
-            });
-            this.emitter.emit(ACCOUNT_CONFIGURED);
+      this.dispatcher.dispatch({
+        type: CONFIGURE_VAULTS,
+        content: { connected: false },
+      });
 
-            this.dispatcher.dispatch({
-              type: CONFIGURE_VAULTS,
-              content: { connected: true },
-            });
-            this.dispatcher.dispatch({
-              type: CONFIGURE_LENDING,
-              content: { connected: true },
-            });
-            this.dispatcher.dispatch({
-              type: CONFIGURE_CDP,
-              content: { connected: true },
-            });
-          })
-          .catch((e) => {
-            this.emitter.emit(ERROR, e);
-            this.emitter.emit(ACCOUNT_CONFIGURED);
+      // if (!isChainSupported) {
+      //   this.setStore({ chainInvalid: true });
+      // }
+    }else if(this.store.accountManager.connected){
+      this.emitter.emit(ACCOUNT_CONFIGURED);
 
-            this.dispatcher.dispatch({
-              type: CONFIGURE_VAULTS,
-              content: { connected: false },
-            });
-            this.dispatcher.dispatch({
-              type: CONFIGURE_LENDING,
-              content: { connected: false },
-            });
-            this.dispatcher.dispatch({
-              type: CONFIGURE_CDP,
-              content: { connected: false },
-            });
-          });
-      } else {
-        //we can ignore if not authorized.
-        this.emitter.emit(ACCOUNT_CONFIGURED);
-        this.emitter.emit(LENDING_CONFIGURED);
-        this.emitter.emit(CDP_CONFIGURED);
+      this.dispatcher.dispatch({
+        type: CONFIGURE_VAULTS,
+        content: { connected: true },
+      });
+      this.dispatcher.dispatch({
+        type: CONFIGURE_LENDING,
+        content: { connected: true },
+      });
+      this.dispatcher.dispatch({
+        type: CONFIGURE_CDP,
+        content: { connected: true },
+      });
+    }
 
-        this.dispatcher.dispatch({
-          type: CONFIGURE_VAULTS,
-          content: { connected: false },
-        });
-      }
-    });
 
+  });
+
+    console.log(window);
     if (window.ethereum) {
       this.updateAccount();
     } else {
@@ -163,6 +149,9 @@ class Store {
         once: true,
       });
     }
+  
+
+    
   };
 
   updateAccount = () => {

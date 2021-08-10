@@ -124,7 +124,9 @@ function Header(props) {
 
   const onAddressClicked = () => {
     if (!(account && account.address)){
-    setUnlockOpen(true);
+    // setUnlockOpen(true);
+    console.log(props);
+    props.toggleModal();
     }
 
   };
@@ -204,6 +206,7 @@ function Header(props) {
         <UserMenu 
         loginClicked={onAddressClicked}
         account={account}
+        logout={props.logout}
         />
         </div>
 

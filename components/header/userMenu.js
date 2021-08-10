@@ -95,21 +95,22 @@ function CustomizedMenus(props) {
   const disconnectWallet = () => {
   // console.log('account store in user menu');
     // console.log(stores.accountStore, '---ad: ', stores.accountStore.store.account.address);
-    stores.accountStore.disconnectAccount();
+    // stores.accountStore.disconnectAccount();
+    props.logout()
 
   };
 
   const handleClose = () => {
     setAnchorEl(null);
   };
-
+console.log(account)
   return (
     <div className={classes.root}>
       <Button disableElevation      className={classes.accountButton}
           variant="contained"
           color={props.theme.palette.type === 'dark' ? 'primary' : 'secondary'} aria-controls="user-menu" aria-haspopup="true"  onClick={handleClick}>
-            {account && account.address && <div className={`${classes.accountIcon} ${classes.metamask}`}></div>}
-            <Typography className={classes.headBtnTxt}>{account && account.address ? formatAddress(account.address) : 'Connect Wallet'}</Typography>
+            {account  && <div className={`${classes.accountIcon} ${classes.metamask}`}></div>}
+            <Typography className={classes.headBtnTxt}>{account ? formatAddress(account.address) : 'Connect Wallet'}</Typography>
       </Button>
       <StyledMenu className={classes.usermenu} id="user-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
         <div className={classes.menuheader}>
@@ -118,7 +119,7 @@ function CustomizedMenus(props) {
               <UserMenuAvatar />
             </Grid>
             <Grid className={classes.two} item sm={6}>
-              <div className={classes.walletTitle}>{account && account.address ? formatAddress(account.address) : 'Connect Wallet'}</div>
+              <div className={classes.walletTitle}>{account  ? formatAddress(account.address) : 'Connect Wallet'}</div>
               <div className={classes.walletProvider}>Metamask</div>
             </Grid>
             <Grid container spacing={4} sm={4}>

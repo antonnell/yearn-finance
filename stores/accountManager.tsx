@@ -144,7 +144,7 @@ interface IAppState {
     result: null
   };
   
-class AccountManager extends React.Component<any,any>{
+class AccountManager extends React.Component<any,IAppState>{
 
     public web3Modal: Web3Modal;
     public state: IAppState;
@@ -171,7 +171,7 @@ class AccountManager extends React.Component<any,any>{
       public onConnect = async () => {
         const provider = await this.web3Modal.connect();
     
-        await this.subscribeProvider(provider);
+        await this.subscribeProvider(povirder);
     
         const web3: any = initWeb3(provider);
     
