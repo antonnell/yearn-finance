@@ -32,6 +32,7 @@
     "lottie-react": "^2.1.0",
     "moment": "^2.29.1",
     "next": "^10.2.3",
+    "next-plausible": "^2.0.0",
     "node-fetch": "^2.6.1",
     "query-string": "^7.0.1",
     "react": "17.0.1",
