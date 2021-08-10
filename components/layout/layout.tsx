@@ -114,13 +114,13 @@ function Layout(props: Props){
   };
 
  const getProviderOptions = () => {
+
+
     const providerOptions = {
       walletconnect: {
         package: WalletConnectProvider,
         options: {
-          infuraId: process.env.REACT_APP_INFURA_ID
-          // rpc: { 1: RPC_URLS[1] },
-
+          infuraId: 'https://rinkeby.infura.io/v3/bd80ce1ca1f94da48e151bb6868bb150'
         }
       },
     //   torus: {
@@ -129,7 +129,7 @@ function Layout(props: Props){
       fortmatic: {
         package: Fortmatic,
         options: {
-          key: process.env.REACT_APP_FORTMATIC_KEY
+          key: '"pk_live_F95FEECB1BE324B5"'
         }
       },
     //   authereum: {

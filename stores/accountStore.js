@@ -115,39 +115,39 @@ class Store {
 
     this.getGasPrices();
     this.getCurrentBlock();
-  //   injected.isAuthorized().then((isAuthorized) => {
-  //   if(this.store.account === null){
-  //     this.emitter.emit(ACCOUNT_CONFIGURED);
-  //     this.emitter.emit(LENDING_CONFIGURED);
-  //     this.emitter.emit(CDP_CONFIGURED);
+    injected.isAuthorized().then((isAuthorized) => {
+    if(this.store.account === null){
+      this.emitter.emit(ACCOUNT_CONFIGURED);
+      this.emitter.emit(LENDING_CONFIGURED);
+      this.emitter.emit(CDP_CONFIGURED);
 
-  //     this.dispatcher.dispatch({
-  //       type: CONFIGURE_VAULTS,
-  //       content: { connected: false },
-  //     });
+      this.dispatcher.dispatch({
+        type: CONFIGURE_VAULTS,
+        content: { connected: false },
+      });
 
-  //     // if (!isChainSupported) {
-  //     //   this.setStore({ chainInvalid: true });
-  //     // }
-  //   }else{
-  //     this.emitter.emit(ACCOUNT_CONFIGURED);
+      // if (!isChainSupported) {
+      //   this.setStore({ chainInvalid: true });
+      // }
+    }else{
+      this.emitter.emit(ACCOUNT_CONFIGURED);
 
-  //     this.dispatcher.dispatch({
-  //       type: CONFIGURE_VAULTS,
-  //       content: { connected: true },
-  //     });
-  //     this.dispatcher.dispatch({
-  //       type: CONFIGURE_LENDING,
-  //       content: { connected: true },
-  //     });
-  //     this.dispatcher.dispatch({
-  //       type: CONFIGURE_CDP,
-  //       content: { connected: true },
-  //     });
-  //   }
+      this.dispatcher.dispatch({
+        type: CONFIGURE_VAULTS,
+        content: { connected: true },
+      });
+      this.dispatcher.dispatch({
+        type: CONFIGURE_LENDING,
+        content: { connected: true },
+      });
+      this.dispatcher.dispatch({
+        type: CONFIGURE_CDP,
+        content: { connected: true },
+      });
+    }
 
 
-  // });
+  });
 
     console.log(window);
     if (window.ethereum) {
