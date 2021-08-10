@@ -253,7 +253,7 @@ function Layout(props: Props){
   if(!web3Init){
     console.log('running',web3Modal,state);
     if(web3Modal.cachedProvider){
-      onConnect();
+      // onConnect();
       setWeb3Init(true);
     }else{
 

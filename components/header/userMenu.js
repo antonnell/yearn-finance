@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { withStyles, withTheme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 // Customisation
@@ -67,15 +67,13 @@ const StyledMenuItem = withStyles((theme) => ({
 
 function CustomizedMenus(props) {
 
-  const { loginClicked, account, switchProvider } = props;
+  const { loginClicked,switchProvider } = props;
+  const accountStore = stores.accountStore.getStore('account');
+
+  const [account, setAccount] = useState(accountStore);
 
 
-  const context = useWeb3React();
 
-  const {
-    connector,
-    deactivate,
-  } = context;
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -109,8 +107,8 @@ console.log(account)
       <Button disableElevation      className={classes.accountButton}
           variant="contained"
           color={props.theme.palette.type === 'dark' ? 'primary' : 'secondary'} aria-controls="user-menu" aria-haspopup="true"  onClick={handleClick}>
-            {account  && <div className={`${classes.accountIcon} ${classes.metamask}`}></div>}
-            <Typography className={classes.headBtnTxt}>{account ? formatAddress(account.address) : 'Connect Wallet'}</Typography>
+            {account && account.address && <div className={`${classes.accountIcon} ${classes.metamask}`}></div>}
+            <Typography className={classes.headBtnTxt}>{account && account.address ? formatAddress(account.address) : 'Connect Wallet'}</Typography>
       </Button>
       <StyledMenu className={classes.usermenu} id="user-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
         <div className={classes.menuheader}>

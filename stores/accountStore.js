@@ -45,7 +45,17 @@ class Store {
       account: null,
       chainInvalid: false,
       web3context: null,
-      accountManager: null,
+      accountManager: { fetching: false,
+        address: "",
+        web3: null,
+        provider: null,
+        connected: false,
+        chainId: 1,
+        networkId: 1,
+        assets: [],
+        showModal: false,
+        pendingRequest: false,
+        result: null},
       tokens: [],
       connectorsByName: {
         MetaMask: injected,
@@ -107,7 +117,7 @@ class Store {
     this.getCurrentBlock();
     injected.isAuthorized().then((isAuthorized) => {
       console.log(injected)
-    if(this.store.account === null && !this.store.accountManager){
+    if(this.store.account === null){
       this.emitter.emit(ACCOUNT_CONFIGURED);
       this.emitter.emit(LENDING_CONFIGURED);
       this.emitter.emit(CDP_CONFIGURED);
@@ -120,7 +130,7 @@ class Store {
       // if (!isChainSupported) {
       //   this.setStore({ chainInvalid: true });
       // }
-    }else if(this.store.accountManager.connected){
+    }else{
       this.emitter.emit(ACCOUNT_CONFIGURED);
 
       this.dispatcher.dispatch({
