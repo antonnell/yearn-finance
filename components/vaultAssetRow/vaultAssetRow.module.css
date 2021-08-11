@@ -5,6 +5,11 @@
   flex: 1;
   padding: 0px 24px;
 }
+
+.assetRow {
+  border-bottom: 1px solid rgba(108,108,123, 0.2);
+}
+
 .balanceUSD {
   color: #4aa166;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !important;
@@ -18,6 +23,15 @@
   align-items: center;
   justify-content: flex-start;
   padding: 18px 6px;
+}
+
+.balanceToken {
+  font-size: 12px !important;
+  color: rgb(104,108,122);
+}
+
+.investedGreen {
+  margin-bottom: 7px !important;
 }
 
 .vaultValueCell {

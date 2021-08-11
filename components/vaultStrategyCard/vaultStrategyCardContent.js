@@ -2,6 +2,11 @@ import { Typography, Tooltip } from '@material-ui/core';
 import Skeleton from '@material-ui/lab/Skeleton';
 import { ETHERSCAN_URL } from '../../stores/constants';
 
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
 import classes from './vaultStrategyCard.module.css';
 
 export default function vaultStrategyCard({ strategy, vault }) {
@@ -87,15 +92,27 @@ export default function vaultStrategyCard({ strategy, vault }) {
   };
 
   return (
-    <div className={classes.strategyContainer}>
-      <div className={classes.strategyName} onClick={onStrategyClicked}>
-        <Typography variant="h5" className={classes.strategyNameText}>
-          {!strategy ? <Skeleton /> : strategy.name}
-        </Typography>
-        <Tooltip arrow={true} title={mapStrategyToDescription(strategy.name, vault.tokenMetadata.displayName)}>
-          <Typography className={classes.strategyDescription}>{mapStrategyToDescription(strategy.name, vault.tokenMetadata.displayName)}</Typography>
-        </Tooltip>
-      </div>
+    <div>
+      <div className={classes.lineDivider}></div>
+      <Accordion elevation="0">
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <Typography className={classes.accHeading}>
+            {!strategy ? <Skeleton /> : strategy.name}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <div className={classes.stratDescBox}>
+          <Typography className={classes.stratDesc}>
+            {mapStrategyToDescription(strategy.name, vault.tokenMetadata.displayName)}
+          </Typography>
+          </div>
+          <Tooltip placement="right-start" arrow="true" title="View on Etherscan"><div className={classes.viewEtherscan} onClick={onStrategyClicked}>&nbsp;</div></Tooltip>
+        </AccordionDetails>
+      </Accordion>
     </div>
   );
 }

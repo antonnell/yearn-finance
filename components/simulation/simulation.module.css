@@ -1,13 +1,20 @@
 .simulationContainer {
   margin-bottom: 20px;
-  margin-top: -20px;
-  background: rgba(108,108,123, 0.1) !important;
-  border: 1px solid rgba(108,108,123, 0.1) !important;
+  margin-top: 20px;
+  background: #619f6b !important;
+  border: 10px solid rgba(108,108,123, 0.1) !important;
   box-shadow: none !important;
+  position: fixed;
+  bottom: 10px;
+  color: #FFF !important;
+  right: 25px;
+  z-index: 2;
+  max-width: 300px;
 }
 
 .simulationCard {
 }
+
 .simulationCardButtons {
 }
 
@@ -27,9 +34,16 @@
 .title {
   width: calc(100% + 32px);
   padding: 12px;
-  background-image: linear-gradient(-20deg, #2b5876 0%, #4e4376 100%);
+  background: rgba(0,0,0,0.2);
   position: relative;
+  border-radius: 4px;
   top: -16px;
   left: -16px;
   color: #FFF !important;
+}
+
+@media screen and (max-width: 960px) {
+  .simulationContainer {
+    display: none;
+  }
 }

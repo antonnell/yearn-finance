@@ -39,13 +39,18 @@ const theme = createMuiTheme({
     },
     MuiTooltip: {
       tooltip: {
-        background: "#fff !important",
-        border: "1px solid #000",
+        background: "#141928 !important",
+        border: "1px solid #141928",
         borderRadius: "8px",
-        color: "#000",
-        fontSize: "13px"
+        color: "#FFF",
+        fontSize: "13px",
+        padding: '15px 20px',
+        textAlign: 'center',
+      },
+      arrow: {
+        color: '#141928',
       }
-    }
+    },
   }
 });
 

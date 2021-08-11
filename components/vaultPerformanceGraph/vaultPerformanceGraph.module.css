@@ -5,6 +5,7 @@
   min-height: 360px;
   flex: 1;
   flex-wrap: wrap;
+  padding: 0 30px;
 }
 
 .tooltipContainer {
@@ -29,9 +30,11 @@
 .vaultDataToggle {
   display: flex;
   width: 100%;
-  max-width: 300px;
+  max-width: 100%;
   align-items: center;
   justify-content: space-between;
+  /* background: teal; */
+  margin-bottom: 20px;
 }
 
 .orangeDot {
