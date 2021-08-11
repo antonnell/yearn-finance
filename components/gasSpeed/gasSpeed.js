@@ -38,7 +38,7 @@ export default function GasSpeed({ setParentSpeed }) {
   return (
     <div className={classes.gasSpeedContainer}>
       <Typography variant="h5" className={classes.title}>
-        Transaction Speed
+        Transaction Speed:
       </Typography>
       <ToggleButtonGroup
         value={gasSpeed}
@@ -46,7 +46,7 @@ export default function GasSpeed({ setParentSpeed }) {
         onChange={handleGasSpeedChanged}
         className={classes.gasSpeed}
       >
-        <ToggleButton value="standard">
+        <ToggleButton value="standard" className={classes.xxx}>
           <div className={classes.toggleButtonText}>
             <Typography variant="h5">Standard</Typography>
             <Typography className={classes.smallText}>

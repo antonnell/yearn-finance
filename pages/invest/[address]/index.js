@@ -5,6 +5,8 @@ import Layout from '../../../components/layout/layout.js';
 import { Typography, Paper } from '@material-ui/core';
 import Skeleton from '@material-ui/lab/Skeleton';
 
+import BigNumber from 'bignumber.js';
+
 import classes from './vault.module.css';
 
 import VaultActionCard from '../../../components/vaultActionCard';
@@ -13,6 +15,7 @@ import VaultPerformanceGraph from '../../../components/vaultPerformanceGraph';
 import VaultTransactions from '../../../components/vaultTransactions';
 import VaultLockupNotice from '../../../components/vaultLockupNotice';
 import VaultStrategyCard from '../../../components/vaultStrategyCard';
+import VaultStrategiesModal from '../../../components/vaultStrategyCard/strategiesModal.js';
 
 import stores from '../../../stores';
 import {
@@ -109,7 +112,7 @@ function Vault(props) {
         <title>Invest</title>
       </Head>
       <div className={classes.vaultContainer}>
-        <Paper elevation={0} className={classes.overviewContainer}>
+        <Paper elevation={0} className={classes.overviewContainer2}>
           <div className={classes.vaultStatsContainer}>
             <div className={classes.vaultBalanceContainer} onClick={onVaultClicked}>
               <div className={classes.vaultOutline}>
@@ -129,6 +132,7 @@ function Vault(props) {
               </div>
             </div>
           </div>
+          <div className={classes.hideMe}>
           {vault.strategies.map((strategy) => {
             return (
               <React.Fragment>
@@ -138,7 +142,18 @@ function Vault(props) {
                 </div>
               </React.Fragment>
             );
-          })}
+          })}</div>
+
+          <div className={classes.stratModalBtn}>
+          <Typography variant='h5' className={classes.summary}>
+          <div className={classes.activeStrats}>Active: ({ vault.strategies.filter((strat) => { return BigNumber(strat.balanceUSD).gt(100) }).length })</div>
+          <div className={classes.allStrats}>Strategies: ({ vault.strategies.length })</div>
+          </Typography>
+
+          <VaultStrategiesModal />
+
+          </div>
+
         </Paper>
         <div className={classes.vaultInfo}>
           <div>

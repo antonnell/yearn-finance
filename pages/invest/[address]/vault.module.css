@@ -1,10 +1,53 @@
 .vaultContainer {
   height: 100%;
-  padding: 0px 48px;
+  padding: 0px 60px;
   display: flex;
   flex-direction: column;
   margin-top: 110px;
   padding-bottom: 48px;
+}
+
+.hideMe {
+  display: none;
+}
+
+.summary {
+  margin-bottom: 20px !important;
+}
+
+.allStrats {
+  float: right;
+  margin-right: 20px;
+  margin-bottom: 20px;
+}
+
+.activeStrats {
+  color: #4aa166;
+  float: right;
+  margin-right: 10px;
+  margin-bottom: 20px;
+}
+
+.overviewContainer2 {
+  padding: 32px 48px;
+  padding-bottom: 18px;
+  border: 1px solid rgba(108,108,123, 0.25);
+  border-radius: 10px;
+  position: relative;
+  min-height: 150px;
+  overflow: hidden;
+  background-image: url('../../../public/images/vaultBGlines.svg');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  /* display: grid;
+  grid-template-columns: 480px 1fr 10fr 1fr 10fr 1fr 10fr; */
+}
+
+.stratModalBtn {
+  position: absolute;
+  right: 30px;
+  top: 30px;
 }
 
 .vaultStatsContainer {
@@ -41,6 +84,7 @@
 .vaultInfo {
   display: flex;
   margin-top: 40px;
+  min-height: calc(100vh - 360px);
 }
 
 .vaultTitle {
@@ -70,6 +114,7 @@
 .vaultTransactionsContainer {
   width: 100%;
   margin-top: 48px;
+  display: none;
 }
 
 .cardSeparation {
@@ -142,7 +187,7 @@
 .borderedSection {
   border: 1px solid rgba(108,108,123, 0.25);
   border-radius: 10px;
-  padding: 30px;
+  padding: 0px;
   padding-bottom: 10px;
   flex: 1;
 }
@@ -152,7 +197,6 @@
   padding-bottom: 18px;
   border: 1px solid rgba(108,108,123, 0.25);
   border-radius: 10px;
-
   display: grid;
   grid-template-columns: 260px 1fr 10fr 1fr 10fr 1fr 10fr;
 }
@@ -233,6 +277,7 @@
 @media screen and (max-width: 576px) {
   .vaultContainer {
     padding: 0px 12px;
+    margin-top: 10px
   }
   .vaultBalanceContainer {
     margin-right: 12px;
@@ -246,7 +291,7 @@
   }
   .vaultInfo {
     max-width: 100vw;
-    flex-direction: column-reverse;
+    /* flex-direction: column-reverse; */
   }
   .vaultTransactionsContainer {
     margin-top: 12px;
