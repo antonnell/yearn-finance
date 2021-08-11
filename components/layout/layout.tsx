@@ -108,10 +108,6 @@ const INITIAL_STATE: IAppState = {
 
 function Layout(props: Props){
 
-  const RPC_URLS = {
-    1: process.env.NEXT_PUBLIC_PROVIDER,
-    4: "https://rinkeby.infura.io/v3/bd80ce1ca1f94da48e151bb6868bb150"
-  };
 
  const getProviderOptions = () => {
 
