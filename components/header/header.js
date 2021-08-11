@@ -9,6 +9,7 @@ import InputBase from '@material-ui/core/InputBase';
 import WbSunnyOutlinedIcon from '@material-ui/icons/WbSunnyOutlined';
 import Brightness2Icon from '@material-ui/icons/Brightness2';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 import { CONNECT_WALLET, ACCOUNT_CONFIGURED, ACCOUNT_CHANGED } from '../../stores/constants';
 
@@ -22,6 +23,7 @@ import AboutModal from './aboutModal';
 import SearchModal from './searchModal';
 import { useHotkeys } from 'react-hotkeys-hook';
 import UserMenu from './userMenu';
+import MoreMenu from './moreMenu';
 
 const StyledSwitch = withStyles((theme) => ({
   root: {
@@ -214,6 +216,7 @@ function Header(props) {
         {toggleAboutModal && <AboutModal setToggleAboutModal={setToggleAboutModal} />}
         {toggleSearchModal && <SearchModal setToggleSearchModal={setToggleSearchModal} />}
 
+        <MoreMenu />
 
     </Paper>
     {chainInvalid ? (

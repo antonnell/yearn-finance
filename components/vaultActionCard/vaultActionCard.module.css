@@ -1,10 +1,11 @@
 .vaultActionContainer {
   width: 520px;
+  /* min-height: 100%; */
   border-radius: 10px;
   display: flex;
   flex-direction: column;
   padding: 24px;
-  margin-right: 48px;
+  margin-right: 40px;
   border: 1px solid rgba(108,108,123, 0.2);
 }
 
@@ -38,14 +39,61 @@
   border-radius: 10px !important;
 }
 
-.disabledWarning {
-  padding-top: 24px;
+.disabledMsg {
+  background: #ad2c51;
+  padding: 20px;
+  margin-top: 15px;
+  border-radius: 8px;
+}
+
+.disabledWarningTitle {
   display: flex;
+  color: #fff !important;
   align-items: center;
+}
+
+.disabledWarning {
+  color: #fff !important;
+  margin-top: 13px !important;
+  font-size: 14px !important;
+  line-height: 1.3em !important;
 }
 
 .disabledIcon {
   margin-right: 12px;
+  color: #fff !important;
+}
+
+.gainedTitleContainer {
+  width: 100%;
+  height: 53px;
+  /* padding: 10px;
+  padding-top: 1px; */
+  position: relative;
+  background: none;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  border: 2px solid #619f6b;
+  overflow: hidden;
+}
+
+.gainedTxt {
+  margin: 0 !important;
+  padding: 0 !important;
+  position: absolute;
+  top: 17px;
+  left: 56px;
+}
+
+.vaultLogo {
+  position: absolute;
+  left: 13px;
+  top: 10px;
+}
+
+.vaultLogo img {
+  width: 28px;
+  height: 28px;
 }
 
 .inputTitleContainer {
@@ -110,6 +158,7 @@
 @media screen and (max-width: 1000px) {
   .vaultActionContainer {
     margin-bottom: 24px;
+    width: calc(100vw - 95px);
   }
 }
 

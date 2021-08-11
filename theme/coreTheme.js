@@ -163,7 +163,7 @@ const coreTheme = {
         border: "none",
         padding: "0px",
         borderRadius: "30px !important",
-        margin: "0px 6px"
+        margin: "0px 6px",
       }
     },
     MuiSnackbar: {

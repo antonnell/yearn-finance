@@ -357,12 +357,12 @@ export default function Deposit({ vault }) {
                 />
               )}
             />
-            <TextField variant="outlined" style={{ width: '40%' }} placeholder="" value={amount} error={amountError} onChange={onAmountChanged} />
+            <TextField label="Amount" variant="outlined" style={{ width: '40%' }} placeholder="" value={amount} error={amountError} onChange={onAmountChanged} />
           </div>
         }
       </div>
       <div className={classes.scaleContainer}>
-        <Tooltip title="25% of your wallet balance">
+        <Tooltip arrow={true} title="25% of your wallet balance">
           <Button
             className={classes.scale}
             variant="outlined"
@@ -374,7 +374,7 @@ export default function Deposit({ vault }) {
             <Typography variant={'h5'}>25%</Typography>
           </Button>
         </Tooltip>
-        <Tooltip title="50% of your wallet balance">
+        <Tooltip arrow={true} title="50% of your wallet balance">
           <Button
             className={classes.scale}
             variant="outlined"
@@ -386,7 +386,7 @@ export default function Deposit({ vault }) {
             <Typography variant={'h5'}>50%</Typography>
           </Button>
         </Tooltip>
-        <Tooltip title="75% of your wallet balance">
+        <Tooltip arrow={true} title="75% of your wallet balance">
           <Button
             className={classes.scale}
             variant="outlined"
@@ -398,7 +398,7 @@ export default function Deposit({ vault }) {
             <Typography variant={'h5'}>75%</Typography>
           </Button>
         </Tooltip>
-        <Tooltip title="100% of your wallet balance">
+        <Tooltip arrow={true} title="100% of your wallet balance">
           <Button
             className={classes.scale}
             variant="outlined"
@@ -411,6 +411,26 @@ export default function Deposit({ vault }) {
           </Button>
         </Tooltip>
       </div>
+      {
+        vault.type === 'v2' && amount !== '' && (
+          <div className={classes.gainedTitleContainer}>
+            <div className={classes.depositSharesAmount}>
+
+              <Typography variant="h5" className={classes.gainedTxt} noWrap>
+                {`You'll Receive: ${formatCurrency(sharesForAmount)} ${vault.symbol}`}
+              </Typography>
+
+              <div className={classes.vaultLogo}>
+                {!vault ? (
+                  <Skeleton />
+                ) : (
+                  <img src={vault.icon ? vault.icon : '/tokens/unknown-logo.png'} className={classes.vaultIcon} alt="" width={50} height={50} />
+                )}
+              </div>
+            </div>
+          </div>
+        )
+      }
       <div>
         {amount && amount > 0 && zapperVaults?.length > 0 ? (
           <Simulation tokenAmount={amount} vault={vault} currentToken={currentToken} zapperVaults={zapperVaults} />
@@ -452,17 +472,7 @@ export default function Deposit({ vault }) {
           </div>
         </div>
       )}
-      {
-        vault.type === 'v2' && amount !== '' && (
-          <div className={classes.inputTitleContainer}>
-            <div className={classes.depositSharesAmount}>
-              <Typography variant="h5" className={classes.value} noWrap>
-                {`To Receive: ${formatCurrency(sharesForAmount)} ${vault.symbol}`}
-              </Typography>
-            </div>
-          </div>
-        )
-      }
+
       {(!account || !account.address) && (
         <div className={classes.actionButton}>
           <Button fullWidth disableElevation variant="contained" color="primary" size="large" onClick={onConnectWallet} disabled={loading}>
@@ -524,10 +534,12 @@ export default function Deposit({ vault }) {
       {
         depositDisabledMessage &&
         <>
-          <Typography variant='h5' className={ classes.disabledWarning }><InfoIcon className={ classes.disabledIcon } />Deposits Temporarily Dsiabled</Typography>
-          <Typography className={ classes.disabledWarning }>
-            { depositDisabledMessage }
-          </Typography>
+          <div className={classes.disabledMsg}>
+            <Typography variant='h5' className={ classes.disabledWarningTitle }><InfoIcon className={ classes.disabledIcon } />v1 Deposits Temporarily Disabled</Typography>
+            <Typography className={ classes.disabledWarning }>
+              { depositDisabledMessage }
+            </Typography>
+          </div>
         </>
       }
     </div>

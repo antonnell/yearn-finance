@@ -42,6 +42,7 @@ export default function VaultAssetRow({ vault, account }) {
 
   return (
     <TableRow
+      className={classes.assetRow}
       hover
       onClick={() => {
         handleNavigate();
@@ -68,11 +69,15 @@ export default function VaultAssetRow({ vault, account }) {
       </TableCell>
       {account && account.address && (
         <TableCell align="right">
-          <Typography variant="h5" className={classes.fontWeightBold}>
-            {!(vault && vault.balance) && <Skeleton stlye={{ minWidth: '100px' }} />}
-            {vault && vault.balance && vault.type === 'Lockup' && formatCurrency(vault.balance) + ' ' + vault.symbol}
-            {vault && vault.balanceUSD && vault.type !== 'Lockup' && '$ ' + formatCurrency(vault.balanceUSD)}
-          </Typography>
+        <Typography variant="h5" className={classes.fontWeightBold}>
+          {!(vault && vault.balance) && <Skeleton stlye={{ minWidth: '100px' }} />}
+          {vault && vault.balance && vault.type === 'Lockup' && formatCurrency(vault.balance) + ' ' + vault.symbol}
+          <div className={classes.investedGreen}>{vault && vault.balanceUSD && vault.type !== 'Lockup' && '$ ' + formatCurrency(vault.balanceUSD)}</div>
+        </Typography>
+        <Typography variant="h2" className={classes.balanceToken}>
+          {!(vault && vault.balance) && <Skeleton />}
+          {vault && vault.balanceInToken && formatCurrency(vault.balanceInToken) + ' ' + vault.displayName}
+        </Typography>
         </TableCell>
       )}
       {account && account.address && (

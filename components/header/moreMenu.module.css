@@ -1,0 +1,19 @@
+.moreBtn {
+  background: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  margin-right: -7px !important;
+}
+
+.moreMenu {
+  margin-top: 15px !important;
+}
+
+.moreLink {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.moreLink:hover {
+  text-decoration: none !important;
+}
