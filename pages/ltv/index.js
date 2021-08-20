@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Typography, Paper, TextField, Grid, InputAdornment } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Head from 'next/head';
-import Layout from '../../components/layout/layout.js';
+import Layout from '../../components/layout';
 import classes from './ltv.module.css';
 
 import stores from '../../stores/index.js';

@@ -1,3 +1,4 @@
+// import AccountManger from './accountManager'
 import AccountStore from './accountStore';
 import InvestStore from './investStore';
 import CoverStore from './coverStore';
@@ -12,6 +13,8 @@ const Emitter = require('events').EventEmitter;
 const dispatcher = new Dispatcher();
 const emitter = new Emitter();
 
+
+// const accountManager = new accountManager(dispatcher,emitter);
 const accountStore = new AccountStore(dispatcher, emitter);
 const investStore = new InvestStore(dispatcher, emitter);
 const coverStore = new CoverStore(dispatcher, emitter);
@@ -22,6 +25,7 @@ const fusdStore = new FUSDStore(dispatcher, emitter);
 
 export default {
   ltvStore: ltvStore,
+  // accountManager: accountManager,
   accountStore: accountStore,
   investStore: investStore,
   coverStore: coverStore,

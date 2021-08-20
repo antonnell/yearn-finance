@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { Typography, Paper, Grid } from '@material-ui/core';
 
 import Head from 'next/head';
-import Layout from '../../components/layout/layout.js';
+import Layout from '../../components/layout';
 import classes from './about.module.css';
 
 import stores from '../../stores/index.js';

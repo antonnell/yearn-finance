@@ -25,9 +25,11 @@ import { bnDec } from '../utils';
 import stores from './';
 
 import { injected, walletconnect, walletlink, fortmatic, portis, network } from './connectors';
+import { Web3ReactProvider, useWeb3React } from "@web3-react/core";
 
 import BigNumber from 'bignumber.js';
 import Web3 from 'web3';
+
 
 class Store {
   constructor(dispatcher, emitter) {
@@ -39,9 +41,10 @@ class Store {
       chainInvalid: false,
       web3context: null,
       tokens: [],
+      tried: false,
       connectorsByName: {
         MetaMask: injected,
-        TrustWallet: injected,
+        // TrustWallet: injected,
         WalletConnect: walletconnect,
         WalletLink: walletlink,
         // Ledger: ledger,
@@ -91,7 +94,9 @@ class Store {
   configure = async () => {
     this.getGasPrices();
     this.getCurrentBlock();
+    if(!this.store.tried){
     injected.isAuthorized().then((isAuthorized) => {
+   
       const { supportedChainIds } = injected;
       // fall back to ethereum mainnet if chainId undefined
       const { chainId = 1 } = window.ethereum || {};
@@ -103,12 +108,14 @@ class Store {
       }
 
       if (isAuthorized && isChainSupported) {
+
         injected
-          .activate()
+        .activate()
           .then((a) => {
             this.setStore({
               account: { address: a.account },
               web3context: { library: { provider: a.provider } },
+              tried: true
             });
             this.emitter.emit(ACCOUNT_CONFIGURED);
 
@@ -154,14 +161,15 @@ class Store {
         });
       }
     });
+  }
 
     if (window.ethereum) {
       this.updateAccount();
     } else {
       window.removeEventListener('ethereum#initialized', this.updateAccount);
-      window.addEventListener('ethereum#initialized', this.updateAccount, {
-        once: true,
-      });
+      // window.addEventListener('ethereum#initialized', this.updateAccount, {
+      //   once: true,
+      // });
     }
   };
 

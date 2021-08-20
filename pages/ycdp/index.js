@@ -4,7 +4,7 @@ import { Typography, Paper, TextField, InputAdornment, Tooltip } from '@material
 import SearchIcon from '@material-ui/icons/Search';
 
 import Head from 'next/head';
-import Layout from '../../components/layout/layout.js';
+import Layout from '../../components/layout';
 import YcdpOverview from '../../components/ycdpOverview';
 import YcdpQuickAction from '../../components/ycdpQuickAction';
 import YcdpTable from '../../components/ycdpTable';

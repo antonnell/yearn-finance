@@ -6,18 +6,40 @@ import CloseIcon from "@material-ui/icons/Close";
 import { Web3ReactProvider, useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 
+
+
 import {
   ERROR,
   CONNECTION_DISCONNECTED,
   CONNECTION_CONNECTED,
   CONFIGURE,
   CONFIGURE_VAULTS,
-  CONFIGURE_LENDING
-} from "../../stores/constants";
+  CONFIGURE_LENDING,
+  GAS_PRICE_API,
+  ZAPPER_GAS_PRICE_API,
+  STORE_UPDATED,
+  ACCOUNT_CONFIGURED,
+  GET_ACCOUNT_BALANCES,
+  ACCOUNT_BALANCES_RETURNED,
+  CONFIGURE_CDP,
+  LENDING_CONFIGURED,
+  CDP_CONFIGURED,
+  ACCOUNT_CHANGED,
+  GET_GAS_PRICES,
+  GAS_PRICES_RETURNED,
+} from "../../stores/constants/constants";
 
 import stores from "../../stores";
+import { useEagerConnect, useInactiveListener } from '../../stores/accountManager.ts';
 
-const styles = theme => ({
+import { createStyles, StyledComponentProps } from "@material-ui/styles";
+
+interface IProps{
+  modalOpen: any;
+  closeModal: any;
+}
+
+const styles = (theme: any) => createStyles({
   root: {
     flex: 1,
     height: "auto",
@@ -44,7 +66,7 @@ const styles = theme => ({
   },
   buttonText: {
     marginLeft: "12px",
-    fontWeight: "700"
+    fontWeight: 700
   },
   instruction: {
     maxWidth: "400px",
@@ -72,9 +94,15 @@ const styles = theme => ({
   }
 });
 
-class Unlock extends Component {
+
+interface IState {
+  loading: boolean;
+  error: any;
+}
+type Props = IProps & StyledComponentProps;
+class Unlock extends React.Component<Props,IState> {
   constructor(props) {
-    super();
+    super(props);
 
     this.state = {
       loading: false,
@@ -134,20 +162,13 @@ class Unlock extends Component {
           <CloseIcon />
         </div>
         <div className={classes.contentContainer}>
-          <Web3ReactProvider getLibrary={getLibrary}>
             <MyComponent closeModal={closeModal} />
-          </Web3ReactProvider>
         </div>
       </div>
     );
   }
 }
 
-function getLibrary(provider) {
-  const library = new Web3Provider(provider);
-  library.pollingInterval = 8000;
-  return library;
-}
 
 function onConnectionClicked(
   currentConnector,
@@ -161,15 +182,25 @@ function onConnectionClicked(
 }
 
 function onDeactivateClicked(deactivate, connector) {
+  console.log(deactivate, connector);
   if (deactivate) {
     deactivate();
   }
-  if (connector && connector.close) {
-    connector.close();
+  if (connector ) {
+    connector.deactivate();
   }
   stores.accountStore.setStore({ account: {}, web3context: null });
   stores.emitter.emit(CONNECTION_DISCONNECTED);
+  stores.emitter.emit(ACCOUNT_CONFIGURED);
+  stores.emitter.emit(LENDING_CONFIGURED);
+  stores.emitter.emit(CDP_CONFIGURED);
+
+  stores.dispatcher.dispatch({
+    type: CONFIGURE_VAULTS,
+    content: { connected: false },
+  });
 }
+
 
 function MyComponent(props) {
   const context = useWeb3React();
@@ -178,35 +209,26 @@ function MyComponent(props) {
   if (localContext) {
     localConnector = localContext.connector;
   }
-  const {
-    connector,
-    library,
-    account,
-    activate,
-    deactivate,
-    active,
-    error
-  } = context;
+  const { connector, library, chainId, account, activate, deactivate, active, error } = context
+// handle logic to recognize the connector currently being activated
+const [activatingConnector, setActivatingConnector] = React.useState<any>()
+React.useEffect(() => {
+  if (activatingConnector && activatingConnector === connector) {
+    setActivatingConnector(undefined)
+  }
+}, [activatingConnector, connector])
+
+// handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
+const triedEager = useEagerConnect()
+
+// handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
+useInactiveListener(!triedEager || !!activatingConnector)
+
+
+
+
   var connectorsByName = stores.accountStore.getStore("connectorsByName");
 
-  const { closeModal } = props;
-
-  const [activatingConnector, setActivatingConnector] = React.useState();
-  React.useEffect(() => {
-    if (activatingConnector && activatingConnector === connector) {
-      setActivatingConnector(undefined);
-    }
-  }, [activatingConnector, connector]);
-
-  React.useEffect(() => {
-    if (account && active && library) {
-      stores.accountStore.setStore({
-        account: { address: account },
-        web3context: context
-      });
-      stores.emitter.emit(CONNECTION_CONNECTED);
-    }
-  }, [account, active, closeModal, context, library]);
 
   const width = window.innerWidth;
 
@@ -220,11 +242,15 @@ function MyComponent(props) {
       }}
     >
       {Object.keys(connectorsByName).map(name => {
+
         const currentConnector = connectorsByName[name];
         const activating = currentConnector === activatingConnector;
         const connected =
           currentConnector === connector || currentConnector === localConnector;
-        const disabled = !!activatingConnector || !!error;
+        const disabled = !!activatingConnector || !!error || connected
+
+
+        console.log(currentConnector, activating);
 
         let url;
         let display = name;
@@ -281,6 +307,7 @@ function MyComponent(props) {
                 width: width > 576 ? "350px" : "calc(100vw - 100px)",
                 height: "200px",
                 backgroundColor: "rgba(0,0,0,0.05)",
+                // borderColor: activating ? 'orange' : connected ? 'green' : 'unset',
                 border: "1px solid rgba(108,108,123,0.2)",
                 color: "rgba(108,108,123,1)"
               }}
@@ -315,12 +342,16 @@ function MyComponent(props) {
                   src={url}
                   alt=""
                 />
-                <Typography variant={"h2"}>{display}</Typography>
+                {connected && (
+                  <span role="img" aria-label="check">
+                    ✅
+                  </span>
+                )}<Typography variant={"h2"}>{display}</Typography>
                 <Typography variant={"body2"}>{descriptor}</Typography>
                 {activating && (
                   <CircularProgress size={15} style={{ marginRight: "10px" }} />
                 )}
-                {!activating && connected && (
+                {activating && connected && (
                   <div
                     style={{
                       background: "#4caf50",
@@ -332,9 +363,11 @@ function MyComponent(props) {
                       top: "15px",
                       right: "15px"
                     }}
+                    // onClick={()=>{onDeactivateClicked(deactivate,currentConnector)}}
                   ></div>
-                )}
-              </div>
+             )}
+               </div>
+               
             </Button>
           </div>
         );
@@ -343,4 +376,9 @@ function MyComponent(props) {
   );
 }
 
+
+
+
 export default withStyles(styles)(Unlock);
+
+

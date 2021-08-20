@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { DialogContent, Dialog, Slide } from "@material-ui/core";
 
-import Unlock from "./unlock.js";
+import Unlock from "./";
 
 function Transition(props) {
   return <Slide direction="up" {...props} />;

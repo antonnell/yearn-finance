@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import { Typography, Switch, Button } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import { createStyles, StyledComponentProps, withStyles } from '@material-ui/core/styles';
 import { withTheme } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import InputBase from '@material-ui/core/InputBase';
@@ -11,21 +11,27 @@ import Brightness2Icon from '@material-ui/icons/Brightness2';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
-import { CONNECT_WALLET, ACCOUNT_CONFIGURED, ACCOUNT_CHANGED } from '../../stores/constants';
+import { CONNECT_WALLET, ACCOUNT_CONFIGURED, ACCOUNT_CHANGED } from '../../stores/constants/constants';
 
-import Unlock from '../unlock';
+import Unlock from '../unlock/unlockModal';
 
 import stores from '../../stores';
-import { formatAddress } from '../../utils';
+import { formatAddress } from '../../utils/utils';
 
-import classes from './header.module.css';
+import * as classes from  './header.module.css';
 import HelpIcon from '@material-ui/icons/Help';
 import AboutModal from './aboutModal';
 import SearchModal from './searchModal';
 import { useHotkeys } from 'react-hotkeys-hook';
 import MoreMenu from './moreMenu';
 
-const StyledSwitch = withStyles((theme) => ({
+import { Web3Provider } from '@ethersproject/providers'
+import { Web3ReactProvider, useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
+import { makeStyles } from '@material-ui/styles';
+
+
+
+const styles  = (theme: any) => makeStyles({
   root: {
     width: 58,
     height: 32,
@@ -59,28 +65,58 @@ const StyledSwitch = withStyles((theme) => ({
   },
   checked: {},
   focusVisible: {},
-}))(({ classes, ...props }) => {
-  return (
-    <Switch
-      focusVisibleClassName={classes.focusVisible}
-      disableRipple
-      classes={{
-        root: classes.root,
-        switchBase: classes.switchBase,
-        thumb: classes.thumb,
-        track: classes.track,
-        checked: classes.checked,
-      }}
-      {...props}
-    />
-  );
 });
 
-function Header(props) {
+
+
+
+
+interface IProps{
+  backClicked: any;
+  changeTheme: any;
+  theme:any;
+}
+
+
+type Props = IProps & StyledComponentProps;
+
+
+interface IsProps{
+  icon: any;
+  checkedIcon: any;
+  checked: any;
+  onChange: any;
+}
+type SProps = IsProps & StyledComponentProps;
+
+
+// function StyledSwitch(props: SProps){
+//   return (
+//     <Switch
+//       focusVisibleClassName={styles.focusVisible}
+//       disableRipple
+//       classes={{
+//         root: styles.root,
+//         switchBase: styles.switchBase,
+//         thumb: classes.thumb,
+//         track: styles.track,
+//         checked: props.checked,
+//       }}
+//       {...props}
+//     />
+//   );
+//     }
+
+function Header(props: Props) {
 
   const accountStore = stores.accountStore.getStore('account');
 
+
+  //Added direct account info
   const [account, setAccount] = useState(accountStore);
+
+
+
   const [toggleAboutModal, setToggleAboutModal] = useState(false);
   const [toggleSearchModal, setToggleSearchModal] = useState(false);
   const [darkMode, setDarkMode] = useState(props.theme.palette.type === 'dark' ? true : false);
@@ -144,6 +180,8 @@ function Header(props) {
     }
   }, []);
 
+  
+  
   return (
     <div>
     <Paper elevation={0} className={classes.headerContainer}>
@@ -155,7 +193,6 @@ function Header(props) {
           </div>
         )}{' '}
         <div className={classes.instantSearch}
-            component="form"
             style={{ display: 'flex', marginRight: '15px' }}
             onClick={(e) => {
               setToggleSearchModal(!toggleSearchModal);
@@ -163,21 +200,21 @@ function Header(props) {
             }}
           >
             <InputBase
-              style={{ paddingi: '20px', marginLeft: '15px', flex: 1 }}
+              style={{ padding: '20px', marginLeft: '15px', flex: 1 }}
               placeholder="Instant Search ⚡"
               inputProps={{ 'aria-label': 'search google maps' }}
             />
-            <span type="submit" aria-label="search">
+            <span aria-label="search">
               <p className={classes.shortcutInfo}>{isMac ? `Cmd+K` : `⊞ Win+K`} or /</p>
             </span>
         </div>
         <div className={classes.themeSelectContainer}>
-          <StyledSwitch
+          {/* <StyledSwitch
             icon={<Brightness2Icon className={classes.switchIcon} />}
             checkedIcon={<WbSunnyOutlinedIcon className={classes.switchIcon} />}
             checked={darkMode}
             onChange={handleToggleChange}
-          />
+          /> */}
         </div>
         <Button
           disableElevation
@@ -195,16 +232,15 @@ function Header(props) {
           variant="contained"
           color={props.theme.palette.type === 'dark' ? 'primary' : 'secondary'}
           onClick={onAddressClicked}>
-          {account && account.address && <div className={`${classes.accountIcon} ${classes.metamask}`}></div>}
+   {account && account.address && <div className={`${classes.accountIcon} ${classes.metamask}`}></div>}
           <Typography className={classes.headBtnTxt}>{account && account.address ? formatAddress(account.address) : 'Connect Wallet'}</Typography>
         </Button>
-        {unlockOpen && <Unlock modalOpen={unlockOpen} closeModal={closeUnlock} />}
+        {unlockOpen && <Unlock modalOpen={unlockOpen} closeModal={closeUnlock}  />}
         {toggleAboutModal && <AboutModal setToggleAboutModal={setToggleAboutModal} />}
         {toggleSearchModal && <SearchModal setToggleSearchModal={setToggleSearchModal} />}
-
         <MoreMenu />
-
     </Paper>
+    
     {chainInvalid ? (
       <div className={classes.chainInvalidError}>
         <div className={classes.ErrorContent}>
@@ -219,4 +255,4 @@ function Header(props) {
   );
 }
 
-export default withTheme(Header);
+export default  withStyles(styles)(withTheme(Header));

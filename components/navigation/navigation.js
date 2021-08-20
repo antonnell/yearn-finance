@@ -10,7 +10,7 @@ import WbSunnyOutlinedIcon from "@material-ui/icons/WbSunnyOutlined";
 import Brightness2Icon from "@material-ui/icons/Brightness2";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 
-import Unlock from "../unlock";
+import Unlock from "../unlock/unlock.tsx";
 
 import stores from "../../stores";
 import { formatAddress } from "../../utils";

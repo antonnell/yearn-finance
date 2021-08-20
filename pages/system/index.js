@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { Typography, Paper, Button } from '@material-ui/core';
 import Skeleton from '@material-ui/lab/Skeleton';
 import Head from 'next/head';
-import Layout from '../../components/layout/layout.js';
+import Layout from '../../components/layout';
 import classes from './system.module.css';
 import BigNumber from 'bignumber.js';
 import { withTheme } from '@material-ui/core/styles';

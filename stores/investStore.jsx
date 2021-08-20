@@ -143,7 +143,7 @@ class Store {
 
   setStore = (obj) => {
     this.store = { ...this.store, ...obj };
-    console.log(this.store);
+    // console.log(this.store);
     return this.emitter.emit(STORE_UPDATED);
   };
 
@@ -216,7 +216,7 @@ class Store {
       this.emitter.emit(VAULTS_CONFIGURED);
       this.dispatcher.dispatch({ type: GET_VAULT_BALANCES });
     } catch (ex) {
-      console.log(ex);
+      // console.log(ex);
     }
   };
 
@@ -305,7 +305,7 @@ class Store {
 
       return earn;
     } catch (ex) {
-      console.log(ex);
+      // console.log(ex);
       return null;
     }
   };
@@ -318,7 +318,7 @@ class Store {
       const vaultsApiResult = await fetch(url);
       vaultInfo = await vaultsApiResult.json();
     } catch (ex) {
-      console.log(ex);
+      // console.log(ex);
       vaultInfo = [];
     }
 
@@ -492,8 +492,8 @@ class Store {
             return vault;
           }
         } catch (ex) {
-          console.log(vault);
-          console.log(ex);
+          // console.log(vault);
+          // console.log(ex);
 
           if (callback) {
             callback(null, vault);
@@ -504,7 +504,7 @@ class Store {
       },
       (err, vaultsBalanced) => {
         if (err) {
-          console.log(err);
+          // console.log(err);
           return this.emitter.emit(ERROR, err);
         }
 
@@ -675,7 +675,7 @@ class Store {
 
       this.emitter.emit(VAULT_PERFORMANCE_RETURNED);
     } catch(ex) {
-      console.log(ex)
+      // console.log(ex)
       this.emitter.emit(VAULT_PERFORMANCE_RETURNED);
     }
   };
@@ -858,7 +858,7 @@ class Store {
         }
       }
     } catch (error) {
-      console.log({ message: `Zap Failed. ${error.message}`, poolAddress: 'poolAddress' });
+      // console.log({ message: `Zap Failed. ${error.message}`, poolAddress: 'poolAddress' });
       return this.emitter.emit(ERROR, error.message ? error.message : 'Sorry, we could not process your request, no funds have been touched.');
     }
   };
@@ -1030,7 +1030,7 @@ class Store {
         }
       }
     } catch (error) {
-      console.log({ message: `Zap Failed. ${error.message}`, poolAddress: 'poolAddress' });
+      // console.log({ message: `Zap Failed. ${error.message}`, poolAddress: 'poolAddress' });
       return this.emitter.emit(ERROR, error.message ? error.message : 'Sorry, we could not process your request, no funds have been touched.');
     }
   };
@@ -1235,7 +1235,7 @@ class Store {
       this.emitter.emit(VAULTS_UPDATED);
       this.emitter.emit(VAULT_TRANSACTIONS_RETURNED);
     } catch (ex) {
-      console.log(ex);
+      // console.log(ex);
     }
   };
 
@@ -1311,9 +1311,9 @@ class Store {
 
     }, (err, vaults) => {
       if(err) {
-        console.log(err)
+        // console.log(err)
       }
-      console.log(JSON.stringify(vaults))
+      // console.log(JSON.stringify(vaults))
 
       this.setStore({ systemJSON: vaults })
       this.emitter.emit(SYSTEM_UPDATED)
@@ -1359,7 +1359,7 @@ class Store {
               underlyingToken.protocolBalance = BigNumber(underlyingBalance).div(10**underlyingToken.decimals).toFixed(underlyingToken.decimals)
               tokens.push(underlyingToken)
             } catch(ex) {
-              console.log(ex)
+              // console.log(ex)
               // there might not be 4 tokens, so this is very reasonable to expect. we just ignore it I guess
             }
           }
@@ -1392,7 +1392,7 @@ class Store {
           }
 
         } catch(ex) {
-          console.log(ex)
+          // console.log(ex)
         }
     } else if (isCompoundToken !== false) {
       const compoundContract = new web3.eth.Contract(COMP_TOKENABI, tokenAddress)
@@ -1551,7 +1551,7 @@ class Store {
 
       return coinsList
     } catch(ex) {
-      console.log(ex)
+      // console.log(ex)
       return []
     }
   }
@@ -1620,7 +1620,7 @@ class Store {
             }
           }
         } catch(ex) {
-          console.log(ex)
+          // console.log(ex)
         }
       }
     }
@@ -2309,7 +2309,7 @@ class Store {
 
       return { strategyBalance, strategyBalanceUSD, protocols, description: strategyDescription }
     } catch(ex) {
-      console.log(ex)
+      // console.log(ex)
     }
 
 
