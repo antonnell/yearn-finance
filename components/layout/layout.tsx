@@ -20,15 +20,9 @@ interface IProps{
 
 type Props = IProps
 
-function getLibrary(provider){
-  const library = new Web3Provider(provider)
-  library.pollingInterval = 12000
-  return library
-}
 
 function Layout(props: Props) {
   return (
-    <Web3ReactProvider getLibrary={getLibrary}>
     <div className={classes.container}>
       <Head>
         <link rel="icon" href="/favicon.png" />
@@ -60,7 +54,6 @@ function Layout(props: Props) {
       </div>
 
     </div>
-    </Web3ReactProvider>
 
 
   );

@@ -207,26 +207,18 @@ function MyComponent(props) {
   if (localContext) {
     localConnector = localContext.connector;
   }
-  const { connector, library, chainId, account, activate, deactivate, active, error } = context
-// handle logic to recognize the connector currently being activated
-const [activatingConnector, setActivatingConnector] = React.useState<any>()
-React.useEffect(() => {
-  if (activatingConnector && activatingConnector === connector) {
-    setActivatingConnector(undefined)
-  }
-}, [activatingConnector, connector])
-
-// handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
-const triedEager = useEagerConnect()
-
-// handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
-useInactiveListener(!triedEager || !!activatingConnector)
 
 
-
+  const { connector, library, chainId, account, activate, deactivate, active, error } = context;
 
   var connectorsByName = stores.accountStore.getStore("connectorsByName");
 
+  const [activatingConnector, setActivatingConnector] = React.useState<any>();
+  React.useEffect(() => {
+    if (activatingConnector && activatingConnector === connector) {
+      setActivatingConnector(undefined);
+    }
+  }, [activatingConnector, connector]);
 
   const width = window.innerWidth;
 

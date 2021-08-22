@@ -311,7 +311,7 @@ const StyledSwitch = withStyles((theme) => ({
 function Navigation(props) {
   const router = useRouter();
   const context = useWeb3React();
-
+console.log(context);
 
   const account = stores.accountStore.getStore("account");
 console.log(account);
