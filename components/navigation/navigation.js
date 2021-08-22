@@ -634,7 +634,7 @@ console.log(account);
         </Grid>
         </Grid>
       </div>
-      <Typography className={classes.smallVersion}>Version 1.3.2</Typography>
+      <Typography className={classes.smallVersion}>Version 1.3.3</Typography>
     </Paper>
   );
 }

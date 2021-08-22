@@ -388,14 +388,21 @@ class Store {
           try {
             // this throws execution reverted: SafeMath: division by zero for not properly finalised vaults
             let pricePerFullShare = 1;
+            let availableDepositLimit = 0;
+
             if (vault.type === 'Lockup') {
               vault.pricePerFullShare = 1; // GET ASSET PRICE?
+              availableDepositLimit = await vaultContract.methods.availableDepositLimit(account.address).call();
+              vault.availableDepositLimit = BigNumber(availableDepositLimit).div(bnDec(vault.decimals)).toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN);
             } else if (vault.type === 'v1' || vault.type === 'Earn') {
               pricePerFullShare = await vaultContract.methods.getPricePerFullShare().call();
               vault.pricePerFullShare = BigNumber(pricePerFullShare).div(bnDec(18)).toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN); // TODO: changed 18 decimals to vault decimals for v2
+              vault.availableDepositLimit = vault.type === 'Earn' ? MAX_UINT256 : '0';
             } else {
               pricePerFullShare = await vaultContract.methods.pricePerShare().call();
               vault.pricePerFullShare = BigNumber(pricePerFullShare).div(bnDec(vault.decimals)).toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN); // TODO: changed 18 decimals to vault decimals for v2
+              availableDepositLimit = await vaultContract.methods.availableDepositLimit().call();
+              vault.availableDepositLimit = BigNumber(availableDepositLimit).div(bnDec(vault.decimals)).toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN);
             }
           } catch (ex) {
             vault.pricePerFullShare = 0;

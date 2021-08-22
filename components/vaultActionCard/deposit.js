@@ -248,8 +248,18 @@ export default function Deposit({ vault }) {
     setVaultTokenSharesForAmount();
   }, [amount]);
 
-  let depositDisabled = vault?.emergency_shutdown
+  let depositDisabled = false
   let depositDisabledMessage = null
+
+  if(vault.emergency_shutdown) {
+    depositDisabled = true
+    depositDisabledMessage = 'Deposits are disabled for this vault.'
+  }
+
+  if(BigNumber(vault.availableDepositLimit).lte(0)) {
+    depositDisabled = true
+    depositDisabledMessage = 'Deposits are disabled for this vault. The available deposit limit has been reached.'
+  }
 
   if(vault.type === 'v1') {
     depositDisabled = true
@@ -326,7 +336,7 @@ export default function Deposit({ vault }) {
               style={{ width: '55%', marginRight: '5px' }}
               renderOption={(option) => (
                 <React.Fragment>
-                  <img src={option.icon ? option.icon : `https://zapper.fi/images/${option.img}`} alt="" width={30} height={30} style={{ marginRight: '10px' }} />
+                  <img src={option.icon ? option.icon : `${option.img}`} alt="" width={30} height={30} style={{ marginRight: '10px' }} />
                   <span className={classes.color} style={{ backgroundColor: option.color }} />
                   <div className={classes.text}>
                     {option.label}
@@ -343,7 +353,7 @@ export default function Deposit({ vault }) {
                       startAdornment: (
                         <InputAdornment position="start">
                           <img
-                            src={selectedZapBalanceToken?.icon ? selectedZapBalanceToken.icon : `https://zapper.fi/images/${selectedZapBalanceToken.img}`}
+                            src={selectedZapBalanceToken?.icon ? selectedZapBalanceToken.icon : `${selectedZapBalanceToken.img}`}
                             alt=""
                             width={30}
                             height={30}
