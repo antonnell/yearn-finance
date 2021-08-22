@@ -30,6 +30,7 @@ interface IProps  {
     dispatcher: any;
     emmiter: any;
 }
+import Web3 from 'web3';
 
 type Props = IProps;
 
@@ -43,14 +44,19 @@ export function useEagerConnect() {
     injected.isAuthorized().then((isAuthorized: boolean) => {
       if (isAuthorized) {
         activate(injected, undefined, true).then((a)=>{
-          console.log(a, injected,)
+          // console.log(a, injected,)
           injected.getProvider().then(a=>{
             console.log(a);
+                const prov_ = new Web3(a)
             stores.accountStore.setStore({
               account: {address:  a.selectedAddress},
+              web3provider:prov_,
               web3context:{library:{provider:a}}})
-
-              console.log('printing',{account: {address:  a.selectedAddress},web3context:{library:{provider:a} }});
+             console.log('printing',{account: {address:  a.selectedAddress},
+             web3provider:prov_,
+             web3context:{library:{provider:a} }});
+              // stores.accountStore.getGasPrices();
+              // stores.accountStore.getCurrentBlock();
 
           })
         }).catch(() => {
@@ -75,12 +81,18 @@ export function useEagerConnect() {
 export function useInactiveListener(suppress: boolean = false) {
   const { active, error, activate } = useWeb3React()
 
+  console.log(suppress)
   useEffect((): any => {
-    const { ethereum } = window as any
+    const { ethereum } = window as any;
+    console.log(ethereum, ethereum.on ,!active , !error, !suppress)
+
     if (ethereum && ethereum.on && !active && !error && !suppress) {
       const handleConnect = () => {
         console.log("Handling 'connect' event")
-        activate(injected)
+        activate(injected).then((d)=>{
+
+          console.log(d);
+        })
       }
       const handleChainChanged = (chainId: string | number) => {
         console.log("Handling 'chainChanged' event with payload", chainId)

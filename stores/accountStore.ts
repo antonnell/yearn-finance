@@ -36,6 +36,7 @@ interface IStore{
   account: any,
   chainInvalid: boolean;
   web3context: any;
+  web3provider: any;
   tokens: any[];
   tried: boolean;
   connectorsByName:any;
@@ -67,6 +68,7 @@ class AccountStore extends React.Component<Props,IStore> {
       account: null,
       chainInvalid: false,
       web3context: null,
+      web3provider: null,
       tokens: [],
       tried: false,
       connectorsByName: {
@@ -120,6 +122,9 @@ class AccountStore extends React.Component<Props,IStore> {
   }
 
   configure = async () => {
+    this.getCurrentBlock();
+    this.getGasPrices();
+
         injected.isAuthorized().then((isAuthorized) => {
 
          this.props.emitter.emit(ACCOUNT_CONFIGURED);
@@ -262,19 +267,22 @@ class AccountStore extends React.Component<Props,IStore> {
 
 
   getBalances = async (payload) => {
+    console.log('getting balance')
     const account = this.getStore('account');
     if (!account) {
       return false;
       //maybe throw an error
     }
-
-    const web3 = await this.getWeb3Provider();
+      console.log(Web3, payload);
+    const web3 = this.store.web3provider
     if (!web3) {
       return false;
       //maybe throw an error
     }
 
     const vaults = stores.investStore.getStore('vaults');
+
+
 
     const vaultTokens = vaults.map((v) => {
       return {
@@ -286,15 +294,16 @@ class AccountStore extends React.Component<Props,IStore> {
         icon: v.tokenMetadata.icon,
       };
     });
-    //get lelnding assets, append them to this
+    console.log(vaultTokens);
+    // //get lelnding assets, append them to this
     async.map(
       vaultTokens,
       async (token, callback) => {
         try {
-          const erc20Contract = new web3.eth.Contract(ERC20ABI, token.address);
+          const erc20Contract = new web3.library.Contract(ERC20ABI, token.address);
           const balanceOf = await erc20Contract.methods.balanceOf(account.address).call();
 
-          token.balance = BigNumber(balanceOf).div(bnDec(token.decimals)).toFixed(token.decimals, BigNumber.ROUND_DOWN);
+          token.balance =  BigNumber(balanceOf).div(bnDec(token.decimals)).toFixed(token.decimals, BigNumber.ROUND_DOWN);
 
           if (callback) {
             callback(null, token);
@@ -317,9 +326,11 @@ class AccountStore extends React.Component<Props,IStore> {
 
   getCurrentBlock = async (payload?) => {
     try {
-      var web3 = new Web3(process.env.NEXT_PUBLIC_PROVIDER);
-      const block = await web3.eth.getBlockNumber();
+      // var web3 = new Web3(process.env.NEXT_PUBLIC_PROVIDER);
+      if(this.store.web3context){
+      const block = await this.store.web3provider.eth.getBlockNumber();
       this.setStore({ currentBlock: block });
+      }
     } catch (ex) {
       console.log(ex);
     }
@@ -349,9 +360,9 @@ class AccountStore extends React.Component<Props,IStore> {
       }
     } catch (e) {
       console.log(e);
-      const web3 = await this._getWeb3Provider();
-      const gasPrice = await web3.eth.getGasPrice();
-      const gasPriceInGwei = web3.utils.fromWei(gasPrice, "gwei");
+      // const web3 = await this._getWeb3Provider();
+      const gasPrice = await this.store.web3provider.eth.getGasPrice();
+      const gasPriceInGwei = this.store.web3provider.utils.fromWei(gasPrice, "gwei");
       return {
         standard: gasPriceInGwei,
         fast: gasPriceInGwei,
@@ -380,21 +391,12 @@ class AccountStore extends React.Component<Props,IStore> {
     }
   };
 
-  getWeb3Provider = async () => {
-    let web3context = this.getStore('web3context');
-    let provider = null;
+  getWeb3Provider = () => {
 
-    if (!web3context) {
-      provider = network.providers['1'];
-    } else {
-      provider = web3context.library.provider;
-    }
-
-    if (!provider) {
-      return null;
-    }
-    return new Web3(provider);
+   
+    return this.store.web3provider;
   };
+
 }
 
 export default AccountStore;

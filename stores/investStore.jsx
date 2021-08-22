@@ -1299,8 +1299,9 @@ class Store {
     async.mapLimit(vaultData, 10, async (vault, callback) => {
 
       let depositToken = await this.getTokenTree(web3, vault.tokenMetadata.address, coingeckoCoinList, vault)
-
-      const erc20Contract = new web3.eth.Contract(ERC20ABI, vault.address);
+      let web3provider = stores.accountStore.getWeb3Provider();
+      // console.log(web3provider);
+      const erc20Contract = new web3provider.eth.Contract(ERC20ABI, vault.address);
       const depositTokenTotalSupply = await erc20Contract.methods.totalSupply().call()
       depositToken.balance = BigNumber(depositTokenTotalSupply).times(vault.pricePerFullShare).div(10**depositToken.decimals).toFixed(depositToken.decimals)
       depositToken.balanceUSD = BigNumber(depositTokenTotalSupply).times(vault.pricePerFullShare).times(depositToken.price).div(10**depositToken.decimals).toFixed(depositToken.decimals)

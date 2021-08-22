@@ -311,10 +311,10 @@ const StyledSwitch = withStyles((theme) => ({
 function Navigation(props) {
   const router = useRouter();
   const context = useWeb3React();
-console.log(context);
+// console.log(context);
 
   const account = stores.accountStore.getStore("account");
-console.log(account);
+// console.log(account);
   const [darkMode, setDarkMode] = useState(false);
   const [unlockOpen, setUnlockOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
