@@ -14,6 +14,7 @@ import stores from '../stores/index.js';
 
 import { CONFIGURE, VAULTS_CONFIGURED, ACCOUNT_CONFIGURED, LENDING_CONFIGURED, CDP_CONFIGURED } from '../stores/constants';
 
+
 export default function MyApp({ Component, pageProps }) {
   const router = useRouter();
 
@@ -101,6 +102,7 @@ export default function MyApp({ Component, pageProps }) {
       <ThemeProvider theme={themeConfig}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
+
         {validateConfigured() && <Component {...pageProps} changeTheme={changeTheme} />}
         {!validateConfigured() && <Configure {...pageProps} />}
       </ThemeProvider>

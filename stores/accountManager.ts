@@ -4,8 +4,27 @@ import { useWeb3React } from '@web3-react/core'
 // import { injected } from './connectors'
 import { injected, walletconnect, walletlink, fortmatic, portis, network } from './connectors/connectors';
 
-import stores from "../../stores";
-
+import stores from "../stores";
+import {
+  ERROR,
+  CONNECTION_DISCONNECTED,
+  CONNECTION_CONNECTED,
+  CONFIGURE,
+  CONFIGURE_VAULTS,
+  CONFIGURE_LENDING,
+  GAS_PRICE_API,
+  ZAPPER_GAS_PRICE_API,
+  STORE_UPDATED,
+  ACCOUNT_CONFIGURED,
+  GET_ACCOUNT_BALANCES,
+  ACCOUNT_BALANCES_RETURNED,
+  CONFIGURE_CDP,
+  LENDING_CONFIGURED,
+  CDP_CONFIGURED,
+  ACCOUNT_CHANGED,
+  GET_GAS_PRICES,
+  GAS_PRICES_RETURNED,
+} from "../stores/constants/constants";
 
 interface IProps  {
     dispatcher: any;
@@ -24,7 +43,16 @@ export function useEagerConnect() {
     injected.isAuthorized().then((isAuthorized: boolean) => {
       if (isAuthorized) {
         activate(injected, undefined, true).then((a)=>{
-          console.log(a)
+          console.log(a, injected,)
+          injected.getProvider().then(a=>{
+            console.log(a);
+            stores.accountStore.setStore({
+              account: {address:  a.selectedAddress},
+              web3context:{library:{provider:a}}})
+
+              console.log('printing',{account: {address:  a.selectedAddress},web3context:{library:{provider:a} }});
+
+          })
         }).catch(() => {
           setTried(true)
         })
@@ -57,11 +85,34 @@ export function useInactiveListener(suppress: boolean = false) {
       const handleChainChanged = (chainId: string | number) => {
         console.log("Handling 'chainChanged' event with payload", chainId)
         activate(injected)
+            const supportedChainIds = [1];
+      const parsedChainId = parseInt(chainId, 16);
+      const isChainSupported = supportedChainIds.includes(parsedChainId);
+      stores.setStore({ chainInvalid: !isChainSupported });
+      stores.emitter.emit(ACCOUNT_CHANGED);
+      stores.emitter.emit(ACCOUNT_CONFIGURED);
       }
       const handleAccountsChanged = (accounts: string[]) => {
         console.log("Handling 'accountsChanged' event with payload", accounts)
         if (accounts.length > 0) {
           activate(injected)
+
+            stores.emitter.emit(ACCOUNT_CHANGED);
+    stores.emitter.emit(ACCOUNT_CONFIGURED);
+
+    stores.dispatcher.dispatch({
+        type: CONFIGURE_VAULTS,
+        content: { connected: true },
+      });
+    stores.dispatcher.dispatch({
+        type: CONFIGURE_LENDING,
+        content: { connected: true },
+      });
+    stores.dispatcher.dispatch({
+        type: CONFIGURE_CDP,
+        content: { connected: true },
+      });
+
         }
       }
       const handleNetworkChanged = (networkId: string | number) => {

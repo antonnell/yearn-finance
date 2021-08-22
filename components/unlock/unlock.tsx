@@ -5,9 +5,6 @@ import CloseIcon from "@material-ui/icons/Close";
 
 import { Web3ReactProvider, useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
-
-
-
 import {
   ERROR,
   CONNECTION_DISCONNECTED,
@@ -34,10 +31,7 @@ import { useEagerConnect, useInactiveListener } from '../../stores/accountManage
 
 import { createStyles, StyledComponentProps } from "@material-ui/styles";
 
-interface IProps{
-  modalOpen: any;
-  closeModal: any;
-}
+
 
 const styles = (theme: any) => createStyles({
   root: {
@@ -94,7 +88,11 @@ const styles = (theme: any) => createStyles({
   }
 });
 
-
+interface IProps{
+  modalOpen: any;
+  closeModal: any;
+  setActivatingConnector?: any;
+}
 interface IState {
   loading: boolean;
   error: any;
@@ -170,16 +168,16 @@ class Unlock extends React.Component<Props,IState> {
 }
 
 
-function onConnectionClicked(
-  currentConnector,
-  name,
-  setActivatingConnector,
-  activate
-) {
-  const connectorsByName = stores.accountStore.getStore("connectorsByName");
-  setActivatingConnector(currentConnector);
-  activate(connectorsByName[name]);
-}
+// function onConnectionClicked(
+//   currentConnector,
+//   name,
+//   setActivatingConnector,
+//   activate
+// ) {
+//   const connectorsByName = stores.accountStore.getStore("connectorsByName");
+//   setActivatingConnector(currentConnector);
+//   activate(connectorsByName[name]);
+// }
 
 function onDeactivateClicked(deactivate, connector) {
   console.log(deactivate, connector);
@@ -249,9 +247,6 @@ useInactiveListener(!triedEager || !!activatingConnector)
           currentConnector === connector || currentConnector === localConnector;
         const disabled = !!activatingConnector || !!error || connected
 
-
-        console.log(currentConnector, activating);
-
         let url;
         let display = name;
         let descriptor = "";
@@ -307,23 +302,37 @@ useInactiveListener(!triedEager || !!activatingConnector)
                 width: width > 576 ? "350px" : "calc(100vw - 100px)",
                 height: "200px",
                 backgroundColor: "rgba(0,0,0,0.05)",
-                // borderColor: activating ? 'orange' : connected ? 'green' : 'unset',
-                border: "1px solid rgba(108,108,123,0.2)",
+                // borderColor: activating ? 'orange' : connected ? 'green' :  "rgba(0,0,0,0.05)",
+                border: activating ? '1px solid orange' : connected ? "1px solid green" : "1px solid rgba(108,108,123,0.2)",
                 color: "rgba(108,108,123,1)"
               }}
               variant="contained"
               onClick={() => {
-                onConnectionClicked(
-                  currentConnector,
-                  name,
-                  setActivatingConnector,
-                  activate
-                );
+
+                if(!activating){
+                  setActivatingConnector(currentConnector)
+                  // props.setActivatingConnector(currentConnector);
+                  activate(connectorsByName[name]).then((a:any)=>{
+                    console.log(a);
+                    // console.log('provider: ', provider)
+                  })
+                }
+                // onConnectionClicked(
+                //   currentConnector,
+                //   name,
+                //   setActivatingConnector,
+                //   activate
+                // );
               }}
               disableElevation
               color="secondary"
               disabled={disabled}
             >
+                      {connected && (
+                  <span role="img" aria-label="check">
+                    ✅
+                  </span>
+                )}
               <div
                 style={{
                   height: "160px",
@@ -342,11 +351,7 @@ useInactiveListener(!triedEager || !!activatingConnector)
                   src={url}
                   alt=""
                 />
-                {connected && (
-                  <span role="img" aria-label="check">
-                    ✅
-                  </span>
-                )}<Typography variant={"h2"}>{display}</Typography>
+            <Typography variant={"h2"}>{display}</Typography>
                 <Typography variant={"body2"}>{descriptor}</Typography>
                 {activating && (
                   <CircularProgress size={15} style={{ marginRight: "10px" }} />

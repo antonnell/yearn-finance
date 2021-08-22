@@ -28,6 +28,7 @@ import MoreMenu from './moreMenu';
 import { Web3Provider } from '@ethersproject/providers'
 import { Web3ReactProvider, useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
 import { makeStyles } from '@material-ui/styles';
+import { useEagerConnect, useInactiveListener } from '../../stores/accountManager.ts';
 
 
 
@@ -109,11 +110,31 @@ type SProps = IsProps & StyledComponentProps;
 
 function Header(props: Props) {
 
+
+  const context = useWeb3React<Web3Provider>()
+  const { connector, library, chainId, account, activate, deactivate, active, error } = context
+
+  // handle logic to recognize the connector currently being activated
+  const [activatingConnector, setActivatingConnector] = React.useState<any>()
+  React.useEffect(() => {
+    if (activatingConnector && activatingConnector === connector) {
+      setActivatingConnector(undefined)
+    }
+  }, [activatingConnector, connector])
+
+  // handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
+  const triedEager = useEagerConnect()
+
+  // handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
+  useInactiveListener(!triedEager || !!activatingConnector)
+
+
+
   const accountStore = stores.accountStore.getStore('account');
 
 
   //Added direct account info
-  const [account, setAccount] = useState(accountStore);
+  // const [account, setAccount] = useState(accountStore);
 
 
 
@@ -130,8 +151,8 @@ function Header(props: Props) {
 
   useEffect(() => {
     const accountConfigure = () => {
-      const accountStore = stores.accountStore.getStore('account');
-      setAccount(accountStore);
+      // const accountStore = stores.accountStore.getStore('account');
+      // setAccount(accountStore);
       closeUnlock();
     };
     const connectWallet = () => {
@@ -232,10 +253,13 @@ function Header(props: Props) {
           variant="contained"
           color={props.theme.palette.type === 'dark' ? 'primary' : 'secondary'}
           onClick={onAddressClicked}>
-   {account && account.address && <div className={`${classes.accountIcon} ${classes.metamask}`}></div>}
-          <Typography className={classes.headBtnTxt}>{account && account.address ? formatAddress(account.address) : 'Connect Wallet'}</Typography>
+   {account && account && <div className={`${classes.accountIcon} ${classes.metamask}`}></div>}
+          <Typography className={classes.headBtnTxt}>{account && account ? formatAddress(account) : 'Connect Wallet'}</Typography>
         </Button>
-        {unlockOpen && <Unlock modalOpen={unlockOpen} closeModal={closeUnlock}  />}
+        {unlockOpen && <Unlock modalOpen={unlockOpen} 
+        setActivatingConnector={setActivatingConnector}
+        closeModal={closeUnlock} 
+         />}
         {toggleAboutModal && <AboutModal setToggleAboutModal={setToggleAboutModal} />}
         {toggleSearchModal && <SearchModal setToggleSearchModal={setToggleSearchModal} />}
         <MoreMenu />

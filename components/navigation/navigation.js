@@ -12,6 +12,9 @@ import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 
 import Unlock from "../unlock/unlock.tsx";
 
+import { Web3ReactProvider, useWeb3React } from "@web3-react/core";
+import { Web3Provider } from "@ethersproject/providers";
+
 import stores from "../../stores";
 import { formatAddress } from "../../utils";
 
@@ -307,9 +310,11 @@ const StyledSwitch = withStyles((theme) => ({
 
 function Navigation(props) {
   const router = useRouter();
+  const context = useWeb3React();
+
 
   const account = stores.accountStore.getStore("account");
-
+console.log(account);
   const [darkMode, setDarkMode] = useState(false);
   const [unlockOpen, setUnlockOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);

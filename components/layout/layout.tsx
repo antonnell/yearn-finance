@@ -7,6 +7,8 @@ import SnackbarController from "../snackbar/snackbarController";
 
 import { Web3ReactProvider } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
+
+
 export const siteTitle = "Yearn";
 
 interface IProps{
@@ -18,9 +20,7 @@ interface IProps{
 
 type Props = IProps
 
-
-
-function getLibrary(provider: any): Web3Provider {
+function getLibrary(provider){
   const library = new Web3Provider(provider)
   library.pollingInterval = 12000
   return library
@@ -58,8 +58,10 @@ function Layout(props: Props) {
         <SnackbarController />
         <main>{props.children}</main>
       </div>
+
     </div>
     </Web3ReactProvider>
+
 
   );
 }

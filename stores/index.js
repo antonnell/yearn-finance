@@ -1,5 +1,5 @@
 // import AccountManger from './accountManager'
-import AccountStore from './accountStore';
+import AccountStore from './accountStore.ts';
 import InvestStore from './investStore';
 import CoverStore from './coverStore';
 import LendStore from './lendStore';
@@ -15,7 +15,7 @@ const emitter = new Emitter();
 
 
 // const accountManager = new accountManager(dispatcher,emitter);
-const accountStore = new AccountStore(dispatcher, emitter);
+const accountStore = new AccountStore({dispatcher, emitter});
 const investStore = new InvestStore(dispatcher, emitter);
 const coverStore = new CoverStore(dispatcher, emitter);
 const lendStore = new LendStore(dispatcher, emitter);
