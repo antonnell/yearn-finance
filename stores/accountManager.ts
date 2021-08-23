@@ -46,15 +46,17 @@ export function useEagerConnect() {
         activate(injected, undefined, true).then((a)=>{
           // console.log(a, injected,)
           injected.getProvider().then(a=>{
-            console.log(a);
+            // console.log(a);
                 const prov_ = new Web3(a)
             stores.accountStore.setStore({
               account: {address:  a.selectedAddress},
               web3provider:prov_,
               web3context:{library:{provider:a}}})
-             console.log('printing',{account: {address:  a.selectedAddress},
-             web3provider:prov_,
-             web3context:{library:{provider:a} }});
+
+            //  console.log('printing',{account: {address:  a.selectedAddress},
+            //  web3provider:prov_,
+            //  web3context:{library:{provider:a} }});
+
               // stores.accountStore.getGasPrices();
               // stores.accountStore.getCurrentBlock();
 
@@ -78,73 +80,4 @@ export function useEagerConnect() {
   return tried
 }
 
-export function useInactiveListener(suppress: boolean = false) {
-  const { active, error, activate } = useWeb3React()
-
-  console.log(suppress)
-  useEffect((): any => {
-    const { ethereum } = window as any;
-    console.log(ethereum, ethereum.on ,!active , !error, !suppress)
-
-    if (ethereum && ethereum.on && !active && !error && !suppress) {
-      const handleConnect = () => {
-        console.log("Handling 'connect' event")
-        activate(injected).then((d)=>{
-
-          console.log(d);
-        })
-      }
-      const handleChainChanged = (chainId: string | number) => {
-        console.log("Handling 'chainChanged' event with payload", chainId)
-        activate(injected)
-            const supportedChainIds = [1];
-      const parsedChainId = parseInt(chainId, 16);
-      const isChainSupported = supportedChainIds.includes(parsedChainId);
-      stores.setStore({ chainInvalid: !isChainSupported });
-      stores.emitter.emit(ACCOUNT_CHANGED);
-      stores.emitter.emit(ACCOUNT_CONFIGURED);
-      }
-      const handleAccountsChanged = (accounts: string[]) => {
-        console.log("Handling 'accountsChanged' event with payload", accounts)
-        if (accounts.length > 0) {
-          activate(injected)
-
-            stores.emitter.emit(ACCOUNT_CHANGED);
-    stores.emitter.emit(ACCOUNT_CONFIGURED);
-
-    stores.dispatcher.dispatch({
-        type: CONFIGURE_VAULTS,
-        content: { connected: true },
-      });
-    stores.dispatcher.dispatch({
-        type: CONFIGURE_LENDING,
-        content: { connected: true },
-      });
-    stores.dispatcher.dispatch({
-        type: CONFIGURE_CDP,
-        content: { connected: true },
-      });
-
-        }
-      }
-      const handleNetworkChanged = (networkId: string | number) => {
-        console.log("Handling 'networkChanged' event with payload", networkId)
-        activate(injected)
-      }
-
-      ethereum.on('connect', handleConnect)
-      ethereum.on('chainChanged', handleChainChanged)
-      ethereum.on('accountsChanged', handleAccountsChanged)
-      ethereum.on('networkChanged', handleNetworkChanged)
-
-      return () => {
-        if (ethereum.removeListener) {
-          ethereum.removeListener('connect', handleConnect)
-          ethereum.removeListener('chainChanged', handleChainChanged)
-          ethereum.removeListener('accountsChanged', handleAccountsChanged)
-          ethereum.removeListener('networkChanged', handleNetworkChanged)
-        }
-      }
-    }
-  }, [active, error, suppress, activate])
-}
+// export function 

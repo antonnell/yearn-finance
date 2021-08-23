@@ -122,8 +122,6 @@ class AccountStore extends React.Component<Props,IStore> {
   }
 
   configure = async () => {
-    this.getCurrentBlock();
-    this.getGasPrices();
 
         injected.isAuthorized().then((isAuthorized) => {
 
@@ -137,6 +135,10 @@ class AccountStore extends React.Component<Props,IStore> {
     content: { connected: true },
   });
 });
+
+this.getCurrentBlock();
+this.getGasPrices();
+
   // this.props.dispatcher.dispatch({
   //   type: CONFIGURE_LENDING,
   //   content: { connected: true },
@@ -258,12 +260,14 @@ class AccountStore extends React.Component<Props,IStore> {
     //   const parsedChainId = parseInt(chainId, 16);
     //   const isChainSupported = supportedChainIds.includes(parsedChainId);
     //   that.setStore({ chainInvalid: !isChainSupported });
-    //   that.emitter.emit(ACCOUNT_CHANGED);
-    //   that.emitter.emit(ACCOUNT_CONFIGURED);
+    //   that.props.emitter.emit(ACCOUNT_CHANGED);
+    //   that.props.emitter.emit(ACCOUNT_CONFIGURED);
 
     //   that.configure()
     // });
   };
+
+  
 
 
   getBalances = async (payload) => {
@@ -273,7 +277,6 @@ class AccountStore extends React.Component<Props,IStore> {
       return false;
       //maybe throw an error
     }
-      console.log(Web3, payload);
     const web3 = this.store.web3provider
     if (!web3) {
       return false;
@@ -303,6 +306,7 @@ class AccountStore extends React.Component<Props,IStore> {
           const erc20Contract = new web3.library.Contract(ERC20ABI, token.address);
           const balanceOf = await erc20Contract.methods.balanceOf(account.address).call();
 
+
           token.balance =  BigNumber(balanceOf).div(bnDec(token.decimals)).toFixed(token.decimals, BigNumber.ROUND_DOWN);
 
           if (callback) {
@@ -316,9 +320,8 @@ class AccountStore extends React.Component<Props,IStore> {
       },
       (err, tokensBalanced) => {
         if (err) {
-          return this.emitter.emit(ERROR, err);
+          return this.props.emitter.emit(ERROR, err);
         }
-
         const tokens = this.setStore({ tokens: tokensBalanced });
       },
     );
@@ -329,6 +332,7 @@ class AccountStore extends React.Component<Props,IStore> {
       // var web3 = new Web3(process.env.NEXT_PUBLIC_PROVIDER);
       if(this.store.web3context){
       const block = await this.store.web3provider.eth.getBlockNumber();
+      console.log(block)
       this.setStore({ currentBlock: block });
       }
     } catch (ex) {
@@ -346,6 +350,7 @@ class AccountStore extends React.Component<Props,IStore> {
     }
 
     this.setStore({ gasPrices: gasPrices, gasSpeed: gasSpeed });
+
     this.props.emitter.emit(GAS_PRICES_RETURNED);
   };
 

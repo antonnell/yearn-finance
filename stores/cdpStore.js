@@ -102,12 +102,12 @@ class Store {
   };
 
   configure = async (payload) => {
-    const web3 = await stores.accountStore.getWeb3Provider();
+    const web3 =  stores.accountStore.getWeb3Provider();
     if (!web3) {
       return null;
     }
 
-    const account = await stores.accountStore.getStore('account');
+    const account =  stores.accountStore.getStore('account');
     if (!account) {
       return null;
     }
@@ -121,7 +121,7 @@ class Store {
       borrowAsset.balance = BigNumber(borrowBalanceOf).div(bnDec(borrowAsset.decimals)).toFixed(borrowAsset.decimals, BigNumber.ROUND_DOWN);
       const allowanceOf = await borrowAssetContract.methods.allowance(account.address, CDP_VAULT_ADDRESS).call();
       borrowAsset.allowance = BigNumber(allowanceOf).div(bnDec(borrowAsset.decimals)).toFixed(borrowAsset.decimals, BigNumber.ROUND_DOWN);
-
+console.log(orrowAsset);
       this.setStore({ borrowAsset: borrowAsset });
 
       //get all supported assets

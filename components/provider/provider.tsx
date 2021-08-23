@@ -6,15 +6,21 @@ import SnackbarController from '../snackbar/snackbarController';
 import stores from '../../stores/index.js';
 import { useRouter } from 'next/router';
 
-import { CONFIGURE, VAULTS_CONFIGURED, ACCOUNT_CONFIGURED, LENDING_CONFIGURED, CDP_CONFIGURED } from '../../stores/constants';
+import { CONFIGURE, VAULTS_CONFIGURED, ACCOUNT_CONFIGURED, LENDING_CONFIGURED, CDP_CONFIGURED ,  ACCOUNT_CHANGED,
+  CONFIGURE_VAULTS,
+  CONFIGURE_LENDING,
+  CONFIGURE_CDP,
+
+} from '../../stores/constants';
 
 import { useWeb3React, Web3ReactProvider } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
 import { useEffect, useState } from 'react';
-import { useEagerConnect, useInactiveListener } from '../../stores/accountManager.ts';
+import { useEagerConnect} from '../../stores/accountManager.ts';
 
 import Configure from '../../pages/configure';
 import React from 'react';
+import { injected } from '../../stores/connectors/connectors';
 
 export const siteTitle = 'Yearn';
 
@@ -26,6 +32,76 @@ interface IProps {
 
 type Props = IProps;
 
+
+
+export function useInactiveListener(suppress: boolean = false) {
+  const { active, error, activate } = useWeb3React()
+
+  // console.log(suppress)
+  useEffect((): any => {
+    const { ethereum } = window as any;
+    // console.log(ethereum, ethereum.on ,!active , !error, !suppress)
+
+    if (ethereum && ethereum.on && !active && !error && !suppress) {
+      const handleConnect = () => {
+        console.log("Handling 'connect' event")
+        activate(injected)
+      }
+      const handleChainChanged = (chainId: string | number) => {
+        console.log("Handling 'chainChanged' event with payload", chainId)
+        activate(injected)
+            const supportedChainIds = [1];
+      const parsedChainId = parseInt(chainId, 16);
+      const isChainSupported = supportedChainIds.includes(parsedChainId);
+      stores.accountStore.setStore({ chainInvalid: !isChainSupported });
+     stores.emitter.emit(ACCOUNT_CHANGED);
+     stores.emitter.emit(ACCOUNT_CONFIGURED);
+      }
+      const handleAccountsChanged = (accounts: string[]) => {
+        console.log("Handling 'accountsChanged' event with payload", accounts)
+        if (accounts.length > 0) {
+          activate(injected)
+
+          stores.emitter.emit(ACCOUNT_CHANGED);
+          stores.emitter.emit(ACCOUNT_CONFIGURED);
+
+   stores.accountStore.dispatcher.dispatch({
+        type: CONFIGURE_VAULTS,
+        content: { connected: true },
+      });
+stores.accountStore.dispatcher.dispatch({
+        type: CONFIGURE_LENDING,
+        content: { connected: true },
+      });
+stores.accountStore.dispatcher.dispatch({
+        type: CONFIGURE_CDP,
+        content: { connected: true },
+      });
+
+        }
+      }
+      const handleNetworkChanged = (networkId: string | number) => {
+        // console.log("Handling 'networkChanged' event with payload", networkId)
+        activate(injected)
+      }
+
+      ethereum.on('connect', handleConnect)
+      ethereum.on('chainChanged', handleChainChanged)
+      ethereum.on('accountsChanged', handleAccountsChanged)
+      ethereum.on('networkChanged', handleNetworkChanged)
+
+      return () => {
+        if (ethereum.removeListener) {
+          ethereum.removeListener('connect', handleConnect)
+          ethereum.removeListener('chainChanged', handleChainChanged)
+          ethereum.removeListener('accountsChanged', handleAccountsChanged)
+          ethereum.removeListener('networkChanged', handleNetworkChanged)
+        }
+      }
+    }
+  }, [active, error, suppress, activate])
+}
+
 function Provider(props: Props) {
   const router = useRouter();
   const context = useWeb3React();
@@ -34,22 +110,6 @@ function Provider(props: Props) {
 
   const { connector, library, chainId, account, activate, deactivate, active, error } = context;
 
-  // handle logic to recognize the connector currently being activated
-  const [activatingConnector, setActivatingConnector] = React.useState<any>();
-  React.useEffect(() => {
-    console.log('running',activatingConnector , activatingConnector,connector)
-    if (activatingConnector && activatingConnector === connector) {
-      setActivatingConnector(undefined);
-    }
-  }, [activatingConnector, connector]);
-
-  
-    // handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
-    const triedEager = useEagerConnect();
-  
-    // handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
-    useInactiveListener(!triedEager || !!activatingConnector);
-
 
 
   const [providerReady, setProviderReady] = useState(false);
@@ -57,6 +117,7 @@ function Provider(props: Props) {
   const [accountConfigured, setAccountConfigured] = useState(false);
   const [lendingConfigured, setLendingConfigured] = useState(false);
   const [cdpConfigured, setCDPConfigured] = useState(false);
+  const [activatingConnector, setActivatingConnector] = React.useState<any>();
 
 
 
@@ -112,10 +173,27 @@ function Provider(props: Props) {
   };
 
 
+  // handle logic to recognize the connector currently being activated
+  React.useEffect(() => {
+    console.log('running',activatingConnector , activatingConnector,connector)
+    if (activatingConnector && activatingConnector === connector) {
+      setActivatingConnector(undefined);
+    }
+  }, [activatingConnector, connector]);
+
+  
+
+    // handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
+    const triedEager = useEagerConnect();
+  
+    // handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
+  useInactiveListener(!triedEager || !!activatingConnector);
+
+
+  console.log(validateConfigured());
+
   return (
     <>
-
-
       {validateConfigured() && <props.Component {...props.pageProps} changeTheme={props.changeTheme} />}
       {!validateConfigured() && <Configure {...props.pageProps} />}
     </>

@@ -14,12 +14,12 @@ import ltvsearchanim from "../../public/lottiefiles/ltv-anim-2.json";
 
 function LTV({ changeTheme }) {
   const [asset, setAsset] = useState('');
-  const [web3, setWeb3] = useState(null);
+  const [web3, setWeb3] = useState(stores.accountStore.getWeb3Provider());
   const [assets, setAssets] = useState([]);
   const [assetDetails, setAssetDetails] = useState(null);
 
   useEffect(async function () {
-    setWeb3(await stores.accountStore.getWeb3Provider());
+    // setWeb3(stores.accountStore.getWeb3Provider());
     setAssets(stores.ltvStore.getStore('assets'));
   }, []);
 
@@ -45,6 +45,9 @@ function LTV({ changeTheme }) {
     });
   };
 
+
+
+  console.log()
   return (
     <Layout changeTheme={changeTheme}>
       <Head>
@@ -82,7 +85,7 @@ function LTV({ changeTheme }) {
                     fullWidth={true}
                     renderOption={(option) => (
                       <React.Fragment>
-                        <img
+                        {/* <img
                           src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${web3.utils.toChecksumAddress(
                             option.address,
                           )}/logo.png`}
@@ -90,7 +93,7 @@ function LTV({ changeTheme }) {
                           width={30}
                           height={30}
                           style={{ marginRight: '10px' }}
-                        />
+                        /> */}
                         <span className={classes.color} style={{ backgroundColor: option.color }} />
                         <div className={classes.text}>
                           {option.symbol}
@@ -107,7 +110,7 @@ function LTV({ changeTheme }) {
                             placeholder: 'ETH, BTC, YFI...',
                             startAdornment: asset && (
                               <InputAdornment position="start">
-                                <img
+                                {/* <img
                                   src={
                                     asset &&
                                     `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${web3.utils.toChecksumAddress(
@@ -117,7 +120,7 @@ function LTV({ changeTheme }) {
                                   alt=""
                                   width={30}
                                   height={30}
-                                />
+                                /> */}
                               </InputAdornment>
                             ),
                           },
