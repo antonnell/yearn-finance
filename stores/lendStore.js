@@ -101,7 +101,7 @@ class Store {
 
   setStore = (obj) => {
     this.store = { ...this.store, ...obj };
-    // console.log(this.store);
+    console.log(this.store);
     return this.emitter.emit(STORE_UPDATED);
   };
 
@@ -164,16 +164,30 @@ class Store {
             name = defaultMarket.tokenMetadata.displayName;
             icon = defaultMarket.tokenMetadata.icon;
           } else {
-            vaultDecimals = await marketContract.methods.decimals().call();
-            vaultSymbol = await marketContract.methods.symbol().call();
-            vaultName = await marketContract.methods.name().call();
-            vaultIcon = `https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/${erc20address}/logo-128.png`;
 
-            erc20address = await marketContract.methods.underlying().call();
-            erc20Contract = new web3.eth.Contract(ERC20ABI, erc20address);
-            symbol = await erc20Contract.methods.symbol().call();
-            decimals = parseInt(await erc20Contract.methods.decimals().call());
-            name = await erc20Contract.methods.name().call();
+            let localCalls1 = await Promise.all([
+              marketContract.methods.decimals().call(),
+              marketContract.methods.symbol().call(),
+              marketContract.methods.name().call(),
+              marketContract.methods.underlying().call()
+            ]);
+
+            erc20Contract = new web3.eth.Contract(ERC20ABI, localCalls1[3]);
+
+            let localCalls2 = await Promise.all([
+              erc20Contract.methods.symbol().call(),
+              erc20Contract.methods.decimals().call(),
+              erc20Contract.methods.name().call()
+            ]);
+
+            vaultDecimals = localCalls1[0]
+            vaultSymbol = localCalls1[1]
+            vaultName = localCalls1[2]
+            erc20address = localCalls1[3]
+            symbol = localCalls2[0]
+            decimals = parseInt(localCalls2[1])
+            name = localCalls2[2]
+            vaultIcon = `https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/${erc20address}/logo-128.png`;
             icon = `https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/${erc20address}/logo-128.png`;
           }
 
@@ -296,41 +310,44 @@ class Store {
     const blocksPeryear = 2425846;
 
     const creamPriceOracleContract = new web3.eth.Contract(CREAMPRICEORACLEABI, CREAM_PRICE_ORACLE_ADDRESS);
-
+    const comptrollerContract = new web3.eth.Contract(COMPTROLLERABI, COMPTROLLER_ADDRESS);
     async.map(
       lendingAssets,
       async (asset, callback) => {
         // console.log(asset)
         try {
           const marketContract = new web3.eth.Contract(CERC20DELEGATORABI, asset.address);
-          const exchangeRate = await marketContract.methods.exchangeRateStored().call();
+
+          let [mar, exchangeRate, cash, borrowRatePerBlock, supplyRatePerBlock, totalBorrows] = await Promise.all([
+            comptrollerContract.methods.markets(asset.address).call(),
+            marketContract.methods.exchangeRateStored().call(),
+            marketContract.methods.getCash().call(),
+            marketContract.methods.borrowRatePerBlock().call(),
+            marketContract.methods.supplyRatePerBlock().call(),
+            marketContract.methods.totalBorrows().call(),
+          ]);
+
           const exchangeRateReal = BigNumber(exchangeRate).div(bnDec(asset.tokenMetadata.decimals)).toFixed(asset.tokenMetadata.decimals, BigNumber.ROUND_DOWN);
-
-          let cash = await marketContract.methods.getCash().call();
           cash = new BigNumber(cash).div(bnDec(asset.tokenMetadata.decimals)).toFixed(asset.tokenMetadata.decimals, BigNumber.ROUND_DOWN);
-
-          const borrowRatePerBlock = await marketContract.methods.borrowRatePerBlock().call();
-          const supplyRatePerBlock = await marketContract.methods.supplyRatePerBlock().call();
-
           const borrowRatePerYear = (borrowRatePerBlock * blocksPeryear) / 1e16;
           const supplyRatePerYear = (supplyRatePerBlock * blocksPeryear) / 1e16;
-
-          let totalBorrows = await marketContract.methods.totalBorrows().call();
           totalBorrows = new BigNumber(totalBorrows).div(bnDec(asset.tokenMetadata.decimals)).toFixed(asset.tokenMetadata.decimals, BigNumber.ROUND_DOWN);
+
           if (account && account.address) {
             const erc20Contract = new web3.eth.Contract(ERC20ABI, asset.tokenMetadata.address);
-            let balance = await erc20Contract.methods.balanceOf(account.address).call();
+
+            let [balance, allowance, supplyBalance, borrowBalance, dollarPerAsset] = await Promise.all([
+              erc20Contract.methods.balanceOf(account.address).call(),
+              erc20Contract.methods.allowance(account.address, asset.address).call(),
+              marketContract.methods.balanceOf(account.address).call(),
+              marketContract.methods.borrowBalanceStored(account.address).call(),
+              creamPriceOracleContract.methods.getUnderlyingPrice(asset.address).call(),
+              marketContract.methods.totalBorrows().call(),
+            ]);
+
             balance = new BigNumber(balance).div(bnDec(asset.tokenMetadata.decimals)).toFixed(asset.tokenMetadata.decimals, BigNumber.ROUND_DOWN);
-
-            const allowance = await erc20Contract.methods.allowance(account.address, asset.address).call();
-
-            let supplyBalance = await marketContract.methods.balanceOf(account.address).call();
             supplyBalance = new BigNumber(supplyBalance).times(exchangeRateReal).div(bnDec(18)).toFixed(asset.tokenMetadata.decimals, BigNumber.ROUND_DOWN);
-
-            let borrowBalance = await marketContract.methods.borrowBalanceStored(account.address).call();
             borrowBalance = new BigNumber(borrowBalance).div(bnDec(asset.tokenMetadata.decimals)).toFixed(asset.tokenMetadata.decimals, BigNumber.ROUND_DOWN);
-
-            const dollarPerAsset = await creamPriceOracleContract.methods.getUnderlyingPrice(asset.address).call();
             const dollarPerAssetReal = dollarPerAsset / 10 ** (36 - asset.tokenMetadata.decimals);
 
             asset.tokenMetadata.allowance = BigNumber(allowance)
@@ -351,7 +368,7 @@ class Store {
           asset.totalBorrows = totalBorrows;
 
           asset.liquidity = cash;
-          asset.collateralPercent = this._getCollateralPercent(asset.symbol);
+          asset.collateralPercent = BigNumber(mar.collateralFactorMantissa).div(10**16).toNumber();
 
           asset.supplyAPY = supplyRatePerYear;
           asset.borrowAPY = borrowRatePerYear;
