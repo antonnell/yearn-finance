@@ -30,6 +30,8 @@ import stores from "../../stores";
 import { useEagerConnect, useInactiveListener } from '../../stores/accountManager.ts';
 
 import { createStyles, StyledComponentProps } from "@material-ui/styles";
+import { injected } from "../../stores/connectors/connectors";
+import Web3 from "web3";
 
 
 
@@ -307,8 +309,42 @@ function MyComponent(props) {
                   // props.setActivatingConnector(currentConnector);
                   activate(connectorsByName[name]).then((a:any)=>{
                     console.log(a);
-                    // console.log('provider: ', provider)
+
+                    injected.getProvider().then(a=>{
+                      // console.log(a);
+                          const prov_ = new Web3(a)
+                      stores.accountStore.setStore({
+                        account: {address:  a.selectedAddress},
+                        web3provider:prov_,
+                        web3context:{library:{provider:a}}})
+          
+                       console.log('printing',{account: {address:  a.selectedAddress},
+                       web3provider:prov_,
+                       web3context:{library:{provider:a} }});
+          
+                       stores.emitter.emit(ACCOUNT_CHANGED);
+                       stores.emitter.emit(ACCOUNT_CONFIGURED);
+             
+            //     stores.dispatcher.dispatch({
+            //          type: CONFIGURE_VAULTS,
+            //          content: { connected: true },
+            //        });
+            //  stores.dispatcher.dispatch({
+            //          type: CONFIGURE_LENDING,
+            //          content: { connected: true },
+            //        });
+            //  stores.dispatcher.dispatch({
+            //          type: CONFIGURE_CDP,
+            //          content: { connected: true },
+            //        });
+                        // stores.accountStore.getGasPrices();
+                        // stores.accountStore.getCurrentBlock();
+                        
+    
+
+                    })
                   })
+ 
                   localStorage.setItem('isConnected', 'true');
 
                 }else{

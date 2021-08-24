@@ -35,7 +35,7 @@ type Props = IProps;
 
 
 
-export function useInactiveListener(suppress: boolean = false) {
+export function useInactiveListener(suppress: boolean) {
   const { active, error, activate } = useWeb3React()
 
   // console.log(suppress)

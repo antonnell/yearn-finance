@@ -105,23 +105,24 @@ class Store {
     return this.emitter.emit(STORE_UPDATED);
   };
 
-  configure = async (payload) => {
-    const web3 = await stores.accountStore.getWeb3Provider();
+  configure =  (payload) => {
+    const web3 =  stores.accountStore.getWeb3Provider();
     if (!web3) {
       return null;
     }
 
-    const allMarkets = await this._getAllMarkets(web3);
+    const allMarkets =  this._getAllMarkets(web3);
 
     const blocksPeryear = 2425846;
     const defaultValues = lendJSON;
-    const account = await stores.accountStore.getStore('account');
+    const account =  stores.accountStore.getStore('account');
     if (!account) {
       return null;
     }
-
+console.log('lend',web3, account )
     const IronBankRegistryAdapter = new web3.eth.Contract(IRONBANKREGISTRYADAPTERABI, IRON_BANK_REGISTRY_ADAPTER);
-    const adapterPositionOf = await IronBankRegistryAdapter.methods.adapterPositionOf(account.address).call();
+    const adapterPositionOf =  IronBankRegistryAdapter.methods.adapterPositionOf(account.address).call();
+    console.log(adapterPositionOf);
     this.setStore({ position: adapterPositionOf });
 
     async.map(

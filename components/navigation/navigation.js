@@ -314,7 +314,7 @@ function Navigation(props) {
 // console.log(context);
 
   const account = stores.accountStore.getStore("account");
-// console.log(account);
+   console.log(account);
   const [darkMode, setDarkMode] = useState(false);
   const [unlockOpen, setUnlockOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
