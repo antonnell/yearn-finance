@@ -187,7 +187,7 @@ function onDeactivateClicked(deactivate, connector) {
   if (connector ) {
     connector.deactivate();
   }
-  stores.accountStore.setStore({ account: {}, web3context: null });
+  stores.accountStore.setStore({ account: {}, web3context: null, Web3Provider: null });
   stores.emitter.emit(CONNECTION_DISCONNECTED);
   stores.emitter.emit(ACCOUNT_CONFIGURED);
   stores.emitter.emit(LENDING_CONFIGURED);
@@ -203,6 +203,7 @@ function onDeactivateClicked(deactivate, connector) {
 function MyComponent(props) {
   const context = useWeb3React();
   const localContext = stores.accountStore.getStore("web3context");
+  var web3provider = stores.accountStore.getStore("web3provider");
   var localConnector = null;
   if (localContext) {
     localConnector = localContext.connector;
@@ -308,6 +309,11 @@ function MyComponent(props) {
                     console.log(a);
                     // console.log('provider: ', provider)
                   })
+                  localStorage.setItem('isConnected', 'true');
+
+                }else{
+
+              
                 }
                 // onConnectionClicked(
                 //   currentConnector,
@@ -315,16 +321,17 @@ function MyComponent(props) {
                 //   setActivatingConnector,
                 //   activate
                 // );
+                return
               }}
               disableElevation
               color="secondary"
               disabled={disabled}
             >
-                      {connected && (
+                      {/* {connected && (
                   <span role="img" aria-label="check">
                     ✅
                   </span>
-                )}
+                )} */}
               <div
                 style={{
                   height: "160px",
@@ -348,7 +355,7 @@ function MyComponent(props) {
                 {activating && (
                   <CircularProgress size={15} style={{ marginRight: "10px" }} />
                 )}
-                {activating && connected && (
+                {connected && (
                   <div
                     style={{
                       background: "#4caf50",
@@ -360,7 +367,6 @@ function MyComponent(props) {
                       top: "15px",
                       right: "15px"
                     }}
-                    // onClick={()=>{onDeactivateClicked(deactivate,currentConnector)}}
                   ></div>
              )}
                </div>
@@ -369,6 +375,44 @@ function MyComponent(props) {
           </div>
         );
       })}
+ <Button
+              style={{
+                width: width > 576 ? "350px" : "calc(100vw - 100px)",
+                height: "200px",
+                backgroundColor: "rgba(0,0,0,0.05)",
+                // borderColor: activating ? 'orange' : connected ? 'green' :  "rgba(0,0,0,0.05)",
+                border:  "1px solid rgba(108,108,123,0.2)",
+                color: "rgba(108,108,123,1)"
+              }}
+              variant="contained"
+              onClick={() => {
+                console.log('go');
+
+                deactivate()
+           
+
+                stores.accountStore.setStore({ account: {}, web3context: null, Web3Provider: null });
+                stores.emitter.emit(CONNECTION_DISCONNECTED);
+                stores.emitter.emit(ACCOUNT_CONFIGURED);
+                stores.emitter.emit(LENDING_CONFIGURED);
+                stores.emitter.emit(CDP_CONFIGURED);
+              
+                stores.dispatcher.dispatch({
+                  type: CONFIGURE_VAULTS,
+                  content: { connected: false },
+                });
+            //  connector.deactivate();
+console.log( web3provider)
+            web3provider.eth.accounts.wallet.remove(0);
+            localStorage.setItem('isConnected', 'false');
+
+                return
+              }}
+              disableElevation
+              color="secondary"
+            >
+                Deactivate
+                </Button>
     </div>
   );
 }
