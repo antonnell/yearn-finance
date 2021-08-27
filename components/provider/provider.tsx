@@ -41,34 +41,15 @@ export function useInactiveListener(suppress: boolean) {
   // console.log(suppress)
   useEffect((): any => {
     const { ethereum } = window as any;
-    console.log(window)
-    console.log('updating',ethereum, ethereum.on ,!active , !error, !suppress)
 
-    if (ethereum && ethereum.on && active && suppress) {
+    if (ethereum && ethereum.on && active && !suppress) {
 
       const handleConnect = () => {
         console.log("Handling 'connect' event")
         activate(injected)
+        return
       }
-      const handleChainChanged = (chainId: string ) => {
-        console.log("Handling 'chainChanged' event with payload", chainId)
-        const supportedChainIds = [1];
-        const parsedChainId = parseInt(chainId, 16);
-        const isChainSupported = supportedChainIds.includes(parsedChainId);
-        console.log('is chain supported',isChainSupported);
-        stores.accountStore.setStore({ chainInvalid: !isChainSupported });
-       stores.emitter.emit(ACCOUNT_CHANGED);
-       stores.emitter.emit(ACCOUNT_CONFIGURED);
-       if( !isChainSupported ){
-         stores.accountStore.setStore({ chainInvalid: true });
-         stores.emitter.emit(ACCOUNT_CHANGED);
-       }else{
 
-         console.log(active);
-        // activate(injected)
-       }
-
-      }
       const handleAccountsChanged = (accounts: string[]) => {
         console.log("Handling 'accountsChanged' event with payload", accounts)
         if (accounts.length > 0) {
@@ -91,6 +72,7 @@ stores.dispatcher.dispatch({
       });
 
         }
+        return
       }
       // const handleNetworkChanged = (networkId: string | number) => {
       //   // console.log("Handling 'networkChanged' event with payload", networkId)
@@ -98,7 +80,26 @@ stores.dispatcher.dispatch({
       // }
 
       ethereum.on('connect', handleConnect)
-      ethereum.on('chainChanged', handleChainChanged)
+      ethereum.on('chainChanged', (chainId: string) => {
+
+        console.log("Handling 'chainChanged' event with payload", chainId);
+        activate(injected);
+        
+        const supportedChainIds = [1];
+        const parsedChainId = parseInt(chainId, 16);
+        console.log(parsedChainId);
+        const isChainSupported = supportedChainIds.includes(parsedChainId);
+        console.log('is chain supported',isChainSupported);
+        stores.accountStore.setStore({ chainInvalid: !isChainSupported });
+       stores.emitter.emit(ACCOUNT_CHANGED);
+       stores.emitter.emit(ACCOUNT_CONFIGURED);
+       if( !isChainSupported ){
+         stores.accountStore.setStore({ chainInvalid: true });
+       }else{
+         console.log(active);
+       }
+       return
+      })
       ethereum.on('accountsChanged', handleAccountsChanged)
       // ethereum.on('networkChanged', handleNetworkChanged)
       console.log('connecting up listeners');
@@ -106,7 +107,7 @@ stores.dispatcher.dispatch({
       return () => {
         if (ethereum.removeListener) {
           ethereum.removeListener('connect', handleConnect)
-          ethereum.removeListener('chainChanged', handleChainChanged)
+          ethereum.removeListener('chainChanged')
           ethereum.removeListener('accountsChanged', handleAccountsChanged)
           // ethereum.removeListener('networkChanged', handleNetworkChanged)
         }
@@ -122,9 +123,17 @@ export function useEagerConnect() {
   useEffect(() => {
     injected.isAuthorized().then((isAuthorized: boolean) => {
     var connected=  localStorage.getItem('isConnected');
-console.log('con info',connected);
-console.log(isAuthorized)
-      if (isAuthorized && connected === 'true') {
+
+    const { supportedChainIds } = injected;
+    // fall back to ethereum mainnet if chainId undefined
+    const { ethereum } = window as any;
+
+    const { chainId = 1 } = ethereum || {};
+    const parsedChainId = parseInt(chainId, 16);
+    const isChainSupported = supportedChainIds.includes(parsedChainId);
+
+console.log(isAuthorized, connected === 'true', isChainSupported)
+      if (isAuthorized && connected === 'true' && isChainSupported) {
         activate(injected, undefined, true).then((a)=>{
           // console.log(a, injected,)
           injected.getProvider().then(a=>{
@@ -157,10 +166,16 @@ console.log(isAuthorized)
           setTried(true)
         })
       } else {
+
         stores.dispatcher.dispatch({
           type: CONFIGURE_VAULTS,
-          content: { connected: true },
+          content: { connected: false },
         });
+
+        if (!isChainSupported) {
+          stores.accountStore.setStore({ chainInvalid: true });
+        }
+        
         setTried(true)
       }
     })

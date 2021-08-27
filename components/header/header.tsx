@@ -18,7 +18,7 @@ import Unlock from '../unlock/unlockModal';
 import stores from '../../stores';
 import { formatAddress } from '../../utils/utils';
 
-import * as classes from  './header.module.css';
+import classes from  './header.module.css';
 import HelpIcon from '@material-ui/icons/Help';
 import AboutModal from './aboutModal';
 import SearchModal from './searchModal';
@@ -29,44 +29,9 @@ import { Web3Provider } from '@ethersproject/providers'
 import { Web3ReactProvider, useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
 import { makeStyles } from '@material-ui/styles';
 import { useEagerConnect, useInactiveListener } from '../../stores/accountManager.ts';
+import StyledSwitch from './StyledSwitch.tsx';
 
 
-
-const styles  = (theme: any) => makeStyles({
-  root: {
-    width: 58,
-    height: 32,
-    padding: 0,
-    margin: theme.spacing(1),
-  },
-  switchBase: {
-    paddingTop: 1.5,
-    width: '75%',
-    margin: 'auto',
-    '&$checked': {
-      transform: 'translateX(28px)',
-      color: 'rgba(128,128,128, 1)',
-      width: '30%',
-      '& + $track': {
-        backgroundColor: 'rgba(0,0,0, 0.3)',
-        opacity: 1,
-      },
-    },
-    '&$focusVisible $thumb': {
-      color: '#ffffff',
-      border: '6px solid #fff',
-    },
-  },
-  track: {
-    borderRadius: 32 / 2,
-    border: '1px solid rgba(128,128,128, 0.2)',
-    backgroundColor: 'rgba(0,0,0, 0)',
-    opacity: 1,
-    transition: theme.transitions.create(['background-color', 'border']),
-  },
-  checked: {},
-  focusVisible: {},
-});
 
 
 
@@ -82,31 +47,6 @@ interface IProps{
 type Props = IProps & StyledComponentProps;
 
 
-interface IsProps{
-  icon: any;
-  checkedIcon: any;
-  checked: any;
-  onChange: any;
-}
-type SProps = IsProps & StyledComponentProps;
-
-
-function StyledSwitch(props: SProps){
-  return (
-    <Switch
-      focusVisibleClassName={styles.focusVisible}
-      disableRipple
-      classes={{
-        root: styles.root,
-        switchBase: styles.switchBase,
-        thumb: classes.thumb,
-        track: styles.track,
-        checked: props.checked,
-      }}
-      {...props}
-    />
-  );
-    }
 
 function Header(props: Props) {
 
@@ -140,7 +80,7 @@ function Header(props: Props) {
 
   const [toggleAboutModal, setToggleAboutModal] = useState(false);
   const [toggleSearchModal, setToggleSearchModal] = useState(false);
-  const [darkMode, setDarkMode] = useState(props.theme.palette.type === 'dark' ? true : false);
+  const [darkMode, setDarkMode] = useState<boolean>(props.theme.palette.type === 'dark' ? true : false);
   const [unlockOpen, setUnlockOpen] = useState(false);
   const [isMac, setIsMac] = useState(false);
   const [chainInvalid, setChainInvalid] = useState(false)
@@ -231,8 +171,8 @@ function Header(props: Props) {
         </div>
         <div className={classes.themeSelectContainer}>
           <StyledSwitch
-            icon={<Brightness2Icon className={classes.switchIcon} />}
-            checkedIcon={<WbSunnyOutlinedIcon className={classes.switchIcon} />}
+            checkedIcon={<Brightness2Icon className={classes.switchIcon} />}
+            icon={<WbSunnyOutlinedIcon className={classes.switchIcon} />}
             checked={darkMode}
             onChange={handleToggleChange}
           />
@@ -279,4 +219,4 @@ function Header(props: Props) {
   );
 }
 
-export default  withStyles(styles)(withTheme(Header));
+export default  withTheme(Header);

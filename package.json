@@ -14,9 +14,9 @@
   "dependencies": {
     "@danah/react-hook-scrollto": "^1.0.10",
     "@ethersproject/providers": "^5.3.1",
-    "@material-ui/core": "^4.11.4",
+    "@material-ui/core": "4.11.2",
     "@material-ui/icons": "^4.11.2",
-    "@material-ui/lab": "^4.0.0-alpha.58",
+    "@material-ui/lab": "4.0.0-alpha.57",
     "@web3-react/core": "^6.1.9",
     "@web3-react/fortmatic-connector": "^6.1.6",
     "@web3-react/injected-connector": "^6.0.7",
