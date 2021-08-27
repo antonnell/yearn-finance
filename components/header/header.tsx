@@ -91,22 +91,22 @@ interface IsProps{
 type SProps = IsProps & StyledComponentProps;
 
 
-// function StyledSwitch(props: SProps){
-//   return (
-//     <Switch
-//       focusVisibleClassName={styles.focusVisible}
-//       disableRipple
-//       classes={{
-//         root: styles.root,
-//         switchBase: styles.switchBase,
-//         thumb: classes.thumb,
-//         track: styles.track,
-//         checked: props.checked,
-//       }}
-//       {...props}
-//     />
-//   );
-//     }
+function StyledSwitch(props: SProps){
+  return (
+    <Switch
+      focusVisibleClassName={styles.focusVisible}
+      disableRipple
+      classes={{
+        root: styles.root,
+        switchBase: styles.switchBase,
+        thumb: classes.thumb,
+        track: styles.track,
+        checked: props.checked,
+      }}
+      {...props}
+    />
+  );
+    }
 
 function Header(props: Props) {
 
@@ -230,12 +230,12 @@ function Header(props: Props) {
             </span>
         </div>
         <div className={classes.themeSelectContainer}>
-          {/* <StyledSwitch
+          <StyledSwitch
             icon={<Brightness2Icon className={classes.switchIcon} />}
             checkedIcon={<WbSunnyOutlinedIcon className={classes.switchIcon} />}
             checked={darkMode}
             onChange={handleToggleChange}
-          /> */}
+          />
         </div>
         <Button
           disableElevation

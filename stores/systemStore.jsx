@@ -1,9 +1,9 @@
 import async from "async";
 import * as moment from "moment";
-import stores from "./";
+import stores from ".";
 import systemJson from "./configurations/system";
 // import { LTVMAXIMIZERABI } from "./abis";
-import { bnDec } from "../utils";
+import { bnDec } from "../utils/utils";
 
 // import { GET_MAX, MAX_RETURNED, LTV_MAXIMIZER_ADDRESS } from "./constants";
 
