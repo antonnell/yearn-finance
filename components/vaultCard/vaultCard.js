@@ -38,7 +38,9 @@ export default function VaultCard({ vault, account }) {
       vaultTypeClass = classes.vaultVersionContainer;
       break;
   }
-
+  const brokenImage = (ev) =>{
+      ev.target.src = './tokens/unknown-logo.png';
+  }
   return (
     <Grid item xs={12} sm={6} md={4} lg={3}>
       <Paper elevation={0} className={activeVault ? classes.vaultContainerActive : classes.vaultContainer} onClick={handleNavigate}>
@@ -50,7 +52,7 @@ export default function VaultCard({ vault, account }) {
 
         <div className={classes.vaultTitle}>
           <div className={classes.vaultLogo}>
-            <img src={vault.icon ? vault.icon : '/tokens/unknown-logo.png'} alt="" width={50} height={50} />
+            <img src={vault.icon ? vault.icon: './tokens/unknown-logo.png'} onError={brokenImage} alt="" width={50} height={50} />
           </div>
           <div className={classes.vaultName}>
             <Typography variant="h2" className={classes.fontWeightBold}>

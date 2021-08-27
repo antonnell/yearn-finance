@@ -86,6 +86,7 @@ class Store {
     this.emitter = emitter;
 
     this.store = {
+      configured:  false,
       portfolioBalanceUSD: null,
       portfolioGrowth: null,
       highestHoldings: null,
@@ -211,18 +212,18 @@ class Store {
       //, ...lockup
 
       this.setStore({ vaults: [...mappedVaults, ...earnWithAPY] });
-
       this.emitter.emit(VAULTS_UPDATED);
-      this.emitter.emit(VAULTS_CONFIGURED);
+       this.emitter.emit(VAULTS_CONFIGURED);
       this.dispatcher.dispatch({ type: GET_VAULT_BALANCES });
     } catch (ex) {
-      // console.log(ex);
+      //  console.log(ex);
     }
+  
   };
 
   getEarnAPYs = async (earn) => {
     try {
-      const web3 = await stores.accountStore.getWeb3Provider();
+      const web3 =  stores.accountStore.getWeb3Provider();
 
       const provider = process.env.NEXT_PUBLIC_PROVIDER;
       const etherscanApiKey = process.env.NEXT_PUBLIC_ETHERSCAN_KEY;
@@ -352,13 +353,13 @@ class Store {
       return false;
     }
 
-    const web3 = await stores.accountStore.getWeb3Provider();
+    const web3 =  stores.accountStore.getWeb3Provider();
     const zapperfiBalanceResults = await fetch(
       `https://api.zapper.fi/v1/protocols/yearn/balances?api_key=96e0cc51-a62e-42ca-acee-910ea7d2a241&addresses[]=${account.address}`,
     );
     const zapperfiBalance = await zapperfiBalanceResults.json();
 
-    async.map(
+   await async.map(
       vaults,
       async (vault, callback) => {
         try {
@@ -384,7 +385,6 @@ class Store {
           const vaultContract = new web3.eth.Contract(abi, vault.address);
           const balanceOf = await vaultContract.methods.balanceOf(account.address).call();
           vault.balance = BigNumber(balanceOf).div(bnDec(vault.decimals)).toFixed(vault.decimals, BigNumber.ROUND_DOWN);
-
           try {
             // this throws execution reverted: SafeMath: division by zero for not properly finalised vaults
             let pricePerFullShare = 1;
@@ -415,7 +415,6 @@ class Store {
           vault.tokenMetadata.balance = BigNumber(tokenBalanceOf)
             .div(bnDec(vault.tokenMetadata.decimals))
             .toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN);
-
           const allowance = await erc20Contract.methods.allowance(account.address, vault.address).call();
           vault.tokenMetadata.allowance = BigNumber(allowance)
             .div(bnDec(vault.tokenMetadata.decimals))
@@ -495,15 +494,17 @@ class Store {
 
           if (callback) {
             callback(null, vault);
+            return
           } else {
             return vault;
           }
         } catch (ex) {
-          // console.log(vault);
-          // console.log(ex);
+          console.log(vault);
+          console.log(ex);
 
           if (callback) {
             callback(null, vault);
+            return
           } else {
             return vault;
           }
@@ -511,7 +512,7 @@ class Store {
       },
       (err, vaultsBalanced) => {
         if (err) {
-          // console.log(err);
+           console.log(err);
           return this.emitter.emit(ERROR, err);
         }
 
@@ -566,6 +567,14 @@ class Store {
             }, 0),
         };
 
+        console.log({
+          vaults: vaultsBalanced,
+          portfolioBalanceUSD: portfolioBalanceUSD,
+          portfolioGrowth: portfolioGrowth ? portfolioGrowth : 0,
+          highestHoldings: highestHoldings,
+          tvlInfo: tvlInfo,
+        })
+
         this.setStore({
           vaults: vaultsBalanced,
           portfolioBalanceUSD: portfolioBalanceUSD,
@@ -573,10 +582,12 @@ class Store {
           highestHoldings: highestHoldings,
           tvlInfo: tvlInfo,
         });
+        this.setStore({configured: true});
 
         this.emitter.emit(VAULTS_UPDATED);
 
         this.calculateSystemOverview();
+        return
       },
     );
   };
@@ -592,7 +603,7 @@ class Store {
         //maybe throw an error
       }
 
-      const web3 = await stores.accountStore.getWeb3Provider();
+      const web3 =  stores.accountStore.getWeb3Provider();
       if (!web3) {
       }
 
@@ -694,7 +705,7 @@ class Store {
       //maybe throw an error
     }
 
-    const web3 = await stores.accountStore.getWeb3Provider();
+    const web3 =  stores.accountStore.getWeb3Provider();
     if (!web3) {
       return false;
       //maybe throw an error
@@ -746,7 +757,7 @@ class Store {
       //maybe throw an error
     }
 
-    const web3 = await stores.accountStore.getWeb3Provider();
+    const web3 =  stores.accountStore.getWeb3Provider();
     if (!web3) {
       return false;
       //maybe throw an error
@@ -918,7 +929,7 @@ class Store {
       //maybe throw an error
     }
 
-    const web3 = await stores.accountStore.getWeb3Provider();
+    const web3 =  stores.accountStore.getWeb3Provider();
     if (!web3) {
       return false;
       //maybe throw an error
@@ -1048,7 +1059,7 @@ class Store {
       //maybe throw an error
     }
 
-    const web3 = await stores.accountStore.getWeb3Provider();
+    const web3 =  stores.accountStore.getWeb3Provider();
     if (!web3) {
       return false;
       //maybe throw an error
@@ -1136,7 +1147,7 @@ class Store {
       //maybe throw an error
     }
 
-    const web3 = await stores.accountStore.getWeb3Provider();
+    const web3 =  stores.accountStore.getWeb3Provider();
     if (!web3) {
       return false;
       //maybe throw an error
@@ -1253,7 +1264,7 @@ class Store {
       //maybe throw an error
     }
 
-    const web3 = await stores.accountStore.getWeb3Provider();
+    const web3 =  stores.accountStore.getWeb3Provider();
     if (!web3) {
       return false;
       //maybe throw an error
@@ -1280,7 +1291,7 @@ class Store {
 
   // gets the system overview.
   calculateSystemOverview = async () => {
-    const web3 = await stores.accountStore.getWeb3Provider();
+    const web3 =  stores.accountStore.getWeb3Provider();
     if (!web3) {
     }
 

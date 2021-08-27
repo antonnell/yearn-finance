@@ -35,6 +35,5 @@ import Web3 from 'web3';
 type Props = IProps;
 
 
+// Moved to provider
 
-
-// export function 

@@ -413,7 +413,7 @@ function MyComponent(props) {
       })}
  <Button
               style={{
-                width: width > 576 ? "350px" : "calc(100vw - 100px)",
+                width:"350px" ,
                 height: "200px",
                 backgroundColor: "rgba(0,0,0,0.05)",
                 // borderColor: activating ? 'orange' : connected ? 'green' :  "rgba(0,0,0,0.05)",
@@ -437,8 +437,7 @@ function MyComponent(props) {
                   type: CONFIGURE_VAULTS,
                   content: { connected: false },
                 });
-            //  connector.deactivate();
-console.log( web3provider)
+            console.log( web3provider)
             web3provider.eth.accounts.wallet.remove(0);
             localStorage.setItem('isConnected', 'false');
 

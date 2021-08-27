@@ -126,14 +126,11 @@ class AccountStore extends React.Component<Props,IStore> {
         injected.isAuthorized().then((isAuthorized) => {
 
          this.props.emitter.emit(ACCOUNT_CONFIGURED);
-        this.props.emitter.emit(LENDING_CONFIGURED);
-        this.props.emitter.emit(CDP_CONFIGURED);
+        // this.props.emitter.emit(LENDING_CONFIGURED);
+        // this.props.emitter.emit(CDP_CONFIGURED);
 
 
-  this.props.dispatcher.dispatch({
-    type: CONFIGURE_VAULTS,
-    content: { connected: true },
-  });
+
 });
 
 this.getCurrentBlock();
@@ -141,11 +138,11 @@ this.getGasPrices();
 
   // this.props.dispatcher.dispatch({
   //   type: CONFIGURE_LENDING,
-  //   content: { connected: true },
+  //   // content: { connected: true },
   // });
   // this.props.dispatcher.dispatch({
   //   type: CONFIGURE_CDP,
-  //   content: { connected: true },
+  //   // content: { connected: true },
   // });
 
 

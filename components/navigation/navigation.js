@@ -12,10 +12,8 @@ import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 
 import Unlock from "../unlock/unlock.tsx";
 
-import { Web3ReactProvider, useWeb3React } from "@web3-react/core";
-import { Web3Provider } from "@ethersproject/providers";
+import { useWeb3React } from "@web3-react/core";
 
-import stores from "../../stores";
 import { formatAddress } from "../../utils";
 
 import classes from "./navigation.module.css";
@@ -311,10 +309,11 @@ const StyledSwitch = withStyles((theme) => ({
 function Navigation(props) {
   const router = useRouter();
   const context = useWeb3React();
-// console.log(context);
+// // console.log(context);
+// const {account } = context;
+const { account} = context;
 
-  const account = stores.accountStore.getStore("account");
-   console.log(account);
+  // const account = stores.accountStore.getStore("account");
   const [darkMode, setDarkMode] = useState(false);
   const [unlockOpen, setUnlockOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -373,7 +372,6 @@ function Navigation(props) {
           />
         )}
         {account &&
-          account.address &&
           renderNav(
             "Lend",
             "lend",
@@ -389,7 +387,6 @@ function Navigation(props) {
             />
           )}
         {account &&
-          account.address &&
           renderNav(
             "CDP",
             "cdp",
@@ -405,7 +402,6 @@ function Navigation(props) {
             />
           )}
         {account &&
-          account.address &&
           renderNav(
             "LTV",
             "ltv",

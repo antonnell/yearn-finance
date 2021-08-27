@@ -125,9 +125,8 @@ class Store {
       borrowAsset.balance = BigNumber(borrowBalanceOf).div(bnDec(borrowAsset.decimals)).toFixed(borrowAsset.decimals, BigNumber.ROUND_DOWN);
       const allowanceOf = await borrowAssetContract.methods.allowance(account.address, CDP_VAULT_ADDRESS).call();
       borrowAsset.allowance = BigNumber(allowanceOf).div(bnDec(borrowAsset.decimals)).toFixed(borrowAsset.decimals, BigNumber.ROUND_DOWN);
-console.log(orrowAsset);
       this.setStore({ borrowAsset: borrowAsset });
-
+console.log(borrowAsset)
       //get all supported assets
       const allAssets = await this._getAssets(web3);
       // get open CDPS
@@ -482,7 +481,7 @@ console.log(orrowAsset);
 
   _getDolarPrice = async (asset, ethPrice) => {
     try {
-      const web3 = await stores.accountStore.getWeb3Provider();
+      const web3 = stores.accountStore.getWeb3Provider();
 
       let dolar = 0;
 
@@ -734,7 +733,7 @@ console.log(orrowAsset);
 
     const account = stores.accountStore.getStore('account');
 
-    const web3 = await stores.accountStore.getWeb3Provider();
+    const web3 =  stores.accountStore.getWeb3Provider();
     if (!web3) {
       return null;
     }
@@ -747,7 +746,7 @@ console.log(orrowAsset);
       //maybe throw an error
     }
 
-    const web3 = await stores.accountStore.getWeb3Provider();
+    const web3 = stores.accountStore.getWeb3Provider();
     if (!web3) {
       return false;
       //maybe throw an error
@@ -788,7 +787,7 @@ console.log(orrowAsset);
       //maybe throw an error
     }
 
-    const web3 = await stores.accountStore.getWeb3Provider();
+    const web3 = stores.accountStore.getWeb3Provider();
     if (!web3) {
       return false;
       //maybe throw an error
@@ -901,7 +900,7 @@ console.log(orrowAsset);
       //maybe throw an error
     }
 
-    const web3 = await stores.accountStore.getWeb3Provider();
+    const web3 =  stores.accountStore.getWeb3Provider();
     if (!web3) {
       return false;
       //maybe throw an error

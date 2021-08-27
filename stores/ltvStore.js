@@ -42,7 +42,7 @@ class Store {
   };
 
   getLTVMax = async payload => {
-    const web3 = await stores.accountStore.getWeb3Provider();
+    const web3 =  stores.accountStore.getWeb3Provider();
 
     const maxContract = new web3.eth.Contract(
       LTVMAXIMIZERABI,

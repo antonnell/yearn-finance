@@ -393,7 +393,7 @@ class Store {
       return false;
     }
 
-    const web3 = await stores.accountStore.getWeb3Provider();
+    const web3 =  stores.accountStore.getWeb3Provider();
     if (!web3) {
       return null;
     }
@@ -524,7 +524,7 @@ class Store {
       //maybe throw an error
     }
 
-    const web3 = await stores.accountStore.getWeb3Provider();
+    const web3 =  stores.accountStore.getWeb3Provider();
     if (!web3) {
       return false;
       //maybe throw an error
@@ -609,7 +609,7 @@ class Store {
       //maybe throw an error
     }
 
-    const web3 = await stores.accountStore.getWeb3Provider();
+    const web3 =  stores.accountStore.getWeb3Provider();
     if (!web3) {
       return false;
       //maybe throw an error
@@ -695,7 +695,7 @@ class Store {
       //maybe throw an error
     }
 
-    const web3 = await stores.accountStore.getWeb3Provider();
+    const web3 =  stores.accountStore.getWeb3Provider();
     if (!web3) {
       return false;
       //maybe throw an error

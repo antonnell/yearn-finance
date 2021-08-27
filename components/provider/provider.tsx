@@ -41,22 +41,33 @@ export function useInactiveListener(suppress: boolean) {
   // console.log(suppress)
   useEffect((): any => {
     const { ethereum } = window as any;
-    // console.log(ethereum, ethereum.on ,!active , !error, !suppress)
+    console.log(window)
+    console.log('updating',ethereum, ethereum.on ,!active , !error, !suppress)
 
-    if (ethereum && ethereum.on && !active && !error && !suppress) {
+    if (ethereum && ethereum.on && active && suppress) {
+
       const handleConnect = () => {
         console.log("Handling 'connect' event")
         activate(injected)
       }
-      const handleChainChanged = (chainId: string | number) => {
+      const handleChainChanged = (chainId: string ) => {
         console.log("Handling 'chainChanged' event with payload", chainId)
-        activate(injected)
-            const supportedChainIds = [1];
-      const parsedChainId = parseInt(chainId, 16);
-      const isChainSupported = supportedChainIds.includes(parsedChainId);
-      stores.accountStore.setStore({ chainInvalid: !isChainSupported });
-     stores.emitter.emit(ACCOUNT_CHANGED);
-     stores.emitter.emit(ACCOUNT_CONFIGURED);
+        const supportedChainIds = [1];
+        const parsedChainId = parseInt(chainId, 16);
+        const isChainSupported = supportedChainIds.includes(parsedChainId);
+        console.log('is chain supported',isChainSupported);
+        stores.accountStore.setStore({ chainInvalid: !isChainSupported });
+       stores.emitter.emit(ACCOUNT_CHANGED);
+       stores.emitter.emit(ACCOUNT_CONFIGURED);
+       if( !isChainSupported ){
+         stores.accountStore.setStore({ chainInvalid: true });
+         stores.emitter.emit(ACCOUNT_CHANGED);
+       }else{
+
+         console.log(active);
+        // activate(injected)
+       }
+
       }
       const handleAccountsChanged = (accounts: string[]) => {
         console.log("Handling 'accountsChanged' event with payload", accounts)
@@ -81,22 +92,23 @@ stores.dispatcher.dispatch({
 
         }
       }
-      const handleNetworkChanged = (networkId: string | number) => {
-        // console.log("Handling 'networkChanged' event with payload", networkId)
-        activate(injected)
-      }
+      // const handleNetworkChanged = (networkId: string | number) => {
+      //   // console.log("Handling 'networkChanged' event with payload", networkId)
+      //   activate(injected)
+      // }
 
       ethereum.on('connect', handleConnect)
       ethereum.on('chainChanged', handleChainChanged)
       ethereum.on('accountsChanged', handleAccountsChanged)
-      ethereum.on('networkChanged', handleNetworkChanged)
+      // ethereum.on('networkChanged', handleNetworkChanged)
+      console.log('connecting up listeners');
 
       return () => {
         if (ethereum.removeListener) {
           ethereum.removeListener('connect', handleConnect)
           ethereum.removeListener('chainChanged', handleChainChanged)
           ethereum.removeListener('accountsChanged', handleAccountsChanged)
-          ethereum.removeListener('networkChanged', handleNetworkChanged)
+          // ethereum.removeListener('networkChanged', handleNetworkChanged)
         }
       }
     }
@@ -111,6 +123,7 @@ export function useEagerConnect() {
     injected.isAuthorized().then((isAuthorized: boolean) => {
     var connected=  localStorage.getItem('isConnected');
 console.log('con info',connected);
+console.log(isAuthorized)
       if (isAuthorized && connected === 'true') {
         activate(injected, undefined, true).then((a)=>{
           // console.log(a, injected,)
@@ -122,10 +135,20 @@ console.log('con info',connected);
               web3provider:prov_,
               web3context:{library:{provider:a}}})
 
+          
              console.log('printing',{account: {address:  a.selectedAddress},
              web3provider:prov_,
              web3context:{library:{provider:a} }});
-
+          stores.dispatcher.dispatch({
+              type: CONFIGURE_VAULTS,
+              content: { connected: true },
+            });
+             stores.dispatcher.dispatch({
+              type: CONFIGURE_LENDING
+            });
+            stores.dispatcher.dispatch({
+              type: CONFIGURE_CDP
+            });
               // stores.accountStore.getGasPrices();
               // stores.accountStore.getCurrentBlock();
 
@@ -134,7 +157,10 @@ console.log('con info',connected);
           setTried(true)
         })
       } else {
-
+        stores.dispatcher.dispatch({
+          type: CONFIGURE_VAULTS,
+          content: { connected: true },
+        });
         setTried(true)
       }
     })
