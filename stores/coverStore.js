@@ -101,6 +101,17 @@ class Store {
 
   configure = async payload => {
     try {
+
+      const account = stores.accountStore.getStore("account");
+      if (!account || !account.address) {
+        return false;
+      }
+  
+      const web3 =  stores.accountStore.getWeb3Provider();
+      if (!web3) {
+        return null;
+      }
+      
       const url = COVER_API;
 
       const coverApiResult = await fetch(url);
@@ -383,10 +394,6 @@ class Store {
   };
 
   getCoverBalances = async payload => {
-    const coverProtocols = this.getStore("coverProtocols");
-    if (!coverProtocols) {
-      return null;
-    }
 
     const account = stores.accountStore.getStore("account");
     if (!account || !account.address) {
@@ -395,6 +402,11 @@ class Store {
 
     const web3 =  stores.accountStore.getWeb3Provider();
     if (!web3) {
+      return null;
+    }
+
+    const coverProtocols = this.getStore("coverProtocols");
+    if (!coverProtocols) {
       return null;
     }
 

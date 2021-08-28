@@ -103,9 +103,6 @@ class Store {
 
   configure = async (payload) => {
 
-    this.emitter.emit(CDP_UPDATED);
-    this.emitter.emit(CDP_CONFIGURED);
-
     const web3 =  stores.accountStore.getWeb3Provider();
     if (!web3) {
       return null;
@@ -115,6 +112,9 @@ class Store {
     if (!account) {
       return null;
     }
+
+    this.emitter.emit(CDP_UPDATED);
+    this.emitter.emit(CDP_CONFIGURED);
 
     // set borrow details
     let borrowAsset = this.getStore('borrowAsset');

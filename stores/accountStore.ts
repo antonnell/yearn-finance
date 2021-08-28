@@ -125,16 +125,20 @@ class AccountStore extends React.Component<Props,IStore> {
 
         injected.isAuthorized().then((isAuthorized) => {
 
+  
+
          this.props.emitter.emit(ACCOUNT_CONFIGURED);
         // this.props.emitter.emit(LENDING_CONFIGURED);
         // this.props.emitter.emit(CDP_CONFIGURED);
+        if(isAuthorized){
 
+            this.getCurrentBlock();
+            this.getGasPrices();
+          }
 
 
 });
 
-this.getCurrentBlock();
-this.getGasPrices();
 
   // this.props.dispatcher.dispatch({
   //   type: CONFIGURE_LENDING,

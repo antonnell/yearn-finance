@@ -42,7 +42,7 @@ export function useInactiveListener(suppress: boolean) {
   useEffect((): any => {
     const { ethereum } = window as any;
 
-    if (ethereum && ethereum.on && active && !suppress) {
+    if (ethereum && ethereum.on  && !suppress) {
 
       const handleConnect = () => {
         console.log("Handling 'connect' event")
@@ -72,15 +72,10 @@ stores.dispatcher.dispatch({
       });
 
         }
-        return
+        
       }
-      // const handleNetworkChanged = (networkId: string | number) => {
-      //   // console.log("Handling 'networkChanged' event with payload", networkId)
-      //   activate(injected)
-      // }
 
-      ethereum.on('connect', handleConnect)
-      ethereum.on('chainChanged', (chainId: string) => {
+      const handleChainChanged = (chainId: string) => {
 
         console.log("Handling 'chainChanged' event with payload", chainId);
         activate(injected);
@@ -99,15 +94,28 @@ stores.dispatcher.dispatch({
          console.log(active);
        }
        return
-      })
+      }
+
+
+
+      const disconnectAccount =(connectInfo:any) =>{
+        console.log(connectInfo);
+ 
+          console.log('accounts---','user logged out');
+                
+      }
+
+      ethereum.on('connect', handleConnect)
+      ethereum.on('chainChanged', handleChainChanged)
       ethereum.on('accountsChanged', handleAccountsChanged)
-      // ethereum.on('networkChanged', handleNetworkChanged)
+      ethereum.on('disconnect',disconnectAccount)
       console.log('connecting up listeners');
 
+      //removing listeners 
       return () => {
         if (ethereum.removeListener) {
           ethereum.removeListener('connect', handleConnect)
-          ethereum.removeListener('chainChanged')
+          ethereum.removeListener('chainChanged',handleChainChanged)
           ethereum.removeListener('accountsChanged', handleAccountsChanged)
           // ethereum.removeListener('networkChanged', handleNetworkChanged)
         }
@@ -279,7 +287,6 @@ function Provider(props: Props) {
   useInactiveListener(!triedEager || !!activatingConnector);
 
 
-  console.log(validateConfigured());
 
   return (
     <>

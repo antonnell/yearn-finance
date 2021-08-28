@@ -32,6 +32,7 @@ import { useEagerConnect, useInactiveListener } from '../../stores/accountManage
 import { createStyles, StyledComponentProps } from "@material-ui/styles";
 import { injected } from "../../stores/connectors/connectors";
 import Web3 from "web3";
+import { useRouter } from 'next/router';
 
 
 
@@ -204,6 +205,8 @@ function onDeactivateClicked(deactivate, connector) {
 
 function MyComponent(props) {
   const context = useWeb3React();
+  const router = useRouter();
+
   const localContext = stores.accountStore.getStore("web3context");
   var web3provider = stores.accountStore.getStore("web3provider");
   var localConnector = null;
@@ -426,7 +429,7 @@ function MyComponent(props) {
 
                 deactivate()
            
-
+                router.replace('/');
                 stores.accountStore.setStore({ account: {}, web3context: null, Web3Provider: null });
                 stores.emitter.emit(CONNECTION_DISCONNECTED);
                 stores.emitter.emit(ACCOUNT_CONFIGURED);
@@ -440,7 +443,7 @@ function MyComponent(props) {
             console.log( web3provider)
             web3provider.eth.accounts.wallet.remove(0);
             localStorage.setItem('isConnected', 'false');
-
+        
                 return
               }}
               disableElevation

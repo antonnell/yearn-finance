@@ -171,6 +171,7 @@ class Store {
 
   configure = async (payload) => {
     try {
+
       const url = `${YEARN_VAULTS_API}`;
 
       const vaultsApiResult = await fetch(url);
@@ -601,10 +602,12 @@ class Store {
       const account = stores.accountStore.getStore('account');
       if (!account) {
         //maybe throw an error
+        return null
       }
 
       const web3 =  stores.accountStore.getWeb3Provider();
       if (!web3) {
+        return null
       }
 
       const provider = process.env.NEXT_PUBLIC_PROVIDER;

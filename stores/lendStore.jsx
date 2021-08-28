@@ -107,18 +107,25 @@ class Store {
 
   configure =  async (payload) => {
     console.log('running lend ....')
+
+
+
+
     const web3 =  stores.accountStore.getWeb3Provider();
     if (!web3) {
       return null;
     }
 
-    const allMarkets = await this._getAllMarkets(web3);
-    const blocksPeryear = 2425846;
-    const defaultValues = lendJSON;
     const account =  stores.accountStore.getStore('account');
     if (!account) {
       return null;
     }
+
+
+    const allMarkets = await this._getAllMarkets(web3);
+    const blocksPeryear = 2425846;
+    const defaultValues = lendJSON;
+
     const IronBankRegistryAdapter = new web3.eth.Contract(IRONBANKREGISTRYADAPTERABI, IRON_BANK_REGISTRY_ADAPTER);
     const adapterPositionOf =  await IronBankRegistryAdapter.methods.adapterPositionOf(account.address).call();
     this.setStore({ position: adapterPositionOf });
