@@ -9,6 +9,7 @@ import lightTheme from '../theme/light';
 import darkTheme from '../theme/dark';
 
 import Configure from './configure';
+import LocationWarning from '../components/locationWarning'
 
 import stores from '../stores/index.js';
 
@@ -22,6 +23,7 @@ export default function MyApp({ Component, pageProps }) {
   const [accountConfigured, setAccountConfigured] = useState(false);
   const [lendingConfigured, setLendingConfigured] = useState(false);
   const [cdpConfigured, setCDPConfigured] = useState(false);
+  const [locationWarningOpen, setLocationWarningOpen] = useState(false);
 
   useEffect(() => {
     // Remove the server-side injected CSS.
@@ -55,6 +57,9 @@ export default function MyApp({ Component, pageProps }) {
   useEffect(function () {
     const localStorageDarkMode = window.localStorage.getItem('yearn.finance-dark-mode');
     changeTheme(localStorageDarkMode ? localStorageDarkMode === 'dark' : false);
+
+    const localStorageWarningAccepted = window.localStorage.getItem('yearn.finance-warning-accepted');
+    setLocationWarningOpen(localStorageWarningAccepted ? localStorageWarningAccepted !== 'accepted' : true);
   }, []);
 
   useEffect(function () {
@@ -92,6 +97,11 @@ export default function MyApp({ Component, pageProps }) {
     }
   };
 
+  const closeWarning = () => {
+    window.localStorage.setItem('yearn.finance-warning-accepted', 'accepted');
+    setLocationWarningOpen(false)
+  }
+
   return (
     <React.Fragment>
       <Head>
@@ -103,6 +113,9 @@ export default function MyApp({ Component, pageProps }) {
         <CssBaseline />
         {validateConfigured() && <Component {...pageProps} changeTheme={changeTheme} />}
         {!validateConfigured() && <Configure {...pageProps} />}
+        { locationWarningOpen &&
+          <LocationWarning close={ closeWarning } />
+        }
       </ThemeProvider>
     </React.Fragment>
   );
