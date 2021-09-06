@@ -1,7 +1,7 @@
 import { Dialog, Typography, Button } from '@material-ui/core';
 import classes from "./locationWarning.module.css";
 
-export default function locationWarning({ close }) {
+export default function locationWarning({ close, locationData }) {
 
   return (
     <Dialog fullScreen open={ true } onClose={close} >
@@ -13,6 +13,9 @@ export default function locationWarning({ close }) {
           </Typography>
           <Typography className={classes.para2} align='center'>
             Persons accessing the Website need to be aware that they are responsible themselves for the compliance with all local rules and regulations.
+          </Typography>
+          <Typography className={classes.para1} align='center'>
+            Yearn.fi is unavailable to residences of United States of America.
           </Typography>
           <div className={ classes.buttonsContainer }>
             <Button

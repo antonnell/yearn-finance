@@ -576,7 +576,7 @@ class Store {
 
         this.emitter.emit(VAULTS_UPDATED);
 
-        this.calculateSystemOverview();
+        // this.calculateSystemOverview();
       },
     );
   };

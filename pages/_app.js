@@ -4,6 +4,7 @@ import Head from 'next/head';
 import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { useRouter } from 'next/router';
+import axios from 'axios'
 
 import lightTheme from '../theme/light';
 import darkTheme from '../theme/dark';
@@ -24,6 +25,7 @@ export default function MyApp({ Component, pageProps }) {
   const [lendingConfigured, setLendingConfigured] = useState(false);
   const [cdpConfigured, setCDPConfigured] = useState(false);
   const [locationWarningOpen, setLocationWarningOpen] = useState(false);
+  const [locationData, setLocationData] = useState(null);
 
   useEffect(() => {
     // Remove the server-side injected CSS.
@@ -32,6 +34,24 @@ export default function MyApp({ Component, pageProps }) {
       jssStyles.parentElement.removeChild(jssStyles);
     }
   }, []);
+
+  useEffect(() => {
+    // not using the location data, so it doesn't matter.
+    // const geoURL = 'https://geolocation-db.com/json/'
+    //
+    // axios.get(geoURL)
+    //   .then(function (response) {
+    //     // handle success
+    //     console.log(response.data);
+    //     if(response && response.data) {
+    //       setLocationData(locationData)
+    //     }
+    //   })
+    //   .catch(function (error) {
+    //     // handle error
+    //     console.log(error);
+    //   })
+  }, [])
 
   const changeTheme = (dark) => {
     setThemeConfig(dark ? darkTheme : lightTheme);
@@ -114,7 +134,7 @@ export default function MyApp({ Component, pageProps }) {
         {validateConfigured() && <Component {...pageProps} changeTheme={changeTheme} />}
         {!validateConfigured() && <Configure {...pageProps} />}
         { locationWarningOpen &&
-          <LocationWarning close={ closeWarning } />
+          <LocationWarning close={ closeWarning } locationData={ locationData } />
         }
       </ThemeProvider>
     </React.Fragment>
