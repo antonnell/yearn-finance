@@ -116,9 +116,9 @@ class Store {
     const blocksPeryear = 2425846;
     const defaultValues = lendJSON;
     const account = await stores.accountStore.getStore('account');
-    if (!account) {
+    if (!account && account.address === undefined) {
       return null;
-    }
+    }else{
 
     const IronBankRegistryAdapter = new web3.eth.Contract(IRONBANKREGISTRYADAPTERABI, IRON_BANK_REGISTRY_ADAPTER);
     const adapterPositionOf = await IronBankRegistryAdapter.methods.adapterPositionOf(account.address).call();
@@ -213,8 +213,8 @@ class Store {
             return lendingAsset;
           }
         } catch (ex) {
-          console.log(ex);
-          console.log(market);
+          // console.log(ex);
+          // console.log(market);
 
           if (callback) {
             callback(ex);
@@ -239,6 +239,7 @@ class Store {
         this.dispatcher.dispatch({ type: GET_LENDING_BALANCES });
       },
     );
+    }
   };
 
   _getCollateralPercent = (vaultSymbol) => {
@@ -274,7 +275,7 @@ class Store {
       });
       return newMarkets;
     } catch (ex) {
-      console.log(ex);
+      // console.log(ex);
       return null;
     }
   };
@@ -285,7 +286,7 @@ class Store {
       const assetsIn = await comptrollerContract.methods.getAssetsIn(account.address).call();
       return assetsIn;
     } catch (ex) {
-      console.log(ex);
+      // console.log(ex);
       return null;
     }
   };
@@ -381,8 +382,8 @@ class Store {
             return asset;
           }
         } catch (ex) {
-          console.log(asset);
-          console.log(ex);
+          // console.log(asset);
+          // console.log(ex);
 
           if (callback) {
             callback(null, asset);

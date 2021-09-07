@@ -16,13 +16,13 @@ import { CONNECT_WALLET, ACCOUNT_CONFIGURED, ACCOUNT_CHANGED } from '../../store
 import Unlock from '../unlock';
 
 import stores from '../../stores';
-import { formatAddress } from '../../utils';
 
 import classes from './header.module.css';
 import HelpIcon from '@material-ui/icons/Help';
 import AboutModal from './aboutModal';
 import SearchModal from './searchModal';
 import { useHotkeys } from 'react-hotkeys-hook';
+import UserMenu from './userMenu';
 import MoreMenu from './moreMenu';
 
 const StyledSwitch = withStyles((theme) => ({
@@ -77,7 +77,7 @@ const StyledSwitch = withStyles((theme) => ({
 });
 
 function Header(props) {
-
+  console.log(stores.accountStore);
   const accountStore = stores.accountStore.getStore('account');
 
   const [account, setAccount] = useState(accountStore);
@@ -125,7 +125,12 @@ function Header(props) {
   };
 
   const onAddressClicked = () => {
-    setUnlockOpen(true);
+    if (!(account && account.address)){
+    // setUnlockOpen(true);
+    console.log(props);
+    props.toggleModal();
+    }
+
   };
 
   const closeUnlock = () => {
@@ -189,7 +194,7 @@ function Header(props) {
         >
           <Typography className={classes.headBtnTxt}>Need help?</Typography>
         </Button>
-        <Button
+        {/* <Button
           disableElevation
           className={classes.accountButton}
           variant="contained"
@@ -197,7 +202,16 @@ function Header(props) {
           onClick={onAddressClicked}>
           {account && account.address && <div className={`${classes.accountIcon} ${classes.metamask}`}></div>}
           <Typography className={classes.headBtnTxt}>{account && account.address ? formatAddress(account.address) : 'Connect Wallet'}</Typography>
-        </Button>
+        </Button> */}
+
+        <div className={classes.usermenutest}>
+        <UserMenu 
+        loginClicked={onAddressClicked}
+        account={account}
+        logout={props.logout}
+        />
+        </div>
+
         {unlockOpen && <Unlock modalOpen={unlockOpen} closeModal={closeUnlock} />}
         {toggleAboutModal && <AboutModal setToggleAboutModal={setToggleAboutModal} />}
         {toggleSearchModal && <SearchModal setToggleSearchModal={setToggleSearchModal} />}

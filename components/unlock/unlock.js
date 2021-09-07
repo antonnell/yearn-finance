@@ -104,7 +104,7 @@ class Unlock extends Component {
     this.setState({ loading: false, error: err });
   };
 
-  connectionConnected = () => {
+  connectionConnected = () => {co
     stores.dispatcher.dispatch({
       type: CONFIGURE_VAULTS,
       content: { connected: true }
