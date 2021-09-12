@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 import Head from 'next/head';
-import Layout from '../../components/layout';
+import Layout from '../../components/layout/layout';
 import { Typography, Paper, TextField, InputAdornment, Grid } from '@material-ui/core';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';

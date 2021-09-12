@@ -116,10 +116,14 @@ class Store {
       return null;
     }
 
-    const account =  stores.accountStore.getStore('account');
-    if (!account) {
+    const allMarkets = await this._getAllMarkets(web3);
+
+    const blocksPeryear = 2425846;
+    const defaultValues = lendJSON;
+    const account = await stores.accountStore.getStore('account');
+    if (!account && account.address === undefined) {
       return null;
-    }
+    }else{
 
 
     const allMarkets = await this._getAllMarkets(web3);
@@ -220,8 +224,8 @@ class Store {
             return lendingAsset;
           }
         } catch (ex) {
-          console.log(ex);
-          console.log(market);
+          // console.log(ex);
+          // console.log(market);
 
           if (callback) {
             callback(ex);
@@ -247,6 +251,7 @@ class Store {
         this.dispatcher.dispatch({ type: GET_LENDING_BALANCES });
       },
     );
+    }
   };
 
   _getCollateralPercent = (vaultSymbol) => {
@@ -282,7 +287,7 @@ class Store {
       });
       return newMarkets;
     } catch (ex) {
-      console.log(ex);
+      // console.log(ex);
       return null;
     }
   };
@@ -293,7 +298,7 @@ class Store {
       const assetsIn = await comptrollerContract.methods.getAssetsIn(account.address).call();
       return assetsIn;
     } catch (ex) {
-      console.log(ex);
+      // console.log(ex);
       return null;
     }
   };
@@ -390,8 +395,8 @@ class Store {
             return asset;
           }
         } catch (ex) {
-          console.log(asset);
-          console.log(ex);
+          // console.log(asset);
+          // console.log(ex);
 
           if (callback) {
             callback(null, asset);

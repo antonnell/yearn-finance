@@ -217,7 +217,7 @@ class Store {
        this.emitter.emit(VAULTS_CONFIGURED);
       this.dispatcher.dispatch({ type: GET_VAULT_BALANCES });
     } catch (ex) {
-      //  console.log(ex);
+      // console.log(ex);
     }
   
   };
@@ -500,8 +500,8 @@ class Store {
             return vault;
           }
         } catch (ex) {
-          console.log(vault);
-          console.log(ex);
+          // console.log(vault);
+          // console.log(ex);
 
           if (callback) {
             callback(null, vault);
@@ -513,7 +513,7 @@ class Store {
       },
       (err, vaultsBalanced) => {
         if (err) {
-           console.log(err);
+          // console.log(err);
           return this.emitter.emit(ERROR, err);
         }
 

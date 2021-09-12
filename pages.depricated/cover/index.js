@@ -11,7 +11,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import CoverCard from '../../components/coverCard'
 
 import Head from 'next/head'
-import Layout from '../../components/layout'
+import Layout from '../../components/layout/layout'
 import classes from './cover.module.css'
 
 import stores from '../../stores/index.js'

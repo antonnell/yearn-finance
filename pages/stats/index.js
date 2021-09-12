@@ -11,7 +11,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Head from 'next/head';
-import Layout from '../../components/layout';
+import Layout from '../../components/layout/layout';
 import classes from './stats.module.css';
 import BigNumber from 'bignumber.js';
 

@@ -6,7 +6,7 @@ import Link from '@material-ui/core/Link';
 import FlashOffOutlinedIcon from '@material-ui/icons/FlashOffOutlined';
 
 import Head from 'next/head';
-import Layout from '../../components/layout';
+import Layout from '../../components/layout/layout';
 
 import classes from './cdp.module.css';
 
