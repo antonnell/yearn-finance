@@ -26,14 +26,14 @@ import {
   DISABLE_COLLATERAL_LEND,
   DISABLE_COLLATERAL_LEND_RETURNED,
   IRON_BANK_REGISTRY_ADAPTER,
-} from './constants';
+} from './constants/constants';
 
 import * as moment from 'moment';
 
-import stores from './';
+import stores from '.';
 import lendJSON from './configurations/lend';
-import { ERC20ABI, COMPTROLLERABI, CERC20DELEGATORABI, CREAMPRICEORACLEABI, IRONBANKREGISTRYADAPTERABI } from './abis';
-import { bnDec } from '../utils';
+import { ERC20ABI, COMPTROLLERABI, CERC20DELEGATORABI, CREAMPRICEORACLEABI, IRONBANKREGISTRYADAPTERABI } from './abis/abis';
+import { bnDec } from '../utils/utils';
 
 import BatchCall from 'web3-batch-call';
 import BigNumber from 'bignumber.js';
@@ -105,8 +105,13 @@ class Store {
     return this.emitter.emit(STORE_UPDATED);
   };
 
-  configure = async (payload) => {
-    const web3 = await stores.accountStore.getWeb3Provider();
+  configure =  async (payload) => {
+    console.log('running lend ....')
+
+
+
+
+    const web3 =  stores.accountStore.getWeb3Provider();
     if (!web3) {
       return null;
     }
@@ -120,18 +125,24 @@ class Store {
       return null;
     }else{
 
-    const IronBankRegistryAdapter = new web3.eth.Contract(IRONBANKREGISTRYADAPTERABI, IRON_BANK_REGISTRY_ADAPTER);
-    const adapterPositionOf = await IronBankRegistryAdapter.methods.adapterPositionOf(account.address).call();
-    this.setStore({ position: adapterPositionOf });
 
-    async.map(
+    const allMarkets = await this._getAllMarkets(web3);
+    const blocksPeryear = 2425846;
+    const defaultValues = lendJSON;
+
+    const IronBankRegistryAdapter = new web3.eth.Contract(IRONBANKREGISTRYADAPTERABI, IRON_BANK_REGISTRY_ADAPTER);
+    const adapterPositionOf =  await IronBankRegistryAdapter.methods.adapterPositionOf(account.address).call();
+    this.setStore({ position: adapterPositionOf });
+// console.log(defaultValues);
+ await async.map(
       allMarkets,
       async (market, callback) => {
         try {
           const marketContract = new web3.eth.Contract(CERC20DELEGATORABI, market);
-
+// console.log(marketContract);
           //set static values to avoid doing tons more calls.
           let defaultMarket = defaultValues.filter((val) => {
+            // console.log('---',val, market);
             return val.address === market;
           });
 
@@ -224,6 +235,7 @@ class Store {
         }
       },
       (err, allMarketsData) => {
+        console.log(err, allMarketsData);
         if (err) {
           this.emitter.emit(LENDING_CONFIGURED);
           return this.emitter.emit(ERROR, err);
@@ -299,20 +311,20 @@ class Store {
 
     const account = stores.accountStore.getStore('account');
 
-    const web3 = await stores.accountStore.getWeb3Provider();
+    const web3 =  stores.accountStore.getWeb3Provider();
     if (!web3) {
       return null;
     }
 
     let assetsIn = null;
     if (account && account.address) {
-      assetsIn = await this._getAssetsIn(web3, account);
+      assetsIn =  await this._getAssetsIn(web3, account);
     }
     const blocksPeryear = 2425846;
 
     const creamPriceOracleContract = new web3.eth.Contract(CREAMPRICEORACLEABI, CREAM_PRICE_ORACLE_ADDRESS);
     const comptrollerContract = new web3.eth.Contract(COMPTROLLERABI, COMPTROLLER_ADDRESS);
-    async.map(
+  await  async.map(
       lendingAssets,
       async (asset, callback) => {
         // console.log(asset)
@@ -378,6 +390,7 @@ class Store {
 
           if (callback) {
             callback(null, asset);
+            return
           } else {
             return asset;
           }
@@ -387,6 +400,7 @@ class Store {
 
           if (callback) {
             callback(null, asset);
+            return
           } else {
             return asset;
           }
@@ -449,7 +463,7 @@ class Store {
       //maybe throw an error
     }
 
-    const web3 = await stores.accountStore.getWeb3Provider();
+    const web3 =  stores.accountStore.getWeb3Provider();
     if (!web3) {
       return false;
       //maybe throw an error
@@ -490,7 +504,7 @@ class Store {
       //maybe throw an error
     }
 
-    const web3 = await stores.accountStore.getWeb3Provider();
+    const web3 =  stores.accountStore.getWeb3Provider();
     if (!web3) {
       return false;
       //maybe throw an error
@@ -523,7 +537,7 @@ class Store {
       //maybe throw an error
     }
 
-    const web3 = await stores.accountStore.getWeb3Provider();
+    const web3 =  stores.accountStore.getWeb3Provider();
     if (!web3) {
       return false;
       //maybe throw an error
@@ -556,7 +570,7 @@ class Store {
       //maybe throw an error
     }
 
-    const web3 = await stores.accountStore.getWeb3Provider();
+    const web3 =  stores.accountStore.getWeb3Provider();
     if (!web3) {
       return false;
       //maybe throw an error
@@ -589,7 +603,7 @@ class Store {
       //maybe throw an error
     }
 
-    const web3 = await stores.accountStore.getWeb3Provider();
+    const web3 =  stores.accountStore.getWeb3Provider();
     if (!web3) {
       return false;
       //maybe throw an error
@@ -622,7 +636,7 @@ class Store {
       //maybe throw an error
     }
 
-    const web3 = await stores.accountStore.getWeb3Provider();
+    const web3 =  stores.accountStore.getWeb3Provider();
     if (!web3) {
       return false;
       //maybe throw an error
@@ -653,7 +667,7 @@ class Store {
       //maybe throw an error
     }
 
-    const web3 = await stores.accountStore.getWeb3Provider();
+    const web3 =  stores.accountStore.getWeb3Provider();
     if (!web3) {
       return false;
       //maybe throw an error

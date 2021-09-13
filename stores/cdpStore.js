@@ -103,19 +103,18 @@ class Store {
 
   configure = async (payload) => {
 
-    this.emitter.emit(CDP_UPDATED);
-    this.emitter.emit(CDP_CONFIGURED);
-    return
-
-    const web3 = await stores.accountStore.getWeb3Provider();
+    const web3 =  stores.accountStore.getWeb3Provider();
     if (!web3) {
       return null;
     }
 
-    const account = await stores.accountStore.getStore('account');
+    const account =  stores.accountStore.getStore('account');
     if (!account) {
       return null;
     }
+
+    this.emitter.emit(CDP_UPDATED);
+    this.emitter.emit(CDP_CONFIGURED);
 
     // set borrow details
     let borrowAsset = this.getStore('borrowAsset');
@@ -126,9 +125,8 @@ class Store {
       borrowAsset.balance = BigNumber(borrowBalanceOf).div(bnDec(borrowAsset.decimals)).toFixed(borrowAsset.decimals, BigNumber.ROUND_DOWN);
       const allowanceOf = await borrowAssetContract.methods.allowance(account.address, CDP_VAULT_ADDRESS).call();
       borrowAsset.allowance = BigNumber(allowanceOf).div(bnDec(borrowAsset.decimals)).toFixed(borrowAsset.decimals, BigNumber.ROUND_DOWN);
-
       this.setStore({ borrowAsset: borrowAsset });
-
+console.log(borrowAsset)
       //get all supported assets
       const allAssets = await this._getAssets(web3);
       // get open CDPS
@@ -483,7 +481,7 @@ class Store {
 
   _getDolarPrice = async (asset, ethPrice) => {
     try {
-      const web3 = await stores.accountStore.getWeb3Provider();
+      const web3 = stores.accountStore.getWeb3Provider();
 
       let dolar = 0;
 
@@ -735,7 +733,7 @@ class Store {
 
     const account = stores.accountStore.getStore('account');
 
-    const web3 = await stores.accountStore.getWeb3Provider();
+    const web3 =  stores.accountStore.getWeb3Provider();
     if (!web3) {
       return null;
     }
@@ -748,7 +746,7 @@ class Store {
       //maybe throw an error
     }
 
-    const web3 = await stores.accountStore.getWeb3Provider();
+    const web3 = stores.accountStore.getWeb3Provider();
     if (!web3) {
       return false;
       //maybe throw an error
@@ -789,7 +787,7 @@ class Store {
       //maybe throw an error
     }
 
-    const web3 = await stores.accountStore.getWeb3Provider();
+    const web3 = stores.accountStore.getWeb3Provider();
     if (!web3) {
       return false;
       //maybe throw an error
@@ -902,7 +900,7 @@ class Store {
       //maybe throw an error
     }
 
-    const web3 = await stores.accountStore.getWeb3Provider();
+    const web3 =  stores.accountStore.getWeb3Provider();
     if (!web3) {
       return false;
       //maybe throw an error

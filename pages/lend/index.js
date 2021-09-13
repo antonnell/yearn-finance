@@ -142,6 +142,7 @@ function Lend({ changeTheme }) {
     setLendingSupplyAPY(stores.lendStore.getStore('lendingSupplyAPY'));
     setLendingBorrowAPY(stores.lendStore.getStore('lendingBorrowAPY'));
     setLendingBorrowLimit(stores.lendStore.getStore('lendingBorrowLimit'));
+    console.log(stores.lendStore.getStore('lendingAssets'));
     forceUpdate();
   };
 

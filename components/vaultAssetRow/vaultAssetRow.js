@@ -40,6 +40,9 @@ export default function VaultAssetRow({ vault, account }) {
       break;
   }
 
+  const brokenImage = (ev) =>{
+    ev.target.src = './tokens/unknown-logo.png';
+}
   return (
     <TableRow
       className={classes.assetRow}
@@ -53,7 +56,7 @@ export default function VaultAssetRow({ vault, account }) {
       <TableCell>
         <div className={classes.vaultTitleCell}>
           <div className={classes.logo}>
-            <img src={vault.icon ? vault.icon : '/tokens/unknown-logo.png'} alt="" width={30} height={30} />
+            <img src={vault.icon ? vault.icon : './tokens/unknown-logo.png'} onError={brokenImage}  alt="" width={30} height={30} />
           </div>
           <div className={classes.name}>
             <Typography variant="h5" className={classes.fontWeightBold}>

@@ -101,6 +101,17 @@ class Store {
 
   configure = async payload => {
     try {
+
+      const account = stores.accountStore.getStore("account");
+      if (!account || !account.address) {
+        return false;
+      }
+  
+      const web3 =  stores.accountStore.getWeb3Provider();
+      if (!web3) {
+        return null;
+      }
+      
       const url = COVER_API;
 
       const coverApiResult = await fetch(url);
@@ -383,18 +394,19 @@ class Store {
   };
 
   getCoverBalances = async payload => {
-    const coverProtocols = this.getStore("coverProtocols");
-    if (!coverProtocols) {
-      return null;
-    }
 
     const account = stores.accountStore.getStore("account");
     if (!account || !account.address) {
       return false;
     }
 
-    const web3 = await stores.accountStore.getWeb3Provider();
+    const web3 =  stores.accountStore.getWeb3Provider();
     if (!web3) {
+      return null;
+    }
+
+    const coverProtocols = this.getStore("coverProtocols");
+    if (!coverProtocols) {
       return null;
     }
 
@@ -524,7 +536,7 @@ class Store {
       //maybe throw an error
     }
 
-    const web3 = await stores.accountStore.getWeb3Provider();
+    const web3 =  stores.accountStore.getWeb3Provider();
     if (!web3) {
       return false;
       //maybe throw an error
@@ -609,7 +621,7 @@ class Store {
       //maybe throw an error
     }
 
-    const web3 = await stores.accountStore.getWeb3Provider();
+    const web3 =  stores.accountStore.getWeb3Provider();
     if (!web3) {
       return false;
       //maybe throw an error
@@ -695,7 +707,7 @@ class Store {
       //maybe throw an error
     }
 
-    const web3 = await stores.accountStore.getWeb3Provider();
+    const web3 =  stores.accountStore.getWeb3Provider();
     if (!web3) {
       return false;
       //maybe throw an error

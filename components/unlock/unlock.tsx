@@ -5,19 +5,38 @@ import CloseIcon from "@material-ui/icons/Close";
 
 import { Web3ReactProvider, useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
-
 import {
   ERROR,
   CONNECTION_DISCONNECTED,
   CONNECTION_CONNECTED,
   CONFIGURE,
   CONFIGURE_VAULTS,
-  CONFIGURE_LENDING
-} from "../../stores/constants";
+  CONFIGURE_LENDING,
+  GAS_PRICE_API,
+  ZAPPER_GAS_PRICE_API,
+  STORE_UPDATED,
+  ACCOUNT_CONFIGURED,
+  GET_ACCOUNT_BALANCES,
+  ACCOUNT_BALANCES_RETURNED,
+  CONFIGURE_CDP,
+  LENDING_CONFIGURED,
+  CDP_CONFIGURED,
+  ACCOUNT_CHANGED,
+  GET_GAS_PRICES,
+  GAS_PRICES_RETURNED,
+} from "../../stores/constants/constants";
 
 import stores from "../../stores";
+import { useEagerConnect, useInactiveListener } from '../../stores/accountManager.ts';
 
-const styles = theme => ({
+import { createStyles, StyledComponentProps } from "@material-ui/styles";
+import { injected } from "../../stores/connectors/connectors";
+import Web3 from "web3";
+import { useRouter } from 'next/router';
+
+
+
+const styles = (theme: any) => createStyles({
   root: {
     flex: 1,
     height: "auto",
@@ -44,7 +63,7 @@ const styles = theme => ({
   },
   buttonText: {
     marginLeft: "12px",
-    fontWeight: "700"
+    fontWeight: 700
   },
   instruction: {
     maxWidth: "400px",
@@ -72,9 +91,19 @@ const styles = theme => ({
   }
 });
 
-class Unlock extends Component {
+interface IProps{
+  modalOpen: any;
+  closeModal: any;
+  setActivatingConnector?: any;
+}
+interface IState {
+  loading: boolean;
+  error: any;
+}
+type Props = IProps & StyledComponentProps;
+class Unlock extends React.Component<Props,IState> {
   constructor(props) {
-    super();
+    super(props);
 
     this.state = {
       loading: false,
@@ -134,79 +163,68 @@ class Unlock extends Component {
           <CloseIcon />
         </div>
         <div className={classes.contentContainer}>
-          <Web3ReactProvider getLibrary={getLibrary}>
             <MyComponent closeModal={closeModal} />
-          </Web3ReactProvider>
         </div>
       </div>
     );
   }
 }
 
-function getLibrary(provider) {
-  const library = new Web3Provider(provider);
-  library.pollingInterval = 8000;
-  return library;
-}
 
-function onConnectionClicked(
-  currentConnector,
-  name,
-  setActivatingConnector,
-  activate
-) {
-  const connectorsByName = stores.accountStore.getStore("connectorsByName");
-  setActivatingConnector(currentConnector);
-  activate(connectorsByName[name]);
-}
+// function onConnectionClicked(
+//   currentConnector,
+//   name,
+//   setActivatingConnector,
+//   activate
+// ) {
+//   const connectorsByName = stores.accountStore.getStore("connectorsByName");
+//   setActivatingConnector(currentConnector);
+//   activate(connectorsByName[name]);
+// }
 
 function onDeactivateClicked(deactivate, connector) {
+  console.log(deactivate, connector);
   if (deactivate) {
     deactivate();
   }
-  if (connector && connector.close) {
-    connector.close();
+  if (connector ) {
+    connector.deactivate();
   }
-  stores.accountStore.setStore({ account: {}, web3context: null });
+  stores.accountStore.setStore({ account: {}, web3context: null, Web3Provider: null });
   stores.emitter.emit(CONNECTION_DISCONNECTED);
+  stores.emitter.emit(ACCOUNT_CONFIGURED);
+  stores.emitter.emit(LENDING_CONFIGURED);
+  stores.emitter.emit(CDP_CONFIGURED);
+
+  stores.dispatcher.dispatch({
+    type: CONFIGURE_VAULTS,
+    content: { connected: false },
+  });
 }
+
 
 function MyComponent(props) {
   const context = useWeb3React();
+  const router = useRouter();
+
   const localContext = stores.accountStore.getStore("web3context");
+  var web3provider = stores.accountStore.getStore("web3provider");
   var localConnector = null;
   if (localContext) {
     localConnector = localContext.connector;
   }
-  const {
-    connector,
-    library,
-    account,
-    activate,
-    deactivate,
-    active,
-    error
-  } = context;
+
+
+  const { connector, library, chainId, account, activate, deactivate, active, error } = context;
+
   var connectorsByName = stores.accountStore.getStore("connectorsByName");
 
-  const { closeModal } = props;
-
-  const [activatingConnector, setActivatingConnector] = React.useState();
+  const [activatingConnector, setActivatingConnector] = React.useState<any>();
   React.useEffect(() => {
     if (activatingConnector && activatingConnector === connector) {
       setActivatingConnector(undefined);
     }
   }, [activatingConnector, connector]);
-
-  React.useEffect(() => {
-    if (account && active && library) {
-      stores.accountStore.setStore({
-        account: { address: account },
-        web3context: context
-      });
-      stores.emitter.emit(CONNECTION_CONNECTED);
-    }
-  }, [account, active, closeModal, context, library]);
 
   const width = window.innerWidth;
 
@@ -220,11 +238,12 @@ function MyComponent(props) {
       }}
     >
       {Object.keys(connectorsByName).map(name => {
+
         const currentConnector = connectorsByName[name];
         const activating = currentConnector === activatingConnector;
         const connected =
           currentConnector === connector || currentConnector === localConnector;
-        const disabled = !!activatingConnector || !!error;
+        const disabled = !!activatingConnector || !!error || connected
 
         let url;
         let display = name;
@@ -281,22 +300,77 @@ function MyComponent(props) {
                 width: width > 576 ? "350px" : "calc(100vw - 100px)",
                 height: "200px",
                 backgroundColor: "rgba(0,0,0,0.05)",
-                border: "1px solid rgba(108,108,123,0.2)",
+                // borderColor: activating ? 'orange' : connected ? 'green' :  "rgba(0,0,0,0.05)",
+                border: activating ? '1px solid orange' : connected ? "1px solid green" : "1px solid rgba(108,108,123,0.2)",
                 color: "rgba(108,108,123,1)"
               }}
               variant="contained"
               onClick={() => {
-                onConnectionClicked(
-                  currentConnector,
-                  name,
-                  setActivatingConnector,
-                  activate
-                );
+
+                if(!activating){
+                  setActivatingConnector(currentConnector)
+                  // props.setActivatingConnector(currentConnector);
+                  activate(connectorsByName[name]).then((a:any)=>{
+                    console.log(a);
+
+                    injected.getProvider().then(a=>{
+                      // console.log(a);
+                          const prov_ = new Web3(a)
+                      stores.accountStore.setStore({
+                        account: {address:  a.selectedAddress},
+                        web3provider:prov_,
+                        web3context:{library:{provider:a}}})
+          
+                       console.log('printing',{account: {address:  a.selectedAddress},
+                       web3provider:prov_,
+                       web3context:{library:{provider:a} }});
+          
+                       stores.emitter.emit(ACCOUNT_CHANGED);
+                       stores.emitter.emit(ACCOUNT_CONFIGURED);
+             
+            //     stores.dispatcher.dispatch({
+            //          type: CONFIGURE_VAULTS,
+            //          content: { connected: true },
+            //        });
+            //  stores.dispatcher.dispatch({
+            //          type: CONFIGURE_LENDING,
+            //          content: { connected: true },
+            //        });
+            //  stores.dispatcher.dispatch({
+            //          type: CONFIGURE_CDP,
+            //          content: { connected: true },
+            //        });
+                        // stores.accountStore.getGasPrices();
+                        // stores.accountStore.getCurrentBlock();
+                        
+    
+
+                    })
+                  })
+ 
+                  localStorage.setItem('isConnected', 'true');
+
+                }else{
+
+              
+                }
+                // onConnectionClicked(
+                //   currentConnector,
+                //   name,
+                //   setActivatingConnector,
+                //   activate
+                // );
+                return
               }}
               disableElevation
               color="secondary"
               disabled={disabled}
             >
+                      {/* {connected && (
+                  <span role="img" aria-label="check">
+                    ✅
+                  </span>
+                )} */}
               <div
                 style={{
                   height: "160px",
@@ -315,12 +389,12 @@ function MyComponent(props) {
                   src={url}
                   alt=""
                 />
-                <Typography variant={"h2"}>{display}</Typography>
+            <Typography variant={"h2"}>{display}</Typography>
                 <Typography variant={"body2"}>{descriptor}</Typography>
                 {activating && (
                   <CircularProgress size={15} style={{ marginRight: "10px" }} />
                 )}
-                {!activating && connected && (
+                {connected && (
                   <div
                     style={{
                       background: "#4caf50",
@@ -333,14 +407,57 @@ function MyComponent(props) {
                       right: "15px"
                     }}
                   ></div>
-                )}
-              </div>
+             )}
+               </div>
+               
             </Button>
           </div>
         );
       })}
+ <Button
+              style={{
+                width:"350px" ,
+                height: "200px",
+                backgroundColor: "rgba(0,0,0,0.05)",
+                // borderColor: activating ? 'orange' : connected ? 'green' :  "rgba(0,0,0,0.05)",
+                border:  "1px solid rgba(108,108,123,0.2)",
+                color: "rgba(108,108,123,1)"
+              }}
+              variant="contained"
+              onClick={() => {
+                console.log('go');
+
+                deactivate()
+           
+                router.replace('/');
+                stores.accountStore.setStore({ account: {}, web3context: null, Web3Provider: null });
+                stores.emitter.emit(CONNECTION_DISCONNECTED);
+                stores.emitter.emit(ACCOUNT_CONFIGURED);
+                stores.emitter.emit(LENDING_CONFIGURED);
+                stores.emitter.emit(CDP_CONFIGURED);
+              
+                stores.dispatcher.dispatch({
+                  type: CONFIGURE_VAULTS,
+                  content: { connected: false },
+                });
+            console.log( web3provider)
+            web3provider.eth.accounts.wallet.remove(0);
+            localStorage.setItem('isConnected', 'false');
+        
+                return
+              }}
+              disableElevation
+              color="secondary"
+            >
+                Deactivate
+                </Button>
     </div>
   );
 }
 
+
+
+
 export default withStyles(styles)(Unlock);
+
+

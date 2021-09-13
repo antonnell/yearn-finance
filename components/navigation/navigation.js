@@ -10,9 +10,10 @@ import WbSunnyOutlinedIcon from "@material-ui/icons/WbSunnyOutlined";
 import Brightness2Icon from "@material-ui/icons/Brightness2";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 
-import Unlock from "../unlock";
+import Unlock from "../unlock/unlock.tsx";
 
-import stores from "../../stores";
+import { useWeb3React } from "@web3-react/core";
+
 import { formatAddress } from "../../utils";
 
 import classes from "./navigation.module.css";
@@ -307,9 +308,12 @@ const StyledSwitch = withStyles((theme) => ({
 
 function Navigation(props) {
   const router = useRouter();
+  const context = useWeb3React();
+// // console.log(context);
+// const {account } = context;
+const { account} = context;
 
-  const account = stores.accountStore.getStore("account");
-
+  // const account = stores.accountStore.getStore("account");
   const [darkMode, setDarkMode] = useState(false);
   const [unlockOpen, setUnlockOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -368,7 +372,6 @@ function Navigation(props) {
           />
         )}
         {account &&
-          account.address &&
           renderNav(
             "Lend",
             "lend",
@@ -384,7 +387,6 @@ function Navigation(props) {
             />
           )}
         {account &&
-          account.address &&
           renderNav(
             "CDP",
             "cdp",
@@ -400,7 +402,6 @@ function Navigation(props) {
             />
           )}
         {account &&
-          account.address &&
           renderNav(
             "LTV",
             "ltv",
