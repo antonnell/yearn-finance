@@ -10,7 +10,7 @@ export const COVER_API = 'https://api.coverprotocol.com/protocol_data/production
 export const COINGECKO_API = 'https://api.coingecko.com/api/v3'
 
 export const LTV_MAXIMIZER_ADDRESS = '0x6AE0b2d7DaEbd40ed5333b1C2C72f09287bcCa84';
-export const CREAM_PRICE_ORACLE_ADDRESS = '0x6B96c414ce762578c3E7930da9114CffC88704Cb';
+export const CREAM_PRICE_ORACLE_ADDRESS = '0xde19f5a7cf029275be9cec538e81aa298e297266';
 export const COMPTROLLER_ADDRESS = '0xAB1c342C7bf5Ec5F02ADEA1c2270670bCa144CbB';
 export const IRON_BANK_REGISTRY_ADAPTER = '0xFF0bd2d0C7E9424ccB149ED3757155eEf41a793D';
 export const CDP_VAULT_ADDRESS = '0xb1cFF81b9305166ff1EFc49A129ad2AfCd7BCf19';
