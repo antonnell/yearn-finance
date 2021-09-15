@@ -143,7 +143,7 @@ class Store {
 
   setStore = (obj) => {
     this.store = { ...this.store, ...obj };
-    console.log(this.store);
+    // console.log(this.store);
     return this.emitter.emit(STORE_UPDATED);
   };
 
@@ -1093,40 +1093,51 @@ class Store {
     this._callContract(web3, vaultContract, 'withdraw', [amountToSend], account, gasPrice, GET_VAULT_BALANCES, callback);
   };
 
-  _callContract = (web3, contract, method, params, account, gasPrice, dispatchEvent, callback) => {
+  _callContract = async (web3, contract, method, params, account, gasPrice, dispatchEvent, callback) => {
     //todo: rewrite the callback unfctionality.
 
-    const context = this;
-    contract.methods[method](...params)
-      .send({
-        from: account.address,
-        gasPrice: web3.utils.toWei(gasPrice, 'gwei'),
-      })
-      .on('transactionHash', function (hash) {
-        context.emitter.emit(TX_SUBMITTED, hash);
-        callback(null, hash);
-      })
-      .on('confirmation', function (confirmationNumber, receipt) {
-        if (dispatchEvent && confirmationNumber === 1) {
-          context.dispatcher.dispatch({ type: dispatchEvent });
-        }
-      })
-      .on('error', function (error) {
-        if (!error.toString().includes('-32601')) {
-          if (error.message) {
-            return callback(error.message);
+    //estimate gas
+    const gasCost = contract.methods[method](...params).estimateGas({ from: account.address })
+    .then((gasAmount) => {
+
+      const context = this;
+      contract.methods[method](...params)
+        .send({
+          from: account.address,
+          gasPrice: web3.utils.toWei(gasPrice, 'gwei'),
+          gas: gasAmount
+        })
+        .on('transactionHash', function (hash) {
+          context.emitter.emit(TX_SUBMITTED, hash);
+          callback(null, hash);
+        })
+        .on('confirmation', function (confirmationNumber, receipt) {
+          if (dispatchEvent && confirmationNumber === 1) {
+            context.dispatcher.dispatch({ type: dispatchEvent });
           }
-          callback(error);
-        }
-      })
-      .catch((error) => {
-        if (!error.toString().includes('-32601')) {
-          if (error.message) {
-            return callback(error.message);
+        })
+        .on('error', function (error) {
+          if (!error.toString().includes('-32601')) {
+            if (error.message) {
+              return callback(error.message);
+            }
+            callback(error);
           }
-          callback(error);
-        }
-      });
+        })
+        .catch((error) => {
+          if (!error.toString().includes('-32601')) {
+            if (error.message) {
+              return callback(error.message);
+            }
+            callback(error);
+          }
+        });
+    })
+    .catch((ex) => {
+      console.log(ex)
+      callback(ex);
+    })
+
   };
 
   approveVault = async (payload) => {

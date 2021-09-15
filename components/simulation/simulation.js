@@ -28,7 +28,6 @@ export default function Simulation({ tokenAmount, vault, currentToken, zapperVau
     }
   };
 
-  console.log('currentPricePertoken', tokenAmount, vault, currentToken, zapperVaults);
   const actualResults = yearn(amount, (years && years >= 1 && years <= 200 ? years : 1) - 1, apy);
   const actualIntersts = actualResults.minus(amount);
   const interestsUSD = BigNumber(actualIntersts).times(pricePerToken);

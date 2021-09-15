@@ -25,7 +25,6 @@ function LTV({ changeTheme }) {
 
   useEffect(function () {
     const maxReturned = (maxVals) => {
-      console.log(maxVals);
       setAssetDetails(maxVals);
     };
 

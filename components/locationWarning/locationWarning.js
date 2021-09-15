@@ -1,7 +1,7 @@
 import { Dialog, Typography, Button } from '@material-ui/core';
 import classes from "./locationWarning.module.css";
 
-export default function locationWarning({ close, locationData }) {
+export default function locationWarning({ close }) {
 
   return (
     <Dialog fullScreen open={ true } onClose={close} >

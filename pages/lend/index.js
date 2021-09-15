@@ -63,6 +63,7 @@ function Lend({ changeTheme }) {
   useEffect(() => {
     document?.getElementById(address)?.scrollIntoView();
   }, []);
+
   const filteredLendingAssets = lendingAssets
     .map((asset) => {
       if (asset.address.toLowerCase() === address?.toLocaleLowerCase()) {
@@ -78,9 +79,10 @@ function Lend({ changeTheme }) {
         returnValue =
           asset.displayName.toLowerCase().includes(search.toLowerCase()) ||
           asset.address.toLowerCase().includes(search.toLowerCase()) ||
+          asset.tokenMetadata.displayName.toLowerCase().includes(search.toLowerCase()) ||
+          asset.tokenMetadata.symbol.toLowerCase().includes(search.toLowerCase()) ||
           asset.symbol.toLowerCase().includes(search.toLowerCase());
       }
-
       return returnValue;
     })
     .sort((a, b) => {

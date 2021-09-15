@@ -10,9 +10,9 @@ import {
   ACCOUNT_BALANCES_RETURNED,
   CONFIGURE_VAULTS,
   CONFIGURE_LENDING,
-  CONFIGURE_CDP,
+  // CONFIGURE_CDP,
   LENDING_CONFIGURED,
-  CDP_CONFIGURED,
+  // CDP_CONFIGURED,
   ACCOUNT_CHANGED,
   GET_GAS_PRICES,
   GAS_PRICES_RETURNED,
@@ -120,10 +120,10 @@ class Store {
               type: CONFIGURE_LENDING,
               content: { connected: true },
             });
-            this.dispatcher.dispatch({
-              type: CONFIGURE_CDP,
-              content: { connected: true },
-            });
+            // this.dispatcher.dispatch({
+            //   type: CONFIGURE_CDP,
+            //   content: { connected: true },
+            // });
           })
           .catch((e) => {
             this.emitter.emit(ERROR, e);
@@ -137,16 +137,16 @@ class Store {
               type: CONFIGURE_LENDING,
               content: { connected: false },
             });
-            this.dispatcher.dispatch({
-              type: CONFIGURE_CDP,
-              content: { connected: false },
-            });
+            // this.dispatcher.dispatch({
+            //   type: CONFIGURE_CDP,
+            //   content: { connected: false },
+            // });
           });
       } else {
         //we can ignore if not authorized.
         this.emitter.emit(ACCOUNT_CONFIGURED);
         this.emitter.emit(LENDING_CONFIGURED);
-        this.emitter.emit(CDP_CONFIGURED);
+        // this.emitter.emit(CDP_CONFIGURED);
 
         this.dispatcher.dispatch({
           type: CONFIGURE_VAULTS,
@@ -183,10 +183,10 @@ class Store {
         type: CONFIGURE_LENDING,
         content: { connected: true },
       });
-      that.dispatcher.dispatch({
-        type: CONFIGURE_CDP,
-        content: { connected: true },
-      });
+      // that.dispatcher.dispatch({
+      //   type: CONFIGURE_CDP,
+      //   content: { connected: true },
+      // });
     });
 
     window.ethereum.on('chainChanged', function (chainId) {

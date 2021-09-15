@@ -4,8 +4,6 @@ import Modal from '@material-ui/core/Modal';
 
 import VaultStrategyCard from './stratModal.js';
 
-import classes from './vaultStrategyCard.module.css';
-
 const useStyles = makeStyles((theme) => ({
   paper: {
     position: 'absolute',

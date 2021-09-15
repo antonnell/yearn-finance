@@ -1,10 +1,7 @@
 import { Typography, Paper } from '@material-ui/core';
-import Skeleton from '@material-ui/lab/Skeleton';
 
 import AccountBalanceWalletOutlinedIcon from '@material-ui/icons/AccountBalanceWalletOutlined';
 import TrendingUpIcon from '@material-ui/icons/TrendingUp';
-
-import BigNumber from 'bignumber.js';
 
 import { formatCurrency } from '../../utils';
 

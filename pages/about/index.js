@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react';
 import { useRouter } from "next/router";
 import { Typography, Paper, Grid } from '@material-ui/core';
 
@@ -6,24 +5,8 @@ import Head from 'next/head';
 import Layout from '../../components/layout/layout.js';
 import classes from './about.module.css';
 
-import stores from '../../stores/index.js';
-import { MAX_RETURNED } from '../../stores/constants';
-
-
 function About({ changeTheme }) {
   const router = useRouter();
-
-  useEffect(function () {
-    const maxReturned = (maxVals) => {
-      console.log(maxVals);
-    };
-
-    stores.emitter.on(MAX_RETURNED, maxReturned);
-
-    return () => {
-      stores.emitter.removeListener(MAX_RETURNED, maxReturned);
-    };
-  }, []);
 
   return (
     <Layout changeTheme={changeTheme}>

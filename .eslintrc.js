@@ -32,6 +32,7 @@ module.exports = {
         "no-undef": "off",
         "no-dupe-else-if": "off",
         "no-unreachable": "off",
-        "react/jsx-no-undef": "off"
+        "react/jsx-no-undef": "off",
+        "react/display-name": "off"
     }
 };

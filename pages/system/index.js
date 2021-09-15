@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from "next/router";
 
-import { Typography, Paper, Button } from '@material-ui/core';
+import { Typography, Paper } from '@material-ui/core';
 import Skeleton from '@material-ui/lab/Skeleton';
 import Head from 'next/head';
 import Layout from '../../components/layout/layout.js';
 import classes from './system.module.css';
 import BigNumber from 'bignumber.js';
 import { withTheme } from '@material-ui/core/styles';
-
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import SystemFilters from '../../components/systemFilters';
 import SystemProtocolsGraph from '../../components/systemProtocolsGraph';
@@ -420,7 +418,7 @@ const mapSystemJsonToVaults = (json, filters) => {
     })
 }
 
-function System({ changeTheme, theme }) {
+function System({ changeTheme }) {
 
   const router = useRouter();
 
@@ -524,24 +522,6 @@ function System({ changeTheme, theme }) {
       <SystemAssetsGraph assets={ assets } filters={ filters } layout={ filters.layout } handleNavigate={handleNavigate} />
     </div>)
 
-  }
-
-  const renderVault = () => {
-    return (
-      <div className={classes.sectionContainer}>
-        <div className={ classes.sectionHeader }>
-          <div className={classes.backButton}>
-            <Button color={theme.palette.type === 'light' ? 'primary' : 'secondary'} onClick={() => { handleNavigate('overview') }} disableElevation>
-              <ArrowBackIcon fontSize={'medium'} />
-            </Button>
-          </div>
-          <Typography variant='h1'>Vault</Typography>
-        </div>
-        <div>
-
-        </div>
-      </div>
-    )
   }
 
   return (

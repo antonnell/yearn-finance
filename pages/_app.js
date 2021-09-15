@@ -4,7 +4,6 @@ import Head from 'next/head';
 import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { useRouter } from 'next/router';
-import axios from 'axios'
 
 import lightTheme from '../theme/light';
 import darkTheme from '../theme/dark';
@@ -14,7 +13,7 @@ import LocationWarning from '../components/locationWarning'
 
 import stores from '../stores/index.js';
 
-import { CONFIGURE, VAULTS_CONFIGURED, ACCOUNT_CONFIGURED, LENDING_CONFIGURED, CDP_CONFIGURED } from '../stores/constants';
+import { CONFIGURE, VAULTS_CONFIGURED, ACCOUNT_CONFIGURED, LENDING_CONFIGURED } from '../stores/constants';
 
 export default function MyApp({ Component, pageProps }) {
   const router = useRouter();
@@ -23,9 +22,8 @@ export default function MyApp({ Component, pageProps }) {
   const [vaultConfigured, setVaultConfigured] = useState(false);
   const [accountConfigured, setAccountConfigured] = useState(false);
   const [lendingConfigured, setLendingConfigured] = useState(false);
-  const [cdpConfigured, setCDPConfigured] = useState(false);
   const [locationWarningOpen, setLocationWarningOpen] = useState(false);
-  const [locationData, setLocationData] = useState(null);
+  const [locationData] = useState(null);
 
   useEffect(() => {
     // Remove the server-side injected CSS.
@@ -70,10 +68,6 @@ export default function MyApp({ Component, pageProps }) {
     setLendingConfigured(true);
   };
 
-  const cdpConfigureReturned = () => {
-    setCDPConfigured(true);
-  };
-
   useEffect(function () {
     const localStorageDarkMode = window.localStorage.getItem('yearn.finance-dark-mode');
     changeTheme(localStorageDarkMode ? localStorageDarkMode === 'dark' : false);
@@ -86,7 +80,6 @@ export default function MyApp({ Component, pageProps }) {
     stores.emitter.on(VAULTS_CONFIGURED, vaultsConfigureReturned);
     stores.emitter.on(ACCOUNT_CONFIGURED, accountConfigureReturned);
     stores.emitter.on(LENDING_CONFIGURED, lendingConfigureReturned);
-    stores.emitter.on(CDP_CONFIGURED, cdpConfigureReturned);
 
     stores.dispatcher.dispatch({ type: CONFIGURE });
 
@@ -94,7 +87,6 @@ export default function MyApp({ Component, pageProps }) {
       stores.emitter.removeListener(VAULTS_CONFIGURED, vaultsConfigureReturned);
       stores.emitter.removeListener(ACCOUNT_CONFIGURED, accountConfigureReturned);
       stores.emitter.removeListener(LENDING_CONFIGURED, lendingConfigureReturned);
-      stores.emitter.removeListener(CDP_CONFIGURED, cdpConfigureReturned);
     };
   }, []);
 
@@ -106,8 +98,6 @@ export default function MyApp({ Component, pageProps }) {
         return vaultConfigured && accountConfigured;
       case '/lend':
         return lendingConfigured && accountConfigured;
-      case '/cdp':
-        return cdpConfigured && accountConfigured;
       case '/ltv':
         return accountConfigured;
       case '/stats':

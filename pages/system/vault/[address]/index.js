@@ -93,8 +93,6 @@ function System({ changeTheme }) {
     return null
   }
 
-  console.log(vault)
-
   return (
     <Layout changeTheme={changeTheme} backClicked={ backClicked }>
       <Head>

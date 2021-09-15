@@ -1,10 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Typography, Paper, Button, TextField, InputAdornment, CircularProgress } from '@material-ui/core';
+import React, { useState } from 'react';
+import { Typography, Paper, Button, TextField, InputAdornment } from '@material-ui/core';
 import Skeleton from '@material-ui/lab/Skeleton';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-
-import AccountBalanceWalletOutlinedIcon from '@material-ui/icons/AccountBalanceWalletOutlined';
-import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 
 import BigNumber from 'bignumber.js';
 
@@ -14,12 +11,8 @@ import classes from './ycdpQuickAction.module.css';
 
 export default function ycdpQuickAction() {
 
-  const [ loading, setLoading ] = useState(false)
-
   const [ activeTab, setActiveTab ] = useState('deposit')
-
-
-  const [ assets, setAssets ] = useState([])
+  const [ assets ] = useState([])
 
   const [depositAsset, setDepositAsset] = useState(null);
   const [depositAmount, setDepositAmount] = useState('');

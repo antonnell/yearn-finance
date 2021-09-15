@@ -58,11 +58,6 @@ export default function Deposit({ vault }) {
   };
 
   const onDeposit = () => {
-    if (currentToken.address.toLowerCase() === vault.tokenMetadata.address.toLowerCase()) {
-      console.log('same token');
-    } else {
-      console.log('different token');
-    }
     setAmountError(false);
     if (!amount || isNaN(amount) || amount <= 0 || BigNumber(amount).gt(currentToken.balance)) {
       setAmountError(true);

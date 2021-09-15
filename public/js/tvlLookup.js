@@ -17,9 +17,7 @@ $(document).ready(function(){
   $.ajax({ url: URL,
     context: document.body,
     success: function(response){
-      console.log(response)
       let tvl = response?.tvl
-
       $('#tvl-current').html(`$ ${convertToInternationalCurrencySystem(tvl)}`);
     }});
 

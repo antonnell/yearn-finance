@@ -45,3 +45,5 @@ MyDocument.getInitialProps = async ctx => {
     ]
   };
 };
+
+MyDocument.displayName = 'Hey'
