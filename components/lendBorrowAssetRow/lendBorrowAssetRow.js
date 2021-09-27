@@ -637,6 +637,11 @@ export default function LendBorrowAssetRow({
         </div>
         <div className={classes.lendValueCell}>
           <Typography variant="h5">
+            { lendingAsset.collateralPercent } %
+          </Typography>
+        </div>
+        <div className={classes.lendValueCell}>
+          <Typography variant="h5">
             {formatCurrency(lendingAsset.liquidity)}{" "}
             {lendingAsset.tokenMetadata.symbol}
           </Typography>

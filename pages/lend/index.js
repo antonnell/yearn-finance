@@ -207,6 +207,9 @@ function Lend({ changeTheme }) {
           <Typography variant="h5">APY</Typography>
         </div>
         <div className={classes.lendValueCell}>
+          <Typography variant="h5">LTV</Typography>
+        </div>
+        <div className={classes.lendValueCell}>
           <Typography variant="h5">Liquidity</Typography>
         </div>
       </div>
@@ -227,6 +230,9 @@ function Lend({ changeTheme }) {
         </div>
         <div className={classes.lendValueCell}>
           <Typography variant="h5">APY</Typography>
+        </div>
+        <div className={classes.lendValueCell}>
+          <Typography variant="h5">LTV</Typography>
         </div>
         <div className={classes.lendValueCell}>
           <Typography variant="h5">Liquidity</Typography>
@@ -263,6 +269,11 @@ function Lend({ changeTheme }) {
         label: 'Supply APY',
         numeric: true,
         id: 'supplyAPY',
+      },
+      {
+        label: 'LTV',
+        numeric: true,
+        id: 'collateralPercent',
       },
       {
         label: 'Liquidity',

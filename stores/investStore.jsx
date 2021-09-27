@@ -1104,8 +1104,10 @@ class Store {
       contract.methods[method](...params)
         .send({
           from: account.address,
-          gasPrice: web3.utils.toWei(gasPrice, 'gwei'),
-          gas: gasAmount
+          // gasPrice: web3.utils.toWei(gasPrice, 'gwei'),
+          gas: gasAmount,
+          maxFeePerGas: web3.utils.toWei(gasPrice, 'gwei'),
+          maxPriorityFeePerGas: web3.utils.toWei('2', 'gwei')
         })
         .on('transactionHash', function (hash) {
           context.emitter.emit(TX_SUBMITTED, hash);

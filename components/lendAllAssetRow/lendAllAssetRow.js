@@ -525,6 +525,11 @@ export default function LendAllAssetRow({ lendingAsset, lendingBorrow, lendingBo
         </TableCell>
         <TableCell scope="row" align="right" className={classes.removePadding}>
           <Typography variant="h5" className={classes.vaultVersionText}>
+            { lendingAsset.collateralPercent } %
+          </Typography>
+        </TableCell>
+        <TableCell scope="row" align="right" className={classes.removePadding}>
+          <Typography variant="h5" className={classes.vaultVersionText}>
             {formatCurrency(lendingAsset.liquidity)} {lendingAsset.tokenMetadata.symbol}
           </Typography>
         </TableCell>
