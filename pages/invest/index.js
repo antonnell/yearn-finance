@@ -60,7 +60,7 @@ const Podium = ({ vaults, isStableCoin, handlePopoverOpen, handleNavigate }) => 
             onClick={() => handleNavigate(vault)}
             className={classes.topVaultPerformersLink}
           >
-            {`${vault.label} (${vault.version})`} {(vault.apy * 100).toFixed(2)}%{' '}
+            {`${vault.label}`} - {(vault.apy * 100).toFixed(2)}%{' '}
           </span>
           <HelpIcon
             style={{ cursor: 'pointer', width: 15 }}
@@ -151,7 +151,7 @@ function Invest({ changeTheme }) {
           v.apy = 0
         }
       });
-      if (v.pricePerToken < 1.4 && v.pricePerToken >= 0.9) {
+      if (v.price < 1.4 && v.price >= 0.9) {
         stableCoinVaults.push(v);
       } else if (v.symbol.indexOf('BTC') > -1 || v.symbol.indexOf('ETH') > -1) {
         ethBTCVaults.push(v);
@@ -175,7 +175,7 @@ function Invest({ changeTheme }) {
   };
   React.useEffect(() => {
     async function fetchVaultsFromZapper() {
-      const response = await fetch('https://api.zapper.fi/v1/vault-stats/yearn?api_key=96e0cc51-a62e-42ca-acee-910ea7d2a241');
+      const response = await fetch('https://api.zapper.fi/v1/protocols/yearn/token-market-data?type=vault&api_key=96e0cc51-a62e-42ca-acee-910ea7d2a241');
       if (response.status === 200) {
         const zapperVaultsJSON = await response.json();
         setTopPerformers(zapperVaultsJSON);

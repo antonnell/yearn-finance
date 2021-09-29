@@ -629,7 +629,7 @@ function Navigation(props) {
         </Grid>
         </Grid>
       </div>
-      <Typography className={classes.smallVersion}>Version 1.3.8</Typography>
+      <Typography className={classes.smallVersion}>Version 1.3.9</Typography>
     </Paper>
   );
 }

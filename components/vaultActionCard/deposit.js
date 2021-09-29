@@ -158,7 +158,7 @@ export default function Deposit({ vault }) {
 
   useEffect(() => {
     async function fetchVaultsFromZapper() {
-      const response = await fetch('https://api.zapper.fi/v1/vault-stats/yearn?api_key=96e0cc51-a62e-42ca-acee-910ea7d2a241');
+      const response = await fetch('https://api.zapper.fi/v1/protocols/yearn/token-market-data?type=vault&api_key=96e0cc51-a62e-42ca-acee-910ea7d2a241');
       if (response.status === 200) {
         const zapperVaultsJSON = await response.json();
         setZapperVaults(zapperVaultsJSON);
@@ -227,14 +227,14 @@ export default function Deposit({ vault }) {
         zapperVaults.map(zvault => {
           if (zvault.address.toLowerCase() === vault.address.toLowerCase()) {
             if (currentToken.address?.toLowerCase() !== vault.tokenMetadata?.address?.toLowerCase()) {
-              tokenAmount = (amount * currentToken.price) / zvault.pricePerToken;
+              tokenAmount = (amount * currentToken.price) / zvault.pricePerShare;
             } else {
               tokenAmount = amount;
             }
           }
         });
-        if (vault.pricePerFullShare > 0) {
-          setSharesForAmount(BigNumber(tokenAmount).div(vault.pricePerFullShare))
+        if (vault.pricePerShare > 0) {
+          setSharesForAmount(BigNumber(tokenAmount).div(vault.pricePerShare))
         } else {
           setSharesForAmount(tokenAmount);
         }
