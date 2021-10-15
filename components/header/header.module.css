@@ -21,6 +21,13 @@
   color: #FFF !important;
 }
 
+.animClass {
+  width: 400px;
+  margin: auto;
+  margin-bottom: -100px;
+  margin-top: -100px;
+}
+
 .aboutmodal dialog {
   border: 10px solid red;
 }

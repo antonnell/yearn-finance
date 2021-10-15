@@ -39,6 +39,8 @@
     "react-dom": "17.0.1",
     "react-hotkeys-hook": "^3.4.0",
     "react-lottie": "^1.2.3",
+    "react-player": "^2.9.0",
+    "react-scroll": "^1.8.4",
     "recharts": "^2.1.2",
     "web3": "^1.5.2",
     "web3-batch-call": "^1.0.13"

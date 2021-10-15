@@ -1,0 +1,259 @@
+.learnContainer {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 0px 48px;
+  margin-top: 0px;
+  padding-bottom: 48px;
+  position: relative;
+  /* background: #9F6BE5; */
+}
+
+.box {
+  margin-top: 100px;
+  padding: 0px;
+  background: none !important;
+}
+
+.sectionIcon {
+  width: 100px !important;
+  height: 100px !important;
+  display: flex;
+  align-items: center !important;
+  justify-content: center !important;
+  background: rgba(0,0,0,0.05);
+  margin-bottom: 30px;
+  border-radius: 100px;
+  -webkit-box-shadow:inset 3px 2px 6px 0 rgba(0,0,0,0.2);
+  box-shadow:inset 3px 2px 6px 0 rgba(0,0,0,0.2);
+}
+
+.st0 {
+  font-size: 50px !important;
+}
+
+.st1 {
+  margin-top: 33px;
+  margin-left: 15px;
+  font-size: 80px !important;
+}
+
+.learnLinkIcon {
+  background: none;
+  font-size: 100px !important;
+  margin-bottom: 40px;
+  color: rgba(104,108,122,0.7) !important;
+}
+
+.backButton {
+  width: 40px;
+  height: 40px;
+  background: none;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 60px;
+  border: 1px solid rgba(104,108,122,0.3);
+}
+
+.mainIntro,
+.mainIntroInvest {
+  min-height: calc(100vh - 150px);
+  padding: 0 55px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
+  position: relative;
+  /* background: #64648a !important; */
+}
+
+.mainIntroInvest {
+  background: #2c76ae !important;
+}
+
+.mainIntro,
+.mainIntroInvest,
+.section,
+.sectionInvest,
+.sectionFaq,
+.sectionRisk,
+.sectionDocs {
+  width: auto;
+  height: auto;
+  text-align: center;
+  border: 1px solid rgba(108,108,123, 0.25);
+  border-radius: 10px;
+  -webkit-transition: all 600ms ease-out;
+  -moz-transition: all 600ms ease-out;
+  -ms-transition: all 600ms ease-out;
+  -o-transition: all 600ms ease-out;
+  transition: all 600ms ease-out;
+}
+
+.newWindow {
+  color: rgba(0,0,0,0.4) !important;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.sectionInvest,
+.sectionFaq,
+.sectionRisk {
+  opacity: 0.3;
+  cursor: not-allowed !important;
+}
+
+.sectionInvest {
+  background: #485DFF !important;
+  color: #FFF !important
+}
+
+.sectionFaq {
+  background: #5bb682 !important;
+  color: #FFF !important;
+}
+
+.sectionRisk {
+  background: #f8d147 !important;
+  color: #FFF !important;
+}
+
+.sectionDocs {
+  background: #B069ED !important;
+  color: #FFF !important;
+  position: relative;
+}
+
+.sectionLink {
+  min-height: calc(50vh - 96px);
+  padding: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  flex-direction: column;
+  text-decoration: none !important;
+}
+
+.section:hover {
+  border: 1px solid #64648a;
+  text-decoration: none !important;
+}
+
+.sectionInvest:hover {
+  border: 1px solid #2c76ae;
+  text-decoration: none !important;
+}
+
+.linkTitle,
+.linkTitleInvest,
+.linkTitleRisk {
+  font-size: 1.7em !important;
+  color: #FFF !important;
+  font-weight: 600 !important;
+  margin-bottom: 20px !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !important;
+}
+
+.linkTitleInvest {
+  color: inherit !important;
+}
+
+.linkTitleRisk {
+  color: #000 !important;
+}
+
+.linkIntro,
+.linkIntroDark {
+  font-size: 18px !important;
+  color: #FFF !important;
+  opacity: 0.7;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !important;
+}
+
+.linkIntroDark {
+  color: #000 !important;
+}
+
+.learningTitle {
+  text-align: left !important;
+  margin-bottom: 20px !important;
+  margin-top: 30px !important;
+  font-size: 40px !important;
+  padding: 20px;
+  padding-bottom: 0px;
+  font-weight: 600 !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !important;
+}
+
+.learningIntro {
+  text-align: left !important;
+  opacity: 0.6;
+  padding: 20px;
+  line-height: 1.5em !important;
+  font-size: 1.02em !important;
+  margin-bottom: 40px !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !important;
+}
+
+.bold {
+  text-align: left !important;
+  opacity: 1 !important;
+  font-size: 1.2em !important;
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !important;
+}
+
+.animClass {
+  margin-bottom: -120px;
+  margin-top: -60px;
+  max-width: 300px;
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+
+  display: none;
+}
+
+@media screen and (max-width: 1280px) {
+  .sectionLink, .mainIntro, .mainIntroInvest {
+    min-height: auto;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+
+  .box {
+    margin-top: 48px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .cdpFilters {
+    top: 20px;
+  }
+
+  .overviewContainer2 {
+    padding: 24px 32px;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .cdpFilters {
+    top: 20px;
+    margin: 320px 0px 0px 0px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .cdpFilters {
+    top: 20px;
+    margin: 420px 0px 0px 0px;
+  }
+}

@@ -1,12 +1,33 @@
+import React, { useEffect } from 'react';
 import { useRouter } from "next/router";
-import { Typography, Paper, Grid } from '@material-ui/core';
+import { Typography, Paper, Grid, Tooltip } from '@material-ui/core';
 
 import Head from 'next/head';
 import Layout from '../../components/layout/layout.js';
+import LaunchIcon from '@material-ui/icons/Launch';
+
 import classes from './about.module.css';
+
+import stores from '../../stores/index.js';
+import { MAX_RETURNED } from '../../stores/constants';
+
 
 function About({ changeTheme }) {
   const router = useRouter();
+
+  const account = stores.accountStore.getStore('account');
+
+  useEffect(function () {
+    const maxReturned = (maxVals) => {
+      console.log(maxVals);
+    };
+
+    stores.emitter.on(MAX_RETURNED, maxReturned);
+
+    return () => {
+      stores.emitter.removeListener(MAX_RETURNED, maxReturned);
+    };
+  }, []);
 
   return (
     <Layout changeTheme={changeTheme}>
@@ -34,45 +55,58 @@ function About({ changeTheme }) {
               </Paper>
             </a>
           </Grid>
-          <Grid item lg={4} md={6} sm={6} xs={12}>
-            <a onClick={() => router.push('/lend')} className={classes.linkz}>
-              <Paper elevation={0}  className={classes.paper}>
-                <div className={classes.icon}>
-                  <div className={classes.iconlend}></div>
-                </div>
-                <Typography variant="h6">Lend &amp; Borrow</Typography>
-                <Typography variant="body2">
-                  Supply assets to the Iron Bank to get your share of the lending fees. Borrow against your provided collateral.
-                </Typography>
-              </Paper>
-            </a>
-          </Grid>
-          <Grid item lg={4} md={6} sm={6} xs={12}>
-            <a onClick={() => router.push('/cdp')} className={classes.linkz}>
-              <Paper elevation={0}  className={classes.paper}>
-                <div className={classes.icon}>
-                  <div className={classes.iconcdp}></div>
-                </div>
-                <Typography variant="h6">Collateral Staking</Typography>
-                <Typography variant="body2">
-                  Unit Protocol is a decentralized protocol that allows you to mint stablecoin $USDP using a variety of tokens as collateral.
-                </Typography>
-              </Paper>
-            </a>
-          </Grid>
-          <Grid item lg={4} md={6} sm={6} xs={12}>
-            <a onClick={() => router.push('/ltv')} className={classes.linkz}>
-              <Paper elevation={0}  className={classes.paper}>
-                <div className={classes.icon}>
-                  <div className={classes.iconltv}></div>
-                </div>
-                <Typography variant="h6">LTV Lookup</Typography>
-                <Typography variant="body2">
-                  LTV Lookup displays how much you can borrow per $1 worth of the asset provided to the different protocols.
-                </Typography>
-              </Paper>
-            </a>
-          </Grid>
+
+          {account && account.address &&
+            <Grid item lg={4} md={6} sm={6} xs={12}>
+              <a onClick={() => router.push('/lend')} className={classes.linkz}>
+                <Paper elevation={0}  className={classes.paper}>
+                  <div className={classes.icon}>
+                    <div className={classes.iconlend}></div>
+                  </div>
+                  <Typography variant="h6">Lend &amp; Borrow</Typography>
+                  <Typography variant="body2">
+                    Supply assets to the Iron Bank to get your share of the lending fees. Borrow against your provided collateral.
+                  </Typography>
+                </Paper>
+              </a>
+            </Grid>
+          }
+
+          <div className={classes.hidden}>
+          {account && account.address &&
+            <Grid item lg={4} md={6} sm={6} xs={12}>
+              <a onClick={() => router.push('/cdp')} className={classes.linkz}>
+                <Paper elevation={0}  className={classes.paper}>
+                  <div className={classes.icon}>
+                    <div className={classes.iconcdp}></div>
+                  </div>
+                  <Typography variant="h6">Collateral Staking</Typography>
+                  <Typography variant="body2">
+                    Unit Protocol is a decentralized protocol that allows you to mint stablecoin $USDP using a variety of tokens as collateral.
+                  </Typography>
+                </Paper>
+              </a>
+            </Grid>
+          }
+          </div>
+
+          {account && account.address &&
+            <Grid item lg={4} md={6} sm={6} xs={12}>
+              <a onClick={() => router.push('/ltv')} className={classes.linkz}>
+                <Paper elevation={0}  className={classes.paper}>
+                  <div className={classes.icon}>
+                    <div className={classes.iconltv}></div>
+                  </div>
+                  <Typography variant="h6">LTV Lookup</Typography>
+                  <Typography variant="body2">
+                    LTV Lookup displays how much you can borrow per $1 worth of the asset provided to the different protocols.
+                  </Typography>
+                </Paper>
+              </a>
+            </Grid>
+          }
+
+          {account && account.address &&
           <Grid item lg={4} md={6} sm={6} xs={12}>
             <a onClick={() => router.push('/system')} className={classes.linkz}>
               <Paper elevation={0}  className={classes.paper}>
@@ -86,23 +120,68 @@ function About({ changeTheme }) {
               </Paper>
             </a>
           </Grid>
-          <Grid item lg={3} md={6} xs={12} onClick={() => { window.open('https://multichain.xyz', '_blank') }}>
+          }
+
+          <Grid item lg={4} md={6} sm={6} xs={12}>
+            <a onClick={() => router.push('/learn')} className={classes.linkz}>
+              <Paper elevation={0}  className={classes.paper}>
+                <div className={classes.icon}>
+                  <div className={classes.iconlearn}></div>
+                </div>
+                <Typography variant="h6">Learning Centre</Typography>
+                <Typography variant="body2">
+                  Thorough visual guides & demos for everything you need to prepare to use Yearn & using Yearn itself.
+                </Typography>
+              </Paper>
+            </a>
+          </Grid>
+
+
+          <Grid item lg={2} md={6} xs={12} onClick={() => { window.open('https://fixedforex.fi/', '_blank') }}>
             <Paper elevation={0}  className={classes.sublinks}>
+              <Tooltip arrow="true" placement="top" title="Opens in new tab">
+                <LaunchIcon className={classes.newWindow} />
+              </Tooltip>
+              <Typography variant="h2">Fixed Forex</Typography>
+            </Paper>
+          </Grid>
+          <Grid item lg={2} md={6} xs={12} onClick={() => { window.open('https://bribe.crv.finance/', '_blank') }}>
+            <Paper elevation={0}  className={classes.sublinks}>
+            <Tooltip arrow="true" placement="top" title="Opens in new tab">
+              <LaunchIcon className={classes.newWindow} />
+            </Tooltip>
+              <Typography variant="h2">Bribe</Typography>
+            </Paper>
+          </Grid>
+          <Grid item lg={2} md={6} xs={12} onClick={() => { window.open('https://multichain.xyz', '_blank') }}>
+            <Paper elevation={0}  className={classes.sublinks}>
+            <Tooltip arrow="true" placement="top" title="Opens in new tab">
+              <LaunchIcon className={classes.newWindow} />
+            </Tooltip>
               <Typography variant="h2">Multichain</Typography>
             </Paper>
           </Grid>
-          <Grid item lg={3} md={6} xs={12} onClick={() => { window.open('https://chainlist.org/', '_blank') }}>
+          <Grid item lg={2} md={6} xs={12} onClick={() => { window.open('https://chainlist.org/', '_blank') }}>
             <Paper elevation={0}  className={classes.sublinks}>
+            <Tooltip arrow="true" placement="top" title="Opens in new tab">
+              <LaunchIcon className={classes.newWindow} />
+            </Tooltip>
               <Typography variant="h2">Chainlist</Typography>
             </Paper>
           </Grid>
-          <Grid item lg={3} md={6} xs={12} onClick={() => { window.open('https://feeds.sushiquote.finance/', '_blank') }}>
+          <Grid item lg={2} md={6} xs={12} onClick={() => { window.open('https://feeds.sushiquote.finance/', '_blank') }}>
             <Paper elevation={0}  className={classes.sublinks}>
+            <Tooltip arrow="true" placement="top" title="Opens in new tab">
+              <LaunchIcon className={classes.newWindow} />
+            </Tooltip>
               <Typography variant="h2">Feeds</Typography>
             </Paper>
           </Grid>
-          <Grid item lg={3} md={6} xs={12} onClick={() => { window.open('https://ve-token-voting.vercel.app/', '_blank') }}>
+          <Grid item lg={2} md={6} xs={12} onClick={() => { window.open('https://ve-token-voting.vercel.app/', '_blank') }}>
             <Paper elevation={0}  className={classes.sublinks}>
+            <Tooltip arrow="true" placement="top" title="Opens in new tab">
+              <LaunchIcon className={classes.newWindow} />
+            </Tooltip>
               <Typography variant="h2">veAssets</Typography>
             </Paper>
           </Grid>

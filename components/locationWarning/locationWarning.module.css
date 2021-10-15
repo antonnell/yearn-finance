@@ -17,7 +17,7 @@
 .warningIcon {
   width: 162px;
   height: 140px;
-  margin-bottom: 52px !important;
+  margin-bottom: 30px !important;
 }
 
 .title1 {
@@ -61,7 +61,7 @@
 
 .buttonTextPrimary {
   font: normal normal bold 16px/19px Inter !important;
-  letter-spacing: 0px  !important;
+  letter-spacing: 0px !important;
   color: #FFFFFF !important;
   text-transform: none;
 }
@@ -71,4 +71,58 @@
   letter-spacing: 0px  !important;
   color: #000 !important;
   text-transform: none;
+}
+
+@media screen and (max-width: 600px) {
+  .warningContainer {
+    max-width: 340px;
+  }
+
+  .para1 {
+    font: normal normal bold 16px/28px Inter !important;
+  }
+
+  .warningIcon {
+    height: 50px !important;
+    margin-bottom: 30px !important;
+  }
+
+  .buttonTextPrimary {
+    font: normal normal bold 16px/19px Inter !important;
+  }
+
+  .primaryButton {
+    margin-bottom: 20px !important;
+    background: transparent linear-gradient(180deg, #1C45F4 0%, #0F1DD3 100%) 0% 0% no-repeat padding-box !important;
+    min-width: 320px !important;
+  }
+}
+
+@media screen and (max-width: 360px) {
+  .warningContainer {
+    max-width: 260px;
+  }
+
+  .para1 {
+    font: normal normal bold 15px/22px Inter !important;
+  }
+
+  .para2 {
+    font: normal normal bold 13px/18px Inter !important;
+  }
+
+  .warningIcon {
+    height: 40px !important;
+    margin-bottom: 20px !important;
+  }
+
+  .buttonTextPrimary {
+    font: normal normal bold 13px/16px Inter !important;
+  }
+
+  .primaryButton {
+    margin-bottom: 20px !important;
+    background: transparent linear-gradient(180deg, #1C45F4 0%, #0F1DD3 100%) 0% 0% no-repeat padding-box !important;
+    min-width: 260px !important;
+  }
 }

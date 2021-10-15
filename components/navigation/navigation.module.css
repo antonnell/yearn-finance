@@ -10,7 +10,7 @@
   border-right: 1px solid rgba(128,128,128, 0.2);
 }
 
-a.linkz { cursor: pointer !important; }
+a.links { cursor: pointer !important; }
 
 .navigationHeading {
   display: flex;
@@ -91,8 +91,6 @@ a.linkz { cursor: pointer !important; }
   max-width: 400px;
 }
 
-
-
 .headerThings {
   display: none;
 }
@@ -156,34 +154,44 @@ a.linkz { cursor: pointer !important; }
   align-items: center;
   justify-content: flex-start;
   padding: 12px 0px;
+  margin-left: 13px;
   width: 100%;
   cursor: pointer;
 }
 
 .navigationOptionSelected {
-  border-left: 6px solid rgba(0, 0, 0, 0);
-  border-radius: 0px 8px 8px 0px;
-  height: 32px;
-  margin-right: 12px;
+  background: #0248ff;
+  width: 3px;
+  border-radius: 0px 10px 10px 0px;
+  height: 40px;
+  position: absolute;
+  left: 0px;
+  z-index: 1;
+  display: none;
 }
 
 .navigationOptionSelectedWhite {
-  border-left: 6px solid rgba(0, 0, 0, 0);
-  border-radius: 0px 8px 8px 0px;
-  height: 32px;
-  margin-right: 12px;
+  background: #0248ff;
+  width: 3px;
+  border-radius: 0px 10px 10px 0px;
+  height: 40px;
+  position: absolute;
+  left: 0px;
+  z-index: 1;
+  display: none;
 }
 
 .navigationOptionNotSelected {
   border-left: 6px solid rgba(0, 0, 0, 0);
   border-radius: 0px 8px 8px 0px;
-  height: 32px;
-  margin-right: 12px;
+  height: 24px;
+  margin-right: 0px;
+  display: none;
 }
 
 .navigationOptionIconContainer {
-  width: 48px;
-  height: 48px;
+  width: 30px;
+  height: auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -197,27 +205,43 @@ a.linkz { cursor: pointer !important; }
 }
 
 .navigationOptionIcon {
-  padding: 12px;
-  height: 48px;
-  width: 48px;
+  padding: 10px;
+  height: 30px;
+  width: 30px;
   font-size: 24px !important;
 }
 
 .navigationOptionIconSelected {
-  height: 48px;
-  width: 48px;
+  height: 18px;
+  width: 18px;
+}
+
+.iconLearnNormal {
+  background: none;
+  margin: 0 24px 0 20px;
+  font-size: 20px !important;
+}
+
+.iconLearnActive {
+  background: none;
+  margin: 0 !important;
+  font-size: 18px !important;
 }
 
 .icon {
-  width: 24px !important;
-  height: 24px !important;
-  margin: 12px 24px 12px 12px;
+  width: 20px !important;
+  height: 20px !important;
+  margin: 5px 24px 5px 20px;
 }
 
 .iconSelected {
-  width: 48px !important;
-  height: 48px !important;
-  margin-right: 12px;
+  width: 30px !important;
+  height: 30px !important;
+  margin: 0px 19px 0px 15px;
+}
+
+.navLinkItem {
+  font-size: 15px !important;
 }
 
 .yearnLogo {
@@ -226,9 +250,20 @@ a.linkz { cursor: pointer !important; }
 }
 
 .iconHack {
-  width: 24px !important;
-  height: 24px !important;
-  margin: 12px;
+  width: 20px !important;
+  height: 20px !important;
+  margin: 5px;
+}
+
+.iconhackNew {
+  margin-left: 8px;
+  margin-top: 7px;
+}
+
+.iconhackNewNormal {
+  margin-left: 22px;
+  margin-top: 8px;
+  margin-right: 15px;
 }
 
 @media screen and (max-width: 1200px) {
@@ -269,7 +304,7 @@ a.linkz { cursor: pointer !important; }
   .navigationHeading {
     width: 100%;
   }
-  .headerThings {
+  .headerWrap {
     width: 100%;
     display: flex;
     align-items: center;
