@@ -1292,6 +1292,11 @@ figcaption {
     line-height: 70px;
   }
 
+  .heading.indicator-down {
+    font-size: 40px;
+    line-height: 70px;
+  }
+
   .tab-link-day {
     padding-right: 20px;
     padding-left: 20px;
@@ -1442,6 +1447,12 @@ figcaption {
   }
 
   .heading.indicator-up {
+    left: 0px;
+    font-size: 20px;
+    line-height: 30px;
+  }
+
+  .heading.indicator-down {
     left: 0px;
     font-size: 20px;
     line-height: 30px;
