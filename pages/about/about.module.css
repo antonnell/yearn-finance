@@ -23,6 +23,18 @@ a.linkz { cursor: pointer !important; }
   text-align: center;
 }
 
+.animClass {
+  max-width: 220px;
+  margin-bottom: -20px;
+  margin-left: -35px;
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+}
+
+.hidden {
+  display: none !important;
+}
+
 .paper:hover {
   border: 1px solid rgba(108,108,123, 0.4);
 }
@@ -42,7 +54,22 @@ a.linkz { cursor: pointer !important; }
   box-shadow: none !important;
   border: 1px solid rgba(108,108,123, 0);
   height: 100%;
-  background-image: linear-gradient(to top, #1c46f5 0%, #0005d3 100%);
+  /* background: #3c4bf1 !important; */
+  background: linear-gradient(-45deg, #7313b7, #234ce7);
+  background-size: 400% 400%;
+	animation: gradient 15s ease infinite;
+}
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
 }
 
 .intro h1 {
@@ -57,6 +84,13 @@ a.linkz { cursor: pointer !important; }
   font-size: 110%;
 }
 
+.newWindow {
+  opacity: 0.15;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
 .sublinks {
   display: flex;
   align-items: center;
@@ -69,6 +103,7 @@ a.linkz { cursor: pointer !important; }
   min-height: 140px;
   text-align: center;
   cursor: pointer;
+  position: relative;
 }
 
 .icon {
@@ -84,6 +119,7 @@ a.linkz { cursor: pointer !important; }
 .iconvaults,
 .iconlend,
 .iconcdp,
+.iconlearn,
 .iconltv,
 .iconstats {
   width: 98px;
@@ -95,6 +131,7 @@ a.linkz { cursor: pointer !important; }
 .iconvaults { background: url('../../public/uiIcons/icon-landing-vaults.svg'); }
 .iconlend { background: url('../../public/uiIcons/icon-landing-lend.svg'); }
 .iconcdp { background: url('../../public/uiIcons/icon-landing-cdp.svg'); }
+.iconlearn { background: url('../../public/uiIcons/icon-landing-learn.svg'); }
 .iconltv { background: url('../../public/uiIcons/icon-landing-ltv.svg'); }
 .iconstats { background: url('../../public/uiIcons/icon-landing-stats.svg'); }
 

@@ -24,6 +24,9 @@ import SearchModal from './searchModal';
 import { useHotkeys } from 'react-hotkeys-hook';
 import MoreMenu from './moreMenu';
 
+import Lottie from "lottie-react";
+import unitato from "../../public/lottiefiles/unitato.json";
+
 const StyledSwitch = withStyles((theme) => ({
   root: {
     width: 58,
@@ -207,7 +210,7 @@ function Header(props) {
     {chainInvalid ? (
       <div className={classes.chainInvalidError}>
         <div className={classes.ErrorContent}>
-          <div className={classes.unitato}></div>
+          <Lottie className={classes.animClass} animationData={unitato} />
           <Typography className={classes.ErrorTxt}>
             The chain you're connected to isn't supported. Please check that your wallet is connected to Ethereum Mainnet.
           </Typography>

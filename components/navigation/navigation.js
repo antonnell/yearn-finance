@@ -111,6 +111,70 @@ function InvestIconSelected(props) {
   );
 }
 
+function DashIcon(props) {
+  const { color, className } = props;
+  return (
+    <SvgIcon viewBox="0, 0, 22, 22" className={classes.iconhackNewNormal}>
+      <path fill={color} d="M8,0C3.589,0,0,3.589,0,8s3.589,8,8,8s8-3.589,8-8S12.411,0,8,0z M13.91,9H8.677L6.929,4.628L5.071,5.372 L6.523,9H2.09C2.035,8.674,2,8.341,2,8c0-3.309,2.691-6,6-6s6,2.691,6,6C14,8.341,13.965,8.674,13.91,9z"></path>
+    </SvgIcon>
+  );
+}
+
+function DashIconSelected(props) {
+  const { color, altColor, className } = props;
+  return (
+    <div
+      style={{
+        width: '30px',
+        height: '30px',
+        background: color,
+        borderRadius: "30px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        marginRight: "17px",
+        marginLeft: '15px',
+      }}
+    >
+    <SvgIcon viewBox="0, 0, 24, 24" className={classes.iconhackNew}>
+      <path fill={altColor} d="M8,0C3.589,0,0,3.589,0,8s3.589,8,8,8s8-3.589,8-8S12.411,0,8,0z M13.91,9H8.677L6.929,4.628L5.071,5.372 L6.523,9H2.09C2.035,8.674,2,8.341,2,8c0-3.309,2.691-6,6-6s6,2.691,6,6C14,8.341,13.965,8.674,13.91,9z"></path>
+    </SvgIcon>
+    </div>
+  );
+}
+
+function LearnIcon(props) {
+  const { color, className } = props;
+  return (
+    <SvgIcon viewBox="0, 0, 22, 22" className={classes.iconLearnNormal}>
+      <path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"></path>
+    </SvgIcon>
+  );
+}
+
+function LearnIconSelected(props) {
+  const { color, altColor, className } = props;
+  return (
+    <div
+      style={{
+        width: '30px',
+        height: '30px',
+        background: color,
+        borderRadius: "30px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        marginRight: "17px",
+        marginLeft: '15px',
+      }}
+    >
+    <SvgIcon viewBox="0, 0, 24, 24" className={classes.iconLearnActive}>
+    <path fill={altColor} d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"></path>
+    </SvgIcon>
+    </div>
+  );
+}
+
 function StatsIcon(props) {
   const { color, className } = props;
   return (
@@ -205,7 +269,8 @@ function LTVIconSelected(props) {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        marginRight: "20px",
+        marginRight: "19px",
+        marginLeft: '15px',
       }}
     >
       <SvgIcon viewBox="0, 0, 24, 24" className={className}>
@@ -240,7 +305,8 @@ function CDPIconSelected(props) {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        marginRight: "14px",
+        marginRight: "19px",
+        marginLeft: '15px',
       }}
     >
       <SvgIcon viewBox="0, 0, 24, 24" className={className}>
@@ -358,7 +424,7 @@ function Navigation(props) {
           "invest",
           <InvestIcon
             className={classes.icon}
-            color={darkMode ? "white" : "rgb(33, 37, 41)"}
+            color={darkMode ? "primary" : "rgb(33, 37, 41)"}
             altColor={darkMode ? "rgb(33, 37, 41)" : "white"}
           />,
           <InvestIconSelected
@@ -429,6 +495,20 @@ function Navigation(props) {
             altColor={darkMode ? "rgb(33, 37, 41)" : "white"}
           />
         )}
+        {renderNav(
+          "Learn",
+          "learn",
+          <LearnIcon
+            className={classes.icon}
+            color={darkMode ? "primary" : "rgb(33, 37, 41)"}
+            altColor={darkMode ? "rgb(33, 37, 41)" : "white"}
+          />,
+          <LearnIconSelected
+            className={classes.iconSelected}
+            color={darkMode ? "white" : "rgb(33, 37, 41)"}
+            altColor={darkMode ? "rgb(33, 37, 41)" : "white"}
+          />
+        )}
       </React.Fragment>
     );
   };
@@ -455,7 +535,7 @@ function Navigation(props) {
         {activePath.includes("/" + link)
           ? iconSelected
           : icon}
-        <Typography variant="h2">{title}</Typography>
+        <Typography className={classes.theTitle} variant="h2">{title}</Typography>
       </div>
     );
   };
@@ -463,7 +543,7 @@ function Navigation(props) {
   return (
     <Paper elevation={0} className={classes.navigationContainer}>
       <div className={classes.navigationHeading}>
-        <a onClick={() => router.push('/')} className={classes.linkz}>
+        <a onClick={() => router.push('/')} className={classes.links}>
         <YearnIcon
           color={darkMode ? "white" : "rgb(33, 37, 41)"}
           altColor={darkMode ? "rgb(255, 255, 255)" : "white"}
@@ -497,7 +577,7 @@ function Navigation(props) {
             className={classes.yearnLogo}
           />
           <div className={classes.navigationContentNavs}>{renderNavs()}</div>
-          <div className={classes.headerThings}>
+          <div className={classes.headerWrap}>
             <div className={classes.themeSelectContainer}>
               <StyledSwitch
                 icon={<Brightness2Icon className={classes.switchIcon} />}
@@ -629,7 +709,7 @@ function Navigation(props) {
         </Grid>
         </Grid>
       </div>
-      <Typography className={classes.smallVersion}>Version 1.3.9</Typography>
+      <Typography className={classes.smallVersion}>Version 1.4.0</Typography>
     </Paper>
   );
 }
