@@ -8,6 +8,7 @@ export const ZAPPER_GAS_PRICE_API = 'https://api.zapper.fi/v1/gas-price?api_key=
 export const ETHERSCAN_URL = 'https://etherscan.io/';
 export const COVER_API = 'https://api.coverprotocol.com/protocol_data/production';
 export const COINGECKO_API = 'https://api.coingecko.com/api/v3'
+export const ZAPPER_AFFILIATE_ADDRESS = '0xFEB4acf3df3cDEA7399794D0869ef76A6EfAff52';
 
 export const LTV_MAXIMIZER_ADDRESS = '0x6AE0b2d7DaEbd40ed5333b1C2C72f09287bcCa84';
 export const CREAM_PRICE_ORACLE_ADDRESS = '0xde19f5a7cf029275be9cec538e81aa298e297266';

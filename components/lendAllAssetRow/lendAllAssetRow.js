@@ -540,7 +540,7 @@ export default function LendAllAssetRow({ lendingAsset, lendingBorrow, lendingBo
         </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6} padding="none">
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7} padding="none">
           <Collapse in={open} timeout="auto" unmountOnExit>
             <LendAllAssetRowDetails
               lendingAsset={lendingAsset}

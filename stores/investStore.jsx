@@ -33,6 +33,7 @@ import {
   UPDATE_DEPOSIT_STATUS,
   UPDATE_WITHDRAWAL_STATUS,
   SYSTEM_UPDATED,
+  ZAPPER_AFFILIATE_ADDRESS
 } from './constants';
 
 import stores from './';
@@ -758,7 +759,7 @@ class Store {
   };
 
   _setZapperAPI = (path, search) => {
-    const uri = ZAPPER_API_URL + `${path}?api_key=${ZAPPER_API_KEY}&` + qs.stringify(search);
+    const uri = ZAPPER_API_URL + `${path}?api_key=${ZAPPER_API_KEY}&affiliateAddress=${ZAPPER_AFFILIATE_ADDRESS}&` + qs.stringify(search);
     return uri;
   };
 
