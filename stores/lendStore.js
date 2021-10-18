@@ -307,7 +307,7 @@ class Store {
     if (account && account.address) {
       assetsIn = await this._getAssetsIn(web3, account);
     }
-    const blocksPeryear = 2425846;
+    const blocksPeryear = 2102400;
 
     const creamPriceOracleContract = new web3.eth.Contract(CREAMPRICEORACLEABI, CREAM_PRICE_ORACLE_ADDRESS);
     const comptrollerContract = new web3.eth.Contract(COMPTROLLERABI, COMPTROLLER_ADDRESS);
@@ -329,8 +329,10 @@ class Store {
 
           const exchangeRateReal = BigNumber(exchangeRate).div(bnDec(asset.tokenMetadata.decimals)).toFixed(asset.tokenMetadata.decimals, BigNumber.ROUND_DOWN);
           cash = new BigNumber(cash).div(bnDec(asset.tokenMetadata.decimals)).toFixed(asset.tokenMetadata.decimals, BigNumber.ROUND_DOWN);
-          const borrowRatePerYear = (borrowRatePerBlock * blocksPeryear) / 1e16;
-          const supplyRatePerYear = (supplyRatePerBlock * blocksPeryear) / 1e16;
+
+          const borrowRatePerYear = (((1+(borrowRatePerBlock/1e18)) ** blocksPeryear)-1)*100
+          const supplyRatePerYear = (((1+(supplyRatePerBlock/1e18)) ** blocksPeryear)-1)*100
+
           totalBorrows = new BigNumber(totalBorrows).div(bnDec(asset.tokenMetadata.decimals)).toFixed(asset.tokenMetadata.decimals, BigNumber.ROUND_DOWN);
 
           if (account && account.address) {
