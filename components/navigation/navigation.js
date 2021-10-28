@@ -449,7 +449,7 @@ function Navigation(props) {
               altColor={darkMode ? "rgb(33, 37, 41)" : "white"}
             />
           )}
-        {account &&
+        {/*account &&
           account.address &&
           renderNav(
             "CDP",
@@ -464,7 +464,7 @@ function Navigation(props) {
               color={darkMode ? "white" : "rgb(33, 37, 41)"}
               altColor={darkMode ? "rgb(33, 37, 41)" : "white"}
             />
-          )}
+          )*/}
         {account &&
           account.address &&
           renderNav(
