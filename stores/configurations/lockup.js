@@ -11,7 +11,7 @@ export default [
     decimals: 18,
     displayName: "veCRV Lockup",
     icon:
-      "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0xc5bDdf9843308380375a611c18B50Fb9341f502A/logo-128.png",
+      "https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0xc5bDdf9843308380375a611c18B50Fb9341f502A/logo-128.png",
     name: "Curve Lockup Vault",
     pricePerFullShare: 1,
     strategies: [],
@@ -24,7 +24,7 @@ export default [
       decimals: 18,
       displayName: "Curve",
       icon:
-        "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0xD533a949740bb3306d119CC777fa900bA034cd52/logo-128.png",
+        "https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0xD533a949740bb3306d119CC777fa900bA034cd52/logo-128.png",
       name: "Curve DAO Token",
       priceUSD: 1,
       symbol: "CRV"

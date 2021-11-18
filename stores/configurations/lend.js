@@ -5,11 +5,11 @@ export default [
     decimals: 8,
     displayName: "Yearn Wrapped Ether",
     icon:
-      "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo-128.png",
+      "https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo-128.png",
     tokenMetadata: {
       address: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
       icon:
-        "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo-128.png",
+        "https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo-128.png",
       symbol: "WETH",
       decimals: 18,
       displayName: "Wrapped Ether"
@@ -21,11 +21,11 @@ export default [
     decimals: 8,
     displayName: "Yearn Dai Stablecoin",
     icon:
-      "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo-128.png",
+      "https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo-128.png",
     tokenMetadata: {
       address: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
       icon:
-        "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo-128.png",
+        "https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo-128.png",
       symbol: "DAI",
       decimals: 18,
       displayName: "Dai Stablecoin"
@@ -37,11 +37,11 @@ export default [
     decimals: 8,
     displayName: "Yearn 3CRV",
     icon:
-      "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0x9cA85572E6A3EbF24dEDd195623F188735A5179f/logo-128.png",
+      "https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0x9cA85572E6A3EbF24dEDd195623F188735A5179f/logo-128.png",
     tokenMetadata: {
       address: "0x9cA85572E6A3EbF24dEDd195623F188735A5179f",
       icon:
-        "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0x9cA85572E6A3EbF24dEDd195623F188735A5179f/logo-128.png",
+        "https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0x9cA85572E6A3EbF24dEDd195623F188735A5179f/logo-128.png",
       symbol: "y3Crv",
       decimals: 18,
       displayName: "Yearn 3CRV"
@@ -53,11 +53,11 @@ export default [
     decimals: 8,
     displayName: "Yearn ChainLink Token",
     icon:
-      "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0x514910771AF9Ca656af840dff83E8264EcF986CA/logo-128.png",
+      "https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0x514910771AF9Ca656af840dff83E8264EcF986CA/logo-128.png",
     tokenMetadata: {
       address: "0x514910771AF9Ca656af840dff83E8264EcF986CA",
       icon:
-        "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0x514910771AF9Ca656af840dff83E8264EcF986CA/logo-128.png",
+        "https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0x514910771AF9Ca656af840dff83E8264EcF986CA/logo-128.png",
       symbol: "LINK",
       decimals: 18,
       displayName: "ChainLink Token"
@@ -69,11 +69,11 @@ export default [
     decimals: 8,
     displayName: "Yearn yearn.finance",
     icon:
-      "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e/logo-128.png",
+      "https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e/logo-128.png",
     tokenMetadata: {
       address: "0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e",
       icon:
-        "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e/logo-128.png",
+        "https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e/logo-128.png",
       symbol: "YFI",
       decimals: 18,
       displayName: "yearn.finance"
@@ -85,11 +85,11 @@ export default [
     decimals: 8,
     displayName: "Yearn Synthetix Network Token",
     icon:
-      "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F/logo-128.png",
+      "https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F/logo-128.png",
     tokenMetadata: {
       address: "0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F",
       icon:
-        "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F/logo-128.png",
+        "https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F/logo-128.png",
       symbol: "SNX",
       decimals: 18,
       displayName: "Synthetix Network Token"
@@ -101,11 +101,11 @@ export default [
     decimals: 8,
     displayName: "Yearn Wrapped BTC",
     icon:
-      "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo-128.png",
+      "https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo-128.png",
     tokenMetadata: {
       address: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
       icon:
-        "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo-128.png",
+        "https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo-128.png",
       symbol: "WBTC",
       decimals: 8,
       displayName: "Wrapped BTC"
@@ -117,11 +117,11 @@ export default [
     decimals: 8,
     displayName: "Yearn Tether USD",
     icon:
-      "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo-128.png",
+      "https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo-128.png",
     tokenMetadata: {
       address: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
       icon:
-        "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo-128.png",
+        "https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo-128.png",
       symbol: "USDT",
       decimals: 6,
       displayName: "Tether USD"
@@ -133,11 +133,11 @@ export default [
     decimals: 8,
     displayName: "Yearn USD Coin",
     icon:
-      "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo-128.png",
+      "https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo-128.png",
     tokenMetadata: {
       address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
       icon:
-        "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo-128.png",
+        "https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo-128.png",
       symbol: "USDC",
       decimals: 6,
       displayName: "USD Coin"
@@ -149,11 +149,11 @@ export default [
     decimals: 8,
     displayName: "Yearn Synth sUSD",
     icon:
-      "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0x57Ab1ec28D129707052df4dF418D58a2D46d5f51/logo-128.png",
+      "https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0x57Ab1ec28D129707052df4dF418D58a2D46d5f51/logo-128.png",
     tokenMetadata: {
       address: "0x57Ab1ec28D129707052df4dF418D58a2D46d5f51",
       icon:
-        "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0x57Ab1ec28D129707052df4dF418D58a2D46d5f51/logo-128.png",
+        "https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0x57Ab1ec28D129707052df4dF418D58a2D46d5f51/logo-128.png",
       symbol: "sUSD",
       decimals: 18,
       displayName: "Synth sUSD"
@@ -165,11 +165,11 @@ export default [
     decimals: 8,
     displayName: "Yearn mStable USD",
     icon:
-      "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0xe2f2a5C287993345a840Db3B0845fbC70f5935a5/logo-128.png",
+      "https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0xe2f2a5C287993345a840Db3B0845fbC70f5935a5/logo-128.png",
     tokenMetadata: {
       address: "0xe2f2a5C287993345a840Db3B0845fbC70f5935a5",
       icon:
-        "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0xe2f2a5C287993345a840Db3B0845fbC70f5935a5/logo-128.png",
+        "https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0xe2f2a5C287993345a840Db3B0845fbC70f5935a5/logo-128.png",
       symbol: "mUSD",
       decimals: 18,
       displayName: "mStable USD"
@@ -181,11 +181,11 @@ export default [
     decimals: 8,
     displayName: "Yearn DefiDollar",
     icon:
-      "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0x5BC25f649fc4e26069dDF4cF4010F9f706c23831/logo-128.png",
+      "https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0x5BC25f649fc4e26069dDF4cF4010F9f706c23831/logo-128.png",
     tokenMetadata: {
       address: "0x5BC25f649fc4e26069dDF4cF4010F9f706c23831",
       icon:
-        "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0x5BC25f649fc4e26069dDF4cF4010F9f706c23831/logo-128.png",
+        "https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0x5BC25f649fc4e26069dDF4cF4010F9f706c23831/logo-128.png",
       symbol: "DUSD",
       decimals: 18,
       displayName: "DefiDollar"
@@ -197,11 +197,11 @@ export default [
     decimals: 8,
     displayName: "Yearn STASIS EURS Token",
     icon:
-      "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0xdB25f211AB05b1c97D595516F45794528a807ad8/logo-128.png",
+      "https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0xdB25f211AB05b1c97D595516F45794528a807ad8/logo-128.png",
     tokenMetadata: {
       address: "0xdB25f211AB05b1c97D595516F45794528a807ad8",
       icon:
-        "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0xdB25f211AB05b1c97D595516F45794528a807ad8/logo-128.png",
+        "https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0xdB25f211AB05b1c97D595516F45794528a807ad8/logo-128.png",
       symbol: "EURS",
       decimals: 2,
       displayName: "STASIS EURS Token"
@@ -213,11 +213,11 @@ export default [
     decimals: 8,
     displayName: "Yearn Synth sEUR",
     icon:
-      "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0xD71eCFF9342A5Ced620049e616c5035F1dB98620/logo-128.png",
+      "https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0xD71eCFF9342A5Ced620049e616c5035F1dB98620/logo-128.png",
     tokenMetadata: {
       address: "0xD71eCFF9342A5Ced620049e616c5035F1dB98620",
       icon:
-        "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0xD71eCFF9342A5Ced620049e616c5035F1dB98620/logo-128.png",
+        "https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0xD71eCFF9342A5Ced620049e616c5035F1dB98620/logo-128.png",
       symbol: "sEUR",
       decimals: 18,
       displayName: "Synth sEUR"
@@ -229,11 +229,11 @@ export default [
     decimals: 8,
     displayName: "Yearn DefiPulse Index",
     icon:
-      "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0x1494CA1F11D487c2bBe4543E90080AeBa4BA3C2b/logo-128.png",
+      "https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0x1494CA1F11D487c2bBe4543E90080AeBa4BA3C2b/logo-128.png",
     tokenMetadata: {
       address: "0x1494CA1F11D487c2bBe4543E90080AeBa4BA3C2b",
       icon:
-        "https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/0x1494CA1F11D487c2bBe4543E90080AeBa4BA3C2b/logo-128.png",
+        "https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0x1494CA1F11D487c2bBe4543E90080AeBa4BA3C2b/logo-128.png",
       symbol: "DPI",
       decimals: 18,
       displayName: "DefiPulse Index"

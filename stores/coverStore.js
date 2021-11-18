@@ -505,7 +505,7 @@ class Store {
         allowance: allowance,
         icon:
           symbol === "DAI"
-            ? `https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/${asset}/logo-128.png`
+            ? `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/${asset}/logo-128.png`
             : "/tokens/cover-logo.png"
       };
     } catch (ex) {

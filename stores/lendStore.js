@@ -187,8 +187,8 @@ class Store {
             symbol = localCalls2[0]
             decimals = parseInt(localCalls2[1])
             name = localCalls2[2]
-            vaultIcon = `https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/${erc20address}/logo-128.png`;
-            icon = `https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/${erc20address}/logo-128.png`;
+            vaultIcon = `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/${erc20address}/logo-128.png`;
+            icon = `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/${erc20address}/logo-128.png`;
           }
 
           const lendingAsset = {

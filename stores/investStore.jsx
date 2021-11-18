@@ -190,7 +190,7 @@ class Store {
           return vault.type !== 'zap';
         })
         .filter((vault) => {
-          return vault.address != '0xbD17B1ce622d73bD438b9E658acA5996dc394b0d' // excluding sushiswap LP pair vault. Doesn't work for now
+          return vault.address != '0xbD17B1ce622d73bD438b9E658acA5996dc394b0d' && vault.address != '0x6FAfCA7f49B4Fd9dC38117469cd31A1E5aec91F5'  // excluding sushiswap LP pair vault. Doesn't work for now
         })
         .map((vault) => {
           if (vault.address === '0xc5bDdf9843308380375a611c18B50Fb9341f502A') {
