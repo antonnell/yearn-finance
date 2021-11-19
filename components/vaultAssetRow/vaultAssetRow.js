@@ -17,6 +17,7 @@ export default function VaultAssetRow({ vault, account }) {
   }
 
   const vaultType = vault.type === 'v2' && !vault.endorsed ? 'Exp' : vault.type;
+  const canMigrate = vault.migration && vault.migration.available && vault.migration.address !== null
 
   let vaultTypeClass = null;
   switch (vaultType) {
@@ -91,21 +92,32 @@ export default function VaultAssetRow({ vault, account }) {
           </Typography>
         </TableCell>
       )}
-      <TableCell align="right">
-        <Typography variant="h5" className={classes.fontWeightBold}>
-          {!vault.apy ? (
-            <Skeleton stlye={{ minWidth: '100px' }} />
-          ) : vault.apy.net_apy ? (
-            vault.apy.net_apy === 'New' ? (
-              'New'
+      {
+        canMigrate && <TableCell align="right">
+          <div className={ classes.migrateContainer }>
+            <Typography variant="h5" className={classes.migrateText}>
+              Migrate to new vault
+            </Typography>
+          </div>
+        </TableCell>
+      }
+      {
+        !canMigrate && <TableCell align="right">
+          <Typography variant="h5" className={classes.fontWeightBold}>
+            {!vault.apy ? (
+              <Skeleton stlye={{ minWidth: '100px' }} />
+            ) : vault.apy.net_apy ? (
+              vault.apy.net_apy === 'New' ? (
+                'New'
+              ) : (
+                BigNumber(vault.apy.net_apy).times(100).toFixed(2) + '%'
+              )
             ) : (
-              BigNumber(vault.apy.net_apy).times(100).toFixed(2) + '%'
-            )
-          ) : (
-            'Unknown'
-          )}
-        </Typography>
-      </TableCell>
+              'Unknown'
+            )}
+          </Typography>
+        </TableCell>
+      }
     </TableRow>
   );
 }

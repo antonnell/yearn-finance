@@ -307,3 +307,17 @@
     display: none;
   }
 }
+
+.migrateContainer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end
+}
+
+.migrateText {
+  background: #4aa166;
+  color: #fff;
+  border-radius: 30px;
+  padding: 15px 30px;
+  width: fit-content;
+}

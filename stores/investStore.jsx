@@ -33,7 +33,12 @@ import {
   UPDATE_DEPOSIT_STATUS,
   UPDATE_WITHDRAWAL_STATUS,
   SYSTEM_UPDATED,
-  ZAPPER_AFFILIATE_ADDRESS
+  ZAPPER_AFFILIATE_ADDRESS,
+  TRUSTED_VAULT_MIGRATOR_ADDRESS,
+  MIGRATE_VAULT,
+  MIGRATE_VAULT_RETURNED,
+  APPROVE_MIGRATE_VAULT,
+  APPROVE_MIGRATE_VAULT_RETURNED
 } from './constants';
 
 import stores from './';
@@ -74,6 +79,7 @@ import {
   VAULT_StrategysteCurveWETHSingleSidedABI,
   VAULT_StrategyeCurveWETHSingleSidedABI,
   VAULT_StrategySynthetixSusdMinterABI,
+  TRUSTEDVAULTMIGRATORABI,
 } from './abis';
 import { bnDec } from '../utils';
 
@@ -130,6 +136,12 @@ class Store {
             break;
           case CLAIM_VAULT:
             this.claimVault(payload);
+            break;
+          case MIGRATE_VAULT:
+            this.migrateVault(payload);
+            break;
+          case APPROVE_MIGRATE_VAULT:
+            this.approveMigrateVault(payload);
             break;
           default: {
           }
@@ -383,8 +395,14 @@ class Store {
           }
 
           const vaultContract = new web3.eth.Contract(abi, vault.address);
-          const balanceOf = await vaultContract.methods.balanceOf(account.address).call();
+
+          let [ balanceOf, migrateAllowance ] = await Promise.all([
+            vaultContract.methods.balanceOf(account.address).call(),
+            vaultContract.methods.allowance(account.address, TRUSTED_VAULT_MIGRATOR_ADDRESS).call(),
+          ]);
+
           vault.balance = BigNumber(balanceOf).div(bnDec(vault.decimals)).toFixed(vault.decimals, BigNumber.ROUND_DOWN);
+          vault.migrateAllowance = BigNumber(migrateAllowance).div(bnDec(vault.decimals)).toFixed(vault.decimals, BigNumber.ROUND_DOWN);
 
           try {
             // this throws execution reverted: SafeMath: division by zero for not properly finalised vaults
@@ -412,12 +430,16 @@ class Store {
           vault.balanceInToken = BigNumber(vault.balance).times(vault.pricePerFullShare).toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN);
 
           const erc20Contract = new web3.eth.Contract(ERC20ABI, vault.tokenMetadata.address);
-          const tokenBalanceOf = await erc20Contract.methods.balanceOf(account.address).call();
+
+          let [ tokenBalanceOf, allowance ] = await Promise.all([
+            erc20Contract.methods.balanceOf(account.address).call(),
+            erc20Contract.methods.allowance(account.address, vault.address).call(),
+          ]);
+
           vault.tokenMetadata.balance = BigNumber(tokenBalanceOf)
             .div(bnDec(vault.tokenMetadata.decimals))
             .toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN);
 
-          const allowance = await erc20Contract.methods.allowance(account.address, vault.address).call();
           vault.tokenMetadata.allowance = BigNumber(allowance)
             .div(bnDec(vault.tokenMetadata.decimals))
             .toFixed(vault.tokenMetadata.decimals, BigNumber.ROUND_DOWN);
@@ -459,11 +481,12 @@ class Store {
           if (vault.type === 'Lockup') {
             const votingEscrowContract = new web3.eth.Contract(VOTINGESCROWABI, '0x5f3b5DfEb7B28CDbD7FAba78963EE202a494e2A2');
 
-            const totalSupply = await vaultContract.methods.totalSupply().call();
-            const votingEscrowBalanceOf = await votingEscrowContract.methods.balanceOf('0xF147b8125d2ef93FB6965Db97D6746952a133934').call();
-
-            const index = await vaultContract.methods.index().call();
-            const supply_index = await vaultContract.methods.supplyIndex(account.address).call();
+            let [ totalSupply, votingEscrowBalanceOf, index, supply_index ] = await Promise.all([
+              vaultContract.methods.totalSupply().call(),
+              votingEscrowContract.methods.balanceOf('0xF147b8125d2ef93FB6965Db97D6746952a133934').call(),
+              vaultContract.methods.index().call(),
+              vaultContract.methods.supplyIndex(account.address).call(),
+            ]);
 
             vault.lockupMetadata = {
               vaultVsSolo: BigNumber(votingEscrowBalanceOf).div(totalSupply).toNumber(),
@@ -1292,6 +1315,82 @@ class Store {
     this._callContract(web3, vaultContract, 'claim', [], account, gasPrice, GET_VAULT_BALANCES, callback);
   };
 
+  approveMigrateVault = async (payload) => {
+    const account = stores.accountStore.getStore('account');
+    if (!account) {
+      return false;
+      //maybe throw an error
+    }
+
+    const web3 = await stores.accountStore.getWeb3Provider();
+    if (!web3) {
+      return false;
+      //maybe throw an error
+    }
+
+    const { vault, amount, gasSpeed } = payload.content;
+
+    this._callApproveMigrateVault(web3, vault, account, amount, gasSpeed, (err, approveResult) => {
+      if (err) {
+        return this.emitter.emit(ERROR, err);
+      }
+
+      return this.emitter.emit(APPROVE_MIGRATE_VAULT_RETURNED, approveResult);
+    });
+  };
+
+  _callApproveMigrateVault = async (web3, vault, account, amount, gasSpeed, callback) => {
+    const tokenContract = new web3.eth.Contract(ERC20ABI, vault.address);
+
+    let amountToSend = '0';
+    if (amount === 'max') {
+      amountToSend = MAX_UINT256;
+    } else {
+      amountToSend = BigNumber(amount)
+        .times(10 ** vault.decimals)
+        .toFixed(0);
+    }
+
+    const gasPrice = await stores.accountStore.getGasPrice(gasSpeed);
+
+    this._callContract(web3, tokenContract, 'approve', [TRUSTED_VAULT_MIGRATOR_ADDRESS, amountToSend], account, gasPrice, GET_VAULT_BALANCES, callback);
+  };
+
+  migrateVault = async (payload) => {
+    const account = stores.accountStore.getStore('account');
+    if (!account) {
+      return false;
+      //maybe throw an error
+    }
+
+    const web3 = await stores.accountStore.getWeb3Provider();
+    if (!web3) {
+      return false;
+      //maybe throw an error
+    }
+
+    const { vault, amount, gasSpeed } = payload.content;
+
+    console.log(vault)
+    console.log(amount)
+
+    this._callMigrateVault(web3, vault, amount, account, gasSpeed, (err, result) => {
+      if (err) {
+        return this.emitter.emit(ERROR, err);
+      }
+
+      return this.emitter.emit(MIGRATE_VAULT_RETURNED, result);
+    });
+  };
+
+  _callMigrateVault = async (web3, vault, amount, account, gasSpeed, callback) => {
+    const trustedVaultMigratorContract = new web3.eth.Contract(TRUSTEDVAULTMIGRATORABI, TRUSTED_VAULT_MIGRATOR_ADDRESS);
+
+    const gasPrice = await stores.accountStore.getGasPrice(gasSpeed);
+
+    this._callContract(web3, trustedVaultMigratorContract, 'migrateAll', [vault.address, vault.migration.address], account, gasPrice, GET_VAULT_BALANCES, callback);
+  };
+
   // gets the system overview.
   calculateSystemOverview = async () => {
     const web3 = await stores.accountStore.getWeb3Provider();
@@ -1418,14 +1517,16 @@ class Store {
     } else if (isCompoundToken !== false) {
       const compoundContract = new web3.eth.Contract(COMP_TOKENABI, tokenAddress)
 
-      const underlying = await compoundContract.methods.underlying().call()
+
+      let [ underlying, getCash, totalBorrows, totalReserves, totalSupply ] = await Promise.all([
+        compoundContract.methods.underlying().call(),
+        compoundContract.methods.getCash().call(),
+        compoundContract.methods.totalBorrows().call(),
+        compoundContract.methods.totalReserves().call(),
+        compoundContract.methods.totalSupply().call()
+      ]);
+
       let underlyingToken = await this.getTokenTree(web3, underlying, coingeckoCoinList)
-
-      const getCash = await compoundContract.methods.getCash().call()
-      const totalBorrows = await compoundContract.methods.totalBorrows().call()
-      const totalReserves = await compoundContract.methods.totalReserves().call()
-      const totalSupply = await compoundContract.methods.totalSupply().call()
-
       const exchangeRate = BigNumber(BigNumber(getCash/(10**underlyingToken.decimals)).plus(totalBorrows/(10**underlyingToken.decimals)).minus(totalReserves/(10**underlyingToken.decimals))).div(totalSupply/(10**8)).toFixed(18)
       underlyingToken.exchangeRate = exchangeRate
 
@@ -1496,13 +1597,15 @@ class Store {
     } else if (isCreamToken !== false) {
       const cyTokenContract = new web3.eth.Contract(CERC20DELEGATORABI, tokenAddress)
 
-      const underlying = await cyTokenContract.methods.underlying().call()
-      let underlyingToken = await this.getTokenTree(web3, underlying, coingeckoCoinList)
+      let [ underlying, getCash, totalBorrows, totalReserves, totalSupply ] = await Promise.all([
+        cyTokenContract.methods.underlying().call(),
+        cyTokenContract.methods.getCash().call(),
+        cyTokenContract.methods.totalBorrows().call(),
+        cyTokenContract.methods.totalReserves().call(),
+        cyTokenContract.methods.totalSupply().call()
+      ]);
 
-      const getCash = await cyTokenContract.methods.getCash().call()
-      const totalBorrows = await cyTokenContract.methods.totalBorrows().call()
-      const totalReserves = await cyTokenContract.methods.totalReserves().call()
-      const totalSupply = await cyTokenContract.methods.totalSupply().call()
+      let underlyingToken = await this.getTokenTree(web3, underlying, coingeckoCoinList)
 
       const exchangeRate = BigNumber(BigNumber(getCash/(10**underlyingToken.decimals)).plus(totalBorrows/(10**underlyingToken.decimals)).minus(totalReserves/(10**underlyingToken.decimals))).div(totalSupply/(10**8)).toFixed(18)
       underlyingToken.exchangeRate = exchangeRate

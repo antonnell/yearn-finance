@@ -155,7 +155,7 @@ a.links { cursor: pointer !important; }
   justify-content: flex-start;
   padding: 12px 0px;
   margin-left: 13px;
-  width: 100%;
+  width: calc(100% - 13px);
   cursor: pointer;
 }
 

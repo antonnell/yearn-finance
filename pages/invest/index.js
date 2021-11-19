@@ -173,7 +173,7 @@ function Invest({ changeTheme }) {
     otherVaults.sort(vaultSort);
     setTopVaultPerformers({ stableCoinVaults: stableCoinVaults, ethBTCVaults: ethBTCVaults, otherVaults: otherVaults });
   };
-  React.useEffect(() => {
+  useEffect(() => {
     async function fetchVaultsFromZapper() {
       const response = await fetch('https://api.zapper.fi/v1/protocols/yearn/token-market-data?type=vault&api_key=96e0cc51-a62e-42ca-acee-910ea7d2a241');
       if (response.status === 200) {
@@ -185,7 +185,11 @@ function Invest({ changeTheme }) {
   }, []);
   const filteredVaults = vaults
     .filter((vault) => {
-      if(vault.type === 'v1' && !BigNumber(vault.balance).gt(0)) {
+      if(vault.type === 'v1' && !BigNumber(vault.balance).gt(0)) { // all v1 vaults are dead
+        return false
+      }
+
+      if(vault.migration && vault.migration.available === true && !BigNumber(vault.balance).gt(0)) { // v2 vaults that have migrations with no balance should not be shown
         return false
       }
 
@@ -501,7 +505,7 @@ function Invest({ changeTheme }) {
 
       <div className={classes.investContainer}>
 
-        <div className={classes.overviewTopPerformersContainer}>
+        {/*<div className={classes.overviewTopPerformersContainer}>
           <Paper elevation={0} className={classes.overviewContainer}>
             <div className={classes.overviewCard}>
 
@@ -578,7 +582,7 @@ function Invest({ changeTheme }) {
             </div>
           </Paper>
         </div>
-
+*/}
         <div className={classes.vaultsContainer}>
 
           <Grid container spacing={3}>

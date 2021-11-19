@@ -5,7 +5,7 @@
 
 .investContainer {
   height: 100%;
-  padding: 0px 30px;
+  padding: 30px 30px;
   display: flex;
   flex-direction: column;
 }
@@ -413,7 +413,7 @@
 
 @media screen and (max-width: 1600px) {
   .investContainer {
-    padding: 0px 24px;
+    padding: 24px 24px;
   }
   .overviewContainer {
     padding: 24px 24px;

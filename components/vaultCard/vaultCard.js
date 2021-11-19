@@ -16,6 +16,7 @@ export default function VaultCard({ vault, account }) {
   const activeVault = BigNumber(vault.balance).gt(0);
 
   const vaultType = vault.type === 'v2' && !vault.endorsed ? 'Exp' : vault.type;
+  const canMigrate = vault.migration && vault.migration.available && vault.migration.address !== null
 
   let vaultTypeClass = null;
   switch (vaultType) {
@@ -65,7 +66,7 @@ export default function VaultCard({ vault, account }) {
         </div>
         <div className={classes.separator}></div>
         <div className={classes.vaultInfo}>
-          {activeVault && (
+          { activeVault && (
             <div className={classes.vaultInfoField}>
               <Typography variant="h2" className={classes.balanceUSD}>
                 {!(vault && vault.balance) && <Skeleton />}
@@ -91,12 +92,23 @@ export default function VaultCard({ vault, account }) {
               <Typography variant="h2" className={classes.subinfofield}>Available to deposit</Typography>
             </div>
           )}
-          <div className={classes.vaultInfoFieldSlim}>
-            <Typography variant="h2" className={classes.fontWeightBold}>
-              {!vault.apy ? <Skeleton /> : vault.apy.net_apy ? (vault.apy.net_apy === 'New' ? 'New' : (BigNumber(vault.apy.net_apy).times(100).toFixed(2) + '%')) : 'Unknown'}
-            </Typography>
-            <Typography variant="h2" className={classes.subinfofield}>Yearly Growth</Typography>
-          </div>
+          {
+            canMigrate && <div className={ classes.vaultInfoFieldSlim }>
+              <div className={ classes.migrateContainer }>
+                <Typography variant="h5" className={classes.migrateText}>
+                  Migrate
+                </Typography>
+              </div>
+            </div>
+          }
+          {
+            !canMigrate && <div className={classes.vaultInfoFieldSlim}>
+              <Typography variant="h2" className={classes.fontWeightBold}>
+                {!vault.apy ? <Skeleton /> : vault.apy.net_apy ? (vault.apy.net_apy === 'New' ? 'New' : (BigNumber(vault.apy.net_apy).times(100).toFixed(2) + '%')) : 'Unknown'}
+              </Typography>
+              <Typography variant="h2" className={classes.subinfofield}>Yearly Growth</Typography>
+            </div>
+          }
         </div>
       </Paper>
     </Grid>

@@ -125,7 +125,10 @@ function Vault(props) {
                 </div>
               </div>
               <div className={classes.vaultTitle}>
-                <Typography variant="h1">{!vault ? <Skeleton /> : vault.displayName}</Typography>
+                <div className={ classes.flexVersionContainer }>
+                  <Typography variant="h1">{!vault ? <Skeleton /> : vault.displayName}</Typography>
+                  <Typography className={ classes.VaultVersionVersion }>v{vault.version}</Typography>
+                </div>
                 <div className={vaultTypeClass}>
                   <Typography className={classes.vaultVersionText}>{vaultType} Vault</Typography>
                 </div>
@@ -133,27 +136,24 @@ function Vault(props) {
             </div>
           </div>
           <div className={classes.hideMe}>
-          {vault.strategies.map((strategy) => {
-            return (
-              <React.Fragment>
-                <div className={classes.separator}></div>
-                <div className={classes.overviewCard}>
-                  <VaultStrategyCard strategy={strategy} vault={vault} />
-                </div>
-              </React.Fragment>
-            );
-          })}</div>
-
-          <div className={classes.stratModalBtn}>
-          <Typography variant='h5' className={classes.summary}>
-          <div className={classes.activeStrats}>Active: ({ vault.strategies.filter((strat) => { return BigNumber(strat.balanceUSD).gt(100) }).length })</div>
-          <div className={classes.allStrats}>Strategies: ({ vault.strategies.length })</div>
-          </Typography>
-
-          <VaultStrategiesModal />
-
+            {vault.strategies.map((strategy) => {
+              return (
+                <React.Fragment>
+                  <div className={classes.separator}></div>
+                  <div className={classes.overviewCard}>
+                    <VaultStrategyCard strategy={strategy} vault={vault} />
+                  </div>
+                </React.Fragment>
+              );
+            })}
           </div>
-
+          <div className={classes.stratModalBtn}>
+            <Typography variant='h5' className={classes.summary}>
+              <div className={classes.activeStrats}>Active: ({ vault.strategies.filter((strat) => { return BigNumber(strat.balanceUSD).gt(100) }).length })</div>
+              <div className={classes.allStrats}>Strategies: ({ vault.strategies.length })</div>
+            </Typography>
+            <VaultStrategiesModal />
+          </div>
         </Paper>
         <div className={classes.vaultInfo}>
           <div>

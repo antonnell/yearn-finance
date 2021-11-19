@@ -50,6 +50,7 @@ import { curve_stePoolContractABI } from './curve_stePoolContractABI';
 import { curve_saPoolContractABI } from './curve_saPoolContractABI';
 import { vault_StrategySynthetixSusdMinterABI } from './vault_StrategySynthetixSusdMinterABI';
 import { fixedUSDABI } from './fixedUSDABI';
+import { trustedVaultMigratorABI } from './trustedVaultMigratorABI'
 
 export const COMP_TOKENABI = comp_tokenABI;
 export const CURVE_POOLCONTRACTABI = curve_poolContractABI;
@@ -103,3 +104,4 @@ export const UNISWAPPAIRABI = uniswapPairABI;
 export const CHAINLINKORACLEABI = chainlinkOracleABI;
 export const CDPMANAGER01ABI = cdpManager01ABI;
 export const FIXEDUSDABI = fixedUSDABI;
+export const TRUSTEDVAULTMIGRATORABI = trustedVaultMigratorABI;
