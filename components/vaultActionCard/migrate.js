@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Typography, InputAdornment, Button, CircularProgress, Tooltip } from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
 import BigNumber from 'bignumber.js';
 import Skeleton from '@material-ui/lab/Skeleton';
 import { formatCurrency } from '../../utils';

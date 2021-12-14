@@ -23,14 +23,14 @@ export default function Withdraw({ vault }) {
   const [amount, setAmount] = useState('');
   const [amountError, setAmountError] = useState(false);
   const [gasSpeed, setGasSpeed] = useState('');
-  const zapperImgUrl = 'https://zapper.fi/images/';
+  const zapperImgUrl = 'https://storage.googleapis.com/zapper-fi-assets/tokens/ethereum/';
   const withdrawTokens = [
-    { label: vault.tokenMetadata.displayName, address: '0x0000000000000000000000000000000000000000', isVault: true, img: vault.tokenMetadata.icon },
-    { label: 'ETH', address: '0x0000000000000000000000000000000000000000', img: `${zapperImgUrl}ETH-icon.png` },
-    { label: 'DAI', address: '0x6b175474e89094c44da98b954eedeac495271d0f', img: `${zapperImgUrl}DAI-icon.png` },
-    { label: 'USDC', address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', img: `${zapperImgUrl}USDC-icon.png` },
-    { label: 'USDT', address: '0xdac17f958d2ee523a2206206994597c13d831ec7', img: `${zapperImgUrl}USDT-icon.png` },
-    { label: 'WBTC', address: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599', img: `${zapperImgUrl}WBTC-icon.png` },
+    { symbol: vault.tokenMetadata.displayName, address: '0x0000000000000000000000000000000000000000', isVault: true, img: vault.tokenMetadata.icon },
+    { symbol: 'ETH', address: '0x0000000000000000000000000000000000000000', img: `${zapperImgUrl}0x0000000000000000000000000000000000000000.png` },
+    { symbol: 'DAI', address: '0x6b175474e89094c44da98b954eedeac495271d0f', img: `${zapperImgUrl}0x6b175474e89094c44da98b954eedeac495271d0f.png` },
+    { symbol: 'USDC', address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', img: `${zapperImgUrl}0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.png` },
+    { symbol: 'USDT', address: '0xdac17f958d2ee523a2206206994597c13d831ec7', img: `${zapperImgUrl}0xdac17f958d2ee523a2206206994597c13d831ec7.png` },
+    { symbol: 'WBTC', address: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599', img: `${zapperImgUrl}0x2260fac5e5542a773aa44fbcfedf7c193bc2c599.png` },
   ];
 
   const handleZapperSlippage = (event, slippage) => {
@@ -222,14 +222,14 @@ export default function Withdraw({ vault }) {
             onChange={(event, newValue) => {
               setSelectedToken(newValue);
             }}
-            getOptionLabel={(option) => option.label}
+            getOptionLabel={(option) => option.symbol}
             fullWidth={true}
             renderOption={(option) => (
               <React.Fragment>
                 <img src={option.img} alt="" width={30} height={30} style={{ marginRight: '10px' }} />
                 <span className={classes.color} style={{ backgroundColor: option.color }} />
                 <div className={classes.text}>
-                  {option.label}
+                  {option.symbol}
                   <br />
                 </div>
               </React.Fragment>
@@ -309,7 +309,7 @@ export default function Withdraw({ vault }) {
                   {withdrawalStatus}
                 </>
               ) : (
-                `Withdraw to ${selectedToken.label}`
+                `Withdraw to ${selectedToken.symbol}`
               )}
             </Typography>
           </Button>

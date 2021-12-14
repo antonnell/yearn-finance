@@ -9,6 +9,7 @@ import { formatCurrency } from '../../utils';
 import GasSpeed from '../gasSpeed';
 import classes from './vaultActionCard.module.css';
 import InfoIcon from "@material-ui/icons/Info";
+const zapperImgUrl = 'https://storage.googleapis.com/zapper-fi-assets/tokens/ethereum/';
 
 import stores from '../../stores';
 import {
@@ -327,18 +328,19 @@ export default function Deposit({ vault }) {
                   setSelectedZapBalanceToken(newValue);
                 }
               }}
-              getOptionLabel={(option) => option.label}
+              getOptionLabel={(option) => { console.log(option); return option.symbol; }}
               style={{ width: '55%', marginRight: '5px' }}
-              renderOption={(option) => (
+              renderOption={(option) => {
+                return (
                 <React.Fragment>
-                  <img src={option.icon ? option.icon : `${option.img}`} alt="" width={30} height={30} style={{ marginRight: '10px' }} />
+                  <img src={option.img ? option.img : `${zapperImgUrl}${option.address}.png`} alt="" width={30} height={30} style={{ marginRight: '10px' }} />
                   <span className={classes.color} style={{ backgroundColor: option.color }} />
                   <div className={classes.text}>
-                    {option.label}
+                    {option.symbol}
                     <br />
                   </div>
                 </React.Fragment>
-              )}
+              )}}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -348,7 +350,7 @@ export default function Deposit({ vault }) {
                       startAdornment: (
                         <InputAdornment position="start">
                           <img
-                            src={selectedZapBalanceToken?.icon ? selectedZapBalanceToken.icon : `${selectedZapBalanceToken.img}`}
+                            src={selectedZapBalanceToken.img ? selectedZapBalanceToken.img : `${zapperImgUrl}${selectedZapBalanceToken.address}.png`}
                             alt=""
                             width={30}
                             height={30}
