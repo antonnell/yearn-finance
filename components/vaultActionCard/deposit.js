@@ -333,7 +333,7 @@ export default function Deposit({ vault }) {
               renderOption={(option) => {
                 return (
                 <React.Fragment>
-                  <img src={option.img ? option.img : `${zapperImgUrl}${option.address}.png`} alt="" width={30} height={30} style={{ marginRight: '10px' }} />
+                  <img src={option.icon ? option.icon : `${zapperImgUrl}${option.address}.png`} alt="" width={30} height={30} style={{ marginRight: '10px' }} />
                   <span className={classes.color} style={{ backgroundColor: option.color }} />
                   <div className={classes.text}>
                     {option.symbol}
@@ -350,7 +350,7 @@ export default function Deposit({ vault }) {
                       startAdornment: (
                         <InputAdornment position="start">
                           <img
-                            src={selectedZapBalanceToken.img ? selectedZapBalanceToken.img : `${zapperImgUrl}${selectedZapBalanceToken.address}.png`}
+                            src={selectedZapBalanceToken.icon ? selectedZapBalanceToken.icon : `${zapperImgUrl}${selectedZapBalanceToken.address}.png`}
                             alt=""
                             width={30}
                             height={30}
