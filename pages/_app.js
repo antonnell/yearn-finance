@@ -10,6 +10,7 @@ import darkTheme from '../theme/dark';
 
 import Configure from './configure';
 import LocationWarning from '../components/locationWarning'
+import ShutdownNotice from '../components/shutdownNotice'
 
 import stores from '../stores/index.js';
 
@@ -112,6 +113,11 @@ export default function MyApp({ Component, pageProps }) {
     setLocationWarningOpen(false)
   }
 
+  const [shutdownNoticeOpen, setShutdownNoticeOpen] = useState(true);
+  const closeShutdown = () => {
+    setShutdownNoticeOpen(false)
+  }
+
   return (
     <React.Fragment>
       <Head>
@@ -125,6 +131,9 @@ export default function MyApp({ Component, pageProps }) {
         {!validateConfigured() && <Configure {...pageProps} />}
         { locationWarningOpen &&
           <LocationWarning close={ closeWarning } locationData={ locationData } />
+        }
+        { shutdownNoticeOpen &&
+          <ShutdownNotice close={ closeShutdown } />
         }
       </ThemeProvider>
     </React.Fragment>
